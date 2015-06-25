@@ -33,6 +33,7 @@ import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class Splash extends Activity {
@@ -45,7 +46,7 @@ public class Splash extends Activity {
 	String AppVersion;
 	String forceupdateversion;
 
-	UrlConstant checkurl;
+	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -77,7 +78,7 @@ public class Splash extends Activity {
 			return;
 		}
 
-		checkurl = new UrlConstant();
+		
 
 		SharedPreferences mPrefs1 = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs1.getString("FullName", "");
@@ -250,7 +251,7 @@ public class Splash extends Activity {
 					Log.i("GCM", "Device registered, ID is " + regid);
 
 					HttpClient httpClient = new DefaultHttpClient();
-					String url_select = checkurl.GetServiceUrl()
+					String url_select = GlobalVariables.ServiceUrl
 							+ "/updateregid.php";
 
 					HttpPost httpPost = new HttpPost(url_select);
@@ -303,7 +304,7 @@ public class Splash extends Activity {
 						Log.i("GCM", "Device registered, ID is " + regid);
 
 						HttpClient httpClient = new DefaultHttpClient();
-						String url_select = checkurl.GetServiceUrl()
+						String url_select = GlobalVariables.ServiceUrl
 								+ "/updateregid.php";
 
 						HttpPost httpPost = new HttpPost(url_select);
@@ -339,7 +340,7 @@ public class Splash extends Activity {
 			}
 
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/changeuserstatus.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select);

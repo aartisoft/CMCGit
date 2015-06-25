@@ -67,10 +67,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,6 +83,7 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -182,13 +183,11 @@ public class CheckPool extends FragmentActivity implements
 	ArrayList<String> phonenoarraynew = new ArrayList<String>();
 	ArrayList<String> imagearraynew = new ArrayList<String>();
 
-	RelativeLayout contexthelpcheckpool;
-
-	UrlConstant checkurl = new UrlConstant();
+	RelativeLayout contexthelpcheckpool; 
 
 	Tracker tracker;
 
-	private final String IPADDRESS = checkurl.GetIPAddress();
+	private final String IPADDRESS = GlobalVariables.IpAddress;
 	private final int PORT = 5222;
 	private ListView listViewMsg;
 	private EditText editTextMsg;
@@ -1255,7 +1254,7 @@ public class CheckPool extends FragmentActivity implements
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/ShowMemberOnMap.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
@@ -1612,7 +1611,7 @@ public class CheckPool extends FragmentActivity implements
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/cancelpoolbyowner.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
@@ -1674,7 +1673,7 @@ public class CheckPool extends FragmentActivity implements
 
 		} else {
 
-			url1 = checkurl.GetServiceUrl() + "/ProfileImages/" + mimgname;
+			url1 = GlobalVariables.ServiceUrl + "/ProfileImages/" + mimgname;
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new DownloadImageTask().executeOnExecutor(
 						AsyncTask.THREAD_POOL_EXECUTOR, url1);
@@ -1871,7 +1870,7 @@ public class CheckPool extends FragmentActivity implements
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/dropuserfrompopup.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
@@ -2008,7 +2007,7 @@ public class CheckPool extends FragmentActivity implements
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/sendcustommessage.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
@@ -2095,7 +2094,7 @@ public class CheckPool extends FragmentActivity implements
 
 		} else {
 
-			String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 					+ ownimg.toString().trim();
 
 			aq.id(myridesbannerimage).image(url, true, true);
@@ -2324,7 +2323,7 @@ public class CheckPool extends FragmentActivity implements
 						+ memimagename.get(position).toString().trim());
 
 			} else {
-				String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ memimagename.get(position).toString().trim();
 				aq.id(memberjoinedimage).image(url, true, true);
 			}
@@ -2417,7 +2416,7 @@ public class CheckPool extends FragmentActivity implements
 
 			for (int i = 0; i < MemberNumber.size(); i++) {
 				String userid = MemberNumber.get(i).toString().trim() + "_"
-						+ CabId + checkurl.GetServerNameForChat();
+						+ CabId + GlobalVariables.ServerNameForChat;
 				message = new Message(userid, Message.Type.chat);
 				message.setBody(text);
 				xmppConnection.sendPacket(message);
@@ -2696,7 +2695,7 @@ public class CheckPool extends FragmentActivity implements
 		public void connection() throws Exception {
 
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/sendchatnotification.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
@@ -2814,7 +2813,7 @@ public class CheckPool extends FragmentActivity implements
 			}
 
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/changeuserstatus.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
@@ -2907,7 +2906,7 @@ public class CheckPool extends FragmentActivity implements
 			MemberNumber.clear();
 
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/tripcompletedmembers.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
@@ -3076,7 +3075,7 @@ public class CheckPool extends FragmentActivity implements
 			// + memimagename.get(position).toString().trim());
 			//
 			// } else {
-			// String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+			// String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 			// + memimagename.get(position).toString().trim();
 			// aq.id(memberjoinedimage).image(url, true, true);
 			// }

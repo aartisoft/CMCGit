@@ -101,6 +101,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -237,7 +238,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 	String imagenameresp;
 	Bitmap mIcon11;
 
-	UrlConstant checkurl;
+	
 
 	private Button mButtonSearch;
 
@@ -345,7 +346,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -1843,7 +1844,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/FetchMyPools.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1957,14 +1958,14 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		@Override
 		protected String doInBackground(String... args) {
 			Log.d("PerformCabSearchTimeAsync",
-					"doInBackground : " + checkurl.GetServiceUrl()
+					"doInBackground : " + GlobalVariables.ServiceUrl
 							+ "/fetchCabDetailsNew.php?" + "FromCity="
 							+ fAddress.getLocality().toString() + "&slat="
 							+ String.valueOf(fAddress.getLatitude()) + "&slon="
 							+ String.valueOf(fAddress.getLongitude()));
 
 			try {
-				URL url = new URL(checkurl.GetServiceUrl()
+				URL url = new URL(GlobalVariables.ServiceUrl
 						+ "/fetchCabDetailsNew.php");
 				String response = "";
 
@@ -2227,7 +2228,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			Double estDistance, Double estDuration) {
 
 		try {
-			URL url = new URL(checkurl.GetServiceUrl()
+			URL url = new URL(GlobalVariables.ServiceUrl
 					+ "/fetchCabDetailsNew.php");
 			String response = "";
 
@@ -2259,7 +2260,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			outputStream.close();
 
 			Log.d("performCabSearchPrice", "performCabSearchPrice query : "
-					+ checkurl.GetServiceUrl() + "/fetchCabDetailsNew.php?"
+					+ GlobalVariables.ServiceUrl + "/fetchCabDetailsNew.php?"
 					+ "FromCity=" + fromAddress.getLocality().toString()
 					+ "&ToCity=" + toAddress.getLocality().toString()
 					+ "&slat=" + String.valueOf(fromAddress.getLatitude())
@@ -2975,12 +2976,12 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 
 			Log.d("FLT", "" + tlatitude);
-			String url = checkurl.GetServiceUrl()
+			String url = GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=priceestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "&elat=" + tlatitude + "&elon="
 					+ tlongitude + "";
 			Log.w("url", url);
-			HttpGet httpget = new HttpGet(checkurl.GetServiceUrl()
+			HttpGet httpget = new HttpGet(GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=priceestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "&elat=" + tlatitude + "&elon="
 					+ tlongitude + "");
@@ -3049,11 +3050,11 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 
 			Log.d("FLT", "" + tlatitude);
-			String url = checkurl.GetServiceUrl()
+			String url = GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=timeestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "";
 			Log.w("url", url);
-			HttpGet httpget = new HttpGet(checkurl.GetServiceUrl()
+			HttpGet httpget = new HttpGet(GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=timeestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "");
 			HttpResponse response = null;
@@ -4208,7 +4209,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					"GetUberRequestIDAsync : " + args[0].toString());
 
 			try {
-				URL url = new URL(checkurl.GetServiceUrl()
+				URL url = new URL(GlobalVariables.ServiceUrl
 						+ "/cabbookrequest.php");
 				String response = "";
 
@@ -4274,7 +4275,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 								MobileSiteActivity.class);
 						intent.putExtra(
 								MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL,
-								checkurl.GetServiceUrl()
+								GlobalVariables.ServiceUrl
 										+ "/uberapi.php?type=oauth");
 						intent.putExtra(
 								MobileSiteFragment.ARGUMENTS_UBER_REQUEST_ID,
@@ -4363,7 +4364,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					+ args[0].toString());
 
 			try {
-				URL url = new URL(checkurl.GetServiceUrl()
+				URL url = new URL(GlobalVariables.ServiceUrl
 						+ "/cabbookrequeststatus.php?requestid="
 						+ args[0].toString());
 				String response = "";
@@ -4477,11 +4478,11 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 	private void getUberBookingStatus(String params) {
 
 		try {
-			URL url = new URL(checkurl.GetServiceUrl() + "/uberConnect.php?"
+			URL url = new URL(GlobalVariables.ServiceUrl + "/uberConnect.php?"
 					+ params);
 			String response = "";
 			Log.d("BookaCab",
-					"getUberBookingStatus : " + checkurl.GetServiceUrl()
+					"getUberBookingStatus : " + GlobalVariables.ServiceUrl
 							+ "/uberConnect.php?" + params);
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
@@ -4864,7 +4865,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					"BookMegaCabAsync : " + args[0].toString());
 
 			try {
-				URL url = new URL(checkurl.GetServiceUrl() + "/MegaApi.php");
+				URL url = new URL(GlobalVariables.ServiceUrl + "/MegaApi.php");
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -5198,7 +5199,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 							+ " boolean site : " + shouldOpenSite);
 
 			try {
-				URL url = new URL(checkurl.GetServiceUrl() + "/cmcRecords.php");
+				URL url = new URL(GlobalVariables.ServiceUrl + "/cmcRecords.php");
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -5497,7 +5498,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
 
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
@@ -5591,7 +5592,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 			HttpPost httpPost11 = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
@@ -5629,7 +5630,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			} else {
 
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 				String urldisplay = url1.toString().trim();
 				mIcon11 = null;
@@ -5692,7 +5693,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchmyprofile.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(

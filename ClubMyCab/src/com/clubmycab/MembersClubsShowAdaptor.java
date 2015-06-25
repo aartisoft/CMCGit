@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -48,7 +49,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 	ArrayList<String> MemberClubOwnerName;
 	LayoutInflater inflater;
 
-	UrlConstant checkurl;
+	
 	Tracker tracker;
 	boolean exceptioncheck = false;
 
@@ -62,7 +63,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 		this.MemberClubNoofMembers = memclubnoofmembers;
 		this.MemberClubOwnerName = memclubownername;
 
-		checkurl = new UrlConstant();
+		
 
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
 		tracker = analytics.newTracker("UA-63477985-1");
@@ -225,7 +226,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/Leave_Club.php";
+			String url_select = GlobalVariables.ServiceUrl + "/Leave_Club.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
 			BasicNameValuePair poolidBasicNameValuePair = new BasicNameValuePair(
@@ -268,7 +269,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select1 = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select1 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 			HttpPost httpPost1 = new HttpPost(url_select1);
 
 			BasicNameValuePair UserNumberBasicNameValuePair1 = new BasicNameValuePair(

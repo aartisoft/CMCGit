@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.clubmycab.utility.GlobalVariables;
 
 public class ListViewAdapter extends BaseAdapter {
 
@@ -27,7 +28,7 @@ public class ListViewAdapter extends BaseAdapter {
 	LayoutInflater inflater;
 	AQuery aq;
 
-	UrlConstant checkurl;
+	
 
 	public ListViewAdapter(Context context, ArrayList<String> floc,
 			ArrayList<String> tloc, ArrayList<String> tdate,
@@ -42,7 +43,7 @@ public class ListViewAdapter extends BaseAdapter {
 		this.ownername = ownnam;
 		this.ownerimagename = ownimgnam;
 		this.aq = new AQuery(context);
-		checkurl = new UrlConstant();
+		
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class ListViewAdapter extends BaseAdapter {
 					+ ownername.get(position).toString().trim());
 
 		} else {
-			String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 					+ ownerimagename.get(position).toString().trim();
 			aq.id(myridesbannerimage).image(url, true, true);
 		}

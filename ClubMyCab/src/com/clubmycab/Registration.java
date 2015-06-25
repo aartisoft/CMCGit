@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class Registration extends Activity {
@@ -62,7 +63,7 @@ public class Registration extends Activity {
 
 	String result;
 
-	UrlConstant checkurl;
+	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -95,7 +96,7 @@ public class Registration extends Activity {
 			return;
 		}
 
-		checkurl = new UrlConstant();
+		
 
 		registerheadertxt = (TextView) findViewById(R.id.registerheadertxt);
 		fullnametxt = (TextView) findViewById(R.id.fullnametxt);
@@ -413,7 +414,7 @@ public class Registration extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/userregister.php";
+			String url_select = GlobalVariables.ServiceUrl + "/userregister.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair FullNameBasicNameValuePair = new BasicNameValuePair(

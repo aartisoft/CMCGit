@@ -65,6 +65,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -150,7 +151,7 @@ public class MyClubs extends Activity {
 	ArrayList<String> MemberClubOwnerName = new ArrayList<String>();
 	ArrayList<String> MemberClubMembers = new ArrayList<String>();
 
-	UrlConstant checkurl;
+	
 	RelativeLayout myclubsrl;
 
 	String comefrom;
@@ -209,7 +210,7 @@ public class MyClubs extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -1266,7 +1267,7 @@ public class MyClubs extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/referFriendStepOne.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
@@ -1364,7 +1365,7 @@ public class MyClubs extends Activity {
 							.getDrawable(R.drawable.cabappicon));
 				} else {
 					AQuery aq = new AQuery(MyClubs.this);
-					String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+					String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 							+ imgnames.get(position).toString().trim();
 
 					aq.id(memberappuserimg).image(url, true, true);
@@ -1461,7 +1462,7 @@ public class MyClubs extends Activity {
 							R.drawable.cabappicon));
 				} else {
 					AQuery aq = new AQuery(MyClubs.this);
-					String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+					String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 							+ imgnames.get(position).toString().trim();
 
 					aq.id(appuserimg).image(url, true, true);
@@ -1632,7 +1633,7 @@ public class MyClubs extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/removeuserfromclub.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
@@ -1674,7 +1675,7 @@ public class MyClubs extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select1 = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select1 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select1);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1797,7 +1798,7 @@ public class MyClubs extends Activity {
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
 
-			String url_select1 = checkurl.GetServiceUrl()
+			String url_select1 = GlobalVariables.ServiceUrl
 					+ "/addmoreuserstoclub.php";
 
 			HttpPost httpPost = new HttpPost(url_select1);
@@ -1842,7 +1843,7 @@ public class MyClubs extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select11 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -2074,7 +2075,7 @@ public class MyClubs extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select1 = checkurl.GetServiceUrl() + "/removeclub.php";
+			String url_select1 = GlobalVariables.ServiceUrl + "/removeclub.php";
 
 			HttpPost httpPost = new HttpPost(url_select1);
 
@@ -2112,7 +2113,7 @@ public class MyClubs extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select11 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -2233,7 +2234,7 @@ public class MyClubs extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 
 			HttpPost httpPost = new HttpPost(url_select11);
@@ -2329,7 +2330,7 @@ public class MyClubs extends Activity {
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 
 			HttpPost httpPost11 = new HttpPost(url_select11);
@@ -2368,7 +2369,7 @@ public class MyClubs extends Activity {
 
 			} else {
 
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 				String urldisplay = url1.toString().trim();
 				mIcon11 = null;
@@ -2486,7 +2487,7 @@ public class MyClubs extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl() + "/Store_Club.php";
+			String url_select11 = GlobalVariables.ServiceUrl + "/Store_Club.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
@@ -2539,7 +2540,7 @@ public class MyClubs extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select111 = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select111 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select111);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(

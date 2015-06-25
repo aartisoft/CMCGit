@@ -34,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
+
 public class MyClubsShowAdaptor extends BaseAdapter {
 
 	// Declare Variables
@@ -44,7 +46,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 	ArrayList<String> MyClubOwnerName;
 	LayoutInflater inflater;
 
-	UrlConstant checkurl;
+	
 	boolean exceptioncheck = false;
 
 	public MyClubsShowAdaptor(Context context, ArrayList<String> myclubpoolid,
@@ -57,7 +59,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 		this.MyClubNoofMembers = myclubnoofmembers;
 		this.MyClubOwnerName = myclubownername;
 
-		checkurl = new UrlConstant();
+		
 	}
 
 	@Override
@@ -204,7 +206,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl() + "/removeclub.php";
+			String url_select11 = GlobalVariables.ServiceUrl + "/removeclub.php";
 
 			HttpPost httpPost = new HttpPost(url_select11);
 
@@ -241,7 +243,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select111 = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select111 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select111);
 

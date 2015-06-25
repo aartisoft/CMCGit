@@ -11,7 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -46,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.navdrawer.SimpleSideDrawer;
 
 public class MyRides extends Activity {
@@ -110,7 +110,7 @@ public class MyRides extends Activity {
 	String readunreadnotiresp;
 	Bitmap mIcon11;
 
-	UrlConstant checkurl;
+	
 	RelativeLayout myridesrl;
 
 	Button showhistory;
@@ -157,7 +157,7 @@ public class MyRides extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -794,7 +794,7 @@ public class MyRides extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/FetchMyPools.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1050,7 +1050,7 @@ public class MyRides extends Activity {
 		public void connection() throws Exception {
 
 			HttpClient httpclient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/fetchmypoolshistory.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 
@@ -1182,7 +1182,7 @@ public class MyRides extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(

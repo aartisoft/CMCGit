@@ -33,6 +33,8 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
+
 public class RateCab extends Activity {
 
 	private JSONArray cabsJSONArray;
@@ -41,7 +43,7 @@ public class RateCab extends Activity {
 	private String cabIDIntent;
 	private String notificationIDIntent;
 
-	UrlConstant checkurl;
+	
 
 	private String cabratingresp;
 	private HashMap<String, JSONObject> hashMap;
@@ -66,7 +68,7 @@ public class RateCab extends Activity {
 		imageView = (ImageView) findViewById(R.id.notificationimg);
 		imageView.setVisibility(View.GONE);
 
-		checkurl = new UrlConstant();
+		
 		mobileNumber = getIntent().getStringExtra("CabsRatingMobileNumber");
 		cabIDIntent = getIntent().getStringExtra("cabIDIntent");
 		notificationIDIntent = getIntent().getStringExtra(
@@ -294,7 +296,7 @@ public class RateCab extends Activity {
 
 		public void connection() throws Exception {
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/cmcCabRating.php";
+			String url_select = GlobalVariables.ServiceUrl + "/cmcCabRating.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabDetailIDNameValuePair = new BasicNameValuePair(
 					"CabDetailID", cabDetailID);

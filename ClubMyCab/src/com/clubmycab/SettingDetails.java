@@ -38,6 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -78,7 +79,7 @@ public class SettingDetails extends Activity {
 
 	String readunreadnotiresp;
 
-	UrlConstant checkurl;
+	
 
 	RelativeLayout settingsrl;
 	Tracker tracker;
@@ -133,7 +134,7 @@ public class SettingDetails extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -582,7 +583,7 @@ public class SettingDetails extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
@@ -660,7 +661,7 @@ public class SettingDetails extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/updatepushnotificationstatus.php";
 
 			HttpPost httpPost = new HttpPost(url_select);

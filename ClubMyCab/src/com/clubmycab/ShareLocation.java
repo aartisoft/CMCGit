@@ -79,6 +79,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -195,7 +196,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 	GoogleMap frommap;
 	String imagenameresp;
 
-	UrlConstant checkurl;
+	
 	RelativeLayout sharelocationrl;
 
 	LinearLayout homeofficellvalues;
@@ -265,7 +266,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -1507,7 +1508,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
@@ -1603,7 +1604,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 
 			HttpPost httpPost11 = new HttpPost(url_select);
@@ -1642,7 +1643,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			} else {
 
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 
 				String urldisplay = url1.toString().trim();
@@ -1707,7 +1708,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(

@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class LoginViaPhoneNumber extends Activity {
@@ -55,7 +56,7 @@ public class LoginViaPhoneNumber extends Activity {
 	String FullName;
 	String MobileNumber;
 
-	UrlConstant checkurl;
+	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -88,7 +89,7 @@ public class LoginViaPhoneNumber extends Activity {
 			return;
 		}
 
-		checkurl = new UrlConstant();
+		
 
 		countrycodelogin = (EditText) findViewById(R.id.countrycodelogin);
 		numberedittext = (EditText) findViewById(R.id.numberedittext);
@@ -374,7 +375,7 @@ public class LoginViaPhoneNumber extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/login.php";
+			String url_select = GlobalVariables.ServiceUrl + "/login.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", countrycodelogin.getText().toString()

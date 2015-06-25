@@ -34,6 +34,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
+
 public class EnterOTP extends Activity {
 
 	TextView otphardtext;
@@ -48,7 +50,7 @@ public class EnterOTP extends Activity {
 	String verifyotpresp;
 	String resendotpresp;
 
-	UrlConstant checkurl;
+	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -82,7 +84,7 @@ public class EnterOTP extends Activity {
 			return;
 		}
 
-		checkurl = new UrlConstant();
+		
 
 		otphardtext = (TextView) findViewById(R.id.otphardtext);
 		enterotp = (TextView) findViewById(R.id.enterotp);
@@ -227,7 +229,7 @@ public class EnterOTP extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/verifyotp.php";
+			String url_select = GlobalVariables.ServiceUrl + "/verifyotp.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
@@ -328,7 +330,7 @@ public class EnterOTP extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/resendotp.php";
+			String url_select = GlobalVariables.ServiceUrl + "/resendotp.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);

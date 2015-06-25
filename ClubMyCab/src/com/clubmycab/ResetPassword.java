@@ -35,13 +35,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
+
 public class ResetPassword extends Activity {
 	Button Send, Change;
 	LinearLayout toplayout, Botttomlayout;
 	TextView mobtxt, otptxt, newpwdtxt, confirmpwdtxt;
 	EditText mobilenumber, otp, newpwd, confirmpwd, countrycoderesetpass;
 	String result, otps, pwd, res;
-	UrlConstant checkurl;
+	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -75,7 +77,7 @@ public class ResetPassword extends Activity {
 			return;
 		}
 
-		checkurl = new UrlConstant();
+		
 
 		Send = (Button) findViewById(R.id.resetpwdsendbtn);
 		toplayout = (LinearLayout) findViewById(R.id.resetpwdtoplayout);
@@ -353,7 +355,7 @@ public class ResetPassword extends Activity {
 
 				// Connect to google.com
 				HttpClient httpClient = new DefaultHttpClient();
-				String url_select = checkurl.GetServiceUrl()
+				String url_select = GlobalVariables.ServiceUrl
 						+ "/verifyresetpasswordotp.php";
 
 				HttpPost httpPost = new HttpPost(url_select);
@@ -471,7 +473,7 @@ public class ResetPassword extends Activity {
 
 				// Connect to google.com
 				HttpClient httpClient = new DefaultHttpClient();
-				String url_select = checkurl.GetServiceUrl()
+				String url_select = GlobalVariables.ServiceUrl
 						+ "/sendresetpasswordotp.php";
 
 				HttpPost httpPost = new HttpPost(url_select);

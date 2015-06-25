@@ -27,13 +27,14 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gcm.GCMBaseIntentService;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
 	static int notificationID = 1;
 	private static final String TAG = "GCMIntentService";
-	UrlConstant checkurl = new UrlConstant();
+	
 	String gotopoolresp;
 
 	public GCMIntentService() {
@@ -673,7 +674,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			String MobileNumber = mPrefs.getString("MobileNumber", "");
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", MobileNumber.toString().trim());
@@ -728,7 +729,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		protected String doInBackground(String... args) {
 
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/GoToPool.php";
+			String url_select = GlobalVariables.ServiceUrl + "/GoToPool.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
 			try {

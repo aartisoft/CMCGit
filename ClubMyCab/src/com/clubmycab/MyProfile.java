@@ -62,6 +62,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -119,7 +120,7 @@ public class MyProfile extends Activity {
 	String readunreadnotiresp;
 	Bitmap mIcon11;
 
-	UrlConstant checkurl;
+	
 	RelativeLayout myprofilerl;
 
 	String imageuploadchkstr;
@@ -194,7 +195,7 @@ public class MyProfile extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -769,7 +770,7 @@ public class MyProfile extends Activity {
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 			HttpPost httpPost11 = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
@@ -806,7 +807,7 @@ public class MyProfile extends Activity {
 			if (imagenameresp == null) {
 
 			} else {
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 				String urldisplay = url1.toString().trim();
 				mIcon11 = null;
@@ -895,7 +896,7 @@ public class MyProfile extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1019,7 +1020,7 @@ public class MyProfile extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/fetchmyprofile.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1146,7 +1147,7 @@ public class MyProfile extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/updatemyprofile.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1191,7 +1192,7 @@ public class MyProfile extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select111 = checkurl.GetServiceUrl()
+			String url_select111 = GlobalVariables.ServiceUrl
 					+ "/fetchmyprofile.php";
 			HttpPost httpPost1 = new HttpPost(url_select111);
 			BasicNameValuePair UserNumberBasicNameValuePair1 = new BasicNameValuePair(
@@ -1574,7 +1575,7 @@ public class MyProfile extends Activity {
 				mainbmp = null;
 			}
 
-			String url_select = checkurl.GetServiceUrl() + "/imageupload.php";
+			String url_select = GlobalVariables.ServiceUrl + "/imageupload.php";
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
@@ -1617,7 +1618,7 @@ public class MyProfile extends Activity {
 
 			} else {
 
-				String urldisplay = checkurl.GetServiceUrl()
+				String urldisplay = GlobalVariables.ServiceUrl
 						+ "/ProfileImages/" + imageuploadresp.trim();
 				mIcon11 = null;
 				String imgString = null;

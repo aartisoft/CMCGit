@@ -66,6 +66,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -166,7 +167,7 @@ public class ContactsMyClub extends Activity {
 
 	String imagenameresp;
 
-	UrlConstant checkurl;
+	
 	RelativeLayout contactsmyclubrl;
 	Tracker tracker;
 
@@ -220,7 +221,7 @@ public class ContactsMyClub extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		Bundle extras = getIntent().getExtras();
 		fromcome = extras.getString("fromcome");
@@ -1623,7 +1624,7 @@ public class ContactsMyClub extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1718,7 +1719,7 @@ public class ContactsMyClub extends Activity {
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 			HttpPost httpPost11 = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
@@ -1755,7 +1756,7 @@ public class ContactsMyClub extends Activity {
 			if (imagenameresp == null) {
 
 			} else {
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 				String urldisplay = url1.toString().trim();
 				mIcon11 = null;
@@ -2034,7 +2035,7 @@ public class ContactsMyClub extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/openacab.php";
+			String url_select = GlobalVariables.ServiceUrl + "/openacab.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", CabId);
@@ -2245,7 +2246,7 @@ public class ContactsMyClub extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/Store_Club.php";
+			String url_select = GlobalVariables.ServiceUrl + "/Store_Club.php";
 			HttpPost httpPost = new HttpPost(url_select);
 
 			BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair(
@@ -2330,7 +2331,7 @@ public class ContactsMyClub extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/referFriendRideStepOne.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
@@ -2416,7 +2417,7 @@ public class ContactsMyClub extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/ownerinvitefriends.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(

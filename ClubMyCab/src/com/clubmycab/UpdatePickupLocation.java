@@ -50,6 +50,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -133,7 +134,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 	TextView joinpoollocationtext;
 
 	ProgressDialog onedialog;
-	UrlConstant checkurl;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +166,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 			return;
 		}
 
-		checkurl = new UrlConstant();
+		
 
 		Intent intent = getIntent();
 		CabId = intent.getStringExtra("CabId");
@@ -826,7 +827,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/ShowMemberOnMap.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
@@ -897,7 +898,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 		memimage = (ImageView) dialog.findViewById(R.id.memimage);
 
 		// show The Image
-		String url1 = checkurl.GetServiceUrl() + "/ProfileImages/" + mimgname;
+		String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/" + mimgname;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new DownloadImageTask().executeOnExecutor(
@@ -992,7 +993,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/updatelocationpool.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
@@ -1112,7 +1113,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/checkpoolalreadyjoined.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(

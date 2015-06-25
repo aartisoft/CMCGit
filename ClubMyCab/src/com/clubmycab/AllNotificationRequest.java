@@ -46,6 +46,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -105,7 +106,7 @@ public class AllNotificationRequest extends Activity {
 	String latlongmap;
 
 	String readunreadnotiresp;
-	UrlConstant checkurl;
+	
 
 	RelativeLayout allnotificationrl;
 	Tracker tracker;
@@ -165,7 +166,7 @@ public class AllNotificationRequest extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -544,7 +545,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/changenotificationstatus.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -608,7 +609,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/changenotificationstatusasread.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1234,7 +1235,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchMyAllNotification.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1319,7 +1320,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/swipetodeletenotification.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1551,7 +1552,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/GoToPool.php";
+			String url_select = GlobalVariables.ServiceUrl + "/GoToPool.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", cid);
@@ -1664,7 +1665,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/referFriendRideStepTwo.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair RefIdBasicNameValuePair = new BasicNameValuePair(
@@ -1773,7 +1774,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/referFriendStepTwo.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair RefIdBasicNameValuePair = new BasicNameValuePair(
@@ -1895,7 +1896,7 @@ public class AllNotificationRequest extends Activity {
 		public void connection() throws Exception {
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/getCabs.php";
+			String url_select = GlobalVariables.ServiceUrl + "/getCabs.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIDNameValuePair = new BasicNameValuePair(
 					"CabID", cabID);
@@ -2040,7 +2041,7 @@ public class AllNotificationRequest extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/UpdateNotificationStatusToRead.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair rnumBasicNameValuePair = new BasicNameValuePair(

@@ -74,6 +74,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -192,7 +193,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 	Address fAddress, tAddress;
 
-	UrlConstant checkurl;
+	
 	RelativeLayout inviterl;
 	Tracker tracker;
 
@@ -294,7 +295,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		flagchk = true;
 
@@ -1938,7 +1939,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
@@ -2116,7 +2117,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/FetchMyPools.php";
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair1 = new BasicNameValuePair(
@@ -2210,7 +2211,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 
 			HttpPost httpPost11 = new HttpPost(url_select);
@@ -2248,7 +2249,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			if (imagenameresp == null) {
 
 			} else {
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 				String urldisplay = url1.toString().trim();
 				mIcon11 = null;
@@ -2951,7 +2952,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 		public void connection() throws Exception {
 
 			HttpClient httpclient = new DefaultHttpClient();
-			String url_select11 = checkurl.GetServiceUrl()
+			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/fetchmypoolshistory.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 

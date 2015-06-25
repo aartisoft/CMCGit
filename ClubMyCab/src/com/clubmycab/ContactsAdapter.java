@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.clubmycab.utility.GlobalVariables;
 
 public class ContactsAdapter extends BaseAdapter {
 
@@ -33,7 +34,7 @@ public class ContactsAdapter extends BaseAdapter {
 	private List<ContactObject> mainDataList = null;
 	private ArrayList<ContactObject> arraylist;
 	private AQuery aq;
-	UrlConstant checkurl;
+	
 	
 	private String filterString1, filterString2;
 	private boolean isThreadOn;
@@ -46,7 +47,7 @@ public class ContactsAdapter extends BaseAdapter {
 		this.arraylist = new ArrayList<ContactObject>();
 		this.arraylist.addAll(mainDataList);
 		aq = new AQuery(mContext);
-		checkurl = new UrlConstant();
+		
 		
 		filterString1 = "";
 		filterString2 = "";
@@ -121,7 +122,7 @@ public class ContactsAdapter extends BaseAdapter {
 					.equalsIgnoreCase("91089108")) {
 
 				Log.d("Appuserimage", "Appuserimage");
-				String url = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ mainDataList.get(position).getAppUserimagename();
 				aq.id(holder.image).image(url, true, true);
 			} else {

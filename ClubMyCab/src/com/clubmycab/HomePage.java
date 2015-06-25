@@ -57,6 +57,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -105,8 +106,6 @@ public class HomePage extends Activity {
 	TextView unreadnoticount;
 
 	Bitmap mIcon11 = null;
-
-	UrlConstant checkurl;
 
 	RelativeLayout homepagerl;
 
@@ -178,7 +177,7 @@ public class HomePage extends Activity {
 			}
 		});
 
-		checkurl = new UrlConstant();
+		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -902,7 +901,7 @@ public class HomePage extends Activity {
 				mainbmp = null;
 			}
 
-			String url_select = checkurl.GetServiceUrl() + "/imageupload.php";
+			String url_select = GlobalVariables.ServiceUrl + "/imageupload.php";
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
@@ -945,7 +944,7 @@ public class HomePage extends Activity {
 
 			} else {
 
-				String urldisplay = checkurl.GetServiceUrl()
+				String urldisplay = GlobalVariables.ServiceUrl
 						+ "/ProfileImages/" + imageuploadresp.trim();
 				mIcon11 = null;
 				String imgString = null;
@@ -1065,7 +1064,7 @@ public class HomePage extends Activity {
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
 
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/FetchUnreadNotificationCount.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
@@ -1161,7 +1160,7 @@ public class HomePage extends Activity {
 
 			// /////////////
 			HttpClient httpClient11 = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchimagename.php";
 			HttpPost httpPost11 = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
@@ -1199,7 +1198,7 @@ public class HomePage extends Activity {
 
 			} else {
 
-				String url1 = checkurl.GetServiceUrl() + "/ProfileImages/"
+				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
 						+ imagenameresp;
 				String urldisplay = url1.toString().trim();
 				mIcon11 = null;
@@ -1271,7 +1270,7 @@ public class HomePage extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/fetchmyprofile.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -1437,7 +1436,7 @@ public class HomePage extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl() + "/Fetch_Club.php";
+			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", MobileNumber.toString().trim());

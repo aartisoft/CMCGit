@@ -39,6 +39,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -52,8 +53,7 @@ public class LocationShareService extends Service implements LocationListener {
 	long timetilvalue;
 	LatLng destinationlatlong;
 	long destinationtimevalue;
-
-	UrlConstant checkurl = new UrlConstant();
+	
 	// final Handler handler = new Handler();
 	private LocationManager locationManager;
 	// private LocationListener locListener = new MyLocationListener();
@@ -297,7 +297,7 @@ public class LocationShareService extends Service implements LocationListener {
 
 				// Connect to google.com
 				HttpClient httpClient = new DefaultHttpClient();
-				String url_select = checkurl.GetServiceUrl()
+				String url_select = GlobalVariables.ServiceUrl
 						+ "/sharelocationtomembers.php";
 				HttpPost httpPost = new HttpPost(url_select);
 				BasicNameValuePair MembersNumberBasicNameValuePair = new BasicNameValuePair(
@@ -506,7 +506,7 @@ public class LocationShareService extends Service implements LocationListener {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = checkurl.GetServiceUrl()
+			String url_select = GlobalVariables.ServiceUrl
 					+ "/sharelocationtomembers.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MembersNumberBasicNameValuePair = new BasicNameValuePair(

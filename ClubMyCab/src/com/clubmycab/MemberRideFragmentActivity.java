@@ -49,6 +49,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -62,7 +63,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,9 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
+import com.clubmycab.ui.ContactsToInviteActivity;
+import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.UpdatePickupLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -91,19 +95,20 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class CheckPool extends FragmentActivity implements
+public class MemberRideFragmentActivity extends FragmentActivity implements
 		FareCalculatorInterface {
-
-	String CompletePageResponse;
 
 	String CabId;
 	String MobileNumber;
@@ -122,17 +127,13 @@ public class CheckPool extends FragmentActivity implements
 	String Seat_Status;
 	String Distance;
 	String OpenTime;
-
 	String CabStatus;
-
 	String BookingRefNo;
 	String DriverName;
 	String DriverNumber;
 	String CarNumber;
 
 	String comefrom;
-
-	GoogleMap checkpoolmap;
 
 	ArrayList<String> steps = new ArrayList<String>();
 	ArrayList<String> Summary = new ArrayList<String>();
@@ -146,11 +147,21 @@ public class CheckPool extends FragmentActivity implements
 
 	ArrayList<PolylineOptions> rectlinesarr = new ArrayList<PolylineOptions>();
 
+	// boolean markerClicked;
+	// Marker memberlocationmarker;
+
+	String memberlocationaddress;
+	LatLng memberlocationlatlong;
+
 	String FullName;
 	String MemberNumberstr;
 
+	String joinpoolresponse;
 	String showmembersresp;
-	String updatestatusresp;
+	String checkpoolalreadyjoinresp;
+	String droppoolresp;
+	String updatelocationpoolresp;
+	String sendcustommessagefrompopupresp;
 
 	ArrayList<String> ShowMemberName = new ArrayList<String>();
 	ArrayList<String> ShowMemberNumber = new ArrayList<String>();
@@ -159,21 +170,40 @@ public class CheckPool extends FragmentActivity implements
 	ArrayList<String> ShowMemberImageName = new ArrayList<String>();
 	ArrayList<String> ShowMemberStatus = new ArrayList<String>();
 
-	LinearLayout ownermessage;
-	LinearLayout ownerinvite;
-	LinearLayout ownerbookacab;
-	LinearLayout ownercancel;
+	GoogleMap joinpoolmap;
+	TextView joinpoolchangelocationtext;
 
-	String ownercancelpoolresp;
-	CircularImageView memimage;
+	LinearLayout beforejoinpoolll;
+	LinearLayout afterjoinpoolll;
 
-	String dropuserfrompopupresp;
-
-	String sendcustommessagefrompopupresp;
-
+	// // before pooljoin
+	LinearLayout joinpoolbtn;
+	LinearLayout refermorefriends;
 	ImageView mydetailbtn;
 	ImageView mycalculatorbtn;
+
+	// //after pooljoin
+	LinearLayout updatelocation;
+	LinearLayout messagetoall;
+	LinearLayout refermorefriendsafterpool;
+	LinearLayout tripcompleted;
+	LinearLayout droppool;
+
+	CircularImageView memimage;
+
+	String usermemname = null;
+	String usermemnumber = null;
+	String usermemlocadd = null;
+	String usermemloclatlong = null;
+	String usermemimagename = null;
+	String usermemst = null;
+
+	String CompletePageResponse;
+
+	ImageView locationmarker;
 	ProgressDialog onedialog;
+
+	Marker mylocationmarker;
 
 	ArrayList<String> namearray = new ArrayList<String>();
 	ArrayList<String> phonenoarray = new ArrayList<String>();
@@ -182,9 +212,7 @@ public class CheckPool extends FragmentActivity implements
 	ArrayList<String> namearraynew = new ArrayList<String>();
 	ArrayList<String> phonenoarraynew = new ArrayList<String>();
 	ArrayList<String> imagearraynew = new ArrayList<String>();
-
-	RelativeLayout contexthelpcheckpool; 
-
+	
 	Tracker tracker;
 
 	private final String IPADDRESS = GlobalVariables.IpAddress;
@@ -209,20 +237,18 @@ public class CheckPool extends FragmentActivity implements
 	DatabaseHandler db;
 	RelativeLayout chatlayoutmainrl;
 
-	LinearLayout checkpoolbottomtabsll;
 	boolean exceptioncheck = false;
 
 	@SuppressLint("DefaultLocale")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_check_pool);
+		setContentView(R.layout.activity_join_pool);
 
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(
-					CheckPool.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(MemberRideFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -243,11 +269,11 @@ public class CheckPool extends FragmentActivity implements
 			return;
 		}
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(CheckPool.this);
+		GoogleAnalytics analytics = GoogleAnalytics.getInstance(MemberRideFragmentActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
-		tracker.setScreenName("Owner Created Pool");
+		tracker.setScreenName("Join Pool");
 
 		Intent intent = getIntent();
 		CabId = intent.getStringExtra("CabId");
@@ -268,321 +294,43 @@ public class CheckPool extends FragmentActivity implements
 		Distance = intent.getStringExtra("Distance");
 		OpenTime = intent.getStringExtra("OpenTime");
 		CabStatus = intent.getStringExtra("CabStatus");
-
 		BookingRefNo = intent.getStringExtra("BookingRefNo");
 		DriverName = intent.getStringExtra("DriverName");
 		DriverNumber = intent.getStringExtra("DriverNumber");
 		CarNumber = intent.getStringExtra("CarNumber");
 
 		comefrom = intent.getStringExtra("comefrom");
-		Log.v("comefrom", "" + comefrom);
+		Log.d("comefrom", "" + comefrom);
 
-		Log.v("CabStatus", "" + CabStatus);
+		Log.d("CabStatus", "" + CabStatus);
 
-		checkpoolbottomtabsll = (LinearLayout) findViewById(R.id.checkpoolbottomtabsll);
+		beforejoinpoolll = (LinearLayout) findViewById(R.id.beforejoinpoolll);
+		afterjoinpoolll = (LinearLayout) findViewById(R.id.afterjoinpoolll);
 
-		if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
-			checkpoolbottomtabsll.setVisibility(View.VISIBLE);
-		} else {
-			checkpoolbottomtabsll.setVisibility(View.GONE);
-		}
+		// / before
+		mydetailbtn = (ImageView) findViewById(R.id.mydetailbtn);
 
-		ownermessage = (LinearLayout) findViewById(R.id.ownermessage);
-		ownerinvite = (LinearLayout) findViewById(R.id.ownerinvite);
-		ownerbookacab = (LinearLayout) findViewById(R.id.ownerbookacab);
-		ownercancel = (LinearLayout) findViewById(R.id.ownercancel);
+		joinpoolbtn = (LinearLayout) findViewById(R.id.joinpoolbtn);
+		refermorefriends = (LinearLayout) findViewById(R.id.refermorefriends);
+
+		// / after
+		updatelocation = (LinearLayout) findViewById(R.id.updatelocation);
+
+		messagetoall = (LinearLayout) findViewById(R.id.messagetoall);
+
+		refermorefriendsafterpool = (LinearLayout) findViewById(R.id.refermorefriendsafterpool);
+
+		tripcompleted = (LinearLayout) findViewById(R.id.tripcompleted);
+
+		droppool = (LinearLayout) findViewById(R.id.droppool);
 
 		chatlayoutmainrl = (RelativeLayout) findViewById(R.id.chatlayoutmainrl);
 		chatlayoutmainrl.setVisibility(View.GONE);
 
-		mydetailbtn = (ImageView) findViewById(R.id.mydetailbtn);
-		mydetailbtn.setOnClickListener(new View.OnClickListener() {
+		memberlocationaddress = "";
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				joinPoolPopUp(FromShortName, ToShortName, TravelDate,
-						TravelTime, Seat_Status, OwnerName, OwnerImage);
-
-			}
-		});
-
-		mycalculatorbtn = (ImageView) findViewById(R.id.mycalculatorbtn);
-		mycalculatorbtn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CheckPool.this);
-				builder.setTitle("Fare Split");
-				builder.setMessage("Please enter fare to split :");
-				builder.setCancelable(false);
-				final EditText input = new EditText(CheckPool.this);
-				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.MATCH_PARENT,
-						LinearLayout.LayoutParams.MATCH_PARENT);
-				input.setLayoutParams(lp);
-				input.setInputType(InputType.TYPE_CLASS_NUMBER
-						| InputType.TYPE_NUMBER_FLAG_DECIMAL);
-				builder.setView(input);
-				builder.setPositiveButton("OK",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-
-								Double fare = 0.0;
-								if (input.getText().toString().isEmpty()) {
-									Toast.makeText(CheckPool.this,
-											"Please enter a valid fare",
-											Toast.LENGTH_LONG).show();
-								} else if (!input.getText().toString()
-										.isEmpty()) {
-									fare = Double.parseDouble(input.getText()
-											.toString());
-									if (fare <= 0.0) {
-										Toast.makeText(CheckPool.this,
-												"Please enter a valid fare",
-												Toast.LENGTH_LONG).show();
-									} else {
-										onedialog = new ProgressDialog(
-												CheckPool.this);
-										onedialog.setMessage("Please Wait...");
-										onedialog.setCancelable(false);
-										onedialog
-												.setCanceledOnTouchOutside(false);
-										onedialog.show();
-
-										InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-										im.hideSoftInputFromWindow(
-												input.getWindowToken(), 0);
-
-										if (showmembersresp
-												.equalsIgnoreCase("No Members joined yet")) {
-
-										} else {
-
-											try {
-
-												JSONObject ownerJsonObject = new JSONObject();
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
-																FromLocation);
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
-																ToLocation);
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_NAME,
-																OwnerName);
-
-												ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
-
-												for (int i = 0; i < ShowMemberName
-														.size(); i++) {
-													JSONObject memberJsonObject = new JSONObject();
-													memberJsonObject
-															.put
-
-															(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
-																	ShowMemberLocationAddress
-																			.get(i)
-																			.toString());
-
-													String[] latlong = ShowMemberLocationLatLong
-															.get(i).split(",");
-													LatLng lt = new LatLng(
-															Double.parseDouble(latlong[0]),
-															Double.parseDouble(latlong[1]));
-													memberJsonObject
-															.put
-
-															(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
-																	lt);
-
-													memberJsonObject
-															.put(FareCalculator.JSON_NAME_MEMBER_NAME,
-																	ShowMemberName
-																			.get(i)
-																			.toString());
-
-													memberArrayList
-															.add(memberJsonObject);
-												}
-
-												FareCalculator fareCalculator = new FareCalculator(
-														CheckPool.this,
-														ownerJsonObject,
-														memberArrayList);
-												fareCalculator
-														.calculateFareSplit(fare);
-
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
-
-										}
-									}
-								}
-							}
-						});
-				builder.setNegativeButton("Cancel", null);
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
-			}
-		});
-
-		ownermessage.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (ShowMemberNumber.size() > 0) {
-
-					if (!chatlayoutmainrl.isShown()) {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("Message All")
-								.setAction("Message All")
-								.setLabel("Message All").build());
-
-						chatlayoutmainrl.setVisibility(View.VISIBLE);
-					} else {
-						chatlayoutmainrl.setVisibility(View.GONE);
-					}
-
-					// Intent mainIntent = new Intent(CheckPool.this,
-					// ChatToAll.class);
-					// mainIntent.putExtra("CabId", CabId);
-					// mainIntent.putExtra("OwnerName", OwnerName);
-					// mainIntent.putExtra("OwnerMobileNumber", MobileNumber);
-					// CheckPool.this.startActivity(mainIntent);
-				} else {
-					Toast.makeText(CheckPool.this,
-							"No Members Have Joined Yet", Toast.LENGTH_SHORT)
-							.show();
-				}
-			}
-		});
-
-		ownerinvite.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (RemainingSeats.equalsIgnoreCase("0")) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							CheckPool.this);
-					builder.setMessage("The ride is already full");
-					builder.setCancelable(false);
-					builder.setNegativeButton("OK", null);
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
-				} else {
-					Intent mainIntent = new Intent(CheckPool.this,
-							ContactsMyClub.class);
-					mainIntent.putExtra("fromcome", "checkpool");
-					mainIntent.putExtra("CabId", CabId);
-					mainIntent.putExtra("MobileNumber", MobileNumber);
-					mainIntent.putExtra("OwnerName", OwnerName);
-					mainIntent.putExtra("FromLocation", FromLocation);
-					mainIntent.putExtra("ToLocation", ToLocation);
-					mainIntent.putExtra("TravelDate", TravelDate);
-					mainIntent.putExtra("TravelTime", TravelTime);
-					mainIntent.putExtra("Seats", Seats);
-					mainIntent.putExtra("fromshortname", FromShortName);
-					mainIntent.putExtra("toshortname", ToShortName);
-					startActivityForResult(mainIntent, 500);
-					overridePendingTransition(R.anim.slide_in_right,
-							R.anim.slide_out_left);
-				}
-			}
-		});
-
-		ownerbookacab.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!BookingRefNo.isEmpty()
-						&& !BookingRefNo.equalsIgnoreCase("null")) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							CheckPool.this);
-					builder.setMessage("A cab has already been booked for the ride");
-					builder.setCancelable(false);
-					builder.setNegativeButton("OK", null);
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
-				} else {
-					String StartAddLatLng = startaddlatlng.get(0).latitude
-							+ "," + startaddlatlng.get(0).longitude;
-					String EndAddLatLng = endaddlatlng.get(0).latitude + ","
-							+ endaddlatlng.get(0).longitude;
-
-					final Intent mainIntent = new Intent(CheckPool.this,
-							BookaCab.class);
-					mainIntent.putExtra("StartAddLatLng", StartAddLatLng);
-					mainIntent.putExtra("EndAddLatLng", EndAddLatLng);
-					mainIntent.putExtra("CabId", CabId);
-					mainIntent.putExtra("FromShortName", FromShortName);
-					mainIntent.putExtra("ToShortName", ToShortName);
-					mainIntent.putExtra("TravelDate", TravelDate);
-					mainIntent.putExtra("TravelTime", TravelTime);
-					CheckPool.this.startActivity(mainIntent);
-				}
-			}
-		});
-
-		ownercancel.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CheckPool.this);
-				builder.setMessage("Are you sure you want to cancel the ride?");
-				builder.setCancelable(true);
-				builder.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-
-								tracker.send(new HitBuilders.EventBuilder()
-										.setCategory("Cancel Ride")
-										.setAction("Cancel Ride")
-										.setLabel("Cancel Ride").build());
-
-								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-									new ConnectionTaskForownercancelpool()
-											.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-								} else {
-									new ConnectionTaskForownercancelpool()
-											.execute();
-								}
-							}
-						});
-				builder.setNegativeButton("NO",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-							}
-						});
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
-			}
-		});
+		locationmarker = (ImageView) findViewById(R.id.locationmarker);
+		locationmarker.setVisibility(View.GONE);
 
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
@@ -606,9 +354,8 @@ public class CheckPool extends FragmentActivity implements
 					onSendMsg(text);
 					editTextMsg.setText("");
 				} else {
-					Toast.makeText(CheckPool.this,
-							"Type some message to send!", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(MemberRideFragmentActivity.this, "Type some message to send!",
+							Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -636,6 +383,458 @@ public class CheckPool extends FragmentActivity implements
 
 		// //////
 
+		joinpoolbtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (locationmarker.getVisibility() == View.VISIBLE) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage(memberlocationaddress.toUpperCase());
+					builder.setCancelable(false);
+					builder.setPositiveButton("Confirm",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+
+									onedialog = new ProgressDialog(
+											MemberRideFragmentActivity.this);
+									onedialog.setMessage("Please Wait...");
+									onedialog.setCancelable(false);
+									onedialog.setCanceledOnTouchOutside(false);
+									onedialog.show();
+
+									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+										new ConnectionTaskForJoiningapool()
+												.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+									} else {
+										new ConnectionTaskForJoiningapool()
+												.execute();
+									}
+
+								}
+							});
+					builder.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+								}
+							});
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+				} else {
+					Toast.makeText(
+							MemberRideFragmentActivity.this,
+							"Please select your location to join the ride, by clicking on map",
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		refermorefriends.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (RemainingSeats.equalsIgnoreCase("0")) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("The ride is already full");
+					builder.setCancelable(false);
+					builder.setNegativeButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+				} else {
+					Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
+							ContactsToInviteActivity.class);
+					mainIntent.putExtra("fromcome", "joinpool");
+					mainIntent.putExtra("CabId", CabId);
+					mainIntent.putExtra("MobileNumber", MobileNumber);
+					mainIntent.putExtra("OwnerName", OwnerName);
+					mainIntent.putExtra("FromLocation", FromLocation);
+					mainIntent.putExtra("ToLocation", ToLocation);
+					mainIntent.putExtra("TravelDate", TravelDate);
+					mainIntent.putExtra("TravelTime", TravelTime);
+					mainIntent.putExtra("Seats", Seats);
+					mainIntent.putExtra("fromshortname", FromShortName);
+					mainIntent.putExtra("toshortname", ToShortName);
+					startActivityForResult(mainIntent, 500);
+					overridePendingTransition(R.anim.slide_in_right,
+							R.anim.slide_out_left);
+				}
+			}
+		});
+
+		// /////////
+
+		updatelocation.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
+						UpdatePickupLocationFragmentActivity.class);
+				mainIntent.putExtra("CabId", CabId);
+				mainIntent.putExtra("MobileNumber", MobileNumber);
+				mainIntent.putExtra("OwnerName", OwnerName);
+				mainIntent.putExtra("FromLocation", FromLocation);
+				mainIntent.putExtra("ToLocation", ToLocation);
+				mainIntent.putExtra("TravelDate", TravelDate);
+				mainIntent.putExtra("TravelTime", TravelTime);
+				mainIntent.putExtra("Seats", Seats);
+				mainIntent.putExtra("RemainingSeats", RemainingSeats);
+				mainIntent.putExtra("Seat_Status", Seat_Status);
+				mainIntent.putExtra("Distance", Distance);
+				mainIntent.putExtra("OpenTime", OpenTime);
+				mainIntent.putExtra("FromShortName", FromShortName);
+				mainIntent.putExtra("ToShortName", ToShortName);
+
+				mainIntent.putExtra("CompletePageResponse",
+						CompletePageResponse);
+				mainIntent.putExtra("checkpoolalreadyjoinresp",
+						checkpoolalreadyjoinresp);
+
+				startActivityForResult(mainIntent, 1);
+
+			}
+		});
+
+		tripcompleted.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (!BookingRefNo.isEmpty()
+						&& !BookingRefNo.equalsIgnoreCase("null")) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("A cab has already been booked for the ride");
+					builder.setCancelable(false);
+					builder.setNegativeButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+				} else {
+					String StartAddLatLng = startaddlatlng.get(0).latitude
+							+ "," + startaddlatlng.get(0).longitude;
+					String EndAddLatLng = endaddlatlng.get(0).latitude + ","
+							+ endaddlatlng.get(0).longitude;
+
+					final Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
+							BookaCabFragmentActivity.class);
+					mainIntent.putExtra("StartAddLatLng", StartAddLatLng);
+					mainIntent.putExtra("EndAddLatLng", EndAddLatLng);
+					mainIntent.putExtra("CabId", CabId);
+					mainIntent.putExtra("FromShortName", FromShortName);
+					mainIntent.putExtra("ToShortName", ToShortName);
+					mainIntent.putExtra("TravelDate", TravelDate);
+					mainIntent.putExtra("TravelTime", TravelTime);
+					MemberRideFragmentActivity.this.startActivity(mainIntent);
+				}
+			}
+		});
+
+		refermorefriendsafterpool
+				.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						if (RemainingSeats.equalsIgnoreCase("0")) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									MemberRideFragmentActivity.this);
+							builder.setMessage("The ride is already full");
+							builder.setCancelable(false);
+							builder.setNegativeButton("OK", null);
+							AlertDialog dialog = builder.show();
+							TextView messageText = (TextView) dialog
+									.findViewById(android.R.id.message);
+							messageText.setGravity(Gravity.CENTER);
+							dialog.show();
+						} else {
+							Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
+									ContactsToInviteActivity.class);
+							mainIntent.putExtra("fromcome", "joinpool");
+							mainIntent.putExtra("CabId", CabId);
+							mainIntent.putExtra("MobileNumber", MobileNumber);
+							mainIntent.putExtra("OwnerName", OwnerName);
+							mainIntent.putExtra("FromLocation", FromLocation);
+							mainIntent.putExtra("ToLocation", ToLocation);
+							mainIntent.putExtra("TravelDate", TravelDate);
+							mainIntent.putExtra("TravelTime", TravelTime);
+							mainIntent.putExtra("Seats", Seats);
+							mainIntent.putExtra("fromshortname", FromShortName);
+							mainIntent.putExtra("toshortname", ToShortName);
+							startActivityForResult(mainIntent, 500);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
+						}
+					}
+				});
+
+		mydetailbtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				joinPoolPopUp(FromShortName, ToShortName, TravelDate,
+						TravelTime, Seat_Status, OwnerName, OwnerImage);
+
+			}
+		});
+
+		mycalculatorbtn = (ImageView) findViewById(R.id.mycalculatorbtn);
+		mycalculatorbtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						MemberRideFragmentActivity.this);
+				builder.setTitle("Fare Split");
+				builder.setMessage("Please enter fare to split :");
+				builder.setCancelable(false);
+				final EditText input = new EditText(MemberRideFragmentActivity.this);
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.MATCH_PARENT,
+						LinearLayout.LayoutParams.MATCH_PARENT);
+				input.setLayoutParams(lp);
+				input.setInputType(InputType.TYPE_CLASS_NUMBER
+						| InputType.TYPE_NUMBER_FLAG_DECIMAL);
+				builder.setView(input);
+				builder.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+
+								Double fare = 0.0;
+								if (input.getText().toString().isEmpty()) {
+									Toast.makeText(MemberRideFragmentActivity.this,
+											"Please enter a valid fare",
+											Toast.LENGTH_LONG).show();
+								} else if (!input.getText().toString()
+										.isEmpty()) {
+									fare = Double.parseDouble(input.getText()
+											.toString());
+									if (fare <= 0.0) {
+										Toast.makeText(MemberRideFragmentActivity.this,
+												"Please enter a valid fare",
+												Toast.LENGTH_LONG).show();
+									} else {
+										onedialog = new ProgressDialog(
+												MemberRideFragmentActivity.this);
+										onedialog.setMessage("Please Wait...");
+										onedialog.setCancelable(false);
+										onedialog
+												.setCanceledOnTouchOutside(false);
+										onedialog.show();
+
+										InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+										im.hideSoftInputFromWindow(
+												input.getWindowToken(), 0);
+
+										if (checkpoolalreadyjoinresp
+												.equalsIgnoreCase("fresh pool")) {
+
+										} else {
+
+											try {
+												JSONObject ownerJsonObject = new JSONObject();
+												ownerJsonObject
+														.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
+																FromLocation);
+												ownerJsonObject
+														.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
+																ToLocation);
+												ownerJsonObject
+														.put(FareCalculator.JSON_NAME_OWNER_NAME,
+																OwnerName);
+
+												ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
+
+												JSONObject memberJsonObject = new JSONObject();
+												memberJsonObject
+														.put(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+																usermemlocadd);
+
+												String[] latlong = usermemloclatlong
+														.split(",");
+												LatLng lt = new LatLng(
+														Double.parseDouble(latlong[0]),
+														Double.parseDouble(latlong[1]));
+												memberJsonObject
+														.put(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+																lt);
+
+												memberJsonObject
+														.put(FareCalculator.JSON_NAME_MEMBER_NAME,
+																usermemname);
+
+												memberArrayList
+														.add(memberJsonObject);
+
+												if (showmembersresp
+														.equalsIgnoreCase("No Members joined yet")) {
+
+												} else {
+
+													try {
+														for (int i = 0; i < ShowMemberName
+																.size(); i++) {
+															memberJsonObject = new JSONObject();
+															memberJsonObject
+																	.put
+
+																	(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+
+																	ShowMemberLocationAddress
+
+																	.get(i)
+
+																	.toString());
+
+															latlong = ShowMemberLocationLatLong
+																	.get(i)
+																	.split(",");
+															lt = new LatLng(
+																	Double.parseDouble(latlong[0]),
+																	Double.parseDouble(latlong
+
+																	[1]));
+															memberJsonObject
+																	.put
+
+																	(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+																			lt);
+
+															memberJsonObject
+																	.put
+
+																	(FareCalculator.JSON_NAME_MEMBER_NAME,
+																			ShowMemberName
+
+																					.get(i)
+
+																					.toString());
+
+															memberArrayList
+																	.add(memberJsonObject);
+														}
+
+													} catch (Exception e) {
+														e.printStackTrace();
+													}
+
+												}
+
+												FareCalculator fareCalculator = new FareCalculator(
+														MemberRideFragmentActivity.this,
+														ownerJsonObject,
+														memberArrayList);
+												fareCalculator
+														.calculateFareSplit(fare);
+
+											} catch (Exception e) {
+												// TODO Auto-generated catch
+												// block
+												e.printStackTrace();
+											}
+										}
+									}
+								}
+							}
+						});
+				builder.setNegativeButton("Cancel", null);
+				AlertDialog dialog = builder.show();
+				TextView messageText = (TextView) dialog
+						.findViewById(android.R.id.message);
+				messageText.setGravity(Gravity.CENTER);
+				dialog.show();
+			}
+		});
+
+		droppool.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						MemberRideFragmentActivity.this);
+				builder.setMessage("Are you sure you want to leave this ride?");
+				builder.setCancelable(true);
+				builder.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+
+								tracker.send(new HitBuilders.EventBuilder()
+										.setCategory("Leave Ride")
+										.setAction("Leave Ride")
+										.setLabel("Leave Ride").build());
+
+								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+									new ConnectionTaskFordroppool()
+											.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+								} else {
+									new ConnectionTaskFordroppool().execute();
+								}
+
+							}
+						});
+				builder.setNegativeButton("NO",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+							}
+						});
+				AlertDialog dialog = builder.show();
+				TextView messageText = (TextView) dialog
+						.findViewById(android.R.id.message);
+				messageText.setGravity(Gravity.CENTER);
+				dialog.show();
+			}
+		});
+
+		messagetoall.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Log.d("MemberNumber", "" + MemberNumber);
+
+				if (!chatlayoutmainrl.isShown()) {
+
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("Message All")
+							.setAction("Message All").setLabel("Message All")
+							.build());
+
+					chatlayoutmainrl.setVisibility(View.VISIBLE);
+				} else {
+					chatlayoutmainrl.setVisibility(View.GONE);
+				}
+
+				// Intent mainIntent = new Intent(CheckPool.this,
+				// ChatToAll.class);
+				// mainIntent.putExtra("CabId", CabId);
+				// mainIntent.putExtra("OwnerName", OwnerName);
+				// mainIntent.putExtra("OwnerMobileNumber", MobileNumber);
+				// CheckPool.this.startActivity(mainIntent);
+			}
+		});
+
 		// Getting Google Play availability status
 		int status = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(getBaseContext());
@@ -651,17 +850,17 @@ public class CheckPool extends FragmentActivity implements
 
 		} else {
 
-			onedialog = new ProgressDialog(CheckPool.this);
+			onedialog = new ProgressDialog(MemberRideFragmentActivity.this);
 			onedialog.setMessage("Please Wait...");
 			onedialog.setCancelable(false);
 			onedialog.setCanceledOnTouchOutside(false);
 			onedialog.show();
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForDirections()
+				new ConnectionTaskForcheckpoolalreadyjoined()
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
-				new ConnectionTaskForDirections().execute();
+				new ConnectionTaskForcheckpoolalreadyjoined().execute();
 			}
 
 		}
@@ -669,7 +868,7 @@ public class CheckPool extends FragmentActivity implements
 		// /// For contacts list
 		Cursor cursor = null;
 		try {
-			cursor = CheckPool.this.getContentResolver().query(
+			cursor = MemberRideFragmentActivity.this.getContentResolver().query(
 					Phone.CONTENT_URI, null, null, null, null);
 			int nameIdx = cursor.getColumnIndex(Phone.DISPLAY_NAME);
 			int phoneNumberIdx = cursor.getColumnIndex(Phone.NUMBER);
@@ -692,9 +891,6 @@ public class CheckPool extends FragmentActivity implements
 						phonesub = phoneStr;
 					}
 
-					if (phonesub.equalsIgnoreCase("9920981334")) {
-						Log.v("phonesub", "" + phonesub);
-					}
 					phonenoarray.add(phonesub);
 
 					imagearray.add(cursor.getString(imageIdx));
@@ -702,13 +898,13 @@ public class CheckPool extends FragmentActivity implements
 
 			} while (cursor.moveToNext());
 
-			Log.e("name", "" + namearray);
-			Log.e("phoneNumber", "" + phonenoarray);
-			Log.e("imagearray", "" + imagearray);
+			Log.d("name", "" + namearray);
+			Log.d("phoneNumber", "" + phonenoarray);
+			Log.d("imagearray", "" + imagearray);
 
-			Log.e("name count", "" + namearray.size());
-			Log.e("phoneNumber count", "" + phonenoarray.size());
-			Log.e("imagearray count", "" + imagearray.size());
+			Log.d("name count", "" + namearray.size());
+			Log.d("phoneNumber count", "" + phonenoarray.size());
+			Log.d("imagearray count", "" + imagearray.size());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -730,39 +926,13 @@ public class CheckPool extends FragmentActivity implements
 			}
 		}
 
-		Log.e("namearraynew", "" + namearraynew);
-		Log.e("phonenoarraynew", "" + phonenoarraynew);
-		Log.e("imagearraynew", "" + imagearraynew);
+		Log.d("namearraynew", "" + namearraynew);
+		Log.d("phonenoarraynew", "" + phonenoarraynew);
+		Log.d("imagearraynew", "" + imagearraynew);
 
-		Log.e("namearraynew count", "" + namearraynew.size());
-		Log.e("phonenoarraynew count", "" + phonenoarraynew.size());
-		Log.e("imagearraynew count", "" + imagearraynew.size());
-
-		contexthelpcheckpool = (RelativeLayout) findViewById(R.id.contexthelpcheckpool);
-
-		SharedPreferences mPrefs1 = getSharedPreferences("ContextHelp", 0);
-		String whichtimeforcheckpool = mPrefs1.getString(
-				"whichtimeforcheckpool", "");
-
-		if (whichtimeforcheckpool.isEmpty() || whichtimeforcheckpool == null
-				|| whichtimeforcheckpool.equalsIgnoreCase("")) {
-			contexthelpcheckpool.setVisibility(View.VISIBLE);
-		}
-
-		contexthelpcheckpool.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				contexthelpcheckpool.setVisibility(View.GONE);
-
-				SharedPreferences sharedPreferences = getSharedPreferences(
-						"ContextHelp", 0);
-				SharedPreferences.Editor editor = sharedPreferences.edit();
-				editor.putString("whichtimeforcheckpool", "second");
-				editor.commit();
-			}
-		});
+		Log.d("namearraynew count", "" + namearraynew.size());
+		Log.d("phonenoarraynew count", "" + phonenoarraynew.size());
+		Log.d("imagearraynew count", "" + imagearraynew.size());
 
 		if (comefrom != null) {
 
@@ -784,6 +954,119 @@ public class CheckPool extends FragmentActivity implements
 		}
 	}
 
+	// ///////////////////////
+	// ///////
+
+	private class ConnectionTaskForcheckpoolalreadyjoined extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectioncheckpoolalreadyjoined mAuth1 = new AuthenticateConnectioncheckpoolalreadyjoined();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+
+				if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
+					beforejoinpoolll.setVisibility(View.VISIBLE);
+					afterjoinpoolll.setVisibility(View.GONE);
+				} else {
+					beforejoinpoolll.setVisibility(View.GONE);
+					afterjoinpoolll.setVisibility(View.GONE);
+				}
+			} else {
+
+				if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
+					afterjoinpoolll.setVisibility(View.VISIBLE);
+					beforejoinpoolll.setVisibility(View.GONE);
+				} else {
+					beforejoinpoolll.setVisibility(View.GONE);
+					afterjoinpoolll.setVisibility(View.GONE);
+				}
+			}
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForDirections()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				new ConnectionTaskForDirections().execute();
+			}
+
+		}
+	}
+
+	public class AuthenticateConnectioncheckpoolalreadyjoined {
+
+		public AuthenticateConnectioncheckpoolalreadyjoined() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/checkpoolalreadyjoined.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+					"CabId", CabId);
+			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
+					"MemberNumber", MemberNumberstr);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(MemberNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				checkpoolalreadyjoinresp = stringBuilder.append(
+						bufferedStrChunk).toString();
+			}
+
+			Log.d("checkpoolalreadyjoinresp", "" + stringBuilder.toString());
+		}
+	}
+
 	// ///////
 
 	private class ConnectionTaskForDirections extends
@@ -791,6 +1074,7 @@ public class CheckPool extends FragmentActivity implements
 
 		@Override
 		protected void onPreExecute() {
+
 		}
 
 		@Override
@@ -811,7 +1095,7 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -877,16 +1161,65 @@ public class CheckPool extends FragmentActivity implements
 				}
 			}
 
-			checkpoolmap = ((SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.checkpoolmap)).getMap();
+			joinpoolmap = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.joinpoolmap)).getMap();
 
-			// Enabling MyLocation Layer of Google Map
-			checkpoolmap.setMyLocationEnabled(true);
+			joinpoolmap.setMyLocationEnabled(true);
+
+			joinpoolchangelocationtext = (TextView) findViewById(R.id.joinpoolchangelocationtext);
+			joinpoolchangelocationtext.setTypeface(Typeface.createFromAsset(
+					getAssets(), "NeutraText-Bold.ttf"));
+
+			joinpoolmap.setOnMapClickListener(new OnMapClickListener() {
+
+				@Override
+				public void onMapClick(LatLng point) {
+
+					joinpoolmap.animateCamera(CameraUpdateFactory
+							.newLatLng(point));
+					locationmarker.setVisibility(View.VISIBLE);
+
+					memberlocationlatlong = point;
+					memberlocationaddress = getAddress(MemberRideFragmentActivity.this,
+							point.latitude, point.longitude);
+
+					Log.d("memberlocationlatlong", "" + memberlocationlatlong);
+					Log.d("memberlocationaddress", "" + memberlocationaddress);
+
+					joinpoolchangelocationtext.setVisibility(View.VISIBLE);
+					joinpoolchangelocationtext.setText(memberlocationaddress);
+
+					joinpoolmap
+							.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+								@Override
+								public void onCameraChange(
+										final CameraPosition cameraPosition) {
+
+									LatLng mapcenter = cameraPosition.target;
+
+									memberlocationlatlong = mapcenter;
+									memberlocationaddress = getAddress(
+											MemberRideFragmentActivity.this, mapcenter.latitude,
+											mapcenter.longitude);
+
+									Log.d("memberlocationlatlong", ""
+											+ memberlocationlatlong);
+									Log.d("memberlocationaddress", ""
+											+ memberlocationaddress);
+
+									joinpoolchangelocationtext
+											.setText(memberlocationaddress);
+
+								}
+							});
+				}
+			});
 
 			LatLngBounds.Builder bc = null;
 
 			for (int i = 0; i < rectlinesarr.size(); i++) {
-				checkpoolmap.addPolyline(rectlinesarr.get(i));
+				joinpoolmap.addPolyline(rectlinesarr.get(i));
 
 				List<LatLng> points = rectlinesarr.get(i).getPoints();
 
@@ -897,17 +1230,17 @@ public class CheckPool extends FragmentActivity implements
 				}
 			}
 
-			checkpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
 					bc.build(), 50));
 
-			checkpoolmap.addMarker(new MarkerOptions()
+			joinpoolmap.addMarker(new MarkerOptions()
 					.position(startaddlatlng.get(0))
 					.title(startaddress.get(0))
 					.snippet("start")
 					.icon(BitmapDescriptorFactory
 							.fromResource(R.drawable.start)));
 
-			checkpoolmap
+			joinpoolmap
 					.addMarker(new MarkerOptions()
 							.position(endaddlatlng.get(0))
 							.title(endaddress.get(0))
@@ -933,17 +1266,6 @@ public class CheckPool extends FragmentActivity implements
 		}
 
 		public void connection() throws Exception {
-
-			steps.clear();
-			Summary.clear();
-			startaddress.clear();
-			endaddress.clear();
-			startaddlatlng.clear();
-			endaddlatlng.clear();
-			listGeopoints.clear();
-			via_waypoint.clear();
-			via_waypointstrarr.clear();
-			rectlinesarr.clear();
 
 			String source = FromLocation.replaceAll(" ", "%20");
 			String dest = ToLocation.replaceAll(" ", "%20");
@@ -1043,19 +1365,412 @@ public class CheckPool extends FragmentActivity implements
 
 			// /////
 			Log.d("Summary", "" + Summary);
-			Log.e("startaddress", "" + startaddress);
-			Log.e("endaddress", "" + endaddress);
-			Log.e("startaddlatlng", "" + startaddlatlng);
-			Log.e("endaddlatlng", "" + endaddlatlng);
+			Log.d("startaddress", "" + startaddress);
+			Log.d("endaddress", "" + endaddress);
+			Log.d("startaddlatlng", "" + startaddlatlng);
+			Log.d("endaddlatlng", "" + endaddlatlng);
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = getAddress(CheckPool.this,
+				String asd = getAddress(MemberRideFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
 			}
 			Log.d("via_waypointstrarr", "" + via_waypointstrarr);
+		}
+	}
+
+	// ///////////////////////
+	// ///////
+
+	private class ConnectionTaskForShowMembersOnMap extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionShowMembers mAuth1 = new AuthenticateConnectionShowMembers();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+
+			} else {
+
+				mycalculatorbtn.setVisibility(View.VISIBLE);
+
+				try {
+					JSONArray subArray = new JSONArray(checkpoolalreadyjoinresp);
+					for (int i = 0; i < subArray.length(); i++) {
+						try {
+							usermemname = subArray.getJSONObject(i)
+									.getString("MemberName").toString();
+							usermemnumber = subArray.getJSONObject(i)
+									.getString("MemberNumber").toString();
+							usermemlocadd = subArray.getJSONObject(i)
+									.getString("MemberLocationAddress")
+									.toString();
+							usermemloclatlong = subArray.getJSONObject(i)
+									.getString("MemberLocationlatlong")
+									.toString();
+							usermemimagename = subArray.getJSONObject(i)
+									.getString("MemberImageName").toString();
+							usermemst = subArray.getJSONObject(i)
+									.getString("Status").toString();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				String[] latlong = usermemloclatlong.split(",");
+				LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+						Double.parseDouble(latlong[1]));
+
+				mylocationmarker = joinpoolmap
+						.addMarker(new MarkerOptions()
+								.position(lt)
+								.snippet("mylocation")
+								.title(usermemlocadd)
+								.icon(BitmapDescriptorFactory
+										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+				memberlocationlatlong = lt;
+				memberlocationaddress = usermemlocadd;
+
+				locationmarker.setVisibility(View.GONE);
+				joinpoolchangelocationtext.setVisibility(View.GONE);
+
+				joinpoolmap.setOnMapClickListener(null);
+				joinpoolmap.setOnCameraChangeListener(null);
+			}
+
+			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+
+			} else {
+
+				ShowMemberName.clear();
+				ShowMemberNumber.clear();
+				ShowMemberLocationAddress.clear();
+				ShowMemberLocationLatLong.clear();
+				ShowMemberImageName.clear();
+				ShowMemberStatus.clear();
+
+				try {
+					JSONArray subArray = new JSONArray(showmembersresp);
+					for (int i = 0; i < subArray.length(); i++) {
+						try {
+							ShowMemberName.add(subArray.getJSONObject(i)
+									.getString("MemberName").toString());
+							ShowMemberNumber.add(subArray.getJSONObject(i)
+									.getString("MemberNumber").toString());
+							ShowMemberLocationAddress.add(subArray
+									.getJSONObject(i)
+									.getString("MemberLocationAddress")
+									.toString());
+							ShowMemberLocationLatLong.add(subArray
+									.getJSONObject(i)
+									.getString("MemberLocationlatlong")
+									.toString());
+							ShowMemberImageName.add(subArray.getJSONObject(i)
+									.getString("MemberImageName").toString());
+							ShowMemberStatus.add(subArray.getJSONObject(i)
+									.getString("Status").toString());
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				for (int i = 0; i < ShowMemberName.size(); i++) {
+					String[] latlong = ShowMemberLocationLatLong.get(i).split(
+							",");
+					LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+							Double.parseDouble(latlong[1]));
+					joinpoolmap
+							.addMarker(new MarkerOptions()
+									.position(lt)
+									.snippet(String.valueOf(i))
+									.title(ShowMemberLocationAddress.get(i))
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+				}
+			}
+
+			joinpoolmap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+				@Override
+				public boolean onMarkerClick(Marker arg0) {
+
+					if (arg0.getSnippet().equals("start")) {
+
+						if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
+							showAlertDialog(OwnerName, MobileNumber,
+									FromLocation, MobileNumber + ".jpg");
+						}
+
+					} else if (arg0.getSnippet().equals("end")) {
+
+						if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
+							showAlertDialog(OwnerName, MobileNumber,
+									ToLocation, MobileNumber + ".jpg");
+						}
+
+					} else if (arg0.getSnippet().equals("mylocation")) {
+
+						if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
+							showAlertDialogmylocation(usermemname,
+									usermemnumber, usermemlocadd,
+									usermemimagename);
+						}
+
+					} else {
+
+						if (checkpoolalreadyjoinresp
+								.equalsIgnoreCase("fresh pool")) {
+
+							if (CabStatus.toString().trim()
+									.equalsIgnoreCase("A")) {
+								Toast.makeText(
+										MemberRideFragmentActivity.this,
+										"Join ride to see details of other members",
+										Toast.LENGTH_LONG).show();
+							}
+
+						} else {
+
+							if (CabStatus.toString().trim()
+									.equalsIgnoreCase("A")) {
+								final Integer index = Integer.parseInt(arg0
+										.getSnippet());
+
+								showAlertDialog(ShowMemberName.get(index),
+										ShowMemberNumber.get(index),
+										ShowMemberLocationAddress.get(index),
+										ShowMemberImageName.get(index));
+							}
+						}
+
+					}
+
+					return true;
+				}
+
+			});
+
+			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+
+				joinPoolPopUp(FromShortName, ToShortName, TravelDate,
+						TravelTime, Seat_Status, OwnerName, OwnerImage);
+
+				if (RemainingSeats.equalsIgnoreCase("0")) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("The ride is already full, you can join another ride or create your own.");
+					builder.setCancelable(false);
+					builder.setNegativeButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.cancel();
+									finish();
+								}
+							});
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+
+				}
+			}
+
+			if (onedialog.isShowing()) {
+				onedialog.dismiss();
+			}
+		}
+	}
+
+	public class AuthenticateConnectionShowMembers {
+
+		public AuthenticateConnectionShowMembers() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/ShowMemberOnMap.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+					"CabId", CabId);
+			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
+					"MemberNumber", MemberNumberstr);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(MemberNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				showmembersresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("showmembersresp", "" + stringBuilder.toString());
+		}
+	}
+
+	// ///////////////////////
+	// ///////
+
+	private class ConnectionTaskForcheckpoolalreadyjoinednew extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectioncheckpoolalreadyjoinednew mAuth1 = new AuthenticateConnectioncheckpoolalreadyjoinednew();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+				beforejoinpoolll.setVisibility(View.VISIBLE);
+				afterjoinpoolll.setVisibility(View.GONE);
+			} else {
+				afterjoinpoolll.setVisibility(View.VISIBLE);
+				beforejoinpoolll.setVisibility(View.GONE);
+			}
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForDirectionsnew()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				new ConnectionTaskForDirectionsnew().execute();
+			}
+
+		}
+	}
+
+	public class AuthenticateConnectioncheckpoolalreadyjoinednew {
+
+		public AuthenticateConnectioncheckpoolalreadyjoinednew() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/checkpoolalreadyjoined.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+					"CabId", CabId);
+			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
+					"MemberNumber", MemberNumberstr);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(MemberNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				checkpoolalreadyjoinresp = stringBuilder.append(
+						bufferedStrChunk).toString();
+			}
+
+			Log.d("checkpoolalreadyjoinresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1109,19 +1824,20 @@ public class CheckPool extends FragmentActivity implements
 		return poly;
 	}
 
-	// ///////////////////////
+	// //////////////////
 	// ///////
 
-	private class ConnectionTaskForShowMembersOnMap extends
+	private class ConnectionTaskForJoiningapool extends
 			AsyncTask<String, Void, Void> {
 
 		@Override
 		protected void onPreExecute() {
+
 		}
 
 		@Override
 		protected Void doInBackground(String... args) {
-			AuthenticateConnectionShowMembers mAuth1 = new AuthenticateConnectionShowMembers();
+			AuthenticateConnectionFetchNotification mAuth1 = new AuthenticateConnectionFetchNotification();
 			try {
 				mAuth1.connection();
 			} catch (Exception e) {
@@ -1137,116 +1853,29 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 
-			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+			tracker.send(new HitBuilders.EventBuilder()
+					.setCategory("Join Ride").setAction("Join Ride")
+					.setLabel("Join Ride").build());
 
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForcheckpoolalreadyjoinednew()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
-
-				mycalculatorbtn.setVisibility(View.VISIBLE);
-
-				ShowMemberName.clear();
-				ShowMemberNumber.clear();
-				ShowMemberLocationAddress.clear();
-				ShowMemberLocationLatLong.clear();
-				ShowMemberImageName.clear();
-				ShowMemberStatus.clear();
-
-				try {
-					JSONArray subArray = new JSONArray(showmembersresp);
-					for (int i = 0; i < subArray.length(); i++) {
-						try {
-							ShowMemberName.add(subArray.getJSONObject(i)
-									.getString("MemberName").toString());
-							ShowMemberNumber.add(subArray.getJSONObject(i)
-									.getString("MemberNumber").toString());
-							ShowMemberLocationAddress.add(subArray
-									.getJSONObject(i)
-									.getString("MemberLocationAddress")
-									.toString());
-							ShowMemberLocationLatLong.add(subArray
-									.getJSONObject(i)
-									.getString("MemberLocationlatlong")
-									.toString());
-							ShowMemberImageName.add(subArray.getJSONObject(i)
-									.getString("MemberImageName").toString());
-							ShowMemberStatus.add(subArray.getJSONObject(i)
-									.getString("Status").toString());
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				for (int i = 0; i < ShowMemberName.size(); i++) {
-					String[] latlong = ShowMemberLocationLatLong.get(i).split(
-							",");
-					LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
-							Double.parseDouble(latlong[1]));
-					checkpoolmap
-							.addMarker(new MarkerOptions()
-									.position(lt)
-									.snippet(String.valueOf(i))
-									.title(ShowMemberLocationAddress.get(i))
-									.icon(BitmapDescriptorFactory
-											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-				}
-
-				checkpoolmap
-						.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-							@Override
-							public boolean onMarkerClick(Marker arg0) {
-
-								if (arg0.getSnippet().equals("start")) {
-
-								} else if (arg0.getSnippet().equals("end")) {
-
-								} else {
-
-									if (CabStatus.toString().trim()
-											.equalsIgnoreCase("A")) {
-
-										final Integer index = Integer
-												.parseInt(arg0.getSnippet());
-
-										showAlertDialog(ShowMemberName
-												.get(index), ShowMemberNumber
-												.get(index),
-												ShowMemberLocationAddress
-														.get(index),
-												ShowMemberLocationLatLong
-														.get(index),
-												ShowMemberImageName.get(index),
-												ShowMemberStatus.get(index));
-									}
-								}
-
-								return true;
-							}
-
-						});
-
-			}
-
-			if (onedialog.isShowing()) {
-				onedialog.dismiss();
+				new ConnectionTaskForcheckpoolalreadyjoinednew().execute();
 			}
 		}
+
 	}
 
-	public class AuthenticateConnectionShowMembers {
+	public class AuthenticateConnectionFetchNotification {
 
-		public AuthenticateConnectionShowMembers() {
+		public AuthenticateConnectionFetchNotification() {
 
 		}
 
@@ -1254,21 +1883,49 @@ public class CheckPool extends FragmentActivity implements
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/ShowMemberOnMap.php";
+			String url_select = GlobalVariables.ServiceUrl + "/joinpool.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", CabId);
+			BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair(
+					"OwnerName", OwnerName);
+			BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair(
+					"OwnerNumber", MobileNumber);
+			BasicNameValuePair MemberNameBasicNameValuePair = new BasicNameValuePair(
+					"MemberName", FullName);
+			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
+					"MemberNumber", MemberNumberstr);
+			BasicNameValuePair MemberLocationAddressBasicNameValuePair = new BasicNameValuePair(
+					"MemberLocationAddress", memberlocationaddress);
+			double lat = memberlocationlatlong.latitude;
+			double longi = memberlocationlatlong.longitude;
+
+			String latlong = String.valueOf(lat) + "," + String.valueOf(longi);
+			BasicNameValuePair MemberLocationlatlongBasicNameValuePair = new BasicNameValuePair(
+					"MemberLocationlatlong", latlong);
+			BasicNameValuePair StatusBasicNameValuePair = new BasicNameValuePair(
+					"Status", "Nothing");
+			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
+					"Message", FullName + " has joined your ride from "
+							+ FromShortName + " to " + ToShortName);
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(OwnerNameBasicNameValuePair);
+			nameValuePairList.add(OwnerNumberBasicNameValuePair);
+			nameValuePairList.add(MemberNameBasicNameValuePair);
+			nameValuePairList.add(MemberNumberBasicNameValuePair);
+			nameValuePairList.add(MemberLocationAddressBasicNameValuePair);
+			nameValuePairList.add(MemberLocationlatlongBasicNameValuePair);
+			nameValuePairList.add(StatusBasicNameValuePair);
+			nameValuePairList.add(MessageBasicNameValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1282,11 +1939,457 @@ public class CheckPool extends FragmentActivity implements
 			String bufferedStrChunk = null;
 
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				showmembersresp = stringBuilder.append(bufferedStrChunk)
+				joinpoolresponse = stringBuilder.append(bufferedStrChunk)
 						.toString();
 			}
 
-			Log.e("showmembersresp", "" + stringBuilder.toString());
+			Log.d("joinpoolresponse", "" + stringBuilder.toString());
+		}
+	}
+
+	// //////////////////
+	// ///////
+
+	private class ConnectionTaskFordroppool extends
+			AsyncTask<String, Void, Void> {
+		private ProgressDialog dialog = new ProgressDialog(MemberRideFragmentActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectiondroppool mAuth1 = new AuthenticateConnectiondroppool();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			Intent mainIntent = new Intent(MemberRideFragmentActivity.this, HomeActivity.class);
+			mainIntent.putExtra("from", "normal");
+			mainIntent.putExtra("message", "null");
+			mainIntent.putExtra("CabId", "null");
+			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			startActivity(mainIntent);
+		}
+
+	}
+
+	public class AuthenticateConnectiondroppool {
+
+		public AuthenticateConnectiondroppool() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl + "/dropapool.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+					"CabId", CabId);
+			BasicNameValuePair SentMemberNameBasicNameValuePair = new BasicNameValuePair(
+					"SentMemberName", FullName);
+			BasicNameValuePair SentMemberNumberBasicNameValuePair = new BasicNameValuePair(
+					"SentMemberNumber", MemberNumberstr);
+			BasicNameValuePair ReceiveMemberNameBasicNameValuePair = new BasicNameValuePair(
+					"ReceiveMemberName", OwnerName);
+			BasicNameValuePair ReceiveMemberNumberBasicNameValuePair = new BasicNameValuePair(
+					"ReceiveMemberNumber", MobileNumber);
+			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
+					"Message", FullName + " left your ride from "
+							+ FromShortName + " to " + ToShortName);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(SentMemberNameBasicNameValuePair);
+			nameValuePairList.add(SentMemberNumberBasicNameValuePair);
+			nameValuePairList.add(ReceiveMemberNameBasicNameValuePair);
+			nameValuePairList.add(ReceiveMemberNumberBasicNameValuePair);
+			nameValuePairList.add(MessageBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				droppoolresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("droppoolresp", "" + stringBuilder.toString());
+		}
+	}
+
+	private void showAlertDialog(String mname, final String mnum,
+			String mlocadd, String mimgname) {
+
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.memberdeatilspopupbyuser);
+
+		memimage = (CircularImageView) dialog.findViewById(R.id.memimage);
+
+		String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/" + mimgname;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new DownloadImageTask().executeOnExecutor(
+					AsyncTask.THREAD_POOL_EXECUTOR, url1);
+		} else {
+			new DownloadImageTask().execute(url1);
+		}
+
+		TextView memname = (TextView) dialog.findViewById(R.id.memname);
+		memname.setText(mname.toUpperCase());
+		dialog.show();
+
+		TextView memlocationadd = (TextView) dialog
+				.findViewById(R.id.memlocationadd);
+		memlocationadd.setText(mlocadd);
+
+		LinearLayout call = (LinearLayout) dialog.findViewById(R.id.call);
+		call.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Call Member").setAction("Call Member")
+						.setLabel("Call Member").build());
+
+				Intent intent = new Intent(Intent.ACTION_CALL);
+				intent.setData(Uri.parse("tel:" + mnum));
+				startActivity(intent);
+
+				dialog.dismiss();
+			}
+		});
+
+		LinearLayout addtocontacts = (LinearLayout) dialog
+				.findViewById(R.id.addtocontacts);
+
+		if (phonenoarraynew.indexOf(mnum.toString().trim().substring(4)) != -1) {
+
+			addtocontacts.setVisibility(View.GONE);
+		} else {
+			addtocontacts.setVisibility(View.VISIBLE);
+		}
+
+		// Boolean chk = null;
+		// Log.i("number array", "" + phonenoarray.toString());
+		//
+		// for (int i = 0; i < phonenoarray.size(); i++) {
+		//
+		// if (phonenoarray.get(i).toString().trim()
+		// .equalsIgnoreCase(mnum.toString().trim())) {
+		// chk = true;
+		// break;
+		// } else {
+		// chk = false;
+		// }
+		// }
+		//
+		// if (chk) {
+		// addtocontacts.setVisibility(View.GONE);
+		// } else {
+		// addtocontacts.setVisibility(View.VISIBLE);
+		// }
+
+		addtocontacts.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				Intent intent = new Intent(Intent.ACTION_INSERT,
+						ContactsContract.Contacts.CONTENT_URI);
+				intent = new Intent(
+						ContactsContract.Intents.SHOW_OR_CREATE_CONTACT, Uri
+								.parse("tel:" + mnum));
+				startActivity(intent);
+
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+	}
+
+	private void joinPoolPopUp(String Fm, String tol, String td, String tt,
+			String st, String ownname, String ownimg) {
+
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.joinpoolpopup);
+		dialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+		WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
+		wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+		wmlp.x = 10; // x position
+		wmlp.y = 10 + mydetailbtn.getHeight() + 10; // y position
+		dialog.getWindow().setAttributes(wmlp);
+
+		CircularImageView myridesbannerimage;
+		TextView myridesbannerusername;
+		TextView fromtolocationvalue;
+		TextView datetext;
+		TextView timetext;
+		TextView seatstext;
+
+		LinearLayout joinedmembersll;
+		ListView joinedmemberslist;
+
+		myridesbannerimage = (CircularImageView) dialog
+				.findViewById(R.id.myridesbannerimage);
+		myridesbannerusername = (TextView) dialog
+				.findViewById(R.id.myridesbannerusername);
+		fromtolocationvalue = (TextView) dialog
+				.findViewById(R.id.fromtolocationvalue);
+		datetext = (TextView) dialog.findViewById(R.id.datetext);
+		timetext = (TextView) dialog.findViewById(R.id.timetext);
+		seatstext = (TextView) dialog.findViewById(R.id.seatstext);
+
+		joinedmembersll = (LinearLayout) dialog
+				.findViewById(R.id.joinedmembersll);
+		joinedmemberslist = (ListView) dialog
+				.findViewById(R.id.joinedmemberslist);
+
+		AQuery aq = new AQuery(MemberRideFragmentActivity.this);
+
+		if (ownimg == null || ownimg.toString().trim().isEmpty()) {
+
+		} else {
+
+			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
+					+ ownimg.toString().trim();
+
+			aq.id(myridesbannerimage).image(url, true, true);
+		}
+		myridesbannerusername.setText(ownname.toString().trim());
+		fromtolocationvalue.setText(Fm.toString().trim() + " > "
+				+ tol.toString().trim());
+		datetext.setText(td.toString().trim());
+		timetext.setText(tt.toString().trim());
+		seatstext.setText(st.toString().trim() + " Seats");
+
+		if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+
+			joinedmembersll.setVisibility(View.GONE);
+
+		} else {
+
+			ArrayList<String> JoinedMemberName = new ArrayList<String>();
+			ArrayList<String> joinedMemberImageName = new ArrayList<String>();
+
+			JoinedMemberName.add(FullName.toString().trim());
+
+			SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
+			String imgname = mPrefs111.getString("imgname", "");
+
+			if (imgname.isEmpty() || imgname == null
+					|| imgname.equalsIgnoreCase("")) {
+
+				joinedMemberImageName.add("");
+			} else {
+
+				joinedMemberImageName.add(imgname.toString().trim());
+			}
+
+			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+
+			} else {
+
+				try {
+					JSONArray subArray = new JSONArray(showmembersresp);
+					for (int i = 0; i < subArray.length(); i++) {
+						try {
+							JoinedMemberName.add(subArray.getJSONObject(i)
+									.getString("MemberName").toString().trim());
+							joinedMemberImageName.add(subArray.getJSONObject(i)
+									.getString("MemberImageName").toString()
+									.trim());
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			joinedmembersll.setVisibility(View.VISIBLE);
+
+			ListViewAdapterJoined adapter = new ListViewAdapterJoined(
+					MemberRideFragmentActivity.this, joinedMemberImageName, JoinedMemberName);
+			joinedmemberslist.setAdapter(adapter);
+
+		}
+
+		if (BookingRefNo.isEmpty() || BookingRefNo.equalsIgnoreCase("null")) {
+			LinearLayout linearLayout = (LinearLayout) dialog
+					.findViewById(R.id.cabbookingll);
+			linearLayout.setVisibility(View.GONE);
+		} else {
+			TextView textView = (TextView) dialog
+					.findViewById(R.id.cabbookingdriver);
+			textView.setText("Driver : " + DriverName);
+
+			textView = (TextView) dialog
+					.findViewById(R.id.cabbookingdriverphone);
+			textView.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_CALL, Uri
+							.parse("tel:" + DriverNumber));
+					startActivity(intent);
+				}
+			});
+
+			textView = (TextView) dialog.findViewById(R.id.cabbookingvehicle);
+			textView.setText("Vehicle : " + CarNumber);
+
+			textView = (TextView) dialog.findViewById(R.id.cabbookingrefno);
+			textView.setText("Booking reference : " + BookingRefNo);
+		}
+
+		dialog.show();
+
+	}
+
+	public class ListViewAdapterJoined extends BaseAdapter {
+
+		// Declare Variables
+		Context context;
+		ArrayList<String> memimagename;
+		ArrayList<String> memusername;
+		LayoutInflater inflater;
+		AQuery aq;
+
+		public ListViewAdapterJoined(Context context,
+				ArrayList<String> mimgname, ArrayList<String> mname) {
+			this.context = context;
+			this.memimagename = mimgname;
+			this.memusername = mname;
+			this.aq = new AQuery(context);
+		}
+
+		@Override
+		public int getCount() {
+			return memusername.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@SuppressLint("ViewHolder")
+		@Override
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+
+			CircularImageView memberjoinedimage;
+			TextView memberjoinedname;
+
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			View itemView = inflater.inflate(R.layout.joinedmem_list_row,
+					parent, false);
+
+			// Locate the TextViews in listview_item.xml
+
+			memberjoinedimage = (CircularImageView) itemView
+					.findViewById(R.id.memberjoinedimage);
+			memberjoinedname = (TextView) itemView
+					.findViewById(R.id.memberjoinedname);
+
+			if (memimagename.get(position).toString().trim().isEmpty()) {
+
+				Log.d("image nahi hai", ""
+						+ memimagename.get(position).toString().trim());
+
+			} else {
+				String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
+						+ memimagename.get(position).toString().trim();
+				aq.id(memberjoinedimage).image(url, true, true);
+			}
+			memberjoinedname.setText(memusername.get(position).toString()
+					.trim());
+
+			return itemView;
+		}
+	}
+
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+		protected Bitmap doInBackground(String... urls) {
+			String urldisplay = urls[0];
+			Bitmap mIcon11 = null;
+			try {
+				InputStream in = new java.net.URL(urldisplay).openStream();
+				mIcon11 = BitmapFactory.decodeStream(in);
+			} catch (Exception e) {
+				Log.d("Error", e.getMessage());
+				e.printStackTrace();
+			}
+			return mIcon11;
+		}
+
+		protected void onPostExecute(Bitmap result) {
+			memimage.setImageBitmap(result);
 		}
 	}
 
@@ -1318,13 +2421,13 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 
-			checkpoolmap.clear();
+			joinpoolmap.clear();
 
 			for (int i = 0; i < steps.size(); i++) {
 
@@ -1389,7 +2492,7 @@ public class CheckPool extends FragmentActivity implements
 			LatLngBounds.Builder bc = null;
 
 			for (int i = 0; i < rectlinesarr.size(); i++) {
-				checkpoolmap.addPolyline(rectlinesarr.get(i));
+				joinpoolmap.addPolyline(rectlinesarr.get(i));
 
 				List<LatLng> points = rectlinesarr.get(i).getPoints();
 
@@ -1400,17 +2503,17 @@ public class CheckPool extends FragmentActivity implements
 				}
 			}
 
-			checkpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
 					bc.build(), 50));
 
-			Marker marker = checkpoolmap.addMarker(new MarkerOptions()
+			joinpoolmap.addMarker(new MarkerOptions()
 					.position(startaddlatlng.get(0))
 					.title(startaddress.get(0))
 					.snippet("start")
 					.icon(BitmapDescriptorFactory
 							.fromResource(R.drawable.start)));
 
-			Marker marker1 = checkpoolmap
+			joinpoolmap
 					.addMarker(new MarkerOptions()
 							.position(endaddlatlng.get(0))
 							.title(endaddress.get(0))
@@ -1529,14 +2632,14 @@ public class CheckPool extends FragmentActivity implements
 
 			// /////
 			Log.d("Summary", "" + Summary);
-			Log.e("startaddress", "" + startaddress);
-			Log.e("endaddress", "" + endaddress);
-			Log.e("startaddlatlng", "" + startaddlatlng);
-			Log.e("endaddlatlng", "" + endaddlatlng);
+			Log.d("startaddress", "" + startaddress);
+			Log.d("endaddress", "" + endaddress);
+			Log.d("startaddlatlng", "" + startaddlatlng);
+			Log.d("endaddlatlng", "" + endaddlatlng);
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = getAddress(CheckPool.this,
+				String asd = getAddress(MemberRideFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
@@ -1548,408 +2651,9 @@ public class CheckPool extends FragmentActivity implements
 	// //////////////////
 	// ///////
 
-	private class ConnectionTaskForownercancelpool extends
-			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(CheckPool.this);
-
-		@Override
-		protected void onPreExecute() {
-			dialog.setMessage("Please Wait...");
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionownercancelpool mAuth1 = new AuthenticateConnectionownercancelpool();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (dialog.isShowing()) {
-				dialog.dismiss();
-			}
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			Intent mainIntent = new Intent(CheckPool.this, HomePage.class);
-			mainIntent.putExtra("from", "normal");
-			mainIntent.putExtra("message", "null");
-			mainIntent.putExtra("CabId", "null");
-			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			startActivity(mainIntent);
-
-		}
-
-	}
-
-	public class AuthenticateConnectionownercancelpool {
-
-		public AuthenticateConnectionownercancelpool() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/cancelpoolbyowner.php";
-			HttpPost httpPost = new HttpPost(url_select);
-
-			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"CabId", CabId);
-			BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair(
-					"OwnerName", OwnerName);
-			BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber);
-			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
-					"Message", OwnerName + " cancelled the ride from "
-							+ FromShortName + " to " + ToShortName);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(CabIdBasicNameValuePair);
-			nameValuePairList.add(OwnerNameBasicNameValuePair);
-			nameValuePairList.add(OwnerNumberBasicNameValuePair);
-			nameValuePairList.add(MessageBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.e("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				ownercancelpoolresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.e("ownercancelpoolresp", "" + stringBuilder.toString());
-		}
-	}
-
-	private void showAlertDialog(final String mname, final String mnum,
-			String mlocadd, String mloclatlon, String mimgname, String mstatus) {
-
-		final Dialog dialog = new Dialog(this);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.memberdeatilspopup);
-
-		memimage = (CircularImageView) dialog.findViewById(R.id.memimage);
-
-		String url1 = null;
-
-		if (mimgname.toString().trim().isEmpty()) {
-
-		} else {
-
-			url1 = GlobalVariables.ServiceUrl + "/ProfileImages/" + mimgname;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new DownloadImageTask().executeOnExecutor(
-						AsyncTask.THREAD_POOL_EXECUTOR, url1);
-			} else {
-				new DownloadImageTask().execute(url1);
-			}
-		}
-
-		TextView memname = (TextView) dialog.findViewById(R.id.memname);
-		memname.setText(mname.toUpperCase());
-		dialog.show();
-
-		TextView memlocationadd = (TextView) dialog
-				.findViewById(R.id.memlocationadd);
-		memlocationadd.setText(mlocadd);
-
-		LinearLayout dropuser = (LinearLayout) dialog
-				.findViewById(R.id.dropuser);
-		dropuser.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CheckPool.this);
-				builder.setMessage("Are you sure you want to remove this person from the ride?");
-				builder.setCancelable(true);
-				builder.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-
-								dialog.dismiss();
-
-								onedialog = new ProgressDialog(CheckPool.this);
-								onedialog.setMessage("Please Wait...");
-								onedialog.setCancelable(false);
-								onedialog.setCanceledOnTouchOutside(false);
-								onedialog.show();
-
-								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-									new ConnectionTaskFordropuserfrompopup()
-											.executeOnExecutor(
-													AsyncTask.THREAD_POOL_EXECUTOR,
-													mnum, mname);
-								} else {
-									new ConnectionTaskFordropuserfrompopup()
-											.execute(mnum, mname);
-								}
-							}
-						});
-				builder.setNegativeButton("NO",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-
-								dialog.dismiss();
-							}
-						});
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
-			}
-		});
-
-		LinearLayout call = (LinearLayout) dialog.findViewById(R.id.call);
-		call.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("Call Member").setAction("Call Member")
-						.setLabel("Call Member").build());
-
-				Intent intent = new Intent(Intent.ACTION_CALL);
-				intent.setData(Uri.parse("tel:" + mnum));
-				startActivity(intent);
-
-				dialog.dismiss();
-			}
-		});
-
-		LinearLayout addtocontacts = (LinearLayout) dialog
-				.findViewById(R.id.addtocontacts);
-
-		if (phonenoarraynew.indexOf(mnum.toString().trim().substring(4)) != -1) {
-
-			addtocontacts.setVisibility(View.GONE);
-		} else {
-			addtocontacts.setVisibility(View.VISIBLE);
-		}
-
-		// Boolean chk = null;
-		// Log.i("number array", "" + phonenoarray.toString());
-		//
-		// for (int i = 0; i < phonenoarray.size(); i++) {
-		//
-		// if (phonenoarray.get(i).toString().trim()
-		// .equalsIgnoreCase(mnum.toString().trim())) {
-		// chk = true;
-		// break;
-		// } else {
-		// chk = false;
-		// }
-		// }
-		//
-		// if (chk) {
-		// addtocontacts.setVisibility(View.GONE);
-		// } else {
-		// addtocontacts.setVisibility(View.VISIBLE);
-		// }
-
-		addtocontacts.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				Intent intent = new Intent(Intent.ACTION_INSERT,
-						ContactsContract.Contacts.CONTENT_URI);
-				intent = new Intent(
-						ContactsContract.Intents.SHOW_OR_CREATE_CONTACT, Uri
-								.parse("tel:" + mnum));
-				startActivity(intent);
-
-				dialog.dismiss();
-			}
-		});
-
-		dialog.show();
-	}
-
-	// //////////////////
-	// ///////
-
-	private class ConnectionTaskFordropuserfrompopup extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectiondropuserfrompopup mAuth1 = new AuthenticateConnectiondropuserfrompopup();
-			try {
-				mAuth1.memnum = args[0];
-				mAuth1.memname = args[1];
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForDirectionsnew()
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				new ConnectionTaskForDirectionsnew().execute();
-			}
-
-		}
-
-	}
-
-	public class AuthenticateConnectiondropuserfrompopup {
-
-		public String memnum;
-		public String memname;
-
-		public AuthenticateConnectiondropuserfrompopup() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/dropuserfrompopup.php";
-			HttpPost httpPost = new HttpPost(url_select);
-
-			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"CabId", CabId);
-			BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair(
-					"OwnerName", OwnerName);
-			BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber);
-			BasicNameValuePair MemberNameBasicNameValuePair = new BasicNameValuePair(
-					"MemberName", memname);
-			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
-					"MemberNumber", memnum);
-			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
-					"Message", OwnerName
-							+ " has removed you from the ride from "
-							+ FromShortName + " to " + ToShortName);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(CabIdBasicNameValuePair);
-			nameValuePairList.add(OwnerNameBasicNameValuePair);
-			nameValuePairList.add(OwnerNumberBasicNameValuePair);
-			nameValuePairList.add(MemberNameBasicNameValuePair);
-			nameValuePairList.add(MemberNumberBasicNameValuePair);
-			nameValuePairList.add(MessageBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.e("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				dropuserfrompopupresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.e("dropuserfrompopupresp", "" + stringBuilder.toString());
-		}
-	}
-
-	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-		protected Bitmap doInBackground(String... urls) {
-			String urldisplay = urls[0];
-			Bitmap mIcon11 = null;
-			try {
-				InputStream in = new java.net.URL(urldisplay).openStream();
-				mIcon11 = BitmapFactory.decodeStream(in);
-			} catch (Exception e) {
-				Log.e("Error", e.getMessage());
-				e.printStackTrace();
-			}
-			return mIcon11;
-		}
-
-		protected void onPostExecute(Bitmap result) {
-			memimage.setImageBitmap(result);
-		}
-	}
-
-	// //////////////////
-	// ///////
-
 	private class ConnectionTaskForsendcustommessage extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(CheckPool.this);
+		private ProgressDialog dialog = new ProgressDialog(MemberRideFragmentActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1984,12 +2688,11 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-
 		}
 
 	}
@@ -2025,7 +2728,7 @@ public class CheckPool extends FragmentActivity implements
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -2043,136 +2746,117 @@ public class CheckPool extends FragmentActivity implements
 						bufferedStrChunk).toString();
 			}
 
-			Log.e("sendcustommessagefrompopupresp",
+			Log.d("sendcustommessagefrompopupresp",
 					"" + stringBuilder.toString());
 		}
 	}
 
-	private void joinPoolPopUp(String Fm, String tol, String td, String tt,
-			String st, String ownname, String ownimg) {
+	private void showAlertDialogmylocation(String mname, final String mnum,
+			String mlocadd, String mimgname) {
 
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.joinpoolpopup);
-		dialog.getWindow().setBackgroundDrawable(
-				new ColorDrawable(android.graphics.Color.TRANSPARENT));
+		dialog.setContentView(R.layout.mylocationpopup);
 
-		WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
-		wmlp.gravity = Gravity.TOP | Gravity.LEFT;
-		wmlp.x = 10; // x position
-		wmlp.y = 10 + mydetailbtn.getHeight() + 10; // y position
-		dialog.getWindow().setAttributes(wmlp);
+		memimage = (CircularImageView) dialog.findViewById(R.id.memimage);
 
-		CircularImageView myridesbannerimage;
-		TextView myridesbannerusername;
-		TextView fromtolocationvalue;
-		TextView datetext;
-		TextView timetext;
-		TextView seatstext;
+		String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/" + mimgname;
 
-		LinearLayout joinedmembersll;
-		ListView joinedmemberslist;
-
-		myridesbannerimage = (CircularImageView) dialog
-				.findViewById(R.id.myridesbannerimage);
-		myridesbannerusername = (TextView) dialog
-				.findViewById(R.id.myridesbannerusername);
-		fromtolocationvalue = (TextView) dialog
-				.findViewById(R.id.fromtolocationvalue);
-		datetext = (TextView) dialog.findViewById(R.id.datetext);
-		timetext = (TextView) dialog.findViewById(R.id.timetext);
-		seatstext = (TextView) dialog.findViewById(R.id.seatstext);
-
-		joinedmembersll = (LinearLayout) dialog
-				.findViewById(R.id.joinedmembersll);
-		joinedmemberslist = (ListView) dialog
-				.findViewById(R.id.joinedmemberslist);
-
-		AQuery aq = new AQuery(CheckPool.this);
-
-		if (ownimg == null || ownimg.toString().trim().isEmpty()) {
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new DownloadImageTask().executeOnExecutor(
+					AsyncTask.THREAD_POOL_EXECUTOR, url1);
 		} else {
-
-			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
-					+ ownimg.toString().trim();
-
-			aq.id(myridesbannerimage).image(url, true, true);
-		}
-		myridesbannerusername.setText(ownname.toString().trim());
-		fromtolocationvalue.setText(Fm.toString().trim() + " > "
-				+ tol.toString().trim());
-		datetext.setText(td.toString().trim());
-		timetext.setText(tt.toString().trim());
-		seatstext.setText(st.toString().trim() + " Seats");
-
-		if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
-
-			joinedmembersll.setVisibility(View.GONE);
-
-		} else {
-
-			ArrayList<String> JoinedMemberName = new ArrayList<String>();
-			ArrayList<String> joinedMemberImageName = new ArrayList<String>();
-
-			try {
-				JSONArray subArray = new JSONArray(showmembersresp);
-				for (int i = 0; i < subArray.length(); i++) {
-					try {
-						JoinedMemberName.add(subArray.getJSONObject(i)
-								.getString("MemberName").toString().trim());
-						joinedMemberImageName
-								.add(subArray.getJSONObject(i)
-										.getString("MemberImageName")
-										.toString().trim());
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				joinedmembersll.setVisibility(View.VISIBLE);
-
-				ListViewAdapterJoined adapter = new ListViewAdapterJoined(
-						CheckPool.this, joinedMemberImageName, JoinedMemberName);
-				joinedmemberslist.setAdapter(adapter);
-
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			new DownloadImageTask().execute(url1);
 		}
 
-		if (BookingRefNo.isEmpty() || BookingRefNo.equalsIgnoreCase("null")) {
-			LinearLayout linearLayout = (LinearLayout) dialog
-					.findViewById(R.id.cabbookingll);
-			linearLayout.setVisibility(View.GONE);
-		} else {
-			TextView textView = (TextView) dialog
-					.findViewById(R.id.cabbookingdriver);
-			textView.setText("Driver : " + DriverName);
-
-			textView = (TextView) dialog
-					.findViewById(R.id.cabbookingdriverphone);
-			textView.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(Intent.ACTION_CALL, Uri
-							.parse("tel:" + DriverNumber));
-					startActivity(intent);
-				}
-			});
-
-			textView = (TextView) dialog.findViewById(R.id.cabbookingvehicle);
-			textView.setText("Vehicle : " + CarNumber);
-
-			textView = (TextView) dialog.findViewById(R.id.cabbookingrefno);
-			textView.setText("Booking reference : " + BookingRefNo);
-		}
-
+		TextView memname = (TextView) dialog.findViewById(R.id.memname);
+		memname.setText(mname.toUpperCase());
 		dialog.show();
 
+		TextView memlocationadd = (TextView) dialog
+				.findViewById(R.id.memlocationadd);
+		memlocationadd.setText(mlocadd);
+
+		dialog.show();
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == 1) {
+			if (resultCode == RESULT_OK) {
+				final String updatedlocationaddress = data
+						.getStringExtra("memberlocationaddress");
+				String updatedlocationlatlong = data
+						.getStringExtra("memberlocationlatlong");
+
+				if (mylocationmarker != null) {
+					mylocationmarker.remove();
+				}
+
+				String[] latlong = updatedlocationlatlong.split(",");
+				LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+						Double.parseDouble(latlong[1]));
+
+				mylocationmarker = joinpoolmap
+						.addMarker(new MarkerOptions()
+								.position(lt)
+								.snippet("mylocation")
+								.title(updatedlocationaddress)
+								.icon(BitmapDescriptorFactory
+										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+				joinpoolmap
+						.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+							@Override
+							public boolean onMarkerClick(Marker arg0) {
+
+								if (arg0.getSnippet().equals("start")) {
+
+									showAlertDialog(OwnerName, MobileNumber,
+											FromLocation, OwnerImage);
+
+								} else if (arg0.getSnippet().equals("end")) {
+
+									showAlertDialog(OwnerName, MobileNumber,
+											ToLocation, OwnerImage);
+
+								} else if (arg0.getSnippet().equals(
+										"mylocation")) {
+
+									showAlertDialogmylocation(usermemname,
+											usermemnumber,
+											updatedlocationaddress,
+											usermemimagename);
+								} else {
+
+									if (checkpoolalreadyjoinresp
+											.equalsIgnoreCase("fresh pool")) {
+
+										Toast.makeText(
+												MemberRideFragmentActivity.this,
+												"Join ride to see details of other members",
+												Toast.LENGTH_LONG).show();
+									} else {
+										final Integer index = Integer
+												.parseInt(arg0.getSnippet());
+
+										showAlertDialog(ShowMemberName
+												.get(index), ShowMemberNumber
+												.get(index),
+												ShowMemberLocationAddress
+														.get(index),
+												ShowMemberImageName.get(index));
+									}
+
+								}
+
+								return true;
+							}
+
+						});
+			}
+		}
 	}
 
 	@Override
@@ -2196,9 +2880,9 @@ public class CheckPool extends FragmentActivity implements
 					MemberNumberstr);
 		}
 
-		Log.d("checkpool onStart", "checkpool onStart");
+		Log.d("joinpool onStart", "joinpool onStart");
 		if (xmppConnection != null) {
-			Log.i("12", "connection already connected");
+			Log.d("12", "connection already connected");
 
 		} else {
 			establishXmppConnection();
@@ -2211,7 +2895,7 @@ public class CheckPool extends FragmentActivity implements
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
-		Log.d("checkpool onStop", "checkpool onStop");
+		Log.d("joinpool onStop", "joinpool onStop");
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForupdatestatus().executeOnExecutor(
@@ -2227,12 +2911,11 @@ public class CheckPool extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		// super.onBackPressed();
 
 		if (comefrom != null) {
 
 			if (!chatlayoutmainrl.isShown()) {
-				Intent mainIntent = new Intent(CheckPool.this, HomePage.class);
+				Intent mainIntent = new Intent(MemberRideFragmentActivity.this, HomeActivity.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);
@@ -2247,7 +2930,7 @@ public class CheckPool extends FragmentActivity implements
 			if (!chatlayoutmainrl.isShown()) {
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
-				CheckPool.this.finish();
+				MemberRideFragmentActivity.this.finish();
 			} else {
 				chatlayoutmainrl.setVisibility(View.GONE);
 			}
@@ -2262,76 +2945,6 @@ public class CheckPool extends FragmentActivity implements
 			return true;
 		}
 		return false;
-	}
-
-	public class ListViewAdapterJoined extends BaseAdapter {
-
-		// Declare Variables
-		Context context;
-		ArrayList<String> memimagename;
-		ArrayList<String> memusername;
-		LayoutInflater inflater;
-		AQuery aq;
-
-		public ListViewAdapterJoined(Context context,
-				ArrayList<String> mimgname, ArrayList<String> mname) {
-			this.context = context;
-			this.memimagename = mimgname;
-			this.memusername = mname;
-			this.aq = new AQuery(context);
-		}
-
-		@Override
-		public int getCount() {
-			return memusername.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		@SuppressLint("ViewHolder")
-		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-
-			CircularImageView memberjoinedimage;
-			TextView memberjoinedname;
-
-			inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			View itemView = inflater.inflate(R.layout.joinedmem_list_row,
-					parent, false);
-
-			// Locate the TextViews in listview_item.xml
-
-			memberjoinedimage = (CircularImageView) itemView
-					.findViewById(R.id.memberjoinedimage);
-			memberjoinedname = (TextView) itemView
-					.findViewById(R.id.memberjoinedname);
-
-			if (memimagename.get(position).toString().trim().isEmpty()) {
-
-				Log.i("image nahi hai", ""
-						+ memimagename.get(position).toString().trim());
-
-			} else {
-				String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
-						+ memimagename.get(position).toString().trim();
-				aq.id(memberjoinedimage).image(url, true, true);
-			}
-			memberjoinedname.setText(memusername.get(position).toString()
-					.trim());
-
-			return itemView;
-		}
 	}
 
 	// ///////////////////// chat code
@@ -2381,7 +2994,7 @@ public class CheckPool extends FragmentActivity implements
 					try {
 						AccountManager am = new AccountManager(xmppConnection);
 						am.createAccount(uname, pwd, hashMap);
-						Log.e("Openfire", "Account Created");
+						Log.d("Openfire", "Account Created");
 					} catch (Exception e) {
 						Log.e("Openfire", "Account already exist");
 					}
@@ -2669,7 +3282,7 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2745,7 +3358,7 @@ public class CheckPool extends FragmentActivity implements
 				chatresp = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			Log.e("chatresp", "" + chatresp);
+			Log.d("chatresp", "" + chatresp);
 		}
 	}
 
@@ -2780,7 +3393,7 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2875,7 +3488,7 @@ public class CheckPool extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(CheckPool.this,
+				Toast.makeText(MemberRideFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2940,6 +3553,8 @@ public class CheckPool extends FragmentActivity implements
 				result = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
+			Log.d("result", "" + result);
+
 			if (result.equalsIgnoreCase("No Members joined yet")) {
 
 			} else {
@@ -2957,7 +3572,7 @@ public class CheckPool extends FragmentActivity implements
 
 	@Override
 	public void sendFareSplitHashMap(final HashMap<String, Double> hashMap) {
-		Log.d("CheckPool", "sendFareSplitHashMap : " + hashMap);
+		Log.d("JoinPool", "sendFareSplitHashMap : " + hashMap);
 
 		runOnUiThread(new Runnable() {
 
@@ -2968,12 +3583,12 @@ public class CheckPool extends FragmentActivity implements
 				}
 
 				if (hashMap == null) {
-					Toast.makeText(CheckPool.this,
+					Toast.makeText(MemberRideFragmentActivity.this,
 							getResources().getString(R.string.exceptionstring),
 							Toast.LENGTH_LONG).show();
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							CheckPool.this);
+							MemberRideFragmentActivity.this);
 					View builderView = (View) getLayoutInflater().inflate(
 							R.layout.fare_split_dialog, null);
 
@@ -3002,7 +3617,7 @@ public class CheckPool extends FragmentActivity implements
 									+ hashMap.get("tripTotalFare").toString());
 
 					listView.setAdapter(new ListViewAdapterFareSplit(
-							CheckPool.this, arrayList));
+							MemberRideFragmentActivity.this, arrayList));
 
 					button.setOnClickListener(new View.OnClickListener() {
 

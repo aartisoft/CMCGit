@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -33,7 +33,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -45,10 +44,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CheckPoolFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.DatabaseHandler;
+import com.clubmycab.ListViewAdapter;
+import com.clubmycab.MemberRideFragmentActivity;
+import com.clubmycab.MyRidesListClass;
+import com.clubmycab.MyRidesObject;
+import com.clubmycab.PagingListView;
+import com.clubmycab.R;
+import com.clubmycab.SafeAsyncTask;
+import com.clubmycab.ShareLocationFragmentActivity;
+import com.clubmycab.ShowHistoryRidesAdaptor;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyRides extends Activity {
+public class MyRidesActivity extends Activity {
 
 	String FullName;
 	String MobileNumberstr;
@@ -125,7 +138,7 @@ public class MyRides extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(MyRides.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -153,7 +166,7 @@ public class MyRides extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("myridesrl", "myridesrl");
+				Log.d("myridesrl", "myridesrl");
 			}
 		});
 
@@ -203,7 +216,7 @@ public class MyRides extends Activity {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(MyRides.this, MyProfile.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this, MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -224,7 +237,7 @@ public class MyRides extends Activity {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(MyRides.this, BookaCab.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this, BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -237,8 +250,8 @@ public class MyRides extends Activity {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(MyRides.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -251,7 +264,7 @@ public class MyRides extends Activity {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(MyRides.this, MyClubs.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this, MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -282,8 +295,8 @@ public class MyRides extends Activity {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(MyRides.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -296,7 +309,7 @@ public class MyRides extends Activity {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(MyRides.this, MainActivity.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this, AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -326,8 +339,8 @@ public class MyRides extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(MyRides.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(MyRidesActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -377,7 +390,7 @@ public class MyRides extends Activity {
 
 	private class ConnectionTaskForFetchPool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyRides.this);
+		private ProgressDialog dialog = new ProgressDialog(MyRidesActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -409,7 +422,7 @@ public class MyRides extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyRides.this,
+				Toast.makeText(MyRidesActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -417,7 +430,7 @@ public class MyRides extends Activity {
 
 			if (poolresponse.equalsIgnoreCase("No Pool Created Yet!!")
 					|| poolresponse.equalsIgnoreCase("[]")) {
-				Toast.makeText(MyRides.this, "No active rides!",
+				Toast.makeText(MyRidesActivity.this, "No active rides!",
 						Toast.LENGTH_LONG).show();
 			} else {
 
@@ -505,11 +518,11 @@ public class MyRides extends Activity {
 						}
 					}
 
-					DatabaseHandler db = new DatabaseHandler(MyRides.this);
+					DatabaseHandler db = new DatabaseHandler(MyRidesActivity.this);
 					allcabids = allcabids.substring(1, allcabids.length() - 1);
 					db.deleteArchieveChats(allcabids);
 
-					adapter = new ListViewAdapter(MyRides.this, FromShortName,
+					adapter = new ListViewAdapter(MyRidesActivity.this, FromShortName,
 							ToShortName, TravelDate, TravelTime, Seat_Status,
 							OwnerName, imagename);
 					mypoollist.setAdapter(adapter);
@@ -526,7 +539,7 @@ public class MyRides extends Activity {
 											.equalsIgnoreCase(MobileNumberstr)) {
 
 										final Intent mainIntent = new Intent(
-												MyRides.this, CheckPool.class);
+												MyRidesActivity.this, CheckPoolFragmentActivity.class);
 										mainIntent.putExtra("CabId",
 												CabId.get(arg2));
 										mainIntent.putExtra("MobileNumber",
@@ -572,12 +585,12 @@ public class MyRides extends Activity {
 										mainIntent.putExtra("CarNumber",
 												CarNumber.get(arg2));
 
-										MyRides.this.startActivity(mainIntent);
+										MyRidesActivity.this.startActivity(mainIntent);
 
 									} else {
 
 										final Intent mainIntent = new Intent(
-												MyRides.this, JoinPool.class);
+												MyRidesActivity.this, MemberRideFragmentActivity.class);
 										mainIntent.putExtra("CabId",
 												CabId.get(arg2));
 										mainIntent.putExtra("MobileNumber",
@@ -623,7 +636,7 @@ public class MyRides extends Activity {
 										mainIntent.putExtra("CarNumber",
 												CarNumber.get(arg2));
 
-										MyRides.this.startActivity(mainIntent);
+										MyRidesActivity.this.startActivity(mainIntent);
 									}
 								}
 							});
@@ -647,7 +660,7 @@ public class MyRides extends Activity {
 					listView = (PagingListView) findViewById(R.id.paging_list_view);
 					listView.setVisibility(View.VISIBLE);
 
-					showhisadaptor = new ShowHistoryRidesAdaptor(MyRides.this);
+					showhisadaptor = new ShowHistoryRidesAdaptor(MyRidesActivity.this);
 
 					latestcabid = "";
 					cabchk = false;
@@ -680,7 +693,7 @@ public class MyRides extends Activity {
 									MobileNumberstr)) {
 
 								final Intent mainIntent = new Intent(
-										MyRides.this, CheckPool.class);
+										MyRidesActivity.this, CheckPoolFragmentActivity.class);
 								mainIntent.putExtra("CabId", CabId.get(arg2));
 								mainIntent.putExtra("MobileNumber",
 										MobileNumber.get(arg2));
@@ -724,12 +737,12 @@ public class MyRides extends Activity {
 								mainIntent.putExtra("CarNumber",
 										CarNumber.get(arg2));
 
-								MyRides.this.startActivity(mainIntent);
+								MyRidesActivity.this.startActivity(mainIntent);
 
 							} else {
 
 								final Intent mainIntent = new Intent(
-										MyRides.this, JoinPool.class);
+										MyRidesActivity.this, MemberRideFragmentActivity.class);
 								mainIntent.putExtra("CabId", CabId.get(arg2));
 								mainIntent.putExtra("MobileNumber",
 										MobileNumber.get(arg2));
@@ -773,7 +786,7 @@ public class MyRides extends Activity {
 								mainIntent.putExtra("CarNumber",
 										CarNumber.get(arg2));
 
-								MyRides.this.startActivity(mainIntent);
+								MyRidesActivity.this.startActivity(mainIntent);
 							}
 						}
 					});
@@ -808,7 +821,7 @@ public class MyRides extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse FetchMyPools", "" + httpResponse);
+			Log.d("httpResponse FetchMyPools", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -826,7 +839,7 @@ public class MyRides extends Activity {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + stringBuilder.toString());
+			Log.d("poolresponse", "" + stringBuilder.toString());
 		}
 	}
 
@@ -859,7 +872,7 @@ public class MyRides extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyRides.this,
+				Toast.makeText(MyRidesActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -867,7 +880,7 @@ public class MyRides extends Activity {
 
 			if (rideshistoryresponse.equalsIgnoreCase("No Pool Created Yet!!")
 					|| rideshistoryresponse.equalsIgnoreCase("[]")) {
-				Toast.makeText(MyRides.this, "No More history",
+				Toast.makeText(MyRidesActivity.this, "No More history",
 						Toast.LENGTH_LONG).show();
 
 				latestcabid = "khatam";
@@ -1019,9 +1032,9 @@ public class MyRides extends Activity {
 
 					}
 
-					Log.e("MyRidesListClass.listmyrides", ""
+					Log.d("MyRidesListClass.listmyrides", ""
 							+ MyRidesListClass.listmyrides);
-					Log.e("MyRidesListClass.listmyrides", ""
+					Log.d("MyRidesListClass.listmyrides", ""
 							+ MyRidesListClass.listmyrides.size());
 
 					new CountryAsyncTask().execute();
@@ -1067,7 +1080,7 @@ public class MyRides extends Activity {
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
 
-			Log.e("url_select11", "" + url_select11);
+			Log.d("url_select11", "" + url_select11);
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
@@ -1119,7 +1132,7 @@ public class MyRides extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(MyRides.this, HomePage.class);
+		Intent mainIntent = new Intent(MyRidesActivity.this, HomeActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);
@@ -1153,7 +1166,7 @@ public class MyRides extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyRides.this,
+				Toast.makeText(MyRidesActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1196,7 +1209,7 @@ public class MyRides extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1214,7 +1227,7 @@ public class MyRides extends Activity {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}

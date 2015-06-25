@@ -15,7 +15,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -348,10 +348,10 @@ public class FareCalculator {
 
 			// // /////
 			// Log.d("Summary", "" + Summary);
-			// Log.e("startaddress", "" + startaddress);
-			// Log.e("endaddress", "" + endaddress);
-			// Log.e("startaddlatlng", "" + startaddlatlng);
-			// Log.e("endaddlatlng", "" + endaddlatlng);
+			// Log.d("startaddress", "" + startaddress);
+			// Log.d("endaddress", "" + endaddress);
+			// Log.d("startaddlatlng", "" + startaddlatlng);
+			// Log.d("endaddlatlng", "" + endaddlatlng);
 			// Log.d("via_waypoint", "" + via_waypoint);
 			//
 			// for (int i = 0; i < via_waypoint.size(); i++) {

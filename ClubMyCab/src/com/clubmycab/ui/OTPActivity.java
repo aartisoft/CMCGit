@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,16 +27,19 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.PhoneListener;
+import com.clubmycab.R;
+import com.clubmycab.SmsReciever;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 
-public class EnterOTP extends Activity {
+public class OTPActivity extends Activity {
 
 	TextView otphardtext;
 	TextView enterotp;
@@ -63,7 +66,7 @@ public class EnterOTP extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(EnterOTP.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(OTPActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -146,7 +149,7 @@ public class EnterOTP extends Activity {
 		});
 
 		Toast.makeText(
-				EnterOTP.this,
+				OTPActivity.this,
 				"We will try to automatically verfiy your OTP, if you want you can enter it manually",
 				Toast.LENGTH_LONG).show();
 	}
@@ -155,7 +158,7 @@ public class EnterOTP extends Activity {
 
 	private class ConnectionTaskForVerifyOTP extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(EnterOTP.this);
+		private ProgressDialog dialog = new ProgressDialog(OTPActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -187,7 +190,7 @@ public class EnterOTP extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(EnterOTP.this,
+				Toast.makeText(OTPActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -201,18 +204,18 @@ public class EnterOTP extends Activity {
 				editor.putString("verifyotp", "true");
 				editor.commit();
 
-				Intent mainIntent = new Intent(EnterOTP.this, HomePage.class);
+				Intent mainIntent = new Intent(OTPActivity.this, HomeActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
 				finish();
 
 			} else if (verifyotpresp.equalsIgnoreCase("OTPEXPIRE")) {
-				Toast.makeText(EnterOTP.this,
+				Toast.makeText(OTPActivity.this,
 						"Entered OTP has expired. Please click resend OTP",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(EnterOTP.this, "Entered OTP is not valid",
+				Toast.makeText(OTPActivity.this, "Entered OTP is not valid",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -246,7 +249,7 @@ public class EnterOTP extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -264,7 +267,7 @@ public class EnterOTP extends Activity {
 						.toString();
 			}
 
-			Log.e("verifyotpresp", "" + verifyotpresp);
+			Log.d("verifyotpresp", "" + verifyotpresp);
 		}
 	}
 
@@ -273,7 +276,7 @@ public class EnterOTP extends Activity {
 
 	private class ConnectionTaskForResendOTP extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(EnterOTP.this);
+		private ProgressDialog dialog = new ProgressDialog(OTPActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -305,14 +308,14 @@ public class EnterOTP extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(EnterOTP.this,
+				Toast.makeText(OTPActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 
 			if (resendotpresp.equalsIgnoreCase("FAILURE")) {
-				Toast.makeText(EnterOTP.this,
+				Toast.makeText(OTPActivity.this,
 						"Something went wrong please try again.",
 						Toast.LENGTH_SHORT).show();
 			}
@@ -343,7 +346,7 @@ public class EnterOTP extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -361,7 +364,7 @@ public class EnterOTP extends Activity {
 						.toString();
 			}
 
-			Log.e("resendotpresp", "" + resendotpresp);
+			Log.d("resendotpresp", "" + resendotpresp);
 		}
 	}
 

@@ -11,7 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
 public class Communicator {
 	public String executeHttpGet(String URL) throws Exception {

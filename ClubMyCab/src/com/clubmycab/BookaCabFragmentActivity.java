@@ -74,7 +74,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -101,6 +101,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.R;
+import com.clubmycab.R.anim;
+import com.clubmycab.R.drawable;
+import com.clubmycab.R.id;
+import com.clubmycab.R.layout;
+import com.clubmycab.R.string;
+import com.clubmycab.ui.AboutPagerFragmentActivity;
+import com.clubmycab.ui.MobileSiteActivity;
+import com.clubmycab.ui.MobileSiteFragment;
+import com.clubmycab.ui.MyClubsActivity;
+import com.clubmycab.ui.MyProfileActivity;
+import com.clubmycab.ui.MyRidesActivity;
+import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.SettingActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -115,7 +129,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.navdrawer.SimpleSideDrawer;
 
-public class BookaCab extends FragmentActivity implements LocationListener {
+public class BookaCabFragmentActivity extends FragmentActivity implements LocationListener {
 
 	// private static ProgressDialog progressDialog;
 	RelativeLayout fromrelative;
@@ -272,7 +286,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 	ImageView clearedittextimgfrom;
 	ImageView clearedittextimgto;
 
-	private BookaCab.RideObject rideObject;
+	private BookaCabFragmentActivity.RideObject rideObject;
 
 	boolean exceptioncheck = false;
 
@@ -286,7 +300,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				double latitude = mycurrentlocationobject.getLatitude();
 				double longitude = mycurrentlocationobject.getLongitude();
 
-				String address = getAddress(BookaCab.this, latitude, longitude);
+				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
 				from_places.setText(address);
 				fAddress = geocodeAddress(address);
 				Log.d("AutoSearchCabAsync", "AutoSearchCabAsync address : "
@@ -314,7 +328,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -391,7 +405,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(BookaCab.this, MyProfile.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -404,7 +418,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(BookaCab.this, MyRides.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -425,8 +439,8 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(BookaCab.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -439,7 +453,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(BookaCab.this, MyClubs.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -470,8 +484,8 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(BookaCab.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -484,8 +498,8 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(BookaCab.this,
-						MainActivity.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+						AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -512,7 +526,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		drawerusername.setText(FullName);
 
 		if (!isOnline()) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 
 			builder.setMessage("No Network Available");
 			builder.setPositiveButton("OK", null);
@@ -550,8 +564,8 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(BookaCab.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -768,12 +782,12 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		});
 
 		FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-				BookaCab.this);
+				BookaCabFragmentActivity.this);
 		JSONArray saveasjsonarray;
 		try {
 			saveasjsonarray = favoritesLocationReadWrite.readFromFile();
 			if (saveasjsonarray.length() > 0) {
-				Log.e("saveasjsonarray", "" + saveasjsonarray);
+				Log.d("saveasjsonarray", "" + saveasjsonarray);
 				type.clear();
 				Latitude.clear();
 				Longitude.clear();
@@ -801,7 +815,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					}
 				}
 			} else {
-				Log.e("saveasjsonarray", "null");
+				Log.d("saveasjsonarray", "null");
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -868,7 +882,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 								.toString());
 						if (fAddress == null) {
 							Toast.makeText(
-									BookaCab.this,
+									BookaCabFragmentActivity.this,
 									"Could not locate the address, please try using the map or a different address",
 									Toast.LENGTH_LONG).show();
 						}
@@ -932,7 +946,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				tAddress = geocodeAddress(to_places.getText().toString());
 				if (tAddress == null) {
 					Toast.makeText(
-							BookaCab.this,
+							BookaCabFragmentActivity.this,
 							"Could not locate the address, please try using the map or a different address",
 							Toast.LENGTH_LONG).show();
 				}
@@ -1007,9 +1021,9 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					invitemapcenter = cameraPosition.target;
 
-					String address = getAddress(BookaCab.this,
+					String address = getAddress(BookaCabFragmentActivity.this,
 							invitemapcenter.latitude, invitemapcenter.longitude);
-					Log.e("address", "" + address);
+					Log.d("address", "" + address);
 
 					fromlocation.setText(address);
 
@@ -1030,7 +1044,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				if (whichdotclick.equalsIgnoreCase("fromdot")) {
 
 					LatLng mapfromlatlng = invitemapcenter;
-					fromshortname = getAddressshort(BookaCab.this,
+					fromshortname = getAddressshort(BookaCabFragmentActivity.this,
 							mapfromlatlng.latitude, mapfromlatlng.longitude);
 
 					fAddress = null; // reset previous
@@ -1039,7 +1053,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder fcoder = new Geocoder(BookaCab.this);
+					Geocoder fcoder = new Geocoder(BookaCabFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
 								.getFromLocationName(jnd, 50);
@@ -1059,7 +1073,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				else if (whichdotclick.equalsIgnoreCase("todot")) {
 
 					LatLng maptolatlng = invitemapcenter;
-					toshortname = getAddressshort(BookaCab.this,
+					toshortname = getAddressshort(BookaCabFragmentActivity.this,
 							maptolatlng.latitude, maptolatlng.longitude);
 
 					tAddress = null; // reset previous
@@ -1068,7 +1082,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					String jnd2 = to_places.getText().toString().trim();
 
-					Geocoder tcoder = new Geocoder(BookaCab.this);
+					Geocoder tcoder = new Geocoder(BookaCabFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
 								.getFromLocationName(jnd2, 50);
@@ -1130,7 +1144,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCab.this, latitude, longitude);
+				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1172,7 +1186,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCab.this, latitude, longitude);
+				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1200,7 +1214,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					fromshortname = getaddressfromautoplace(BookaCab.this,
+					fromshortname = getaddressfromautoplace(BookaCabFragmentActivity.this,
 							from_places.getText().toString().trim());
 				}
 			}
@@ -1236,7 +1250,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					toshortname = getaddressfromautoplace(BookaCab.this,
+					toshortname = getaddressfromautoplace(BookaCabFragmentActivity.this,
 							to_places.getText().toString().trim());
 				}
 			}
@@ -1285,7 +1299,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				try {
 					if (from_places.getText().toString().isEmpty()
 							|| fAddress == null) {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Please enter an address to save",
 								Toast.LENGTH_LONG).show();
 					} else {
@@ -1302,14 +1316,14 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						jsonObject.put("shortaddress", fromshortname);
 
 						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								BookaCab.this);
+								BookaCabFragmentActivity.this);
 
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCab.this, "Saved!",
+							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCab.this, "Error saving!",
+							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
 									Toast.LENGTH_LONG).show();
 						}
 						Log.d("BookaCab", "onClick mTextViewSetHomeFav : "
@@ -1336,7 +1350,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						try {
 							if (from_places.getText().toString().isEmpty()
 									|| fAddress == null) {
-								Toast.makeText(BookaCab.this,
+								Toast.makeText(BookaCabFragmentActivity.this,
 										"Please enter an address to save",
 										Toast.LENGTH_LONG).show();
 							} else {
@@ -1353,13 +1367,13 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 								jsonObject.put("shortaddress", fromshortname);
 
 								FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-										BookaCab.this);
+										BookaCabFragmentActivity.this);
 								if (favoritesLocationReadWrite
 										.saveToFile(jsonObject.toString())) {
-									Toast.makeText(BookaCab.this, "Saved!",
+									Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
 											Toast.LENGTH_LONG).show();
 								} else {
-									Toast.makeText(BookaCab.this,
+									Toast.makeText(BookaCabFragmentActivity.this,
 											"Error saving!", Toast.LENGTH_LONG)
 											.show();
 								}
@@ -1388,7 +1402,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				try {
 					if (to_places.getText().toString().isEmpty()
 							|| tAddress == null) {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Please enter an address to save",
 								Toast.LENGTH_LONG).show();
 					} else {
@@ -1405,13 +1419,13 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						jsonObject.put("shortaddress", toshortname);
 
 						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								BookaCab.this);
+								BookaCabFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCab.this, "Saved!",
+							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCab.this, "Error saving!",
+							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
 									Toast.LENGTH_LONG).show();
 						}
 
@@ -1437,7 +1451,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				try {
 					if (to_places.getText().toString().isEmpty()
 							|| tAddress == null) {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Please enter an address to save",
 								Toast.LENGTH_LONG).show();
 					} else {
@@ -1454,13 +1468,13 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						jsonObject.put("shortaddress", toshortname);
 
 						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								BookaCab.this);
+								BookaCabFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCab.this, "Saved!",
+							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCab.this, "Error saving!",
+							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
 									Toast.LENGTH_LONG).show();
 						}
 
@@ -1514,7 +1528,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			Double startLat = Double.parseDouble(RowData[0]);
 			Double startLng = Double.parseDouble(RowData[1]);
 
-			String address = getAddress(BookaCab.this, startLat.doubleValue(),
+			String address = getAddress(BookaCabFragmentActivity.this, startLat.doubleValue(),
 					startLng.doubleValue());
 			from_places.setText(address);
 			fAddress = geocodeAddress(address);
@@ -1525,7 +1539,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			Double endLat = Double.parseDouble(RowData[0]);
 			Double endLng = Double.parseDouble(RowData[1]);
 
-			address = getAddress(BookaCab.this, endLat.doubleValue(),
+			address = getAddress(BookaCabFragmentActivity.this, endLat.doubleValue(),
 					endLng.doubleValue());
 			to_places.setText(address);
 			tAddress = geocodeAddress(address);
@@ -1580,7 +1594,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 	private class ConnectionTaskForFetchPool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(BookaCab.this);
+		private ProgressDialog dialog = new ProgressDialog(BookaCabFragmentActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1612,7 +1626,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(BookaCab.this,
+				Toast.makeText(BookaCabFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1715,7 +1729,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					if (arrayListTrip.size() > 0) {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								BookaCab.this);
+								BookaCabFragmentActivity.this);
 						View builderView = (View) getLayoutInflater().inflate(
 								R.layout.exisiting_rides_dialog, null);
 
@@ -1729,7 +1743,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						final AlertDialog dialog = builder.create();
 
 						listView.setAdapter(new CustomListViewAdapter(
-								BookaCab.this, arrayListTrip, arrayListDate,
+								BookaCabFragmentActivity.this, arrayListTrip, arrayListDate,
 								arrayListTime, arrayListSeat));
 						listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -1858,7 +1872,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse FetchMyPools", "" + httpResponse);
+			Log.d("httpResponse FetchMyPools", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1876,7 +1890,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + stringBuilder.toString());
+			Log.d("poolresponse", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1887,7 +1901,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			from_places.requestFocus();
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 
 			builder.setMessage("Please Enter From Location. If you have already selected a location on map please try again by selecting a nearby location");
 			builder.setPositiveButton("OK", null);
@@ -1902,7 +1916,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			if (!isOnline()) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						BookaCab.this);
+						BookaCabFragmentActivity.this);
 				builder.setTitle("Internet Connection Error");
 				builder.setMessage("ClubMyCab requires Internet connection");
 				builder.setPositiveButton("OK", null);
@@ -1947,7 +1961,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		@Override
 		protected void onPreExecute() {
 			Log.d("PerformCabSearchTimeAsync", "onPreExecute");
-			dialog12 = new ProgressDialog(BookaCab.this);
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
 			dialog12.setMessage("Please Wait...");
 			dialog12.setCancelable(false);
@@ -2002,7 +2016,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				} else {
 					response = "";
-					Log.e("PerformCabSearchTimeAsync",
+					Log.d("PerformCabSearchTimeAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
@@ -2018,7 +2032,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -2078,7 +2092,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 						@Override
 						public void run() {
-							Toast.makeText(BookaCab.this,
+							Toast.makeText(BookaCabFragmentActivity.this,
 									"Something went wrong, please try again",
 									Toast.LENGTH_LONG).show();
 						}
@@ -2091,7 +2105,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					@Override
 					public void run() {
 						Toast.makeText(
-								BookaCab.this,
+								BookaCabFragmentActivity.this,
 								"No cabs found for your location, we are continuously adding new locations",
 								Toast.LENGTH_LONG).show();
 					}
@@ -2111,7 +2125,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
-			dialog12 = new ProgressDialog(BookaCab.this);
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
 			dialog12.setMessage("Please Wait...");
 			dialog12.setCancelable(false);
@@ -2160,7 +2174,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				} else {
 					response = "";
-					Log.e("DistanceTimeEstimateAsync",
+					Log.d("DistanceTimeEstimateAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
@@ -2176,7 +2190,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -2206,7 +2220,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -2284,7 +2298,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			} else {
 				response = "";
-				Log.e("performCabSearchPrice",
+				Log.d("performCabSearchPrice",
 						"responseCode != HttpsURLConnection.HTTP_OK : "
 								+ responseCode);
 				return;
@@ -2348,7 +2362,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 						@Override
 						public void run() {
-							Toast.makeText(BookaCab.this,
+							Toast.makeText(BookaCabFragmentActivity.this,
 									"Something went wrong, please try again",
 									Toast.LENGTH_LONG).show();
 						}
@@ -2361,7 +2375,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					@Override
 					public void run() {
 						Toast.makeText(
-								BookaCab.this,
+								BookaCabFragmentActivity.this,
 								"No cabs found for your location, we are continuously adding new locations",
 								Toast.LENGTH_LONG).show();
 					}
@@ -2373,7 +2387,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				@Override
 				public void run() {
-					Toast.makeText(BookaCab.this,
+					Toast.makeText(BookaCabFragmentActivity.this,
 							"Something went wrong, please try again",
 							Toast.LENGTH_LONG).show();
 				}
@@ -2512,7 +2526,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 	 * false;
 	 * 
 	 * String address = getAddress(Invite.this, point.latitude,
-	 * point.longitude); Log.e("address", "" + address);
+	 * point.longitude); Log.d("address", "" + address);
 	 * 
 	 * fromlocation.setText(address); }
 	 */
@@ -2565,7 +2579,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		 * myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 		 * 
 		 * String address = getAddress(Invite.this, latitude, longitude);
-		 * Log.e("address", "" + address);
+		 * Log.d("address", "" + address);
 		 * 
 		 * ImageView imgbtn = (ImageView) findViewById(R.id.mylocbtn); // your
 		 * // button imgbtn.setOnClickListener(new View.OnClickListener() {
@@ -2619,10 +2633,10 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				jsonResults.append(buff, 0, read);
 			}
 		} catch (MalformedURLException e) {
-			Log.e(LOG_TAG, "Error processing Places API URL", e);
+			Log.e(LOG_TAG, "Error processing Places API URL" + e);
 			return resultList;
 		} catch (IOException e) {
-			Log.e(LOG_TAG, "Error connecting to Places API", e);
+			Log.e(LOG_TAG, "Error connecting to Places API" + e);
 			return resultList;
 		} finally {
 			if (conn != null) {
@@ -2642,7 +2656,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						"description"));
 			}
 		} catch (JSONException e) {
-			Log.e("LOG_TAG", "Cannot process JSON results", e);
+			Log.e("LOG_TAG", "Cannot process JSON results" + e);
 		}
 
 		return resultList;
@@ -2668,7 +2682,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		mypoollist = (ListView) dialog.findViewById(R.id.mypoollist);
 
-		adapter = new ListViewAdapter(BookaCab.this, FromLocation, ToLocation,
+		adapter = new ListViewAdapter(BookaCabFragmentActivity.this, FromLocation, ToLocation,
 				TravelDate, TravelTime, Seat_Status, OwnerName, imagename);
 		mypoollist.setAdapter(adapter);
 
@@ -2926,7 +2940,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			}
 
 			Log.d("distancevalue", "" + distancevalue);
-			Log.e("distancetext", "" + distancetext);
+			Log.d("distancetext", "" + distancetext);
 		}
 	}
 
@@ -2980,7 +2994,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					+ "/uberConnect.php?type=priceestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "&elat=" + tlatitude + "&elon="
 					+ tlongitude + "";
-			Log.w("url", url);
+			Log.d("url", url);
 			HttpGet httpget = new HttpGet(GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=priceestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "&elat=" + tlatitude + "&elon="
@@ -3025,7 +3039,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				e.printStackTrace();
 			}
 			String result = sb.toString();
-			Log.v("My Response :: ", result);
+			Log.d("My Response :: ", result);
 			return result;
 		}
 
@@ -3053,7 +3067,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			String url = GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=timeestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "";
-			Log.w("url", url);
+			Log.d("url", url);
 			HttpGet httpget = new HttpGet(GlobalVariables.ServiceUrl
 					+ "/uberConnect.php?type=timeestimates&lat=" + flatitude
 					+ "&lon=" + flongitude + "");
@@ -3097,7 +3111,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				e.printStackTrace();
 			}
 			String result = sb.toString();
-			Log.v("My Response :: ", result);
+			Log.d("My Response :: ", result);
 			return result;
 		}
 
@@ -3196,7 +3210,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 				}
 			});
 
-			Log.w("MyPool.FriendNamegetview:- ", CabName.get(position));
+			Log.d("MyPool.FriendNamegetview:- ", CabName.get(position));
 			return single_row;
 		}
 
@@ -3239,7 +3253,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						// position);
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								BookaCab.this);
+								BookaCabFragmentActivity.this);
 						View builderView = (View) getLayoutInflater().inflate(
 								R.layout.book_cab_detail_dialog, null);
 
@@ -3483,7 +3497,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 													|| phoneString
 															.equalsIgnoreCase("na")) {
 												Toast.makeText(
-														BookaCab.this,
+														BookaCabFragmentActivity.this,
 														"Phone number could not be retrieved",
 														Toast.LENGTH_LONG)
 														.show();
@@ -3508,7 +3522,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 											// TODO: handle exception
 											e.printStackTrace();
 											Toast.makeText(
-													BookaCab.this,
+													BookaCabFragmentActivity.this,
 													"Phone number could not be retrieved",
 													Toast.LENGTH_LONG).show();
 										}
@@ -3517,7 +3531,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 						try {
 							CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
-									BookaCab.this);
+									BookaCabFragmentActivity.this);
 							JSONArray jsonArray = cabUserCredentialsReadWrite
 									.readArrayFromFile();
 							JSONObject jsonObject = new JSONObject();
@@ -4143,7 +4157,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
 			builder.setMessage("ClubMyCab requires Internet connection");
 			builder.setPositiveButton("OK", null);
@@ -4155,7 +4169,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			return;
 		} else if (startAddress == null || endAddress == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 			builder.setTitle("");
 			builder.setMessage("Please provide both From & To locations to make a booking.");
 			builder.setPositiveButton("OK", null);
@@ -4195,7 +4209,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
-			dialog12 = new ProgressDialog(BookaCab.this);
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
 			dialog12.setMessage("Please Wait...");
 			dialog12.setCancelable(false);
@@ -4243,7 +4257,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				} else {
 					response = "";
-					Log.e("PerformCabSearchTimeAsync",
+					Log.d("PerformCabSearchTimeAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
@@ -4259,7 +4273,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -4271,7 +4285,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Intent intent = new Intent(BookaCab.this,
+						Intent intent = new Intent(BookaCabFragmentActivity.this,
 								MobileSiteActivity.class);
 						intent.putExtra(
 								MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL,
@@ -4297,7 +4311,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -4350,7 +4364,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
-			dialog12 = new ProgressDialog(BookaCab.this);
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
 			dialog12.setMessage("Please Wait...");
 			dialog12.setCancelable(false);
@@ -4399,7 +4413,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				} else {
 					response = "";
-					Log.e("GetUberAccessTokenAsync",
+					Log.d("GetUberAccessTokenAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
@@ -4415,7 +4429,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -4444,7 +4458,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 						@Override
 						public void run() {
-							Toast.makeText(BookaCab.this,
+							Toast.makeText(BookaCabFragmentActivity.this,
 									"Something went wrong, please try again",
 									Toast.LENGTH_LONG).show();
 						}
@@ -4456,7 +4470,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -4513,7 +4527,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			} else {
 				response = "";
-				Log.e("getUberBookingStatus",
+				Log.d("getUberBookingStatus",
 						"responseCode != HttpsURLConnection.HTTP_OK : "
 								+ responseCode);
 				return;
@@ -4587,7 +4601,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 								public void run() {
 
 									AlertDialog.Builder builder = new AlertDialog.Builder(
-											BookaCab.this);
+											BookaCabFragmentActivity.this);
 									builder.setTitle("Success");
 									builder.setMessage("Cab booked succesfully!\r\n"
 											+ "Driver : "
@@ -4647,7 +4661,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 								@Override
 								public void run() {
 									AlertDialog.Builder builder = new AlertDialog.Builder(
-											BookaCab.this);
+											BookaCabFragmentActivity.this);
 									builder.setTitle("Cab could not be booked");
 									builder.setMessage(status);
 									builder.setPositiveButton("OK", null);
@@ -4666,7 +4680,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 							@Override
 							public void run() {
 								Toast.makeText(
-										BookaCab.this,
+										BookaCabFragmentActivity.this,
 										"Something went wrong, please try again",
 										Toast.LENGTH_LONG).show();
 							}
@@ -4680,7 +4694,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 						@Override
 						public void run() {
-							Toast.makeText(BookaCab.this,
+							Toast.makeText(BookaCabFragmentActivity.this,
 									"Something went wrong, please try again",
 									Toast.LENGTH_LONG).show();
 						}
@@ -4744,7 +4758,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 							@Override
 							public void run() {
 								AlertDialog.Builder builder = new AlertDialog.Builder(
-										BookaCab.this);
+										BookaCabFragmentActivity.this);
 								builder.setTitle(finalDialogTitle);
 								builder.setMessage(finalDialogMessage);
 								builder.setPositiveButton("OK", null);
@@ -4762,7 +4776,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 							@Override
 							public void run() {
 								Toast.makeText(
-										BookaCab.this,
+										BookaCabFragmentActivity.this,
 										"Something went wrong, please try again",
 										Toast.LENGTH_LONG).show();
 							}
@@ -4776,7 +4790,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 						@Override
 						public void run() {
-							Toast.makeText(BookaCab.this,
+							Toast.makeText(BookaCabFragmentActivity.this,
 									"Something went wrong, please try again",
 									Toast.LENGTH_LONG).show();
 						}
@@ -4790,7 +4804,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				@Override
 				public void run() {
-					Toast.makeText(BookaCab.this,
+					Toast.makeText(BookaCabFragmentActivity.this,
 							"Something went wrong, please try again",
 							Toast.LENGTH_LONG).show();
 				}
@@ -4804,7 +4818,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
 			builder.setMessage("ClubMyCab requires Internet connection");
 			builder.setPositiveButton("OK", null);
@@ -4816,7 +4830,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			return;
 		} else if (startAddress == null || endAddress == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 			builder.setTitle("");
 			builder.setMessage("Please provide both From & To locations to make a booking.");
 			builder.setPositiveButton("OK", null);
@@ -4851,7 +4865,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
-			dialog12 = new ProgressDialog(BookaCab.this);
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
 			dialog12.setMessage("Please Wait...");
 			dialog12.setCancelable(false);
@@ -4898,7 +4912,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				} else {
 					response = "";
-					Log.e("BookMegaCabAsync",
+					Log.d("BookMegaCabAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
@@ -4914,7 +4928,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -4976,7 +4990,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 							public void run() {
 
 								AlertDialog.Builder builder = new AlertDialog.Builder(
-										BookaCab.this);
+										BookaCabFragmentActivity.this);
 								builder.setTitle("Success");
 								builder.setMessage("Cab booked succesfully!\r\n"
 										+ "Driver : "
@@ -5032,7 +5046,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 							@Override
 							public void run() {
 								AlertDialog.Builder builder = new AlertDialog.Builder(
-										BookaCab.this);
+										BookaCabFragmentActivity.this);
 								builder.setTitle("Cab could not be booked");
 								builder.setMessage(reason);
 								builder.setPositiveButton("OK", null);
@@ -5053,7 +5067,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 					@Override
 					public void run() {
-						Toast.makeText(BookaCab.this,
+						Toast.makeText(BookaCabFragmentActivity.this,
 								"Something went wrong, please try again",
 								Toast.LENGTH_LONG).show();
 					}
@@ -5183,7 +5197,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 		@Override
 		protected void onPreExecute() {
-			dialog12 = new ProgressDialog(BookaCab.this);
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
 			dialog12.setMessage("Please Wait...");
 			dialog12.setCancelable(false);
@@ -5232,7 +5246,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 				} else {
 					response = "";
-					Log.e("UpdateCMCRecordsAsync",
+					Log.d("UpdateCMCRecordsAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
@@ -5281,7 +5295,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 					}
 
 					if (shouldOpenBookedCabPage) {
-						Intent intent = new Intent(BookaCab.this, MyRides.class);
+						Intent intent = new Intent(BookaCabFragmentActivity.this, MyRidesActivity.class);
 						startActivity(intent);
 					}
 				}
@@ -5417,7 +5431,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 		final CharSequence[] options = { "Take Photo", "Choose from Gallery",
 				"Cancel" };
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(BookaCab.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
 		builder.setTitle("Add Photo!");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
 			@Override
@@ -5468,7 +5482,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(BookaCab.this,
+				Toast.makeText(BookaCabFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -5513,7 +5527,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -5531,7 +5545,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}
@@ -5562,7 +5576,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(BookaCab.this,
+				Toast.makeText(BookaCabFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -5606,7 +5620,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			httpPost11.setEntity(urlEncodedFormEntity11);
 			HttpResponse httpResponse11 = httpClient11.execute(httpPost11);
 
-			Log.e("httpResponse", "" + httpResponse11);
+			Log.d("httpResponse", "" + httpResponse11);
 
 			InputStream inputStream11 = httpResponse11.getEntity().getContent();
 			InputStreamReader inputStreamReader11 = new InputStreamReader(
@@ -5624,7 +5638,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						.toString();
 			}
 
-			Log.e("imagenameresp", "" + imagenameresp);
+			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
 
@@ -5707,7 +5721,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -5726,7 +5740,7 @@ public class BookaCab extends FragmentActivity implements LocationListener {
 						.toString();
 			}
 
-			Log.e("myprofileresp", "" + myprofileresp);
+			Log.d("myprofileresp", "" + myprofileresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyProfile", 0);

@@ -37,7 +37,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.maps.model.LatLng;
@@ -184,13 +184,13 @@ public class LocationShareService extends Service implements LocationListener {
 						double abs_longdiff = (longdiff < 0) ? -longdiff
 								: longdiff;
 
-						Log.i("abs_latdiff", "" + abs_latdiff);
-						Log.i("abs_longdiff", "" + abs_longdiff);
+						Log.d("abs_latdiff", "" + abs_latdiff);
+						Log.d("abs_longdiff", "" + abs_longdiff);
 
 						double dist = Math.sqrt((abs_latdiff * abs_latdiff)
 								+ (abs_longdiff * abs_longdiff));
 
-						Log.i("dist", "" + dist);
+						Log.d("dist", "" + dist);
 
 						if ((System.currentTimeMillis() < destinationtimevalue)
 								&& (dist > 0.002)) {
@@ -344,7 +344,7 @@ public class LocationShareService extends Service implements LocationListener {
 					e.printStackTrace();
 				}
 
-				Log.e("httpResponse", "" + httpResponse);
+				Log.d("httpResponse", "" + httpResponse);
 			}
 
 		} else {
@@ -539,7 +539,7 @@ public class LocationShareService extends Service implements LocationListener {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -557,7 +557,7 @@ public class LocationShareService extends Service implements LocationListener {
 						.toString();
 			}
 
-			Log.e("shareresponse", "" + stringBuilder.toString());
+			Log.d("shareresponse", "" + stringBuilder.toString());
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -45,7 +45,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,14 +56,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.InviteFragmentActivity;
+import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class HomePage extends Activity {
+public class HomeActivity extends Activity {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -124,7 +129,7 @@ public class HomePage extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(HomePage.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -147,7 +152,7 @@ public class HomePage extends Activity {
 
 		// ////////////////////
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(HomePage.this);
+		GoogleAnalytics analytics = GoogleAnalytics.getInstance(HomeActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -173,7 +178,7 @@ public class HomePage extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("homepagerl", "homepagerl");
+				Log.d("homepagerl", "homepagerl");
 			}
 		});
 
@@ -227,7 +232,7 @@ public class HomePage extends Activity {
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(HomePage.this, MyProfile.class);
+				Intent mainIntent = new Intent(HomeActivity.this, MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -245,7 +250,7 @@ public class HomePage extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomePage.this, MyRides.class);
+				Intent mainIntent = new Intent(HomeActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -263,7 +268,7 @@ public class HomePage extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomePage.this, BookaCab.class);
+				Intent mainIntent = new Intent(HomeActivity.this, BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -281,8 +286,8 @@ public class HomePage extends Activity {
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(HomePage.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -300,7 +305,7 @@ public class HomePage extends Activity {
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomePage.this, MyClubs.class);
+				Intent mainIntent = new Intent(HomeActivity.this, MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -341,8 +346,8 @@ public class HomePage extends Activity {
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomePage.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -359,8 +364,8 @@ public class HomePage extends Activity {
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(HomePage.this,
-						MainActivity.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -396,7 +401,7 @@ public class HomePage extends Activity {
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						HomePage.this, R.anim.button_click_anim);
+						HomeActivity.this, R.anim.button_click_anim);
 				homeclubmycabll.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -411,8 +416,8 @@ public class HomePage extends Activity {
 
 						logger.logEvent("HomePage ClubMyCab Click");
 
-						Intent mainIntent = new Intent(HomePage.this,
-								Invite.class);
+						Intent mainIntent = new Intent(HomeActivity.this,
+								InviteFragmentActivity.class);
 						startActivityForResult(mainIntent, 500);
 						overridePendingTransition(R.anim.slide_in_right,
 								R.anim.slide_out_left);
@@ -429,7 +434,7 @@ public class HomePage extends Activity {
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						HomePage.this, R.anim.button_click_anim);
+						HomeActivity.this, R.anim.button_click_anim);
 				homebookacabll.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -444,8 +449,8 @@ public class HomePage extends Activity {
 
 						logger.logEvent("HomePage BookaCab Click");
 
-						Intent mainIntent = new Intent(HomePage.this,
-								BookaCab.class);
+						Intent mainIntent = new Intent(HomeActivity.this,
+								BookaCabFragmentActivity.class);
 						startActivityForResult(mainIntent, 500);
 						overridePendingTransition(R.anim.slide_in_right,
 								R.anim.slide_out_left);
@@ -462,7 +467,7 @@ public class HomePage extends Activity {
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						HomePage.this, R.anim.button_click_anim);
+						HomeActivity.this, R.anim.button_click_anim);
 				homehereiamll.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -477,8 +482,8 @@ public class HomePage extends Activity {
 
 						logger.logEvent("HomePage ShareLocation Click");
 
-						Intent mainIntent = new Intent(HomePage.this,
-								ShareLocation.class);
+						Intent mainIntent = new Intent(HomeActivity.this,
+								ShareLocationFragmentActivity.class);
 						startActivityForResult(mainIntent, 500);
 						overridePendingTransition(R.anim.slide_in_right,
 								R.anim.slide_out_left);
@@ -504,8 +509,8 @@ public class HomePage extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(HomePage.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -575,7 +580,7 @@ public class HomePage extends Activity {
 		final CharSequence[] options = { "Take Photo", "Choose from Gallery",
 				"Cancel" };
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(HomePage.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
 		builder.setTitle("Add Photo!");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
 			@Override
@@ -704,7 +709,7 @@ public class HomePage extends Activity {
 			}
 		} else {
 			mainbmp = null;
-			Log.e("Result not ok", "Result not ok");
+			Log.d("Result not ok", "Result not ok");
 		}
 
 	}
@@ -713,7 +718,7 @@ public class HomePage extends Activity {
 
 	private class ConnectionTaskForImageUpload extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(HomePage.this);
+		private ProgressDialog dialog = new ProgressDialog(HomeActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -746,7 +751,7 @@ public class HomePage extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(HomePage.this,
+				Toast.makeText(HomeActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -755,7 +760,7 @@ public class HomePage extends Activity {
 			if (imageuploadresp.equalsIgnoreCase("Error")) {
 
 				Toast.makeText(
-						HomePage.this,
+						HomeActivity.this,
 						"Error uploading Image, Please try again or use a different image",
 						Toast.LENGTH_SHORT).show();
 			} else {
@@ -763,7 +768,7 @@ public class HomePage extends Activity {
 				profilepic.setImageBitmap(mIcon11);
 				drawerprofilepic.setImageBitmap(mIcon11);
 
-				Toast.makeText(HomePage.this, "Image Uploaded",
+				Toast.makeText(HomeActivity.this, "Image Uploaded",
 						Toast.LENGTH_SHORT).show();
 
 				if (mIcon11 != null) {
@@ -920,7 +925,7 @@ public class HomePage extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -938,7 +943,7 @@ public class HomePage extends Activity {
 						.toString();
 			}
 
-			Log.e("imageuploadresp", "" + stringBuilder.toString());
+			Log.d("imageuploadresp", "" + stringBuilder.toString());
 
 			if (imageuploadresp.equalsIgnoreCase("Error")) {
 
@@ -1034,7 +1039,7 @@ public class HomePage extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(HomePage.this,
+				Toast.makeText(HomeActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1079,7 +1084,7 @@ public class HomePage extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1097,7 +1102,7 @@ public class HomePage extends Activity {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}
@@ -1130,7 +1135,7 @@ public class HomePage extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(HomePage.this,
+				Toast.makeText(HomeActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1174,7 +1179,7 @@ public class HomePage extends Activity {
 			httpPost11.setEntity(urlEncodedFormEntity11);
 			HttpResponse httpResponse11 = httpClient11.execute(httpPost11);
 
-			Log.e("httpResponse", "" + httpResponse11);
+			Log.d("httpResponse", "" + httpResponse11);
 
 			InputStream inputStream11 = httpResponse11.getEntity().getContent();
 			InputStreamReader inputStreamReader11 = new InputStreamReader(
@@ -1192,7 +1197,7 @@ public class HomePage extends Activity {
 						.toString();
 			}
 
-			Log.e("imagenameresp", "" + imagenameresp);
+			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
 
@@ -1252,7 +1257,7 @@ public class HomePage extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(HomePage.this,
+				Toast.makeText(HomeActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1284,7 +1289,7 @@ public class HomePage extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1303,7 +1308,7 @@ public class HomePage extends Activity {
 						.toString();
 			}
 
-			Log.e("myprofileresp", "" + myprofileresp);
+			Log.d("myprofileresp", "" + myprofileresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyProfile", 0);
@@ -1342,7 +1347,7 @@ public class HomePage extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(HomePage.this,
+				Toast.makeText(HomeActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1376,7 +1381,7 @@ public class HomePage extends Activity {
 	}
 
 	private void showNoClubDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(HomePage.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
 
 		builder.setMessage("You are not a member of any clubs yet! Let's start by creating your first.");
 		builder.setPositiveButton("OK\r\n",
@@ -1384,8 +1389,8 @@ public class HomePage extends Activity {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						Intent mainIntent = new Intent(HomePage.this,
-								MyClubs.class);
+						Intent mainIntent = new Intent(HomeActivity.this,
+								MyClubsActivity.class);
 						startActivity(mainIntent);
 					}
 				});
@@ -1449,7 +1454,7 @@ public class HomePage extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1467,7 +1472,7 @@ public class HomePage extends Activity {
 				myclubsresp = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);

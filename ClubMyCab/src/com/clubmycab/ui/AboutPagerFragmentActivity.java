@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.util.ArrayList;
 
@@ -15,9 +15,10 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
+import com.clubmycab.R;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class MainActivity extends FragmentActivity {
+public class AboutPagerFragmentActivity extends FragmentActivity {
 
 	private ViewPager mViewPager;
 	private FragmentStatePagerAdapter mFragmentStatePagerAdapter;
@@ -115,8 +116,8 @@ public class MainActivity extends FragmentActivity {
 			public void onClick(View v) {
 				
 				if (mStartedFrom != null) {
-					Intent mainIntent = new Intent(MainActivity.this,
-							LoginViaPhoneNumber.class);
+					Intent mainIntent = new Intent(AboutPagerFragmentActivity.this,
+							LoginActivity.class);
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);

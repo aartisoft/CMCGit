@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -33,7 +33,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +45,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.AllNotificationListViewAdapter;
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CheckPoolFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.MemberRideFragmentActivity;
+import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -55,7 +62,7 @@ import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
-public class AllNotificationRequest extends Activity {
+public class NotificationListActivity extends Activity {
 
 	String FullName;
 	String MobileNumberstr;
@@ -122,7 +129,7 @@ public class AllNotificationRequest extends Activity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					AllNotificationRequest.this);
+					NotificationListActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -144,7 +151,7 @@ public class AllNotificationRequest extends Activity {
 		}
 
 		GoogleAnalytics analytics = GoogleAnalytics
-				.getInstance(AllNotificationRequest.this);
+				.getInstance(NotificationListActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -162,7 +169,7 @@ public class AllNotificationRequest extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("allnotificationrl", "allnotificationrl");
+				Log.d("allnotificationrl", "allnotificationrl");
 			}
 		});
 
@@ -217,8 +224,8 @@ public class AllNotificationRequest extends Activity {
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						MyProfile.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -236,8 +243,8 @@ public class AllNotificationRequest extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						MyRides.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -255,8 +262,8 @@ public class AllNotificationRequest extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						BookaCab.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -274,8 +281,8 @@ public class AllNotificationRequest extends Activity {
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -293,8 +300,8 @@ public class AllNotificationRequest extends Activity {
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						MyClubs.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -335,8 +342,8 @@ public class AllNotificationRequest extends Activity {
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -353,8 +360,8 @@ public class AllNotificationRequest extends Activity {
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(AllNotificationRequest.this,
-						MainActivity.class);
+				Intent mainIntent = new Intent(NotificationListActivity.this,
+						AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -391,7 +398,7 @@ public class AllNotificationRequest extends Activity {
 			public void onClick(View v) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						AllNotificationRequest.this);
+						NotificationListActivity.this);
 				builder.setMessage("Are you sure you want to clear all notifications? To remove individual notification, swipe them");
 				builder.setCancelable(true);
 				builder.setPositiveButton("No",
@@ -425,7 +432,7 @@ public class AllNotificationRequest extends Activity {
 									new clearallnotificationtask().execute();
 
 								} else {
-									Toast.makeText(AllNotificationRequest.this,
+									Toast.makeText(NotificationListActivity.this,
 											"No Notifications to clear!!",
 											Toast.LENGTH_LONG).show();
 								}
@@ -468,7 +475,7 @@ public class AllNotificationRequest extends Activity {
 					new markallasnotificationtask().execute();
 
 				} else {
-					Toast.makeText(AllNotificationRequest.this,
+					Toast.makeText(NotificationListActivity.this,
 							"No Notifications to mark as read!!",
 							Toast.LENGTH_LONG).show();
 				}
@@ -526,7 +533,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -559,7 +566,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 		}
 	}
 
@@ -590,7 +597,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -623,7 +630,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 		}
 	}
 
@@ -633,7 +640,7 @@ public class AllNotificationRequest extends Activity {
 			AsyncTask<String, Void, Void> {
 
 		private ProgressDialog dialog = new ProgressDialog(
-				AllNotificationRequest.this);
+				NotificationListActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -666,14 +673,14 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 
 			if (allnotificationresp.equalsIgnoreCase("No Notification !!")) {
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						"" + allnotificationresp, Toast.LENGTH_LONG).show();
 				allnotificationiconsll.setVisibility(View.GONE);
 			} else {
@@ -731,7 +738,7 @@ public class AllNotificationRequest extends Activity {
 
 					onnotificationlistview = (DynamicListView) findViewById(R.id.onnotificationlistview);
 					adapter = new AllNotificationListViewAdapter(
-							AllNotificationRequest.this, SentMemberName,
+							NotificationListActivity.this, SentMemberName,
 							SentMemberNumber, ReceiveMemberName,
 							ReceiveMemberNumber, Message, CabId, DateTime,
 							Status, NotificationType);
@@ -844,7 +851,7 @@ public class AllNotificationRequest extends Activity {
 											.equalsIgnoreCase("CabId_Refered")) {
 
 										AlertDialog.Builder builder = new AlertDialog.Builder(
-												AllNotificationRequest.this);
+												NotificationListActivity.this);
 										builder.setMessage("Do you want to invite friend refered by "
 												+ SentMemberName.get(arg2)
 														.toString().trim()
@@ -951,19 +958,19 @@ public class AllNotificationRequest extends Activity {
 													"Share_LocationUpdate")) {
 										String[] arr = Message.get(arg2).split(
 												"-");
-										Log.e("arr", ""
+										Log.d("arr", ""
 												+ arr[1].toString().trim());
 
 										address = arr[1].toString().trim();
 										latlongmap = UserLatLong.get(arg2);
 
 										Intent mainIntent = new Intent(
-												AllNotificationRequest.this,
-												LocationInMap.class);
+												NotificationListActivity.this,
+												LocationInMapFragmentActivity.class);
 										mainIntent.putExtra("address", address);
 										mainIntent.putExtra("latlongmap",
 												latlongmap);
-										AllNotificationRequest.this
+										NotificationListActivity.this
 												.startActivity(mainIntent);
 
 									} else if (NotificationType.get(arg2)
@@ -1001,8 +1008,8 @@ public class AllNotificationRequest extends Activity {
 															"PoolId_Rejected")) {
 
 										Intent mainIntent = new Intent(
-												AllNotificationRequest.this,
-												MyClubs.class);
+												NotificationListActivity.this,
+												MyClubsActivity.class);
 										mainIntent.putExtra("comefrom",
 												"comefrom");
 										startActivityForResult(mainIntent, 500);
@@ -1015,7 +1022,7 @@ public class AllNotificationRequest extends Activity {
 											.equalsIgnoreCase("PoolId_Refered")) {
 
 										AlertDialog.Builder builder = new AlertDialog.Builder(
-												AllNotificationRequest.this);
+												NotificationListActivity.this);
 										builder.setMessage("Do you want to add friend refered by "
 												+ SentMemberName.get(arg2)
 														.toString().trim());
@@ -1148,7 +1155,7 @@ public class AllNotificationRequest extends Activity {
 										final int[] reverseSortedPositions) {
 									for (int position : reverseSortedPositions) {
 
-										Log.e("position", "" + position);
+										Log.d("position", "" + position);
 
 										if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 											new SwipeToDeleteParticularNotiFication()
@@ -1249,7 +1256,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1267,7 +1274,7 @@ public class AllNotificationRequest extends Activity {
 						.toString();
 			}
 
-			Log.e("allnotificationresp", "" + stringBuilder.toString());
+			Log.d("allnotificationresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1299,7 +1306,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1337,7 +1344,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 		}
 	}
 
@@ -1347,7 +1354,7 @@ public class AllNotificationRequest extends Activity {
 	private class ConnectionTaskForseenotification extends
 			AsyncTask<String, Void, Void> {
 		private ProgressDialog dialog = new ProgressDialog(
-				AllNotificationRequest.this);
+				NotificationListActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1381,14 +1388,14 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 
 			if (gotopoolresp.equalsIgnoreCase("This Ride no longer exist")) {
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						"This ride no longer exists!", Toast.LENGTH_LONG)
 						.show();
 			} else {
@@ -1472,7 +1479,7 @@ public class AllNotificationRequest extends Activity {
 					if (MobileNumber.equalsIgnoreCase(MobileNumberstr)) {
 
 						final Intent mainIntent = new Intent(
-								AllNotificationRequest.this, CheckPool.class);
+								NotificationListActivity.this, CheckPoolFragmentActivity.class);
 						mainIntent.putExtra("CabId", CabIdstr);
 						mainIntent.putExtra("MobileNumber", MobileNumber);
 						mainIntent.putExtra("OwnerName", OwnerName);
@@ -1498,11 +1505,11 @@ public class AllNotificationRequest extends Activity {
 						mainIntent.putExtra("DriverNumber", DriverNumber);
 						mainIntent.putExtra("CarNumber", CarNumber);
 
-						AllNotificationRequest.this.startActivity(mainIntent);
+						NotificationListActivity.this.startActivity(mainIntent);
 
 					} else {
 						final Intent mainIntent = new Intent(
-								AllNotificationRequest.this, JoinPool.class);
+								NotificationListActivity.this, MemberRideFragmentActivity.class);
 						mainIntent.putExtra("CabId", CabIdstr);
 						mainIntent.putExtra("MobileNumber", MobileNumber);
 						mainIntent.putExtra("OwnerName", OwnerName);
@@ -1527,7 +1534,7 @@ public class AllNotificationRequest extends Activity {
 						mainIntent.putExtra("DriverNumber", DriverNumber);
 						mainIntent.putExtra("CarNumber", CarNumber);
 
-						AllNotificationRequest.this.startActivity(mainIntent);
+						NotificationListActivity.this.startActivity(mainIntent);
 					}
 
 				} catch (JSONException e) {
@@ -1565,7 +1572,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1583,7 +1590,7 @@ public class AllNotificationRequest extends Activity {
 						.toString();
 			}
 
-			Log.e("gotopoolresp", "" + stringBuilder.toString());
+			Log.d("gotopoolresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1591,8 +1598,8 @@ public class AllNotificationRequest extends Activity {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 
-		Intent mainIntent = new Intent(AllNotificationRequest.this,
-				HomePage.class);
+		Intent mainIntent = new Intent(NotificationListActivity.this,
+				HomeActivity.class);
 		mainIntent.putExtra("from", "normal");
 		mainIntent.putExtra("message", "null");
 		mainIntent.putExtra("CabId", "null");
@@ -1634,7 +1641,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1688,7 +1695,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1706,7 +1713,7 @@ public class AllNotificationRequest extends Activity {
 						.toString();
 			}
 
-			Log.e("gotopoolresp", "" + stringBuilder.toString());
+			Log.d("gotopoolresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1743,7 +1750,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1797,7 +1804,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1815,7 +1822,7 @@ public class AllNotificationRequest extends Activity {
 						.toString();
 			}
 
-			Log.e("gotopoolresp", "" + stringBuilder.toString());
+			Log.d("gotopoolresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1823,7 +1830,7 @@ public class AllNotificationRequest extends Activity {
 			AsyncTask<String, Void, Void> {
 
 		private ProgressDialog dialog = new ProgressDialog(
-				AllNotificationRequest.this);
+				NotificationListActivity.this);
 		private String cabIDString;
 		private String notificationIDString;
 
@@ -1859,7 +1866,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1867,12 +1874,12 @@ public class AllNotificationRequest extends Activity {
 
 			if (cabratingresp.isEmpty() || cabratingresp == null
 					|| cabratingresp.toLowerCase().contains("no cabs found")) {
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						"Sorry, no cabs were found", Toast.LENGTH_SHORT).show();
 			} else {
 
-				Intent intent = new Intent(AllNotificationRequest.this,
-						RateCab.class);
+				Intent intent = new Intent(NotificationListActivity.this,
+						RateCabActivity.class);
 				intent.putExtra("CabsJSONArrayString", cabratingresp);
 				intent.putExtra("CabsRatingMobileNumber", MobileNumberstr);
 				intent.putExtra("cabIDIntent", cabIDString);
@@ -1911,7 +1918,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1929,7 +1936,7 @@ public class AllNotificationRequest extends Activity {
 						.toString();
 			}
 
-			Log.e("cabratingresp", "" + stringBuilder.toString());
+			Log.d("cabratingresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -2019,7 +2026,7 @@ public class AllNotificationRequest extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(AllNotificationRequest.this,
+				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2058,7 +2065,7 @@ public class AllNotificationRequest extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 		}
 	}
 }

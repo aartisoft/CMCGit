@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -38,13 +37,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class SettingDetails extends Activity {
+public class SettingActivity extends Activity {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -95,7 +99,7 @@ public class SettingDetails extends Activity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					SettingDetails.this);
+					SettingActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -117,7 +121,7 @@ public class SettingDetails extends Activity {
 		}
 
 		GoogleAnalytics analytics = GoogleAnalytics
-				.getInstance(SettingDetails.this);
+				.getInstance(SettingActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -130,7 +134,7 @@ public class SettingDetails extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("settingsrl", "settingsrl");
+				Log.d("settingsrl", "settingsrl");
 			}
 		});
 
@@ -184,8 +188,8 @@ public class SettingDetails extends Activity {
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						MyProfile.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -203,8 +207,8 @@ public class SettingDetails extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						MyRides.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -222,8 +226,8 @@ public class SettingDetails extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						BookaCab.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -241,8 +245,8 @@ public class SettingDetails extends Activity {
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -260,8 +264,8 @@ public class SettingDetails extends Activity {
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						MyClubs.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -309,8 +313,8 @@ public class SettingDetails extends Activity {
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						MainActivity.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -340,8 +344,8 @@ public class SettingDetails extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(SettingDetails.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(SettingActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -496,7 +500,7 @@ public class SettingDetails extends Activity {
 				// TODO Auto-generated method stub
 				AlertDialog dialog;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						SettingDetails.this);
+						SettingActivity.this);
 				builder.setTitle(null);
 
 				final CharSequence str[] = { "2 minutes", "5 minutes",
@@ -554,7 +558,7 @@ public class SettingDetails extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(SettingDetails.this,
+				Toast.makeText(SettingActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -598,7 +602,7 @@ public class SettingDetails extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -616,7 +620,7 @@ public class SettingDetails extends Activity {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}

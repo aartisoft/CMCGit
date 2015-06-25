@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +39,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,7 +49,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -65,7 +66,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class UpdatePickupLocation extends FragmentActivity {
+public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 
 	String CabId;
 	String MobileNumber;
@@ -145,7 +146,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					UpdatePickupLocation.this);
+					UpdatePickupLocationFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -216,7 +217,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 				if (updatelocationmarker.getVisibility() == View.VISIBLE) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							UpdatePickupLocation.this);
+							UpdatePickupLocationFragmentActivity.this);
 					builder.setMessage(memberlocationaddress.toUpperCase());
 					builder.setCancelable(false);
 					builder.setPositiveButton("Update Location",
@@ -225,7 +226,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 										int id) {
 
 									onedialog = new ProgressDialog(
-											UpdatePickupLocation.this);
+											UpdatePickupLocationFragmentActivity.this);
 									onedialog.setMessage("Please Wait...");
 									onedialog.setCancelable(false);
 									onedialog.setCanceledOnTouchOutside(false);
@@ -255,7 +256,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 				} else {
 					Toast.makeText(
-							UpdatePickupLocation.this,
+							UpdatePickupLocationFragmentActivity.this,
 							"Please update your pickup location by clicking on map",
 							Toast.LENGTH_LONG).show();
 				}
@@ -263,7 +264,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 			}
 		});
 
-		onedialog = new ProgressDialog(UpdatePickupLocation.this);
+		onedialog = new ProgressDialog(UpdatePickupLocationFragmentActivity.this);
 		onedialog.setMessage("Please Wait...");
 		onedialog.setCancelable(false);
 		onedialog.setCanceledOnTouchOutside(false);
@@ -306,7 +307,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(UpdatePickupLocation.this,
+				Toast.makeText(UpdatePickupLocationFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -386,11 +387,11 @@ public class UpdatePickupLocation extends FragmentActivity {
 					updatelocationmarker.setVisibility(View.VISIBLE);
 					memberlocationlatlong = point;
 					memberlocationaddress = getAddress(
-							UpdatePickupLocation.this, point.latitude,
+							UpdatePickupLocationFragmentActivity.this, point.latitude,
 							point.longitude);
 
-					Log.e("memberlocationlatlong", "" + memberlocationlatlong);
-					Log.e("memberlocationaddress", "" + memberlocationaddress);
+					Log.d("memberlocationlatlong", "" + memberlocationlatlong);
+					Log.d("memberlocationaddress", "" + memberlocationaddress);
 				}
 			});
 
@@ -405,12 +406,12 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 							memberlocationlatlong = mapcenter;
 							memberlocationaddress = getAddress(
-									UpdatePickupLocation.this,
+									UpdatePickupLocationFragmentActivity.this,
 									mapcenter.latitude, mapcenter.longitude);
 
-							Log.e("memberlocationlatlong", ""
+							Log.d("memberlocationlatlong", ""
 									+ memberlocationlatlong);
-							Log.e("memberlocationaddress", ""
+							Log.d("memberlocationaddress", ""
 									+ memberlocationaddress);
 
 						}
@@ -558,14 +559,14 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			// /////
 			Log.d("Summary", "" + Summary);
-			Log.e("startaddress", "" + startaddress);
-			Log.e("endaddress", "" + endaddress);
-			Log.e("startaddlatlng", "" + startaddlatlng);
-			Log.e("endaddlatlng", "" + endaddlatlng);
+			Log.d("startaddress", "" + startaddress);
+			Log.d("endaddress", "" + endaddress);
+			Log.d("startaddlatlng", "" + startaddlatlng);
+			Log.d("endaddlatlng", "" + endaddlatlng);
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = getAddress(UpdatePickupLocation.this,
+				String asd = getAddress(UpdatePickupLocationFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
@@ -652,7 +653,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(UpdatePickupLocation.this,
+				Toast.makeText(UpdatePickupLocationFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -790,7 +791,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 				if (Seats.equalsIgnoreCase("0")) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							UpdatePickupLocation.this);
+							UpdatePickupLocationFragmentActivity.this);
 					builder.setMessage("Sorry For Inconvience. Cab is Full");
 					builder.setCancelable(false);
 					builder.setNegativeButton("OK",
@@ -844,7 +845,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -862,7 +863,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 						.toString();
 			}
 
-			Log.e("showmembersresp", "" + stringBuilder.toString());
+			Log.d("showmembersresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -966,7 +967,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(UpdatePickupLocation.this,
+				Toast.makeText(UpdatePickupLocationFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1033,7 +1034,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1051,7 +1052,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 						.toString();
 			}
 
-			Log.e("updatelocationpoolresp", "" + stringBuilder.toString());
+			Log.d("updatelocationpoolresp", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1087,7 +1088,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(UpdatePickupLocation.this,
+				Toast.makeText(UpdatePickupLocationFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1130,7 +1131,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1148,7 +1149,7 @@ public class UpdatePickupLocation extends FragmentActivity {
 						bufferedStrChunk).toString();
 			}
 
-			Log.e("checkpoolalreadyjoinresp", "" + stringBuilder.toString());
+			Log.d("checkpoolalreadyjoinresp", "" + stringBuilder.toString());
 		}
 	}
 

@@ -11,6 +11,6 @@ public class GlobalVariables {
 	public static final String ServerNameForChat = "@p2p-vm1"; // production
 	//public static final String ServerNameForChat = "@p2p-vm2"; // UAT
 	
-	public static final boolean LOGGING_ENABLED = false;
+	public static final boolean LOGGING_ENABLED = true;
 
 }

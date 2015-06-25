@@ -8,7 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -75,7 +75,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		String selectQuery = "SELECT * FROM " + TABLE_GROUPCHAT + " WHERE "
 				+ KEY_CABID + " = " + "'" + CabId + "'";
 
-		Log.v("selectQuery", "" + selectQuery);
+		Log.d("selectQuery", "" + selectQuery);
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -101,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		String selectQuery = "DELETE FROM " + TABLE_GROUPCHAT + " WHERE "
 				+ KEY_CABID + " NOT IN " + "(" + CabIds + ")";
-		Log.v("selectQuery", "" + selectQuery);
+		Log.d("selectQuery", "" + selectQuery);
 		getWritableDatabase().execSQL(selectQuery);
 	}
 }

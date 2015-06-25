@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -28,15 +28,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-public class Splash extends Activity {
+public class SplashActivity extends Activity {
 
 	String FullName;
 	String MobileNumber;
@@ -57,7 +58,7 @@ public class Splash extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(Splash.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -103,7 +104,7 @@ public class Splash extends Activity {
 		if ((FullName.isEmpty() || FullName == null)
 				&& (MobileNumber.isEmpty() || MobileNumber == null)) {
 
-			Intent mainIntent = new Intent(Splash.this, MainActivity.class);
+			Intent mainIntent = new Intent(SplashActivity.this, AboutPagerFragmentActivity.class);
 			mainIntent.putExtra("mStartedFrom", "mStartedFrom");
 			startActivity(mainIntent);
 			overridePendingTransition(R.anim.slide_in_right,
@@ -155,7 +156,7 @@ public class Splash extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(Splash.this,
+				Toast.makeText(SplashActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -168,7 +169,7 @@ public class Splash extends Activity {
 			if (latestappversion < forceappversion) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						Splash.this);
+						SplashActivity.this);
 				builder.setMessage("Newer version of the app is available. You need to update before proceeding");
 				builder.setCancelable(false);
 				builder.setPositiveButton("Update",
@@ -205,14 +206,14 @@ public class Splash extends Activity {
 
 			} else {
 				if (verifyotp.equalsIgnoreCase("false")) {
-					Intent mainIntent = new Intent(Splash.this, EnterOTP.class);
+					Intent mainIntent = new Intent(SplashActivity.this, OTPActivity.class);
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);
 					finish();
 				} else {
 
-					Intent mainIntent = new Intent(Splash.this, HomePage.class);
+					Intent mainIntent = new Intent(SplashActivity.this, HomeActivity.class);
 					mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					startActivityForResult(mainIntent, 500);
@@ -248,7 +249,7 @@ public class Splash extends Activity {
 								.getInstance(getApplicationContext());
 					}
 					regid = gcm.register(PROJECT_NUMBER);
-					Log.i("GCM", "Device registered, ID is " + regid);
+					Log.d("GCM", "Device registered, ID is " + regid);
 
 					HttpClient httpClient = new DefaultHttpClient();
 					String url_select = GlobalVariables.ServiceUrl
@@ -301,7 +302,7 @@ public class Splash extends Activity {
 									.getInstance(getApplicationContext());
 						}
 						regid = gcm.register(PROJECT_NUMBER);
-						Log.i("GCM", "Device registered, ID is " + regid);
+						Log.d("GCM", "Device registered, ID is " + regid);
 
 						HttpClient httpClient = new DefaultHttpClient();
 						String url_select = GlobalVariables.ServiceUrl
@@ -382,7 +383,7 @@ public class Splash extends Activity {
 						.toString();
 			}
 
-			Log.e("forceupdateversion", "" + forceupdateversion);
+			Log.d("forceupdateversion", "" + forceupdateversion);
 
 		}
 	}

@@ -2,7 +2,7 @@ package com.clubmycab;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public abstract class SafeAsyncTask<ResultT> implements Callable<ResultT> {
     }
 
     protected void onThrowable(Throwable t) throws RuntimeException {
-        Log.e("roboguice", "Throwable caught during background processing", t);
+        Log.e("roboguice", "Throwable caught during background processing" + t);
     }
 
     /**
@@ -181,7 +181,7 @@ public abstract class SafeAsyncTask<ResultT> implements Callable<ResultT> {
                     doException(e);
                 } catch (Exception f) {
                     // logged but ignored
-                    Log.e("BACKGROUND_TASK", "Exception in", f);
+                    Log.e("BACKGROUND_TASK", "Exception in" + f);
                 }
 
             } catch (final Throwable t) {
@@ -189,7 +189,7 @@ public abstract class SafeAsyncTask<ResultT> implements Callable<ResultT> {
                     doThrowable(t);
                 } catch (Exception f) {
                     // logged but ignored
-                    Log.e("BACKGROUND_TASK", "Exception in", f);
+                    Log.e("BACKGROUND_TASK", "Exception in" + f);
                 }
             } finally {
                 doFinally();

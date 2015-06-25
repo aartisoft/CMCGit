@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -45,7 +45,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,13 +64,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.ContactObject;
+import com.clubmycab.ContactsAdapter;
+import com.clubmycab.ContactsListClass;
+import com.clubmycab.MembersClubsShowAdaptor;
+import com.clubmycab.MyClubsShowAdaptor;
+import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyClubs extends Activity {
+public class MyClubsActivity extends Activity {
 
 	ListView lv, lvmyclub, listMembersclubs;
 	Button newclub;
@@ -172,7 +181,7 @@ public class MyClubs extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(MyClubs.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(MyClubsActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -193,7 +202,7 @@ public class MyClubs extends Activity {
 			return;
 		}
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(MyClubs.this);
+		GoogleAnalytics analytics = GoogleAnalytics.getInstance(MyClubsActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -206,7 +215,7 @@ public class MyClubs extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("myclubsrl", "myclubsrl");
+				Log.d("myclubsrl", "myclubsrl");
 			}
 		});
 
@@ -261,7 +270,7 @@ public class MyClubs extends Activity {
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(MyClubs.this, MyProfile.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this, MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -279,7 +288,7 @@ public class MyClubs extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyClubs.this, MyRides.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -297,7 +306,7 @@ public class MyClubs extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyClubs.this, BookaCab.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this, BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -315,8 +324,8 @@ public class MyClubs extends Activity {
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(MyClubs.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -365,8 +374,8 @@ public class MyClubs extends Activity {
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyClubs.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -383,7 +392,7 @@ public class MyClubs extends Activity {
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(MyClubs.this, MainActivity.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this, AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -413,8 +422,8 @@ public class MyClubs extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(MyClubs.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(MyClubsActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -435,7 +444,7 @@ public class MyClubs extends Activity {
 
 		Cursor cursor = null;
 		try {
-			cursor = MyClubs.this.getContentResolver().query(Phone.CONTENT_URI,
+			cursor = MyClubsActivity.this.getContentResolver().query(Phone.CONTENT_URI,
 					null, null, null, null);
 			int nameIdx = cursor.getColumnIndex(Phone.DISPLAY_NAME);
 			int phoneNumberIdx = cursor.getColumnIndex(Phone.NUMBER);
@@ -464,13 +473,13 @@ public class MyClubs extends Activity {
 
 			} while (cursor.moveToNext());
 
-			Log.e("name", "" + namearray);
-			Log.e("phoneNumber", "" + phonenoarray);
-			Log.e("imagearray", "" + imagearray);
+			Log.d("name", "" + namearray);
+			Log.d("phoneNumber", "" + phonenoarray);
+			Log.d("imagearray", "" + imagearray);
 
-			Log.e("name count", "" + namearray.size());
-			Log.e("phoneNumber count", "" + phonenoarray.size());
-			Log.e("imagearray count", "" + imagearray.size());
+			Log.d("name count", "" + namearray.size());
+			Log.d("phoneNumber count", "" + phonenoarray.size());
+			Log.d("imagearray count", "" + imagearray.size());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -492,13 +501,13 @@ public class MyClubs extends Activity {
 			}
 		}
 
-		Log.e("namearraynew", "" + namearraynew);
-		Log.e("phonenoarraynew", "" + phonenoarraynew);
-		Log.e("imagearraynew", "" + imagearraynew);
+		Log.d("namearraynew", "" + namearraynew);
+		Log.d("phonenoarraynew", "" + phonenoarraynew);
+		Log.d("imagearraynew", "" + imagearraynew);
 
-		Log.e("namearraynew count", "" + namearraynew.size());
-		Log.e("phonenoarraynew count", "" + phonenoarraynew.size());
-		Log.e("imagearraynew count", "" + imagearraynew.size());
+		Log.d("namearraynew count", "" + namearraynew.size());
+		Log.d("phonenoarraynew count", "" + phonenoarraynew.size());
+		Log.d("imagearraynew count", "" + imagearraynew.size());
 
 		newclub.setOnClickListener(new OnClickListener() {
 
@@ -586,7 +595,7 @@ public class MyClubs extends Activity {
 					}
 				});
 
-		objAdapter = new ContactsAdapter(MyClubs.this,
+		objAdapter = new ContactsAdapter(MyClubsActivity.this,
 				ContactsListClass.phoneList);
 		lv.setAdapter(objAdapter);
 
@@ -642,7 +651,7 @@ public class MyClubs extends Activity {
 				if (cname.isEmpty() || cname == null
 						|| cname.equalsIgnoreCase("")) {
 
-					Toast.makeText(MyClubs.this, "Please enter the club name",
+					Toast.makeText(MyClubsActivity.this, "Please enter the club name",
 							Toast.LENGTH_LONG).show();
 				} else {
 
@@ -685,7 +694,7 @@ public class MyClubs extends Activity {
 											.toString());
 						}
 					} else {
-						Toast.makeText(MyClubs.this,
+						Toast.makeText(MyClubsActivity.this,
 								"Please select contact(s) to create club",
 								Toast.LENGTH_LONG).show();
 					}
@@ -704,7 +713,7 @@ public class MyClubs extends Activity {
 		String clubs = mPrefs11111.getString("clubs", "");
 
 		if (clubs.equalsIgnoreCase("No Users of your Club")) {
-			Toast.makeText(MyClubs.this, "No clubs created yet!!",
+			Toast.makeText(MyClubsActivity.this, "No clubs created yet!!",
 					Toast.LENGTH_LONG).show();
 		} else {
 
@@ -762,7 +771,7 @@ public class MyClubs extends Activity {
 			Log.d("MemberClubOwnerName", "" + MemberClubOwnerName);
 			Log.d("MemberClubMembers", "" + MemberClubMembers);
 
-			MyClubsShowAdaptor adapter = new MyClubsShowAdaptor(MyClubs.this,
+			MyClubsShowAdaptor adapter = new MyClubsShowAdaptor(MyClubsActivity.this,
 					MyClubPoolId, MyClubPoolName, MyClubNoofMembers,
 					MyClubOwnerName);
 			lvmyclub.setAdapter(adapter);
@@ -808,7 +817,7 @@ public class MyClubs extends Activity {
 			});
 
 			MembersClubsShowAdaptor adapter1 = new MembersClubsShowAdaptor(
-					MyClubs.this, MemberClubPoolId, MemberClubPoolName,
+					MyClubsActivity.this, MemberClubPoolId, MemberClubPoolName,
 					MemberClubNoofMembers, MemberClubOwnerName);
 			listMembersclubs.setAdapter(adapter1);
 
@@ -980,7 +989,7 @@ public class MyClubs extends Activity {
 					}
 				});
 
-		objAdapter = new ContactsAdapter(MyClubs.this,
+		objAdapter = new ContactsAdapter(MyClubsActivity.this,
 				ContactsListClass.phoneList);
 		lv.setAdapter(objAdapter);
 
@@ -1066,11 +1075,11 @@ public class MyClubs extends Activity {
 
 					String toaststr = selectednumbers.size()
 							+ " friend(s) added to " + clubname + " club";
-					Toast.makeText(MyClubs.this, "" + toaststr,
+					Toast.makeText(MyClubsActivity.this, "" + toaststr,
 							Toast.LENGTH_LONG).show();
 
 				} else {
-					Toast.makeText(MyClubs.this,
+					Toast.makeText(MyClubsActivity.this,
 							"Please select contact(s) to create club",
 							Toast.LENGTH_LONG).show();
 				}
@@ -1117,7 +1126,7 @@ public class MyClubs extends Activity {
 					}
 				});
 
-		objAdapter = new ContactsAdapter(MyClubs.this,
+		objAdapter = new ContactsAdapter(MyClubsActivity.this,
 				ContactsListClass.phoneList);
 		lv.setAdapter(objAdapter);
 
@@ -1198,11 +1207,11 @@ public class MyClubs extends Activity {
 
 					String toaststr = selectednumbers.size()
 							+ " friend(s) refered to " + clubname + " club";
-					Toast.makeText(MyClubs.this, "" + toaststr,
+					Toast.makeText(MyClubsActivity.this, "" + toaststr,
 							Toast.LENGTH_LONG).show();
 
 				} else {
-					Toast.makeText(MyClubs.this,
+					Toast.makeText(MyClubsActivity.this,
 							"Please select contact(s) to refer",
 							Toast.LENGTH_LONG).show();
 				}
@@ -1241,7 +1250,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1293,7 +1302,7 @@ public class MyClubs extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 		}
 	}
 
@@ -1364,7 +1373,7 @@ public class MyClubs extends Activity {
 					memberappuserimg.setImageDrawable(getResources()
 							.getDrawable(R.drawable.cabappicon));
 				} else {
-					AQuery aq = new AQuery(MyClubs.this);
+					AQuery aq = new AQuery(MyClubsActivity.this);
 					String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 							+ imgnames.get(position).toString().trim();
 
@@ -1461,7 +1470,7 @@ public class MyClubs extends Activity {
 					appuserimg.setImageDrawable(getResources().getDrawable(
 							R.drawable.cabappicon));
 				} else {
-					AQuery aq = new AQuery(MyClubs.this);
+					AQuery aq = new AQuery(MyClubsActivity.this);
 					String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 							+ imgnames.get(position).toString().trim();
 
@@ -1476,7 +1485,7 @@ public class MyClubs extends Activity {
 					// TODO Auto-generated method stub
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							MyClubs.this);
+							MyClubsActivity.this);
 					String str;
 					if (name.get(position) == null
 							|| name.get(position).equalsIgnoreCase("null")) {
@@ -1575,7 +1584,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1652,7 +1661,7 @@ public class MyClubs extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1670,7 +1679,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + stringBuilder.toString());
+			Log.d("poolresponse", "" + stringBuilder.toString());
 
 			// /////////////
 			// Connect to google.com
@@ -1689,7 +1698,7 @@ public class MyClubs extends Activity {
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse", "" + httpResponse1);
+			Log.d("httpResponse", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -1708,7 +1717,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -1725,7 +1734,7 @@ public class MyClubs extends Activity {
 
 	private class ConnectionTaskForAddmoreuserstoclub extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyClubs.this);
+		private ProgressDialog dialog = new ProgressDialog(MyClubsActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1762,7 +1771,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1820,7 +1829,7 @@ public class MyClubs extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1838,7 +1847,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + stringBuilder.toString());
+			Log.d("poolresponse", "" + stringBuilder.toString());
 
 			// /////////////
 			// Connect to google.com
@@ -1857,7 +1866,7 @@ public class MyClubs extends Activity {
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse", "" + httpResponse1);
+			Log.d("httpResponse", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -1876,7 +1885,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -1940,7 +1949,7 @@ public class MyClubs extends Activity {
 				public void onClick(View v) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							MyClubs.this);
+							MyClubsActivity.this);
 					builder.setMessage("Want to delete this club?");
 					builder.setCancelable(true);
 					builder.setPositiveButton("No",
@@ -2009,7 +2018,7 @@ public class MyClubs extends Activity {
 
 	private class ConnectionTaskForRemoveclub extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyClubs.this);
+		private ProgressDialog dialog = new ProgressDialog(MyClubsActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -2043,7 +2052,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2090,7 +2099,7 @@ public class MyClubs extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -2108,7 +2117,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + stringBuilder.toString());
+			Log.d("poolresponse", "" + stringBuilder.toString());
 
 			// /////////////
 			// Connect to google.com
@@ -2127,7 +2136,7 @@ public class MyClubs extends Activity {
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse", "" + httpResponse1);
+			Log.d("httpResponse", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -2146,7 +2155,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -2167,9 +2176,9 @@ public class MyClubs extends Activity {
 		if (comefrom != null) {
 			overridePendingTransition(R.anim.slide_in_right,
 					R.anim.slide_out_left);
-			MyClubs.this.finish();
+			MyClubsActivity.this.finish();
 		} else {
-			Intent mainIntent = new Intent(MyClubs.this, HomePage.class);
+			Intent mainIntent = new Intent(MyClubsActivity.this, HomeActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);
@@ -2205,7 +2214,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2249,7 +2258,7 @@ public class MyClubs extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -2267,7 +2276,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}
@@ -2300,7 +2309,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2345,7 +2354,7 @@ public class MyClubs extends Activity {
 			httpPost11.setEntity(urlEncodedFormEntity11);
 			HttpResponse httpResponse11 = httpClient11.execute(httpPost11);
 
-			Log.e("httpResponse", "" + httpResponse11);
+			Log.d("httpResponse", "" + httpResponse11);
 
 			InputStream inputStream11 = httpResponse11.getEntity().getContent();
 			InputStreamReader inputStreamReader11 = new InputStreamReader(
@@ -2363,7 +2372,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("imagenameresp", "" + imagenameresp);
+			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
 
@@ -2410,7 +2419,7 @@ public class MyClubs extends Activity {
 
 	private class ConnectionTaskForcreatingNewClub extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyClubs.this);
+		private ProgressDialog dialog = new ProgressDialog(MyClubsActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -2448,7 +2457,7 @@ public class MyClubs extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyClubs.this,
+				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2517,7 +2526,7 @@ public class MyClubs extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -2535,7 +2544,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + poolresponse);
+			Log.d("poolresponse", "" + poolresponse);
 
 			// /////////////
 			// Connect to google.com
@@ -2554,7 +2563,7 @@ public class MyClubs extends Activity {
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse", "" + httpResponse1);
+			Log.d("httpResponse", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -2573,7 +2582,7 @@ public class MyClubs extends Activity {
 						.toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);

@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,7 +25,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,9 +34,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 
-public class ResetPassword extends Activity {
+public class ResetPasswordActivity extends Activity {
 	Button Send, Change;
 	LinearLayout toplayout, Botttomlayout;
 	TextView mobtxt, otptxt, newpwdtxt, confirmpwdtxt;
@@ -56,7 +57,7 @@ public class ResetPassword extends Activity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					ResetPassword.this);
+					ResetPasswordActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -114,7 +115,7 @@ public class ResetPassword extends Activity {
 					mobilenumber.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							ResetPassword.this);
+							ResetPasswordActivity.this);
 
 					builder.setMessage("Please enter mobile number");
 					builder.setPositiveButton("OK", null);
@@ -128,7 +129,7 @@ public class ResetPassword extends Activity {
 
 					mobilenumber.requestFocus();
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							ResetPassword.this);
+							ResetPasswordActivity.this);
 
 					builder.setMessage("Please enter valid mobile number");
 					builder.setPositiveButton("OK", null);
@@ -144,7 +145,7 @@ public class ResetPassword extends Activity {
 					mobilenumber.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							ResetPassword.this);
+							ResetPasswordActivity.this);
 					builder.setMessage("Please enter a valid mobile number");
 					builder.setPositiveButton("OK", null);
 					AlertDialog dialog = builder.show();
@@ -160,7 +161,7 @@ public class ResetPassword extends Activity {
 					if (!isOnline()) {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								ResetPassword.this);
+								ResetPasswordActivity.this);
 						builder.setTitle("Internet Connection Error");
 						builder.setMessage("ClubMyCab requires Internet connection");
 						builder.setPositiveButton("OK", null);
@@ -193,7 +194,7 @@ public class ResetPassword extends Activity {
 					otp.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							ResetPassword.this);
+							ResetPasswordActivity.this);
 
 					builder.setMessage("Please enter otp");
 					builder.setPositiveButton("OK", null);
@@ -208,7 +209,7 @@ public class ResetPassword extends Activity {
 					newpwd.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							ResetPassword.this);
+							ResetPasswordActivity.this);
 
 					builder.setMessage("Please enter ur new Password");
 					builder.setPositiveButton("OK", null);
@@ -223,7 +224,7 @@ public class ResetPassword extends Activity {
 					confirmpwd.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							ResetPassword.this);
+							ResetPasswordActivity.this);
 
 					builder.setMessage("Please enter ur confirm Password");
 					builder.setPositiveButton("OK", null);
@@ -240,7 +241,7 @@ public class ResetPassword extends Activity {
 					if (!isOnline()) {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								ResetPassword.this);
+								ResetPasswordActivity.this);
 						builder.setTitle("Internet Connection Error");
 						builder.setMessage("ClubMyCab requires Internet connection");
 						builder.setPositiveButton("OK", null);
@@ -285,7 +286,7 @@ public class ResetPassword extends Activity {
 
 	private class ConnectionTaskForResetPassword extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(ResetPassword.this);
+		private ProgressDialog dialog = new ProgressDialog(ResetPasswordActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -318,7 +319,7 @@ public class ResetPassword extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(ResetPassword.this,
+				Toast.makeText(ResetPasswordActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -327,7 +328,7 @@ public class ResetPassword extends Activity {
 			if (result.equalsIgnoreCase("FAILURE")) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						ResetPassword.this);
+						ResetPasswordActivity.this);
 
 				builder.setMessage("Invalid Mobile number or OTP");
 				builder.setPositiveButton("OK", null);
@@ -341,7 +342,7 @@ public class ResetPassword extends Activity {
 				Toast.makeText(getApplicationContext(),
 						"Your password has been changed!", Toast.LENGTH_LONG)
 						.show();
-				ResetPassword.this.finish();
+				ResetPasswordActivity.this.finish();
 			}
 		}
 
@@ -378,7 +379,7 @@ public class ResetPassword extends Activity {
 				httpPost.setEntity(urlEncodedFormEntity);
 				HttpResponse httpResponse = httpClient.execute(httpPost);
 
-				Log.e("httpResponse", "" + httpResponse);
+				Log.d("httpResponse", "" + httpResponse);
 
 				InputStream inputStream = httpResponse.getEntity().getContent();
 				InputStreamReader inputStreamReader = new InputStreamReader(
@@ -395,14 +396,14 @@ public class ResetPassword extends Activity {
 					result = stringBuilder.append(bufferedStrChunk).toString();
 				}
 
-				Log.e("result", "" + stringBuilder.toString());
+				Log.d("result", "" + stringBuilder.toString());
 			}
 		}
 	}
 
 	private class ConnectionTaskForSendOTP extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(ResetPassword.this);
+		private ProgressDialog dialog = new ProgressDialog(ResetPasswordActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -435,7 +436,7 @@ public class ResetPassword extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(ResetPassword.this,
+				Toast.makeText(ResetPasswordActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -444,7 +445,7 @@ public class ResetPassword extends Activity {
 			if (res.equalsIgnoreCase("FAILURE")) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						ResetPassword.this);
+						ResetPasswordActivity.this);
 
 				builder.setMessage("Mobile Number does not exist");
 				builder.setPositiveButton("OK", null);
@@ -490,7 +491,7 @@ public class ResetPassword extends Activity {
 				httpPost.setEntity(urlEncodedFormEntity);
 				HttpResponse httpResponse = httpClient.execute(httpPost);
 
-				Log.e("httpResponse", "" + httpResponse);
+				Log.d("httpResponse", "" + httpResponse);
 
 				InputStream inputStream = httpResponse.getEntity().getContent();
 				InputStreamReader inputStreamReader = new InputStreamReader(
@@ -507,7 +508,7 @@ public class ResetPassword extends Activity {
 					res = stringBuilder.append(bufferedStrChunk).toString();
 				}
 
-				Log.e("res", "" + stringBuilder.toString());
+				Log.d("res", "" + stringBuilder.toString());
 			}
 		}
 	}

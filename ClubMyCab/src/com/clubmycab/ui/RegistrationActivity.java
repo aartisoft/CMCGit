@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -30,7 +30,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -38,10 +37,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-public class Registration extends Activity {
+public class RegistrationActivity extends Activity {
 
 	TextView registerheadertxt;
 	TextView fullnametxt;
@@ -75,7 +76,7 @@ public class Registration extends Activity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					Registration.this);
+					RegistrationActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -151,7 +152,7 @@ public class Registration extends Activity {
 					fullnameedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 
 					builder.setMessage("Please enter Full Name");
 					builder.setPositiveButton("OK", null);
@@ -166,7 +167,7 @@ public class Registration extends Activity {
 					mobileedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 
 					builder.setMessage("Please enter mobile number");
 					builder.setPositiveButton("OK", null);
@@ -180,7 +181,7 @@ public class Registration extends Activity {
 
 					mobileedittext.requestFocus();
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 
 					builder.setMessage("Please enter valid mobile number");
 					builder.setPositiveButton("OK", null);
@@ -196,7 +197,7 @@ public class Registration extends Activity {
 					mobileedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 					builder.setMessage("Please enter a valid mobile number");
 					builder.setPositiveButton("OK", null);
 					AlertDialog dialog = builder.show();
@@ -212,7 +213,7 @@ public class Registration extends Activity {
 					passwordedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 
 					builder.setMessage("Please enter Password");
 					builder.setPositiveButton("OK", null);
@@ -230,7 +231,7 @@ public class Registration extends Activity {
 					confirmpasswordedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 
 					builder.setMessage("Please re-type the Password");
 					builder.setPositiveButton("OK", null);
@@ -246,7 +247,7 @@ public class Registration extends Activity {
 					confirmpasswordedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							Registration.this);
+							RegistrationActivity.this);
 
 					builder.setMessage("Password Mismatch");
 					builder.setPositiveButton("OK", null);
@@ -261,7 +262,7 @@ public class Registration extends Activity {
 					if (!isOnline()) {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								Registration.this);
+								RegistrationActivity.this);
 						builder.setTitle("Internet Connection Error");
 						builder.setMessage("ClubMyCab requires Internet connection");
 						builder.setPositiveButton("OK", null);
@@ -304,7 +305,7 @@ public class Registration extends Activity {
 
 	private class ConnectionTaskForRegister extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(Registration.this);
+		private ProgressDialog dialog = new ProgressDialog(RegistrationActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -337,7 +338,7 @@ public class Registration extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(Registration.this,
+				Toast.makeText(RegistrationActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -367,7 +368,7 @@ public class Registration extends Activity {
 				editor.putString("LastRegisteredAppVersion", version);
 				editor.commit();
 
-				Intent i = new Intent(Registration.this, EnterOTP.class);
+				Intent i = new Intent(RegistrationActivity.this, OTPActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(i);
@@ -375,7 +376,7 @@ public class Registration extends Activity {
 			} else {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						Registration.this);
+						RegistrationActivity.this);
 
 				builder.setMessage("Mobile Number Already Exists. Please try with different Mobile Number");
 				builder.setPositiveButton("OK", null);
@@ -407,7 +408,7 @@ public class Registration extends Activity {
 							.getInstance(getApplicationContext());
 				}
 				regid = gcm.register(PROJECT_NUMBER);
-				Log.i("GCM", "Device registered, ID is " + regid);
+				Log.d("GCM", "Device registered, ID is " + regid);
 			} catch (Exception e) {
 				Log.e(" registerDevice()", e.getMessage());
 			}
@@ -450,7 +451,7 @@ public class Registration extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -467,7 +468,7 @@ public class Registration extends Activity {
 				result = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			Log.e("result", "" + stringBuilder.toString());
+			Log.d("result", "" + stringBuilder.toString());
 		}
 	}
 }

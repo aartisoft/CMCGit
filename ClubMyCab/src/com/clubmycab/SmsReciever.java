@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
 public class SmsReciever extends BroadcastReceiver {
 

@@ -55,7 +55,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -79,7 +78,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.ui.AboutPagerFragmentActivity;
+import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.MyClubsActivity;
+import com.clubmycab.ui.MyProfileActivity;
+import com.clubmycab.ui.MyRidesActivity;
+import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.SettingActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -92,7 +99,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
-public class ShareLocation extends FragmentActivity implements LocationListener {
+public class ShareLocationFragmentActivity extends FragmentActivity implements LocationListener {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -228,7 +235,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					ShareLocation.this);
+					ShareLocationFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 			builder.setPositiveButton("Retry",
@@ -249,7 +256,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 		}
 
 		GoogleAnalytics analytics = GoogleAnalytics
-				.getInstance(ShareLocation.this);
+				.getInstance(ShareLocationFragmentActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -262,7 +269,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("sharelocationrl", "sharelocationrl");
+				Log.d("sharelocationrl", "sharelocationrl");
 			}
 		});
 
@@ -317,8 +324,8 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(ShareLocation.this,
-						MyProfile.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+						MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -336,7 +343,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(ShareLocation.this, MyRides.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -354,8 +361,8 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(ShareLocation.this,
-						BookaCab.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+						BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -381,8 +388,8 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(ShareLocation.this,
-						MyClubs.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+						MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -423,8 +430,8 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(ShareLocation.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -441,8 +448,8 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(ShareLocation.this,
-						MainActivity.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+						AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -473,8 +480,8 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(ShareLocation.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -518,7 +525,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 				// TODO Auto-generated method stub
 				AlertDialog dialog;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						ShareLocation.this);
+						ShareLocationFragmentActivity.this);
 				builder.setTitle(null);
 
 				final CharSequence str[] = { "10 minutes", "20 minutes",
@@ -668,7 +675,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						// Zoom in the Google Map
 						frommap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-						String address = getAddress(ShareLocation.this,
+						String address = getAddress(ShareLocationFragmentActivity.this,
 								latitude, longitude);
 
 						fromlocation.setText(address);
@@ -678,7 +685,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 						// no network provider is enabled
 						AlertDialog.Builder dialog = new AlertDialog.Builder(
-								ShareLocation.this);
+								ShareLocationFragmentActivity.this);
 						dialog.setMessage("Please check your location services");
 						dialog.setPositiveButton("Retry",
 								new DialogInterface.OnClickListener() {
@@ -717,7 +724,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder coder = new Geocoder(ShareLocation.this);
+					Geocoder coder = new Geocoder(ShareLocationFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) coder
 								.getFromLocationName(jnd, 50);
@@ -755,12 +762,12 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 		officeimg = (ImageView) findViewById(R.id.officeimg);
 
 		FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-				ShareLocation.this);
+				ShareLocationFragmentActivity.this);
 		JSONArray saveasjsonarray = null;
 		try {
 			saveasjsonarray = favoritesLocationReadWrite.readFromFile();
 			if (saveasjsonarray.length() > 0) {
-				Log.e("saveasjsonarray", "" + saveasjsonarray);
+				Log.d("saveasjsonarray", "" + saveasjsonarray);
 				type.clear();
 				Latitude.clear();
 				Longitude.clear();
@@ -788,7 +795,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 					}
 				}
 			} else {
-				Log.e("saveasjsonarray", "null");
+				Log.d("saveasjsonarray", "null");
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -869,7 +876,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 				.fromJson(json, ShareLocationObject.class);
 
 		if (isMyServiceRunning(LocationShareService.class)) {
-			Log.i("service", "service running");
+			Log.d("service", "service running");
 
 			stopService(new Intent(this, LocationShareService.class));
 
@@ -900,7 +907,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			startService(new Intent(this, LocationShareService.class));
 
 		} else {
-			Log.i("service", "service not running");
+			Log.d("service", "service not running");
 
 			shartsharing.setVisibility(View.VISIBLE);
 			stopsharing.setVisibility(View.GONE);
@@ -925,7 +932,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						ShareLocation.this, R.anim.button_click_anim);
+						ShareLocationFragmentActivity.this, R.anim.button_click_anim);
 				shartsharing.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -975,7 +982,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 												|| chk.equalsIgnoreCase("")) {
 
 											AlertDialog.Builder builder = new AlertDialog.Builder(
-													ShareLocation.this);
+													ShareLocationFragmentActivity.this);
 											builder.setMessage("You need to keep location services and data plan running for this to work. Your location may not be shared while you are on a call");
 											builder.setCancelable(true);
 											builder.setPositiveButton(
@@ -1036,7 +1043,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 												.equalsIgnoreCase("Remind me again")) {
 
 											AlertDialog.Builder builder = new AlertDialog.Builder(
-													ShareLocation.this);
+													ShareLocationFragmentActivity.this);
 											builder.setMessage("You need to keep location services and data plan running for this to work. Your location may not be shared while you are on a call");
 											builder.setCancelable(true);
 											builder.setPositiveButton(
@@ -1112,7 +1119,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 												|| chk.equalsIgnoreCase("")) {
 
 											AlertDialog.Builder builder = new AlertDialog.Builder(
-													ShareLocation.this);
+													ShareLocationFragmentActivity.this);
 											builder.setMessage("You need to keep location services and data plan running for this to work. Your location may not be shared while you are on a call");
 											builder.setCancelable(true);
 											builder.setPositiveButton(
@@ -1173,7 +1180,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 												.equalsIgnoreCase("Remind me again")) {
 
 											AlertDialog.Builder builder = new AlertDialog.Builder(
-													ShareLocation.this);
+													ShareLocationFragmentActivity.this);
 											builder.setMessage("You need to keep location services and data plan running for this to work. Your location may not be shared while you are on a call");
 											builder.setCancelable(true);
 											builder.setPositiveButton(
@@ -1261,7 +1268,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			public void onClick(View v) {
 
 				if (isMyServiceRunning(LocationShareService.class)) {
-					stopService(new Intent(ShareLocation.this,
+					stopService(new Intent(ShareLocationFragmentActivity.this,
 							LocationShareService.class));
 				}
 
@@ -1302,9 +1309,9 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 				LatLng mapcenter = cameraPosition.target;
 
-				String address = getAddress(ShareLocation.this,
+				String address = getAddress(ShareLocationFragmentActivity.this,
 						mapcenter.latitude, mapcenter.longitude);
-				Log.e("address", "" + address);
+				Log.d("address", "" + address);
 
 				fromlocation.setText(address);
 
@@ -1341,7 +1348,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 		Cursor cursor = null;
 		try {
-			cursor = ShareLocation.this.getContentResolver().query(
+			cursor = ShareLocationFragmentActivity.this.getContentResolver().query(
 					Phone.CONTENT_URI, null, null, null, null);
 			int nameIdx = cursor.getColumnIndex(Phone.DISPLAY_NAME);
 			int phoneNumberIdx = cursor.getColumnIndex(Phone.NUMBER);
@@ -1371,13 +1378,13 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			} while (cursor.moveToNext());
 
-			Log.e("name", "" + namearray);
-			Log.e("phoneNumber", "" + phonenoarray);
-			Log.e("imagearray", "" + imagearray);
+			Log.d("name", "" + namearray);
+			Log.d("phoneNumber", "" + phonenoarray);
+			Log.d("imagearray", "" + imagearray);
 
-			Log.e("name count", "" + namearray.size());
-			Log.e("phoneNumber count", "" + phonenoarray.size());
-			Log.e("imagearray count", "" + imagearray.size());
+			Log.d("name count", "" + namearray.size());
+			Log.d("phoneNumber count", "" + phonenoarray.size());
+			Log.d("imagearray count", "" + imagearray.size());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1479,7 +1486,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(ShareLocation.this,
+				Toast.makeText(ShareLocationFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1523,7 +1530,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1541,7 +1548,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}
@@ -1574,7 +1581,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(ShareLocation.this,
+				Toast.makeText(ShareLocationFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1619,7 +1626,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			httpPost11.setEntity(urlEncodedFormEntity11);
 			HttpResponse httpResponse11 = httpClient11.execute(httpPost11);
 
-			Log.e("httpResponse", "" + httpResponse11);
+			Log.d("httpResponse", "" + httpResponse11);
 
 			InputStream inputStream11 = httpResponse11.getEntity().getContent();
 			InputStreamReader inputStreamReader11 = new InputStreamReader(
@@ -1637,7 +1644,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						.toString();
 			}
 
-			Log.e("imagenameresp", "" + imagenameresp);
+			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
 
@@ -1722,7 +1729,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1740,7 +1747,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 				myclubsresp = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -1784,7 +1791,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			String[] arr = watchmeforvalue.getText().toString().trim()
 					.split(" ");
 			Integer min = Integer.parseInt(arr[0]);
-			Log.e("min", "" + min);
+			Log.d("min", "" + min);
 
 			ShareLocationObject myObject = new ShareLocationObject();
 			myObject.recipientsnames = selectednames;
@@ -2055,7 +2062,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 							}
 						});
 
-				objAdapter = new ContactsAdapter(ShareLocation.this,
+				objAdapter = new ContactsAdapter(ShareLocationFragmentActivity.this,
 						ContactsListClass.phoneList);
 				contactslist.setAdapter(objAdapter);
 				contactslist.setOnItemClickListener(new OnItemClickListener() {
@@ -2133,7 +2140,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 				String clubs1 = mPrefs111111.getString("clubs", "");
 
 				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
-					Toast.makeText(ShareLocation.this,
+					Toast.makeText(ShareLocationFragmentActivity.this,
 							"No Clubs Created Yet!!", Toast.LENGTH_LONG).show();
 				} else {
 
@@ -2218,7 +2225,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 							}
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
-									ShareLocation.this, ClubListClass.ClubList);
+									ShareLocationFragmentActivity.this, ClubListClass.ClubList);
 							listMyclubs.setAdapter(adapter);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
@@ -2266,7 +2273,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 							}
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
-									ShareLocation.this,
+									ShareLocationFragmentActivity.this,
 									ClubListClass.MemberClubList);
 
 							listMembersclubs.setAdapter(adapter);
@@ -2308,7 +2315,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						ShareLocation.this, R.anim.button_click_anim);
+						ShareLocationFragmentActivity.this, R.anim.button_click_anim);
 				donebtn.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -2419,9 +2426,9 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 							Object[] st = selectednumbers.toArray();
 							for (Object s : st) {
 
-								Log.i("selectednumbers.indexOf(s)", ""
+								Log.d("selectednumbers.indexOf(s)", ""
 										+ selectednumbers.indexOf(s));
-								Log.i("selectednumbers.lastIndexOf(s)", ""
+								Log.d("selectednumbers.lastIndexOf(s)", ""
 										+ selectednumbers.lastIndexOf(s));
 
 								if (selectednumbers.indexOf(s) != selectednumbers
@@ -2449,7 +2456,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 							dialog.dismiss();
 
 						} else {
-							Toast.makeText(ShareLocation.this,
+							Toast.makeText(ShareLocationFragmentActivity.this,
 									"Please select contact(s)",
 									Toast.LENGTH_LONG).show();
 						}
@@ -2495,7 +2502,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 			String clubs1 = mPrefs111111.getString("clubs", "");
 
 			if (clubs1.equalsIgnoreCase("No Users of your Club")) {
-				Toast.makeText(ShareLocation.this, "No clubs created yet!",
+				Toast.makeText(ShareLocationFragmentActivity.this, "No clubs created yet!",
 						Toast.LENGTH_LONG).show();
 			} else {
 
@@ -2574,7 +2581,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						}
 
 						ClubsAdaptor adapter = new ClubsAdaptor(
-								ShareLocation.this, ClubListClass.ClubList);
+								ShareLocationFragmentActivity.this, ClubListClass.ClubList);
 						listMyclubs.setAdapter(adapter);
 						listMyclubs
 								.setOnItemClickListener(new OnItemClickListener() {
@@ -2622,7 +2629,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						}
 
 						ClubsAdaptor adapter = new ClubsAdaptor(
-								ShareLocation.this,
+								ShareLocationFragmentActivity.this,
 								ClubListClass.MemberClubList);
 
 						listMembersclubs.setAdapter(adapter);
@@ -2697,7 +2704,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 						}
 					});
 
-			objAdapter = new ContactsAdapter(ShareLocation.this,
+			objAdapter = new ContactsAdapter(ShareLocationFragmentActivity.this,
 					ContactsListClass.phoneList);
 			contactslist.setAdapter(objAdapter);
 			contactslist.setOnItemClickListener(new OnItemClickListener() {
@@ -2767,7 +2774,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 		str = str.substring(0, str.length() - 1);
 
-		Log.i("str", "" + str);
+		Log.d("str", "" + str);
 		selectrecipientsvalue.setText(str);
 
 	}
@@ -2811,7 +2818,7 @@ public class ShareLocation extends FragmentActivity implements LocationListener 
 
 		if (!fromrelative.isShown()) {
 
-			Intent mainIntent = new Intent(ShareLocation.this, HomePage.class);
+			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this, HomeActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +92,7 @@ public class ListViewAdapter extends BaseAdapter {
 
 		if (ownerimagename.get(position).toString().trim().isEmpty()) {
 
-			Log.i("image nahi hai", ""
+			Log.d("image nahi hai", ""
 					+ ownername.get(position).toString().trim());
 
 		} else {

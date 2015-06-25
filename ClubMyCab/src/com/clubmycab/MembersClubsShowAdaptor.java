@@ -23,7 +23,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.ui.MyClubsActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -201,7 +202,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			}
 
 			try {
-				((MyClubs) context).showclub();
+				((MyClubsActivity) context).showclub();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -247,7 +248,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -265,7 +266,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 						.toString();
 			}
 
-			Log.e("poolresponse", "" + stringBuilder.toString());
+			Log.d("poolresponse", "" + stringBuilder.toString());
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
@@ -283,7 +284,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse", "" + httpResponse1);
+			Log.d("httpResponse", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -302,7 +303,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 						.toString();
 			}
 
-			Log.e("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myclubsresp);
 
 			SharedPreferences sharedPreferences1 = context
 					.getSharedPreferences("MyClubs", 0);

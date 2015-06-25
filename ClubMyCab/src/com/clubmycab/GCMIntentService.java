@@ -25,8 +25,11 @@ import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import com.clubmycab.utility.Log;
 
+import com.clubmycab.ui.MyRidesActivity;
+import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.SplashActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -46,7 +49,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	 **/
 	@Override
 	protected void onRegistered(Context context, String registrationId) {
-		Log.i(TAG, "Device registered: regId = " + registrationId);
+		Log.d(TAG, "Device registered: regId = " + registrationId);
 	}
 
 	/**
@@ -54,7 +57,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	 * */
 	@Override
 	protected void onUnregistered(Context context, String registrationId) {
-		Log.i(TAG, "Device unregistered");
+		Log.d(TAG, "Device unregistered");
 	}
 
 	/**
@@ -64,7 +67,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onMessage(Context context, Intent intent) {
 
 		String message = intent.getExtras().getString("gcmText");
-		Log.i("message", "" + message);
+		Log.d("message", "" + message);
 		String pushfrom = intent.getExtras().getString("pushfrom");
 		String CabId = intent.getExtras().getString("CabId");
 		String MemberName = intent.getExtras().getString("MemberName");
@@ -90,7 +93,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	 * */
 	@Override
 	protected void onDeletedMessages(Context context, int total) {
-		Log.i(TAG, "Received deleted messages notification");
+		Log.d(TAG, "Received deleted messages notification");
 	}
 
 	/**
@@ -98,13 +101,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 	 * */
 	@Override
 	public void onError(Context context, String errorId) {
-		Log.i(TAG, "Received error: " + errorId);
+		Log.e(TAG, "Received error: " + errorId);
 	}
 
 	@Override
 	protected boolean onRecoverableError(Context context, String errorId) {
 		// log message
-		Log.i(TAG, "Received recoverable error: " + errorId);
+		Log.e(TAG, "Received recoverable error: " + errorId);
 		return super.onRecoverableError(context, errorId);
 	}
 
@@ -121,7 +124,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		int icon = R.drawable.cabappicon;
 		notificationID++;
 
-		Intent intent = new Intent(this, AllNotificationRequest.class);
+		Intent intent = new Intent(this, NotificationListActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(this, notificationID,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -160,7 +163,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		int icon = R.drawable.cabappicon;
 		notificationID++;
 
-		Intent intent = new Intent(this, Splash.class);
+		Intent intent = new Intent(this, SplashActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(this, notificationID,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -205,7 +208,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				int icon = R.drawable.cabappicon;
 				notificationID++;
 
-				Intent intent = new Intent(this, MyRides.class);
+				Intent intent = new Intent(this, MyRidesActivity.class);
 				PendingIntent pIntent = PendingIntent.getActivity(this,
 						notificationID, intent,
 						PendingIntent.FLAG_UPDATE_CURRENT);
@@ -300,7 +303,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, CheckPool.class);
+					Intent mainIntent = new Intent(this, CheckPoolFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -350,7 +353,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, JoinPool.class);
+					Intent mainIntent = new Intent(this, MemberRideFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -430,7 +433,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				int icon = R.drawable.cabappicon;
 				notificationID++;
 
-				Intent intent = new Intent(this, MyRides.class);
+				Intent intent = new Intent(this, MyRidesActivity.class);
 				PendingIntent pIntent = PendingIntent.getActivity(this,
 						notificationID, intent,
 						PendingIntent.FLAG_UPDATE_CURRENT);
@@ -526,7 +529,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, CheckPool.class);
+					Intent mainIntent = new Intent(this, CheckPoolFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -578,7 +581,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, JoinPool.class);
+					Intent mainIntent = new Intent(this, MemberRideFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -687,7 +690,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(

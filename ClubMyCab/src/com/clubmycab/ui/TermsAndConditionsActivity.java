@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TNCActivity extends Activity {
+import com.clubmycab.R;
+
+public class TermsAndConditionsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

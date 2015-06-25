@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -30,7 +30,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -38,10 +37,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-public class LoginViaPhoneNumber extends Activity {
+public class LoginActivity extends Activity {
 
 	EditText countrycodelogin;
 	EditText numberedittext;
@@ -68,7 +69,7 @@ public class LoginViaPhoneNumber extends Activity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					LoginViaPhoneNumber.this);
+					LoginActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -120,10 +121,10 @@ public class LoginViaPhoneNumber extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				Intent mainIntent = new Intent(LoginViaPhoneNumber.this,
-						ResetPassword.class);
+				Intent mainIntent = new Intent(LoginActivity.this,
+						ResetPasswordActivity.class);
 				mainIntent.putExtra("source", "phonenumber");
-				LoginViaPhoneNumber.this.startActivity(mainIntent);
+				LoginActivity.this.startActivity(mainIntent);
 
 			}
 		});
@@ -132,9 +133,9 @@ public class LoginViaPhoneNumber extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				Intent mainIntent = new Intent(LoginViaPhoneNumber.this,
-						TNCActivity.class);
-				LoginViaPhoneNumber.this.startActivityForResult(mainIntent, 1);
+				Intent mainIntent = new Intent(LoginActivity.this,
+						TermsAndConditionsActivity.class);
+				LoginActivity.this.startActivityForResult(mainIntent, 1);
 
 			}
 		});
@@ -148,7 +149,7 @@ public class LoginViaPhoneNumber extends Activity {
 					numberedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							LoginViaPhoneNumber.this);
+							LoginActivity.this);
 
 					builder.setMessage("Please enter mobile number");
 					builder.setPositiveButton("OK", null);
@@ -162,7 +163,7 @@ public class LoginViaPhoneNumber extends Activity {
 
 					numberedittext.requestFocus();
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							LoginViaPhoneNumber.this);
+							LoginActivity.this);
 
 					builder.setMessage("Please enter valid mobile number");
 					builder.setPositiveButton("OK", null);
@@ -178,7 +179,7 @@ public class LoginViaPhoneNumber extends Activity {
 					numberedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							LoginViaPhoneNumber.this);
+							LoginActivity.this);
 					builder.setMessage("Please enter a valid mobile number");
 					builder.setPositiveButton("OK", null);
 					AlertDialog dialog = builder.show();
@@ -193,7 +194,7 @@ public class LoginViaPhoneNumber extends Activity {
 					numberpasswordedittext.requestFocus();
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							LoginViaPhoneNumber.this);
+							LoginActivity.this);
 
 					builder.setMessage("Please enter password");
 					builder.setPositiveButton("OK", null);
@@ -210,7 +211,7 @@ public class LoginViaPhoneNumber extends Activity {
 					if (!isOnline()) {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								LoginViaPhoneNumber.this);
+								LoginActivity.this);
 						builder.setTitle("Internet Connection Error");
 						builder.setMessage("ClubMyCab requires Internet connection");
 						builder.setPositiveButton("OK", null);
@@ -252,7 +253,7 @@ public class LoginViaPhoneNumber extends Activity {
 
 	private class ConnectionTaskForLogin extends AsyncTask<String, Void, Void> {
 		private ProgressDialog dialog = new ProgressDialog(
-				LoginViaPhoneNumber.this);
+				LoginActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -285,7 +286,7 @@ public class LoginViaPhoneNumber extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(LoginViaPhoneNumber.this,
+				Toast.makeText(LoginActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -294,7 +295,7 @@ public class LoginViaPhoneNumber extends Activity {
 			if (result.equalsIgnoreCase("login error")) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						LoginViaPhoneNumber.this);
+						LoginActivity.this);
 
 				builder.setMessage("Invalid Credentials");
 				builder.setPositiveButton("OK", null);
@@ -327,8 +328,8 @@ public class LoginViaPhoneNumber extends Activity {
 					}
 				}
 
-				Log.v("FullName", "" + FullName);
-				Log.v("MobileNumber", "" + MobileNumber);
+				Log.d("FullName", "" + FullName);
+				Log.d("MobileNumber", "" + MobileNumber);
 
 				SharedPreferences sharedPreferences = getSharedPreferences(
 						"FacebookData", 0);
@@ -337,8 +338,8 @@ public class LoginViaPhoneNumber extends Activity {
 				editor.putString("MobileNumber", MobileNumber);
 				editor.commit();
 
-				Intent mainIntent = new Intent(LoginViaPhoneNumber.this,
-						HomePage.class);
+				Intent mainIntent = new Intent(LoginActivity.this,
+						HomeActivity.class);
 				mainIntent.putExtra("from", "normal");
 				mainIntent.putExtra("message", "null");
 				startActivityForResult(mainIntent, 500);
@@ -368,7 +369,7 @@ public class LoginViaPhoneNumber extends Activity {
 							.getInstance(getApplicationContext());
 				}
 				regid = gcm.register(PROJECT_NUMBER);
-				Log.i("GCM", "Device registered, ID is " + regid);
+				Log.d("GCM", "Device registered, ID is " + regid);
 			} catch (Exception e) {
 				Log.e(" registerDevice()", e.getMessage());
 			}
@@ -401,7 +402,7 @@ public class LoginViaPhoneNumber extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -418,7 +419,7 @@ public class LoginViaPhoneNumber extends Activity {
 				result = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			Log.e("result", "" + stringBuilder.toString());
+			Log.d("result", "" + stringBuilder.toString());
 		}
 	}
 
@@ -427,10 +428,10 @@ public class LoginViaPhoneNumber extends Activity {
 		Log.d("LoginViaPhonenumber", "onActivityResult : " + resultCode);
 		if (requestCode == 1) {
 			if (resultCode == Activity.RESULT_OK) {
-				Intent mainIntent = new Intent(LoginViaPhoneNumber.this,
-						Registration.class);
+				Intent mainIntent = new Intent(LoginActivity.this,
+						RegistrationActivity.class);
 				mainIntent.putExtra("source", "phonenumber");
-				LoginViaPhoneNumber.this.startActivity(mainIntent);
+				LoginActivity.this.startActivity(mainIntent);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -38,13 +37,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class About extends Activity {
+public class AboutActivity extends Activity {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -87,7 +91,7 @@ public class About extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(About.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 			builder.setPositiveButton("Retry",
@@ -107,7 +111,7 @@ public class About extends Activity {
 			return;
 		}
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(About.this);
+		GoogleAnalytics analytics = GoogleAnalytics.getInstance(AboutActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -120,7 +124,7 @@ public class About extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("aboutrl", "aboutrl");
+				Log.d("aboutrl", "aboutrl");
 			}
 		});
 
@@ -174,7 +178,7 @@ public class About extends Activity {
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(About.this, MyProfile.class);
+				Intent mainIntent = new Intent(AboutActivity.this, MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -192,7 +196,7 @@ public class About extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(About.this, MyRides.class);
+				Intent mainIntent = new Intent(AboutActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -210,7 +214,7 @@ public class About extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(About.this, BookaCab.class);
+				Intent mainIntent = new Intent(AboutActivity.this, BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -228,7 +232,7 @@ public class About extends Activity {
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(About.this, ShareLocation.class);
+				Intent mainIntent = new Intent(AboutActivity.this, ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -246,7 +250,7 @@ public class About extends Activity {
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(About.this, MyClubs.class);
+				Intent mainIntent = new Intent(AboutActivity.this, MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -287,7 +291,7 @@ public class About extends Activity {
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(About.this, SettingDetails.class);
+				Intent mainIntent = new Intent(AboutActivity.this, SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -325,8 +329,8 @@ public class About extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(About.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(AboutActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -368,7 +372,7 @@ public class About extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(About.this, HomePage.class);
+		Intent mainIntent = new Intent(AboutActivity.this, HomeActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);
@@ -402,7 +406,7 @@ public class About extends Activity {
 			
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(About.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
+				Toast.makeText(AboutActivity.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -443,7 +447,7 @@ public class About extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -461,7 +465,7 @@ public class About extends Activity {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}

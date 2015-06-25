@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -50,7 +50,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,13 +61,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CircularImageView;
+import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyProfile extends Activity {
+public class MyProfileActivity extends Activity {
 	TextView fullnametxt;
 	TextView emailtxt;
 	TextView dobtxt;
@@ -157,7 +161,7 @@ public class MyProfile extends Activity {
 		if (!isOnline()) {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					MyProfile.this);
+					MyProfileActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -178,7 +182,7 @@ public class MyProfile extends Activity {
 			return;
 		}
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(MyProfile.this);
+		GoogleAnalytics analytics = GoogleAnalytics.getInstance(MyProfileActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -191,7 +195,7 @@ public class MyProfile extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("myprofilerl", "myprofilerl");
+				Log.d("myprofilerl", "myprofilerl");
 			}
 		});
 
@@ -254,7 +258,7 @@ public class MyProfile extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyProfile.this, MyRides.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -272,7 +276,7 @@ public class MyProfile extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyProfile.this, BookaCab.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this, BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -290,8 +294,8 @@ public class MyProfile extends Activity {
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(MyProfile.this,
-						ShareLocation.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this,
+						ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -309,7 +313,7 @@ public class MyProfile extends Activity {
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyProfile.this, MyClubs.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this, MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -350,8 +354,8 @@ public class MyProfile extends Activity {
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(MyProfile.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -368,8 +372,8 @@ public class MyProfile extends Activity {
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(MyProfile.this,
-						MainActivity.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this,
+						AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -406,8 +410,8 @@ public class MyProfile extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(MyProfile.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(MyProfileActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -469,7 +473,7 @@ public class MyProfile extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				new DatePickerDialog(MyProfile.this, date1, myCalendar
+				new DatePickerDialog(MyProfileActivity.this, date1, myCalendar
 						.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
 						myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 			}
@@ -480,7 +484,7 @@ public class MyProfile extends Activity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					new DatePickerDialog(MyProfile.this, date1, myCalendar
+					new DatePickerDialog(MyProfileActivity.this, date1, myCalendar
 							.get(Calendar.YEAR),
 							myCalendar.get(Calendar.MONTH), myCalendar
 									.get(Calendar.DAY_OF_MONTH)).show();
@@ -499,7 +503,7 @@ public class MyProfile extends Activity {
 				// TODO Auto-generated method stub
 				AlertDialog dialog;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						MyProfile.this);
+						MyProfileActivity.this);
 				builder.setTitle("Select Gender");
 
 				final CharSequence str[] = { "Male", "Female" };
@@ -529,7 +533,7 @@ public class MyProfile extends Activity {
 							// TODO Auto-generated method stub
 							AlertDialog dialog;
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									MyProfile.this);
+									MyProfileActivity.this);
 							builder.setTitle("Select Gender");
 
 							final CharSequence str[] = { "Male", "Female" };
@@ -566,7 +570,7 @@ public class MyProfile extends Activity {
 						&& dobedittext.getText().toString().trim().isEmpty()) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							MyProfile.this);
+							MyProfileActivity.this);
 
 					builder.setMessage("Please enter the details");
 					builder.setPositiveButton("OK", null);
@@ -585,7 +589,7 @@ public class MyProfile extends Activity {
 					if (!isOnline()) {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(
-								MyProfile.this);
+								MyProfileActivity.this);
 						builder.setTitle("Internet Connection Error");
 						builder.setMessage("ClubMyCab requires Internet connection");
 						builder.setPositiveButton("OK", null);
@@ -677,7 +681,7 @@ public class MyProfile extends Activity {
 		} else {
 
 			if (myprofile.equalsIgnoreCase("No Data")) {
-				Toast.makeText(MyProfile.this, "" + myprofile,
+				Toast.makeText(MyProfileActivity.this, "" + myprofile,
 						Toast.LENGTH_LONG).show();
 			} else {
 				JSONArray subArray = null;
@@ -740,7 +744,7 @@ public class MyProfile extends Activity {
 			
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyProfile.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
+				Toast.makeText(MyProfileActivity.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -784,7 +788,7 @@ public class MyProfile extends Activity {
 			httpPost11.setEntity(urlEncodedFormEntity11);
 			HttpResponse httpResponse11 = httpClient11.execute(httpPost11);
 
-			Log.e("httpResponse", "" + httpResponse11);
+			Log.d("httpResponse", "" + httpResponse11);
 
 			InputStream inputStream11 = httpResponse11.getEntity().getContent();
 			InputStreamReader inputStreamReader11 = new InputStreamReader(
@@ -802,7 +806,7 @@ public class MyProfile extends Activity {
 						.toString();
 			}
 
-			Log.e("imagenameresp", "" + imagenameresp);
+			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
 
@@ -869,7 +873,7 @@ public class MyProfile extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyProfile.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
+				Toast.makeText(MyProfileActivity.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
 				return;
 			}
 			
@@ -910,7 +914,7 @@ public class MyProfile extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -928,7 +932,7 @@ public class MyProfile extends Activity {
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 
 		}
 	}
@@ -937,7 +941,7 @@ public class MyProfile extends Activity {
 
 	private class ConnectionTaskForFetchMyProfile extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyProfile.this);
+		private ProgressDialog dialog = new ProgressDialog(MyProfileActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -970,12 +974,12 @@ public class MyProfile extends Activity {
 			
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyProfile.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
+				Toast.makeText(MyProfileActivity.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
 				return;
 			}
 
 			if (myprofileresp.equalsIgnoreCase("No Data")) {
-				Toast.makeText(MyProfile.this, "" + myprofileresp,
+				Toast.makeText(MyProfileActivity.this, "" + myprofileresp,
 						Toast.LENGTH_LONG).show();
 			} else {
 				JSONArray subArray = null;
@@ -1034,7 +1038,7 @@ public class MyProfile extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1052,7 +1056,7 @@ public class MyProfile extends Activity {
 						.toString();
 			}
 
-			Log.e("myprofileresp", "" + stringBuilder.toString());
+			Log.d("myprofileresp", "" + stringBuilder.toString());
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyProfile", 0);
@@ -1077,7 +1081,7 @@ public class MyProfile extends Activity {
 
 	private class ConnectionTaskForUpdateMyProfile extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyProfile.this);
+		private ProgressDialog dialog = new ProgressDialog(MyProfileActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1113,7 +1117,7 @@ public class MyProfile extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyProfile.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
+				Toast.makeText(MyProfileActivity.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
 				return;
 			}
 			
@@ -1123,11 +1127,11 @@ public class MyProfile extends Activity {
 
 			if (updateprofileresp.equalsIgnoreCase("update success")) {
 
-				Toast.makeText(MyProfile.this, "Profile updated successfully",
+				Toast.makeText(MyProfileActivity.this, "Profile updated successfully",
 						Toast.LENGTH_LONG).show();
 			} else {
 
-				Toast.makeText(MyProfile.this, "" + updateprofileresp,
+				Toast.makeText(MyProfileActivity.this, "" + updateprofileresp,
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -1170,7 +1174,7 @@ public class MyProfile extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1188,7 +1192,7 @@ public class MyProfile extends Activity {
 						.toString();
 			}
 
-			Log.e("updateprofileresp", "" + stringBuilder.toString());
+			Log.d("updateprofileresp", "" + stringBuilder.toString());
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
@@ -1206,7 +1210,7 @@ public class MyProfile extends Activity {
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse", "" + httpResponse1);
+			Log.d("httpResponse", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -1224,7 +1228,7 @@ public class MyProfile extends Activity {
 						.toString();
 			}
 
-			Log.e("myprofileresp", "" + stringBuilder1.toString());
+			Log.d("myprofileresp", "" + stringBuilder1.toString());
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyProfile", 0);
@@ -1238,7 +1242,7 @@ public class MyProfile extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(MyProfile.this, HomePage.class);
+		Intent mainIntent = new Intent(MyProfileActivity.this, HomeActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);
@@ -1250,7 +1254,7 @@ public class MyProfile extends Activity {
 		final CharSequence[] options = { "Take Photo", "Choose from Gallery",
 				"Cancel" };
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(MyProfileActivity.this);
 		builder.setTitle("Add Photo!");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
 			@Override
@@ -1379,7 +1383,7 @@ public class MyProfile extends Activity {
 			}
 		} else {
 			mainbmp = null;
-			Log.e("Result not ok", "Result not ok");
+			Log.d("Result not ok", "Result not ok");
 		}
 
 	}
@@ -1388,7 +1392,7 @@ public class MyProfile extends Activity {
 
 	private class ConnectionTaskForImageUpload extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyProfile.this);
+		private ProgressDialog dialog = new ProgressDialog(MyProfileActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1421,7 +1425,7 @@ public class MyProfile extends Activity {
 			
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyProfile.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
+				Toast.makeText(MyProfileActivity.this, getResources().getString(R.string.exceptionstring), Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -1433,7 +1437,7 @@ public class MyProfile extends Activity {
 			if (imageuploadresp.equalsIgnoreCase("Error")) {
 
 				Toast.makeText(
-						MyProfile.this,
+						MyProfileActivity.this,
 						"Error uploading Image, Please try again or use a different image",
 						Toast.LENGTH_SHORT).show();
 			} else {
@@ -1442,7 +1446,7 @@ public class MyProfile extends Activity {
 				drawerprofilepic.setImageBitmap(mIcon11);
 				profilebannerimage.setImageBitmap(mIcon11);
 
-				Toast.makeText(MyProfile.this, "Image Uploaded",
+				Toast.makeText(MyProfileActivity.this, "Image Uploaded",
 						Toast.LENGTH_SHORT).show();
 
 				if (mIcon11 != null) {
@@ -1594,7 +1598,7 @@ public class MyProfile extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1612,7 +1616,7 @@ public class MyProfile extends Activity {
 						.toString();
 			}
 
-			Log.e("imageuploadresp", "" + stringBuilder.toString());
+			Log.d("imageuploadresp", "" + stringBuilder.toString());
 
 			if (imageuploadresp.equalsIgnoreCase("Error")) {
 

@@ -1,8 +1,7 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-public class TNCFragment extends Fragment {
+import com.clubmycab.R;
+import com.clubmycab.utility.Log;
+
+public class TermsAndConditionsFragment extends Fragment {
 	
 	private static final String TAG = "com.clubmycab.TNCFragment";
 	
@@ -22,12 +24,12 @@ public class TNCFragment extends Fragment {
 	private WebView mWebView;
     private ProgressBar mProgressBar;
 	
-	public static TNCFragment newInstance(String url) {
+	public static TermsAndConditionsFragment newInstance(String url) {
 		
 		Bundle args = new Bundle();
         args.putSerializable(ARGUMENTS_TNC_SITE_URL, url);
         
-		TNCFragment tncFragment = new TNCFragment();
+		TermsAndConditionsFragment tncFragment = new TermsAndConditionsFragment();
 		tncFragment.setArguments(args);
 		
 		return tncFragment;

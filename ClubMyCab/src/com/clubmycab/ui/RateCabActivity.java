@@ -1,4 +1,4 @@
-package com.clubmycab;
+package com.clubmycab.ui;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,9 +32,11 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 
-public class RateCab extends Activity {
+public class RateCabActivity extends Activity {
 
 	private JSONArray cabsJSONArray;
 	private JSONObject selectedJsonObject;
@@ -212,7 +213,7 @@ public class RateCab extends Activity {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					Toast.makeText(RateCab.this,
+					Toast.makeText(RateCabActivity.this,
 							"Something went wrong, please try again",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -224,7 +225,7 @@ public class RateCab extends Activity {
 	private class ConnectionTaskForCabRating extends
 			AsyncTask<String, Void, Void> {
 
-		private ProgressDialog dialog = new ProgressDialog(RateCab.this);
+		private ProgressDialog dialog = new ProgressDialog(RateCabActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -258,7 +259,7 @@ public class RateCab extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(RateCab.this,
+				Toast.makeText(RateCabActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -266,11 +267,11 @@ public class RateCab extends Activity {
 
 			if (cabratingresp.isEmpty() || cabratingresp == null
 					|| !cabratingresp.toLowerCase().contains("success")) {
-				Toast.makeText(RateCab.this,
+				Toast.makeText(RateCabActivity.this,
 						"Something went wrong, please try again",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(RateCab.this, "Thank you for the feedback!",
+				Toast.makeText(RateCabActivity.this, "Thank you for the feedback!",
 						Toast.LENGTH_SHORT).show();
 
 				Intent intent = new Intent();
@@ -320,7 +321,7 @@ public class RateCab extends Activity {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -338,7 +339,7 @@ public class RateCab extends Activity {
 						.toString();
 			}
 
-			Log.e("cabratingresp", "" + stringBuilder.toString());
+			Log.d("cabratingresp", "" + stringBuilder.toString());
 		}
 	}
 

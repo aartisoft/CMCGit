@@ -53,7 +53,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,7 +73,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.ui.AboutPagerFragmentActivity;
+import com.clubmycab.ui.ContactsToInviteActivity;
+import com.clubmycab.ui.MyClubsActivity;
+import com.clubmycab.ui.MyProfileActivity;
+import com.clubmycab.ui.MyRidesActivity;
+import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.SettingActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -90,7 +97,7 @@ import com.navdrawer.SimpleSideDrawer;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
-public class Invite extends FragmentActivity implements LocationListener,
+public class InviteFragmentActivity extends FragmentActivity implements LocationListener,
 		OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
 	TextView textFrom;
@@ -240,7 +247,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(Invite.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(InviteFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -278,7 +285,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			}
 		});
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(Invite.this);
+		GoogleAnalytics analytics = GoogleAnalytics.getInstance(InviteFragmentActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -291,7 +298,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				Log.e("inviterl", "inviterl");
+				Log.d("inviterl", "inviterl");
 			}
 		});
 
@@ -348,7 +355,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(Invite.this, MyProfile.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this, MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -366,7 +373,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(Invite.this, MyRides.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this, MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -384,7 +391,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(Invite.this, BookaCab.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this, BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -402,7 +409,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setAction("ShareLocation Click")
 						.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(Invite.this, ShareLocation.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this, ShareLocationFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -420,7 +427,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(Invite.this, MyClubs.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this, MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -461,8 +468,8 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setAction("Settings Click").setLabel("Settings Click")
 						.build());
 
-				Intent mainIntent = new Intent(Invite.this,
-						SettingDetails.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this,
+						SettingActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -479,7 +486,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.setCategory("About Click").setAction("About Click")
 						.setLabel("About Click").build());
 
-				Intent mainIntent = new Intent(Invite.this, MainActivity.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this, AboutPagerFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -509,8 +516,8 @@ public class Invite extends FragmentActivity implements LocationListener,
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(Invite.this,
-						AllNotificationRequest.class);
+				Intent mainIntent = new Intent(InviteFragmentActivity.this,
+						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -722,12 +729,12 @@ public class Invite extends FragmentActivity implements LocationListener,
 				homeofficellvaluesto.setVisibility(View.GONE);
 
 				FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-						Invite.this);
+						InviteFragmentActivity.this);
 				JSONArray saveasjsonarray;
 				try {
 					saveasjsonarray = favoritesLocationReadWrite.readFromFile();
 					if (saveasjsonarray.length() > 0) {
-						Log.e("saveasjsonarray", "" + saveasjsonarray);
+						Log.d("saveasjsonarray", "" + saveasjsonarray);
 						type.clear();
 						Latitude.clear();
 						Longitude.clear();
@@ -760,7 +767,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							}
 						}
 					} else {
-						Log.e("saveasjsonarray", "null");
+						Log.d("saveasjsonarray", "null");
 					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -819,7 +826,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					fromshortname = getaddressfromautoplace(Invite.this,
+					fromshortname = getaddressfromautoplace(InviteFragmentActivity.this,
 							from_places.getText().toString().trim());
 				}
 			}
@@ -842,12 +849,12 @@ public class Invite extends FragmentActivity implements LocationListener,
 				homeofficellvalues.setVisibility(View.GONE);
 
 				FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-						Invite.this);
+						InviteFragmentActivity.this);
 				JSONArray saveasjsonarray;
 				try {
 					saveasjsonarray = favoritesLocationReadWrite.readFromFile();
 					if (saveasjsonarray.length() > 0) {
-						Log.e("saveasjsonarray", "" + saveasjsonarray);
+						Log.d("saveasjsonarray", "" + saveasjsonarray);
 						type.clear();
 						Latitude.clear();
 						Longitude.clear();
@@ -880,7 +887,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							}
 						}
 					} else {
-						Log.e("saveasjsonarray", "null");
+						Log.d("saveasjsonarray", "null");
 					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -939,7 +946,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					toshortname = getaddressfromautoplace(Invite.this,
+					toshortname = getaddressfromautoplace(InviteFragmentActivity.this,
 							to_places.getText().toString().trim());
 				}
 			}
@@ -989,9 +996,9 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 				invitemapcenter = cameraPosition.target;
 
-				String address = getAddress(Invite.this,
+				String address = getAddress(InviteFragmentActivity.this,
 						invitemapcenter.latitude, invitemapcenter.longitude);
-				Log.e("address", "" + address);
+				Log.d("address", "" + address);
 
 				fromlocation.setText(address);
 
@@ -1011,7 +1018,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				if (whichdotclick.equalsIgnoreCase("fromdot")) {
 
 					mapfromlatlng = invitemapcenter;
-					fromshortname = getAddressshort(Invite.this,
+					fromshortname = getAddressshort(InviteFragmentActivity.this,
 							mapfromlatlng.latitude, mapfromlatlng.longitude);
 
 					fAddress = null; // reset previous
@@ -1020,7 +1027,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder fcoder = new Geocoder(Invite.this);
+					Geocoder fcoder = new Geocoder(InviteFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
 								.getFromLocationName(jnd, 50);
@@ -1036,7 +1043,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				} else if (whichdotclick.equalsIgnoreCase("todot")) {
 
 					maptolatlng = invitemapcenter;
-					toshortname = getAddressshort(Invite.this,
+					toshortname = getAddressshort(InviteFragmentActivity.this,
 							maptolatlng.latitude, maptolatlng.longitude);
 
 					tAddress = null; // reset previous
@@ -1045,7 +1052,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 					String jnd2 = to_places.getText().toString().trim();
 
-					Geocoder tcoder = new Geocoder(Invite.this);
+					Geocoder tcoder = new Geocoder(InviteFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
 								.getFromLocationName(jnd2, 50);
@@ -1102,7 +1109,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						// Zoom in the Google Map
 						myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-						String address = getAddress(Invite.this, latitude,
+						String address = getAddress(InviteFragmentActivity.this, latitude,
 								longitude);
 
 						fromlocation.setText(address);
@@ -1112,7 +1119,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 						// no network provider is enabled
 						AlertDialog.Builder dialog = new AlertDialog.Builder(
-								Invite.this);
+								InviteFragmentActivity.this);
 						dialog.setMessage("Please check your location services");
 						dialog.setPositiveButton("Retry",
 								new DialogInterface.OnClickListener() {
@@ -1152,7 +1159,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder coder = new Geocoder(Invite.this);
+					Geocoder coder = new Geocoder(InviteFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) coder
 								.getFromLocationName(jnd, 50);
@@ -1195,7 +1202,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 				try {
 					if (from_places.getText().toString().isEmpty()) {
-						Toast.makeText(Invite.this,
+						Toast.makeText(InviteFragmentActivity.this,
 								"Please enter an address to save",
 								Toast.LENGTH_LONG).show();
 					} else {
@@ -1212,14 +1219,14 @@ public class Invite extends FragmentActivity implements LocationListener,
 						jsonObject.put("shortaddress", fromshortname);
 
 						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								Invite.this);
+								InviteFragmentActivity.this);
 
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(Invite.this, "Saved!",
+							Toast.makeText(InviteFragmentActivity.this, "Saved!",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(Invite.this,
+							Toast.makeText(InviteFragmentActivity.this,
 									"Error saving. Please try again!",
 									Toast.LENGTH_LONG).show();
 						}
@@ -1247,7 +1254,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						try {
 							if (from_places.getText().toString().isEmpty()
 									|| fAddress == null) {
-								Toast.makeText(Invite.this,
+								Toast.makeText(InviteFragmentActivity.this,
 										"Please enter an address to save",
 										Toast.LENGTH_LONG).show();
 							} else {
@@ -1264,13 +1271,13 @@ public class Invite extends FragmentActivity implements LocationListener,
 								jsonObject.put("shortaddress", fromshortname);
 
 								FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-										Invite.this);
+										InviteFragmentActivity.this);
 								if (favoritesLocationReadWrite
 										.saveToFile(jsonObject.toString())) {
-									Toast.makeText(Invite.this, "Saved!",
+									Toast.makeText(InviteFragmentActivity.this, "Saved!",
 											Toast.LENGTH_LONG).show();
 								} else {
-									Toast.makeText(Invite.this,
+									Toast.makeText(InviteFragmentActivity.this,
 											"Error saving. Please try again!",
 											Toast.LENGTH_LONG).show();
 								}
@@ -1299,7 +1306,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				try {
 					if (to_places.getText().toString().isEmpty()
 							|| tAddress == null) {
-						Toast.makeText(Invite.this,
+						Toast.makeText(InviteFragmentActivity.this,
 								"Please enter an address to save",
 								Toast.LENGTH_LONG).show();
 					} else {
@@ -1316,13 +1323,13 @@ public class Invite extends FragmentActivity implements LocationListener,
 						jsonObject.put("shortaddress", toshortname);
 
 						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								Invite.this);
+								InviteFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(Invite.this, "Saved!",
+							Toast.makeText(InviteFragmentActivity.this, "Saved!",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(Invite.this,
+							Toast.makeText(InviteFragmentActivity.this,
 									"Error saving. Please try again!",
 									Toast.LENGTH_LONG).show();
 						}
@@ -1349,7 +1356,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				try {
 					if (to_places.getText().toString().isEmpty()
 							|| tAddress == null) {
-						Toast.makeText(Invite.this,
+						Toast.makeText(InviteFragmentActivity.this,
 								"Please enter an address to save",
 								Toast.LENGTH_LONG).show();
 					} else {
@@ -1366,13 +1373,13 @@ public class Invite extends FragmentActivity implements LocationListener,
 						jsonObject.put("shortaddress", toshortname);
 
 						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								Invite.this);
+								InviteFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(Invite.this, "Saved!",
+							Toast.makeText(InviteFragmentActivity.this, "Saved!",
 									Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(Invite.this,
+							Toast.makeText(InviteFragmentActivity.this,
 									"Error saving. Please try again!",
 									Toast.LENGTH_LONG).show();
 						}
@@ -1420,7 +1427,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						// Zoom in the Google Map
 						myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-						String address = getAddress(Invite.this, latitude,
+						String address = getAddress(InviteFragmentActivity.this, latitude,
 								longitude);
 
 						fromlocation.setText(address);
@@ -1429,7 +1436,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 						// no network provider is enabled
 						AlertDialog.Builder dialog = new AlertDialog.Builder(
-								Invite.this);
+								InviteFragmentActivity.this);
 						dialog.setMessage("Please check your location services");
 						dialog.setPositiveButton("Retry",
 								new DialogInterface.OnClickListener() {
@@ -1469,7 +1476,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 					String jnd = to_places.getText().toString().trim();
 
-					Geocoder coder = new Geocoder(Invite.this);
+					Geocoder coder = new Geocoder(InviteFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) coder
 								.getFromLocationName(jnd, 50);
@@ -1505,7 +1512,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 		final Calendar calendar = Calendar.getInstance();
 
 		final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-				Invite.this, calendar.get(Calendar.YEAR),
+				InviteFragmentActivity.this, calendar.get(Calendar.YEAR),
 				calendar.get(Calendar.MONTH),
 				calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
 
@@ -1514,19 +1521,19 @@ public class Invite extends FragmentActivity implements LocationListener,
 		int minute = calendar.get(Calendar.MINUTE);
 
 		final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
-				Invite.this, hour, minute, false, false);
+				InviteFragmentActivity.this, hour, minute, false, false);
 
 		if (savedInstanceState != null) {
 			DatePickerDialog dpd = (DatePickerDialog) getSupportFragmentManager()
 					.findFragmentByTag(DATEPICKER_TAG);
 			if (dpd != null) {
-				dpd.setOnDateSetListener(Invite.this);
+				dpd.setOnDateSetListener(InviteFragmentActivity.this);
 			}
 
 			TimePickerDialog tpd = (TimePickerDialog) getSupportFragmentManager()
 					.findFragmentByTag(TIMEPICKER_TAG);
 			if (tpd != null) {
-				tpd.setOnTimeSetListener(Invite.this);
+				tpd.setOnTimeSetListener(InviteFragmentActivity.this);
 			}
 		}
 
@@ -1605,7 +1612,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 				// TODO Auto-generated method stub
 				AlertDialog dialog;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
-						Invite.this);
+						InviteFragmentActivity.this);
 				builder.setTitle("Select No of Seats");
 
 				final CharSequence str[] = { "1", "2", "3", "4", "5", "6" };
@@ -1635,7 +1642,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							// TODO Auto-generated method stub
 							AlertDialog dialog;
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									Invite.this);
+									InviteFragmentActivity.this);
 							builder.setTitle("Select No of Seats");
 
 							final CharSequence str[] = { "1", "2", "3", "4",
@@ -1666,7 +1673,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			@Override
 			public void onClick(View arg0) {
 
-				Animation animScale = AnimationUtils.loadAnimation(Invite.this,
+				Animation animScale = AnimationUtils.loadAnimation(InviteFragmentActivity.this,
 						R.anim.button_click_anim);
 				invite.startAnimation(animScale);
 
@@ -1681,7 +1688,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							from_places.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									Invite.this);
+									InviteFragmentActivity.this);
 
 							builder.setMessage("Please Enter From Location. If you have already selected a location on map please try again by selecting a nearby location");
 							builder.setPositiveButton("OK", null);
@@ -1698,7 +1705,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							to_places.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									Invite.this);
+									InviteFragmentActivity.this);
 
 							builder.setMessage("Please Enter To Location. If you have already selected a location on map please try again by selecting a nearby location");
 							builder.setPositiveButton("OK", null);
@@ -1714,7 +1721,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							dateedittext.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									Invite.this);
+									InviteFragmentActivity.this);
 
 							builder.setMessage("Please Enter Date");
 							builder.setPositiveButton("OK", null);
@@ -1732,7 +1739,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							timeedittext.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									Invite.this);
+									InviteFragmentActivity.this);
 
 							builder.setMessage("Please Enter Time");
 							builder.setPositiveButton("OK", null);
@@ -1748,7 +1755,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 							seatsedittext.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
-									Invite.this);
+									InviteFragmentActivity.this);
 
 							builder.setMessage("Please Enter Seats Available");
 							builder.setPositiveButton("OK", null);
@@ -1782,7 +1789,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 								timeedittext.requestFocus();
 
 								AlertDialog.Builder builder = new AlertDialog.Builder(
-										Invite.this);
+										InviteFragmentActivity.this);
 
 								builder.setMessage("The time entered is before the current time");
 								builder.setPositiveButton("OK", null);
@@ -1793,15 +1800,15 @@ public class Invite extends FragmentActivity implements LocationListener,
 								dialog.show();
 							} else {
 
-								Log.i("fromshortname", "" + fromshortname);
-								Log.i("toshortname", "" + toshortname);
+								Log.d("fromshortname", "" + fromshortname);
+								Log.d("toshortname", "" + toshortname);
 
 								CabId = MobileNumber
 										+ System.currentTimeMillis();
 								String OwnerName = FullName;
 
-								Intent mainIntent = new Intent(Invite.this,
-										ContactsMyClub.class);
+								Intent mainIntent = new Intent(InviteFragmentActivity.this,
+										ContactsToInviteActivity.class);
 								mainIntent.putExtra("fromcome", "invite");
 								mainIntent.putExtra("CabId", CabId);
 								mainIntent.putExtra("MobileNumber",
@@ -1910,7 +1917,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(Invite.this,
+				Toast.makeText(InviteFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1954,7 +1961,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.e("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -1972,7 +1979,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.toString();
 			}
 
-			Log.e("readunreadnotiresp", "" + readunreadnotiresp);
+			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
 		}
 	}
 
@@ -2004,7 +2011,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(Invite.this,
+				Toast.makeText(InviteFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2045,7 +2052,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						inviteloadingll.setVisibility(View.GONE);
 						topthreeridesll.setVisibility(View.VISIBLE);
 
-						topthreeadaptor = new TopThreeRidesAdaptor(Invite.this,
+						topthreeadaptor = new TopThreeRidesAdaptor(InviteFragmentActivity.this,
 								FromShortName, ToShortName, TravelDate,
 								TravelTime, Seat_Status);
 						topthreerideslist.setAdapter(topthreeadaptor);
@@ -2131,7 +2138,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			httpPost1.setEntity(urlEncodedFormEntity1);
 			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
 
-			Log.e("httpResponse FetchMyPools", "" + httpResponse1);
+			Log.d("httpResponse FetchMyPools", "" + httpResponse1);
 
 			InputStream inputStream1 = httpResponse1.getEntity().getContent();
 			InputStreamReader inputStreamReader1 = new InputStreamReader(
@@ -2149,7 +2156,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.toString();
 			}
 
-			Log.e("activeridesresp", "" + stringBuilder1.toString());
+			Log.d("activeridesresp", "" + stringBuilder1.toString());
 
 		}
 	}
@@ -2181,7 +2188,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(Invite.this,
+				Toast.makeText(InviteFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2226,7 +2233,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 			httpPost11.setEntity(urlEncodedFormEntity11);
 			HttpResponse httpResponse11 = httpClient11.execute(httpPost11);
 
-			Log.e("httpResponse", "" + httpResponse11);
+			Log.d("httpResponse", "" + httpResponse11);
 
 			InputStream inputStream11 = httpResponse11.getEntity().getContent();
 			InputStreamReader inputStreamReader11 = new InputStreamReader(
@@ -2244,7 +2251,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						.toString();
 			}
 
-			Log.e("imagenameresp", "" + imagenameresp);
+			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
 
@@ -2531,10 +2538,10 @@ public class Invite extends FragmentActivity implements LocationListener,
 				jsonResults.append(buff, 0, read);
 			}
 		} catch (MalformedURLException e) {
-			Log.e(LOG_TAG, "Error processing Places API URL", e);
+			Log.e(LOG_TAG, "Error processing Places API URL" + e);
 			return resultList;
 		} catch (IOException e) {
-			Log.e(LOG_TAG, "Error connecting to Places API", e);
+			Log.e(LOG_TAG, "Error connecting to Places API" + e);
 			return resultList;
 		} finally {
 			if (conn != null) {
@@ -2554,7 +2561,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 						"description"));
 			}
 		} catch (JSONException e) {
-			Log.e("LOG_TAG", "Cannot process JSON results", e);
+			Log.e("LOG_TAG", "Cannot process JSON results" + e);
 		}
 
 		return resultList;
@@ -2567,7 +2574,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			overridePendingTransition(R.anim.slide_in_right,
 					R.anim.slide_out_left);
-			Invite.this.finish();
+			InviteFragmentActivity.this.finish();
 		} else {
 			fromrelative.setVisibility(View.GONE);
 		}
@@ -2716,7 +2723,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(Invite.this,
+				Toast.makeText(InviteFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -2730,7 +2737,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 					inviteloadingll.setVisibility(View.GONE);
 					topthreeridesll.setVisibility(View.VISIBLE);
 
-					topthreeadaptor = new TopThreeRidesAdaptor(Invite.this,
+					topthreeadaptor = new TopThreeRidesAdaptor(InviteFragmentActivity.this,
 							FromShortName, ToShortName, TravelDate, TravelTime,
 							Seat_Status);
 					topthreerideslist.setAdapter(topthreeadaptor);
@@ -2822,7 +2829,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 									.trim());
 						}
 
-						topthreeadaptor = new TopThreeRidesAdaptor(Invite.this,
+						topthreeadaptor = new TopThreeRidesAdaptor(InviteFragmentActivity.this,
 								FromShortNameNew, ToShortNameNew,
 								TravelDateNew, TravelTimeNew, Seat_StatusNew);
 						topthreerideslist.setAdapter(topthreeadaptor);
@@ -2891,7 +2898,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 									.trim());
 						}
 
-						topthreeadaptor = new TopThreeRidesAdaptor(Invite.this,
+						topthreeadaptor = new TopThreeRidesAdaptor(InviteFragmentActivity.this,
 								FromShortNameNew, ToShortNameNew,
 								TravelDateNew, TravelTimeNew, Seat_StatusNew);
 						topthreerideslist.setAdapter(topthreeadaptor);
@@ -2969,7 +2976,7 @@ public class Invite extends FragmentActivity implements LocationListener,
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
 
-			Log.e("url_select11", "" + url_select11);
+			Log.d("url_select11", "" + url_select11);
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/searchfromlist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:hint="Search"
+        android:textSize="15sp" />
+
+    <ListView
+        android:id="@+id/listView_selectrecp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/selectrecpdonebtn"
+        android:layout_below="@+id/searchfromlist" >
+    </ListView>
+
+    <Button
+        android:id="@+id/selectrecpdonebtn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="#4279bd"
+        android:text="DONE"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+
+</RelativeLayout>

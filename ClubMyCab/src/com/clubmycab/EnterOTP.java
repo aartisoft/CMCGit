@@ -1,0 +1,392 @@
+package com.clubmycab;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class EnterOTP extends Activity {
+
+	TextView otphardtext;
+	TextView enterotp;
+	EditText otpedittext;
+	Button resendotp;
+	Button continuewithotp;
+
+	String FullName;
+	String MobileNumberstr;
+
+	String verifyotpresp;
+	String resendotpresp;
+
+	UrlConstant checkurl;
+	boolean exceptioncheck = false;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_enter_otp);
+
+		setOTPListener();
+
+		// Check if Internet present
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(EnterOTP.this);
+			builder.setMessage("No Internet Connection. Please check and try again!");
+			builder.setCancelable(false);
+
+			builder.setPositiveButton("Retry",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent = getIntent();
+							intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+							finish();
+
+							startActivity(intent);
+
+						}
+					});
+
+			builder.show();
+			return;
+		}
+
+		checkurl = new UrlConstant();
+
+		otphardtext = (TextView) findViewById(R.id.otphardtext);
+		enterotp = (TextView) findViewById(R.id.enterotp);
+		otpedittext = (EditText) findViewById(R.id.otpedittext);
+		resendotp = (Button) findViewById(R.id.resendotp);
+		continuewithotp = (Button) findViewById(R.id.continuewithotp);
+
+		enterotp.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Bold.ttf"));
+		otphardtext.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+		otpedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+		resendotp.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+		continuewithotp.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
+		FullName = mPrefs.getString("FullName", "");
+		MobileNumberstr = mPrefs.getString("MobileNumber", "");
+
+		resendotp.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForResendOTP()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				} else {
+					new ConnectionTaskForResendOTP().execute();
+				}
+
+			}
+		});
+
+		continuewithotp.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (otpedittext.getText().toString().trim().length() > 0) {
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForVerifyOTP()
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					} else {
+						new ConnectionTaskForVerifyOTP().execute();
+					}
+
+				} else {
+
+					Toast.makeText(getApplicationContext(), "Please enter OTP",
+							Toast.LENGTH_LONG).show();
+				}
+
+			}
+		});
+
+		Toast.makeText(
+				EnterOTP.this,
+				"We will try to automatically verfiy your OTP, if you want you can enter it manually",
+				Toast.LENGTH_LONG).show();
+	}
+
+	// ///////
+
+	private class ConnectionTaskForVerifyOTP extends
+			AsyncTask<String, Void, Void> {
+		private ProgressDialog dialog = new ProgressDialog(EnterOTP.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionVerifyOTP mAuth1 = new AuthenticateConnectionVerifyOTP();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(EnterOTP.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (verifyotpresp.equalsIgnoreCase("SUCCESS")) {
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"FacebookData", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("verifyotp", "true");
+				editor.commit();
+
+				Intent mainIntent = new Intent(EnterOTP.this, HomePage.class);
+				startActivityForResult(mainIntent, 500);
+				overridePendingTransition(R.anim.slide_in_right,
+						R.anim.slide_out_left);
+				finish();
+
+			} else if (verifyotpresp.equalsIgnoreCase("OTPEXPIRE")) {
+				Toast.makeText(EnterOTP.this,
+						"Entered OTP has expired. Please click resend OTP",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(EnterOTP.this, "Entered OTP is not valid",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionVerifyOTP {
+
+		public AuthenticateConnectionVerifyOTP() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = checkurl.GetServiceUrl() + "/verifyotp.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+					"MobileNumber", MobileNumberstr);
+			BasicNameValuePair singleusepasswordBasicNameValuePair = new BasicNameValuePair(
+					"singleusepassword", otpedittext.getText().toString()
+							.trim());
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(singleusepasswordBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.e("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				verifyotpresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.e("verifyotpresp", "" + verifyotpresp);
+		}
+	}
+
+	// ////////////////////
+	// ///////
+
+	private class ConnectionTaskForResendOTP extends
+			AsyncTask<String, Void, Void> {
+		private ProgressDialog dialog = new ProgressDialog(EnterOTP.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionResendOTP mAuth1 = new AuthenticateConnectionResendOTP();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(EnterOTP.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (resendotpresp.equalsIgnoreCase("FAILURE")) {
+				Toast.makeText(EnterOTP.this,
+						"Something went wrong please try again.",
+						Toast.LENGTH_SHORT).show();
+			}
+
+		}
+	}
+
+	public class AuthenticateConnectionResendOTP {
+
+		public AuthenticateConnectionResendOTP() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = checkurl.GetServiceUrl() + "/resendotp.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+					"MobileNumber", MobileNumberstr);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(MobileNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.e("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				resendotpresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.e("resendotpresp", "" + resendotpresp);
+		}
+	}
+
+	public boolean isOnline() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+		return false;
+	}
+
+	private void setOTPListener() {
+		Log.d("EnterOTP", "setOTPListener");
+		try {
+			SmsReciever smsReceiver = new SmsReciever();
+
+			smsReceiver.setOnPhoneListener(new PhoneListener() {
+				@Override
+				public void onOtpConfirmed(String target) {
+					Log.d("EnterOTP", "onOtpConfirmed : " + target);
+					otpedittext.setText(target);
+					continuewithotp.performClick();
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

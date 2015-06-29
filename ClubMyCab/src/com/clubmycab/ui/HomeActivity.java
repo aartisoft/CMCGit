@@ -61,8 +61,11 @@ import com.clubmycab.CircularImageView;
 import com.clubmycab.InviteFragmentActivity;
 import com.clubmycab.R;
 import com.clubmycab.ShareLocationFragmentActivity;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
+import com.clubmycab.xmlhandler.QueryWalletHandler;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -126,10 +129,25 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_page);
 
+		String checksumstring = GlobalMethods.calculateCheckSumForService(
+				"'existingusercheck''9650460424'MyMerchantName''MBK9005''500'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = "https://" + GlobalVariables.Mobikwik_ServerURL
+				+ "/querywallet";
+		String params = "email=abc@gmail.com&cell=9650460424&msgcode=500&action=existingusercheck&mid="
+				+ GlobalVariables.Mobikwik_Mid
+				+ "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName
+				+ "&checksum="
+				+ checksumstring + "";
+		GlobalAsyncTask global = new GlobalAsyncTask(this, endpoint, params,
+				new QueryWalletHandler());
+
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					HomeActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -152,7 +170,8 @@ public class HomeActivity extends Activity {
 
 		// ////////////////////
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(HomeActivity.this);
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(HomeActivity.this);
 		tracker = analytics.newTracker("UA-63477985-1");
 
 		// All subsequent hits will be send with screen name = "main screen"
@@ -181,8 +200,6 @@ public class HomeActivity extends Activity {
 				Log.d("homepagerl", "homepagerl");
 			}
 		});
-
-		
 
 		mNav = new SimpleSideDrawer(this);
 		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -232,7 +249,8 @@ public class HomeActivity extends Activity {
 						.setAction("MyProfile Click")
 						.setLabel("MyProfile Click").build());
 
-				Intent mainIntent = new Intent(HomeActivity.this, MyProfileActivity.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						MyProfileActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -250,7 +268,8 @@ public class HomeActivity extends Activity {
 						.setAction("MyRides Click").setLabel("MyRides Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomeActivity.this, MyRidesActivity.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						MyRidesActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -268,7 +287,8 @@ public class HomeActivity extends Activity {
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomeActivity.this, BookaCabFragmentActivity.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						BookaCabFragmentActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -305,7 +325,8 @@ public class HomeActivity extends Activity {
 						.setAction("MyClubs Click").setLabel("MyClubs Click")
 						.build());
 
-				Intent mainIntent = new Intent(HomeActivity.this, MyClubsActivity.class);
+				Intent mainIntent = new Intent(HomeActivity.this,
+						MyClubsActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);

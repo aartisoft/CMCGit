@@ -44,7 +44,7 @@ public class WalletsAcitivity extends Activity implements
 				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
 				+ checksumstring + "";
 		new GlobalAsyncTask(this, endpoint, params, new QueryWalletHandler(),
-				this);
+				this, true);
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(WalletsAcitivity.this);

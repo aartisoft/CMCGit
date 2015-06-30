@@ -18,6 +18,8 @@ public class GlobalVariables {
 
 	public static final String GoogleAnalyticsTrackerId = "UA-63477985-1";
 	
+	public static String UnreadNotificationCount = "0";
+	
 	
     //Mobikwik String Tags
 	public static final String Mobikwik_ServerURL = "test.mobikwik.com/mobikwik"; // UAT

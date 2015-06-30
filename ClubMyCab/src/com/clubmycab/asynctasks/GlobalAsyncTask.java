@@ -8,6 +8,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import android.R.bool;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -15,18 +16,21 @@ import android.os.Build;
 import android.util.Log;
 
 import com.clubmycab.connections.WebRequest;
+import com.clubmycab.xmlhandler.FetchUnreadNotificationCountHandler;
 
 public class GlobalAsyncTask {
 
 	Context context;
 	String endPoint;
 	String params;
-	DefaultHandler handler;
+	Object handler;
+	boolean showdialog;
 
 	private AsyncTaskResultListener mListener;
 
 	public GlobalAsyncTask(Context context, String endPoint, String params,
-			DefaultHandler handler, AsyncTaskResultListener listener) {
+			Object handler, AsyncTaskResultListener listener, boolean showdialog) {
+		this.showdialog = showdialog;
 		this.handler = handler;
 		this.context = context;
 		this.endPoint = endPoint;
@@ -54,11 +58,12 @@ public class GlobalAsyncTask {
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
-
-			dialog.setMessage("Please Wait...");
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
+			if (showdialog) {
+				dialog.setMessage("Please Wait...");
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				dialog.show();
+			}
 		}
 
 		@Override
@@ -69,15 +74,19 @@ public class GlobalAsyncTask {
 				try {
 					xmlReader = SAXParserFactory.newInstance().newSAXParser()
 							.getXMLReader();
-					xmlReader.setContentHandler(handler);
+					xmlReader.setContentHandler((DefaultHandler) handler);
 					xmlReader.parse(new InputSource(new StringReader(wr
 							.getResult())));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			} else {
+				((FetchUnreadNotificationCountHandler) handler)
+						.setCount(response);
 			}
-			if (dialog.isShowing()) {
+
+			if (showdialog && dialog.isShowing()) {
 				dialog.dismiss();
 			}
 			try {

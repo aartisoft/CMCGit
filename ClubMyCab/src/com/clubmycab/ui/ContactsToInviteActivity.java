@@ -213,6 +213,8 @@ public class ContactsToInviteActivity extends Activity {
 			builder.show();
 			return;
 		}
+		
+
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(ContactsToInviteActivity.this);
@@ -476,6 +478,16 @@ public class ContactsToInviteActivity extends Activity {
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
+		
+		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+			unreadnoticountrl.setVisibility(View.GONE);
+
+		} else {
+
+			unreadnoticountrl.setVisibility(View.VISIBLE);
+			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
+		}
 
 		NeutraTextLight = Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf");
@@ -1130,12 +1142,12 @@ public class ContactsToInviteActivity extends Activity {
 		});
 
 		// ///////////////
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForreadunreadnotification()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForreadunreadnotification().execute();
-		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//			new ConnectionTaskForreadunreadnotification()
+//					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//		} else {
+//			new ConnectionTaskForreadunreadnotification().execute();
+//		}
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -1585,97 +1597,97 @@ public class ContactsToInviteActivity extends Activity {
 	}
 
 	// ///////
-	private class ConnectionTaskForreadunreadnotification extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(ContactsToInviteActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
-			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount.setText(readunreadnotiresp);
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionreadunreadnotification {
-
-		public AuthenticateConnectionreadunreadnotification() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/FetchUnreadNotificationCount.php";
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumberstr);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-
-		}
-	}
+//	private class ConnectionTaskForreadunreadnotification extends
+//			AsyncTask<String, Void, Void> {
+//
+//		@Override
+//		protected void onPreExecute() {
+//
+//		}
+//
+//		@Override
+//		protected Void doInBackground(String... args) {
+//			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
+//			try {
+//				mAuth1.connection();
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				exceptioncheck = true;
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(Void v) {
+//
+//			if (exceptioncheck) {
+//				exceptioncheck = false;
+//				Toast.makeText(ContactsToInviteActivity.this,
+//						getResources().getString(R.string.exceptionstring),
+//						Toast.LENGTH_LONG).show();
+//				return;
+//			}
+//
+//			if (readunreadnotiresp.equalsIgnoreCase("0")) {
+//
+//				unreadnoticountrl.setVisibility(View.GONE);
+//
+//			} else {
+//
+//				unreadnoticountrl.setVisibility(View.VISIBLE);
+//				unreadnoticount.setText(readunreadnotiresp);
+//			}
+//		}
+//
+//	}
+//
+//	public class AuthenticateConnectionreadunreadnotification {
+//
+//		public AuthenticateConnectionreadunreadnotification() {
+//
+//		}
+//
+//		public void connection() throws Exception {
+//
+//			// Connect to google.com
+//			HttpClient httpClient = new DefaultHttpClient();
+//			String url_select = GlobalVariables.ServiceUrl
+//					+ "/FetchUnreadNotificationCount.php";
+//			HttpPost httpPost = new HttpPost(url_select);
+//			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+//					"MobileNumber", MobileNumberstr);
+//
+//			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+//			nameValuePairList.add(MobileNumberBasicNameValuePair);
+//
+//			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+//					nameValuePairList);
+//			httpPost.setEntity(urlEncodedFormEntity);
+//			HttpResponse httpResponse = httpClient.execute(httpPost);
+//
+//			Log.d("httpResponse", "" + httpResponse);
+//
+//			InputStream inputStream = httpResponse.getEntity().getContent();
+//			InputStreamReader inputStreamReader = new InputStreamReader(
+//					inputStream);
+//
+//			BufferedReader bufferedReader = new BufferedReader(
+//					inputStreamReader);
+//
+//			StringBuilder stringBuilder = new StringBuilder();
+//
+//			String bufferedStrChunk = null;
+//
+//			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+//				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+//						.toString();
+//			}
+//
+//			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+//
+//		}
+//	}
 
 	// ////////////////////////
 	// ///////

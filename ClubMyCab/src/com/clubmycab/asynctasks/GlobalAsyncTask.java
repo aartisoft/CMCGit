@@ -1,17 +1,10 @@
 package com.clubmycab.asynctasks;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.StringWriter;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -33,11 +26,12 @@ public class GlobalAsyncTask {
 	private AsyncTaskResultListener mListener;
 
 	public GlobalAsyncTask(Context context, String endPoint, String params,
-			DefaultHandler handler) {
+			DefaultHandler handler,AsyncTaskResultListener listener) {
 		this.handler = handler;
 		this.context = context;
 		this.endPoint = endPoint;
 		this.params = params;
+		this.mListener = listener;
 		// TODO Auto-generated constructor stub
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new GlobalRequestTask()
@@ -69,11 +63,7 @@ public class GlobalAsyncTask {
 
 		@Override
 		protected void onPostExecute(Void v) {
-			if (dialog.isShowing()) {
-				dialog.dismiss();
-			}
-			Log.d("Web Response", wr.getResult());
-
+			String response = wr.getResult();
 			if (handler instanceof DefaultHandler) {
 				XMLReader xmlReader;
 				try {
@@ -87,6 +77,17 @@ public class GlobalAsyncTask {
 					e.printStackTrace();
 				}
 			}
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+			try {
+				mListener.getResult(0, response);
+			} catch (Exception e) {
+				// TODO: handle exception
+				Log.d("Exception", e.toString());
+				e.printStackTrace();
+			}
+			
 
 		};
 

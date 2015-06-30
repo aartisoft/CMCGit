@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clubmycab.CircularImageView;
@@ -30,8 +31,17 @@ public class UniversalDrawer {
 	TextView sharemylocation;
 	TextView myclubs;
 	TextView sharethisapp;
+	TextView wallets;
 	TextView mypreferences;
 	TextView about;
+
+	LinearLayout myclubslayout;
+	LinearLayout myrideslayout;
+	LinearLayout myprofilelayout;
+	LinearLayout mywalletslayout;
+	LinearLayout settingslayout;
+	LinearLayout shareapplayout;
+	LinearLayout aboutlayout;
 
 	Context context;
 
@@ -56,6 +66,21 @@ public class UniversalDrawer {
 					}
 				});
 
+		myclubslayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.myclubslayout);
+		myrideslayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.myrideslayout);
+		myprofilelayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.myprofilelayout);
+		mywalletslayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.mywalletslayout);
+		settingslayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.settingslayout);
+		shareapplayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.shareapplayout);
+		aboutlayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.aboutlayout);
+
 		myprofile = (TextView) ((Activity) context)
 				.findViewById(R.id.myprofile);
 		myprofile.setTypeface(Typeface.createFromAsset(context.getAssets(),
@@ -77,6 +102,10 @@ public class UniversalDrawer {
 				.findViewById(R.id.sharethisapp);
 		sharethisapp.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
+		wallets = (TextView) ((Activity) context).findViewById(R.id.mywallets);
+		wallets.setTypeface(Typeface.createFromAsset(context.getAssets(),
+				"NeutraText-Light.ttf"));
+
 		mypreferences = (TextView) ((Activity) context)
 				.findViewById(R.id.mypreferences);
 		mypreferences.setTypeface(Typeface.createFromAsset(context.getAssets(),
@@ -85,7 +114,7 @@ public class UniversalDrawer {
 		about.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
 
-		myprofile.setOnClickListener(new View.OnClickListener() {
+		myprofilelayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -106,7 +135,7 @@ public class UniversalDrawer {
 			}
 		});
 
-		myrides.setOnClickListener(new View.OnClickListener() {
+		myrideslayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -129,7 +158,7 @@ public class UniversalDrawer {
 			}
 		});
 
-		myclubs.setOnClickListener(new View.OnClickListener() {
+		myclubslayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -152,7 +181,7 @@ public class UniversalDrawer {
 			}
 		});
 
-		sharethisapp.setOnClickListener(new View.OnClickListener() {
+		shareapplayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -176,7 +205,29 @@ public class UniversalDrawer {
 			}
 		});
 
-		mypreferences.setOnClickListener(new View.OnClickListener() {
+		mywalletslayout.setOnClickListener(new View.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(View arg0) {
+				mNav.toggleDrawer();
+				if (!GlobalVariables.ActivityName.equals("WalletsAcitivity")) {
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("Wallets Click")
+							.setAction("Wallets Click")
+							.setLabel("Wallets Click").build());
+
+					Intent mainIntent = new Intent(context,
+							WalletsAcitivity.class);
+					context.startActivity(mainIntent);
+					((Activity) context).overridePendingTransition(
+							R.anim.slide_in_right, R.anim.slide_out_left);
+					GlobalVariables.ActivityName = "WalletsAcitivity";
+				}
+
+			}
+		});
+
+		settingslayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -198,7 +249,7 @@ public class UniversalDrawer {
 
 			}
 		});
-		about.setOnClickListener(new View.OnClickListener() {
+		aboutlayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -223,15 +274,6 @@ public class UniversalDrawer {
 			}
 		});
 
-	}
-
-	public UniversalDrawer getInstance() {
-		if (instance == null)
-			instance = new UniversalDrawer(context, tracker);
-		else
-			return instance;
-
-		return instance;
 	}
 
 }

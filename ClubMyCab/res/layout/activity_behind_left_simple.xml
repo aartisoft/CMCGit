@@ -32,12 +32,13 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/drawerprofilepic"
                 android:gravity="center_vertical"
-                android:text="Manoj Kabdal"
+                android:text="Ekansh Srivastava"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/myclubslayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -73,6 +74,7 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/myrideslayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -184,6 +186,7 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/myprofilelayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -218,6 +221,42 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/mywalletslayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/wallet_icon" />
+
+            <TextView
+                android:id="@+id/mywallets"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:text="Wallets"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:alpha="0.3"
+            android:background="@android:color/darker_gray"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/settingslayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -252,6 +291,7 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/shareapplayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -286,6 +326,7 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/aboutlayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

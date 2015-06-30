@@ -26,7 +26,7 @@ public class GlobalAsyncTask {
 	private AsyncTaskResultListener mListener;
 
 	public GlobalAsyncTask(Context context, String endPoint, String params,
-			DefaultHandler handler,AsyncTaskResultListener listener) {
+			DefaultHandler handler, AsyncTaskResultListener listener) {
 		this.handler = handler;
 		this.context = context;
 		this.endPoint = endPoint;
@@ -87,7 +87,6 @@ public class GlobalAsyncTask {
 				Log.d("Exception", e.toString());
 				e.printStackTrace();
 			}
-			
 
 		};
 

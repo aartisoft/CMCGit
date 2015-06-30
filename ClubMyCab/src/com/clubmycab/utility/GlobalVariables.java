@@ -13,7 +13,13 @@ public class GlobalVariables {
 	// public static final String ServerNameForChat = "@p2p-vm2"; // UAT
 
 	public static final boolean LOGGING_ENABLED = true;
+	
+	public static String ActivityName = "";
 
+	public static final String GoogleAnalyticsTrackerId = "UA-63477985-1";
+	
+	
+    //Mobikwik String Tags
 	public static final String Mobikwik_ServerURL = "test.mobikwik.com/mobikwik"; // UAT
 
 	// public static final String Mobikwik_ServerURL =
@@ -25,8 +31,6 @@ public class GlobalVariables {
 
 	public static final String Mobikwik_14SecretKey = "ju6tygh7u7tdg554k098ujd5468o";
 
-	public static String ActivityName = "";
 
-	public static final String GoogleAnalyticsTrackerId = "UA-63477985-1";
 
 }

@@ -73,7 +73,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class HomeActivity extends Activity implements AsyncTaskResultListener {
+public class HomeActivity extends Activity {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -129,20 +129,6 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_page);
-
-		String checksumstring = GlobalMethods.calculateCheckSumForService(
-				"'existingusercheck''9650460424'MyMerchantName''MBK9005''500'",
-				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = "https://" + GlobalVariables.Mobikwik_ServerURL
-				+ "/querywallet";
-		String params = "email=abc@gmail.com&cell=9650460424&msgcode=500&action=existingusercheck&mid="
-				+ GlobalVariables.Mobikwik_Mid
-				+ "&merchantname="
-				+ GlobalVariables.Mobikwik_MerchantName
-				+ "&checksum="
-				+ checksumstring + "";
-		GlobalAsyncTask global = new GlobalAsyncTask(this, endpoint, params,
-				new QueryWalletHandler(),this);
 
 		// Check if Internet present
 		if (!isOnline()) {
@@ -1528,10 +1514,5 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	protected void onPause() {
 		super.onPause();
 		AppEventsLogger.deactivateApp(this);
-	}
-
-	@Override
-	public void getResult(int result, String error) {
-		// TODO Auto-generated method stub
 	}
 }

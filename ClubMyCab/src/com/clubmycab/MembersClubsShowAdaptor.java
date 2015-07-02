@@ -67,7 +67,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 		
 
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-		tracker = analytics.newTracker("UA-63477985-1");
+		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("MyClubs");

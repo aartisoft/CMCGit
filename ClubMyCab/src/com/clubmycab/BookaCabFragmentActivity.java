@@ -74,7 +74,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -101,21 +100,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.R;
-import com.clubmycab.R.anim;
-import com.clubmycab.R.drawable;
-import com.clubmycab.R.id;
-import com.clubmycab.R.layout;
-import com.clubmycab.R.string;
-import com.clubmycab.ui.AboutPagerFragmentActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
-import com.clubmycab.ui.MyClubsActivity;
-import com.clubmycab.ui.MyProfileActivity;
 import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
-import com.clubmycab.ui.SettingActivity;
+import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -129,7 +122,8 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.navdrawer.SimpleSideDrawer;
 
-public class BookaCabFragmentActivity extends FragmentActivity implements LocationListener {
+public class BookaCabFragmentActivity extends FragmentActivity implements
+		LocationListener {
 
 	// private static ProgressDialog progressDialog;
 	RelativeLayout fromrelative;
@@ -152,6 +146,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 	final int RQS_GooglePlayServices = 1;
 	private GoogleMap myMap;
+	Tracker tracker;
 
 	Location myLocation;
 	String FullName, MobileNumberstr;
@@ -215,7 +210,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 	String[] Imag = { "R.drawable.olacab", "R.drawable.mreucab",
 			"R.drawable.easycab" };
 
-	private static final String API_KEY = "AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0";
 	private static final String LOG_TAG = "ExampleApp";
 	Location mycurrentlocationobject;
 
@@ -251,8 +245,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 	String readunreadnotiresp;
 	String imagenameresp;
 	Bitmap mIcon11;
-
-	
 
 	private Button mButtonSearch;
 
@@ -300,7 +292,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				double latitude = mycurrentlocationobject.getLatitude();
 				double longitude = mycurrentlocationobject.getLongitude();
 
-				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
+				String address = getAddress(BookaCabFragmentActivity.this,
+						latitude, longitude);
 				from_places.setText(address);
 				fAddress = geocodeAddress(address);
 				Log.d("AutoSearchCabAsync", "AutoSearchCabAsync address : "
@@ -328,7 +321,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -360,151 +354,163 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			}
 		});
 
-		
+		// mNav = new SimpleSideDrawer(this);
+		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
+		//
+		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v) {
+		//
+		// mNav.toggleLeftDrawer();
+		//
+		// }
+		// });
+		//
+		// myprofile = (TextView) findViewById(R.id.myprofile);
+		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myrides = (TextView) findViewById(R.id.myrides);
+		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// bookacab = (TextView) findViewById(R.id.bookacab);
+		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
+		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myclubs = (TextView) findViewById(R.id.myclubs);
+		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
+		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// mypreferences = (TextView) findViewById(R.id.mypreferences);
+		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// about = (TextView) findViewById(R.id.about);
+		// about.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		//
+		// myprofile.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+		// MyProfileActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myrides.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+		// MyRidesActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// bookacab.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		// }
+		// });
+		//
+		// sharemylocation.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+		// ShareLocationFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myclubs.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+		// MyClubsActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// sharethisapp.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent sendIntent = new Intent();
+		// sendIntent.setAction(Intent.ACTION_SEND);
+		// sendIntent
+		// .putExtra(
+		// Intent.EXTRA_TEXT,
+		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
+		// sendIntent.setType("text/plain");
+		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
+		//
+		// }
+		// });
+		//
+		// mypreferences.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+		// SettingActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// about.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
+		// AboutPagerFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
 
-		mNav = new SimpleSideDrawer(this);
-		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(BookaCabFragmentActivity.this);
+		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
-		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
+		// All subsequent hits will be send with screen name = "main screen"
+		tracker.setScreenName("BookACab");
 
-				mNav.toggleLeftDrawer();
-
-			}
-		});
-
-		myprofile = (TextView) findViewById(R.id.myprofile);
-		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myrides = (TextView) findViewById(R.id.myrides);
-		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		bookacab = (TextView) findViewById(R.id.bookacab);
-		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myclubs = (TextView) findViewById(R.id.myclubs);
-		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		mypreferences = (TextView) findViewById(R.id.mypreferences);
-		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		about = (TextView) findViewById(R.id.about);
-		about.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-
-		myprofile.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyProfileActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myrides.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyRidesActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		bookacab.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-			}
-		});
-
-		sharemylocation.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
-						ShareLocationFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myclubs.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyClubsActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharethisapp.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent
-						.putExtra(
-								Intent.EXTRA_TEXT,
-								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-
-			}
-		});
-
-		mypreferences.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
-						SettingActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		about.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
-						AboutPagerFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
+		drawer.createDrawer();
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
@@ -526,7 +532,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		drawerusername.setText(FullName);
 
 		if (!isOnline()) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 
 			builder.setMessage("No Network Available");
 			builder.setPositiveButton("OK", null);
@@ -541,6 +548,16 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
+		
+		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+			unreadnoticountrl.setVisibility(View.GONE);
+
+		} else {
+
+			unreadnoticountrl.setVisibility(View.VISIBLE);
+			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
+		}
 
 		profilepic.setOnClickListener(new View.OnClickListener() {
 
@@ -552,12 +569,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		});
 
 		// ///////////////
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForreadunreadnotification()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForreadunreadnotification().execute();
-		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//			new ConnectionTaskForreadunreadnotification()
+//					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//		} else {
+//			new ConnectionTaskForreadunreadnotification().execute();
+//		}
 
 		notificationimg.setOnClickListener(new View.OnClickListener() {
 
@@ -1044,7 +1061,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				if (whichdotclick.equalsIgnoreCase("fromdot")) {
 
 					LatLng mapfromlatlng = invitemapcenter;
-					fromshortname = getAddressshort(BookaCabFragmentActivity.this,
+					fromshortname = getAddressshort(
+							BookaCabFragmentActivity.this,
 							mapfromlatlng.latitude, mapfromlatlng.longitude);
 
 					fAddress = null; // reset previous
@@ -1053,7 +1071,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder fcoder = new Geocoder(BookaCabFragmentActivity.this);
+					Geocoder fcoder = new Geocoder(
+							BookaCabFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
 								.getFromLocationName(jnd, 50);
@@ -1073,7 +1092,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				else if (whichdotclick.equalsIgnoreCase("todot")) {
 
 					LatLng maptolatlng = invitemapcenter;
-					toshortname = getAddressshort(BookaCabFragmentActivity.this,
+					toshortname = getAddressshort(
+							BookaCabFragmentActivity.this,
 							maptolatlng.latitude, maptolatlng.longitude);
 
 					tAddress = null; // reset previous
@@ -1082,7 +1102,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					String jnd2 = to_places.getText().toString().trim();
 
-					Geocoder tcoder = new Geocoder(BookaCabFragmentActivity.this);
+					Geocoder tcoder = new Geocoder(
+							BookaCabFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
 								.getFromLocationName(jnd2, 50);
@@ -1144,7 +1165,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
+				String address = getAddress(BookaCabFragmentActivity.this,
+						latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1186,7 +1208,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
+				String address = getAddress(BookaCabFragmentActivity.this,
+						latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1214,8 +1237,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					fromshortname = getaddressfromautoplace(BookaCabFragmentActivity.this,
-							from_places.getText().toString().trim());
+					fromshortname = getaddressfromautoplace(
+							BookaCabFragmentActivity.this, from_places
+									.getText().toString().trim());
 				}
 			}
 
@@ -1250,8 +1274,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					toshortname = getaddressfromautoplace(BookaCabFragmentActivity.this,
-							to_places.getText().toString().trim());
+					toshortname = getaddressfromautoplace(
+							BookaCabFragmentActivity.this, to_places.getText()
+									.toString().trim());
 				}
 			}
 
@@ -1320,11 +1345,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Saved!", Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Error saving!", Toast.LENGTH_LONG).show();
 						}
 						Log.d("BookaCab", "onClick mTextViewSetHomeFav : "
 								+ favoritesLocationReadWrite.readFromFile());
@@ -1370,10 +1395,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 										BookaCabFragmentActivity.this);
 								if (favoritesLocationReadWrite
 										.saveToFile(jsonObject.toString())) {
-									Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-											Toast.LENGTH_LONG).show();
+									Toast.makeText(
+											BookaCabFragmentActivity.this,
+											"Saved!", Toast.LENGTH_LONG).show();
 								} else {
-									Toast.makeText(BookaCabFragmentActivity.this,
+									Toast.makeText(
+											BookaCabFragmentActivity.this,
 											"Error saving!", Toast.LENGTH_LONG)
 											.show();
 								}
@@ -1422,11 +1449,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 								BookaCabFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Saved!", Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Error saving!", Toast.LENGTH_LONG).show();
 						}
 
 						Log.d("BookaCab", "onClick mTextViewSetHomeFavTo : "
@@ -1471,11 +1498,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 								BookaCabFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Saved!", Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Error saving!", Toast.LENGTH_LONG).show();
 						}
 
 						Log.d("BookaCab", "onClick mTextViewSetOfficeFavTo : "
@@ -1528,8 +1555,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			Double startLat = Double.parseDouble(RowData[0]);
 			Double startLng = Double.parseDouble(RowData[1]);
 
-			String address = getAddress(BookaCabFragmentActivity.this, startLat.doubleValue(),
-					startLng.doubleValue());
+			String address = getAddress(BookaCabFragmentActivity.this,
+					startLat.doubleValue(), startLng.doubleValue());
 			from_places.setText(address);
 			fAddress = geocodeAddress(address);
 
@@ -1539,8 +1566,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			Double endLat = Double.parseDouble(RowData[0]);
 			Double endLng = Double.parseDouble(RowData[1]);
 
-			address = getAddress(BookaCabFragmentActivity.this, endLat.doubleValue(),
-					endLng.doubleValue());
+			address = getAddress(BookaCabFragmentActivity.this,
+					endLat.doubleValue(), endLng.doubleValue());
 			to_places.setText(address);
 			tAddress = geocodeAddress(address);
 
@@ -1594,7 +1621,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 	private class ConnectionTaskForFetchPool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(BookaCabFragmentActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				BookaCabFragmentActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1743,8 +1771,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 						final AlertDialog dialog = builder.create();
 
 						listView.setAdapter(new CustomListViewAdapter(
-								BookaCabFragmentActivity.this, arrayListTrip, arrayListDate,
-								arrayListTime, arrayListSeat));
+								BookaCabFragmentActivity.this, arrayListTrip,
+								arrayListDate, arrayListTime, arrayListSeat));
 						listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 							@Override
@@ -1901,7 +1929,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 			from_places.requestFocus();
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 
 			builder.setMessage("Please Enter From Location. If you have already selected a location on map please try again by selecting a nearby location");
 			builder.setPositiveButton("OK", null);
@@ -1971,12 +2000,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		@Override
 		protected String doInBackground(String... args) {
-			Log.d("PerformCabSearchTimeAsync",
-					"doInBackground : " + GlobalVariables.ServiceUrl
-							+ "/fetchCabDetailsNew.php?" + "FromCity="
-							+ fAddress.getLocality().toString() + "&slat="
-							+ String.valueOf(fAddress.getLatitude()) + "&slon="
-							+ String.valueOf(fAddress.getLongitude()));
+			Log.d("PerformCabSearchTimeAsync", "doInBackground : "
+					+ GlobalVariables.ServiceUrl + "/fetchCabDetailsNew.php?"
+					+ "FromCity=" + fAddress.getLocality().toString()
+					+ "&slat=" + String.valueOf(fAddress.getLatitude())
+					+ "&slon=" + String.valueOf(fAddress.getLongitude()));
 
 			try {
 				URL url = new URL(GlobalVariables.ServiceUrl
@@ -2149,7 +2177,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 								+ Double.toString(tAddress.getLatitude())
 								+ ","
 								+ Double.toString(tAddress.getLongitude())
-								+ "&sensor=false&units=metric&alternatives=false&mode=driving");
+								+ "&sensor=false&units=metric&alternatives=false&mode=driving&key="+GlobalVariables.GoogleMapsAPIKey);
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -2618,7 +2646,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		try {
 			StringBuilder sb = new StringBuilder(PLACES_API_BASE
 					+ TYPE_AUTOCOMPLETE + OUT_JSON);
-			sb.append("?sensor=false&key=" + API_KEY);
+			sb.append("?sensor=false&key=" + GlobalVariables.GoogleMapsAPIKey);
 			sb.append("&components=country:ind");
 			sb.append("&input=" + URLEncoder.encode(input, "utf8"));
 
@@ -2682,8 +2710,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		mypoollist = (ListView) dialog.findViewById(R.id.mypoollist);
 
-		adapter = new ListViewAdapter(BookaCabFragmentActivity.this, FromLocation, ToLocation,
-				TravelDate, TravelTime, Seat_Status, OwnerName, imagename);
+		adapter = new ListViewAdapter(BookaCabFragmentActivity.this,
+				FromLocation, ToLocation, TravelDate, TravelTime, Seat_Status,
+				OwnerName, imagename);
 		mypoollist.setAdapter(adapter);
 
 		mypoollist.setOnItemClickListener(new OnItemClickListener() {
@@ -2905,7 +2934,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key=AIzaSyDOEO_G29Qu7VM6_veLVJCoiNUtSJ26Fl0";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 
@@ -4157,7 +4186,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
 			builder.setMessage("ClubMyCab requires Internet connection");
 			builder.setPositiveButton("OK", null);
@@ -4169,7 +4199,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 			return;
 		} else if (startAddress == null || endAddress == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("");
 			builder.setMessage("Please provide both From & To locations to make a booking.");
 			builder.setPositiveButton("OK", null);
@@ -4285,7 +4316,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					@Override
 					public void run() {
-						Intent intent = new Intent(BookaCabFragmentActivity.this,
+						Intent intent = new Intent(
+								BookaCabFragmentActivity.this,
 								MobileSiteActivity.class);
 						intent.putExtra(
 								MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL,
@@ -4495,9 +4527,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			URL url = new URL(GlobalVariables.ServiceUrl + "/uberConnect.php?"
 					+ params);
 			String response = "";
-			Log.d("BookaCab",
-					"getUberBookingStatus : " + GlobalVariables.ServiceUrl
-							+ "/uberConnect.php?" + params);
+			Log.d("BookaCab", "getUberBookingStatus : "
+					+ GlobalVariables.ServiceUrl + "/uberConnect.php?" + params);
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
 			urlConnection.setReadTimeout(30000);
@@ -4818,7 +4849,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
 			builder.setMessage("ClubMyCab requires Internet connection");
 			builder.setPositiveButton("OK", null);
@@ -4830,7 +4862,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 			return;
 		} else if (startAddress == null || endAddress == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("");
 			builder.setMessage("Please provide both From & To locations to make a booking.");
 			builder.setPositiveButton("OK", null);
@@ -5213,7 +5246,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 							+ " boolean site : " + shouldOpenSite);
 
 			try {
-				URL url = new URL(GlobalVariables.ServiceUrl + "/cmcRecords.php");
+				URL url = new URL(GlobalVariables.ServiceUrl
+						+ "/cmcRecords.php");
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -5295,7 +5329,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 					}
 
 					if (shouldOpenBookedCabPage) {
-						Intent intent = new Intent(BookaCabFragmentActivity.this, MyRidesActivity.class);
+						Intent intent = new Intent(
+								BookaCabFragmentActivity.this,
+								MyRidesActivity.class);
 						startActivity(intent);
 					}
 				}
@@ -5431,7 +5467,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		final CharSequence[] options = { "Take Photo", "Choose from Gallery",
 				"Cancel" };
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
 		builder.setTitle("Add Photo!");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
 			@Override
@@ -5456,99 +5493,99 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		builder.show();
 	}
 
-	private class ConnectionTaskForreadunreadnotification extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(BookaCabFragmentActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
-			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount.setText(readunreadnotiresp);
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionreadunreadnotification {
-
-		public AuthenticateConnectionreadunreadnotification() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/FetchUnreadNotificationCount.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumberstr);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-
-		}
-	}
+//	private class ConnectionTaskForreadunreadnotification extends
+//			AsyncTask<String, Void, Void> {
+//
+//		@Override
+//		protected void onPreExecute() {
+//
+//		}
+//
+//		@Override
+//		protected Void doInBackground(String... args) {
+//			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
+//			try {
+//				mAuth1.connection();
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				exceptioncheck = true;
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(Void v) {
+//
+//			if (exceptioncheck) {
+//				exceptioncheck = false;
+//				Toast.makeText(BookaCabFragmentActivity.this,
+//						getResources().getString(R.string.exceptionstring),
+//						Toast.LENGTH_LONG).show();
+//				return;
+//			}
+//
+//			if (readunreadnotiresp.equalsIgnoreCase("0")) {
+//
+//				unreadnoticountrl.setVisibility(View.GONE);
+//
+//			} else {
+//
+//				unreadnoticountrl.setVisibility(View.VISIBLE);
+//				unreadnoticount.setText(readunreadnotiresp);
+//			}
+//		}
+//
+//	}
+//
+//	public class AuthenticateConnectionreadunreadnotification {
+//
+//		public AuthenticateConnectionreadunreadnotification() {
+//
+//		}
+//
+//		public void connection() throws Exception {
+//
+//			// Connect to google.com
+//			HttpClient httpClient = new DefaultHttpClient();
+//
+//			String url_select = GlobalVariables.ServiceUrl
+//					+ "/FetchUnreadNotificationCount.php";
+//
+//			HttpPost httpPost = new HttpPost(url_select);
+//			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+//					"MobileNumber", MobileNumberstr);
+//
+//			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+//			nameValuePairList.add(MobileNumberBasicNameValuePair);
+//
+//			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+//					nameValuePairList);
+//			httpPost.setEntity(urlEncodedFormEntity);
+//			HttpResponse httpResponse = httpClient.execute(httpPost);
+//
+//			Log.d("httpResponse", "" + httpResponse);
+//
+//			InputStream inputStream = httpResponse.getEntity().getContent();
+//			InputStreamReader inputStreamReader = new InputStreamReader(
+//					inputStream);
+//
+//			BufferedReader bufferedReader = new BufferedReader(
+//					inputStreamReader);
+//
+//			StringBuilder stringBuilder = new StringBuilder();
+//
+//			String bufferedStrChunk = null;
+//
+//			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+//				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+//						.toString();
+//			}
+//
+//			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+//
+//		}
+//	}
 
 	private class ConnectionTaskForfetchimagename extends
 			AsyncTask<String, Void, Void> {

@@ -15,8 +15,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Build;
-import com.clubmycab.utility.Log;
 
+import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -294,7 +295,7 @@ public class FareCalculator {
 					+ Double.toString(endLatLng.latitude)
 					+ ","
 					+ Double.toString(endLatLng.longitude)
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 

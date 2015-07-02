@@ -2,6 +2,7 @@ package com.clubmycab;
 
 import android.app.Application;
 
+import com.clubmycab.utility.GlobalVariables;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -17,7 +18,7 @@ public class CabApplication extends Application {
 
 		analytics = GoogleAnalytics.getInstance(this);
 		analytics.setLocalDispatchPeriod(1800);
-		tracker = analytics.newTracker("UA-63477985-1");
+		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 		tracker.enableExceptionReporting(true);
 		tracker.enableAdvertisingIdCollection(true);
 		tracker.enableAutoActivityTracking(true);

@@ -246,7 +246,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(CheckPoolFragmentActivity.this);
-		tracker = analytics.newTracker("UA-63477985-1");
+		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("Owner Created Pool");
@@ -955,7 +955,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 

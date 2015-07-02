@@ -62,7 +62,10 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
+
+import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.utility.Log;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1052,34 +1055,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = getAddress(CheckPoolFragmentActivity.this,
+				String asd = MapUtilityMethods.getAddress(CheckPoolFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
 			}
 			Log.d("via_waypointstrarr", "" + via_waypointstrarr);
 		}
-	}
-
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
 	}
 
 	private ArrayList<LatLng> decodePoly(String encoded) {
@@ -1538,7 +1520,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = getAddress(CheckPoolFragmentActivity.this,
+				String asd = MapUtilityMethods.getAddress(CheckPoolFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);

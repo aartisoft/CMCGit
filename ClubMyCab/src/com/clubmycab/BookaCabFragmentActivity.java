@@ -100,6 +100,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
 import com.clubmycab.ui.MyRidesActivity;
@@ -292,7 +293,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				double latitude = mycurrentlocationobject.getLatitude();
 				double longitude = mycurrentlocationobject.getLongitude();
 
-				String address = getAddress(BookaCabFragmentActivity.this,
+				String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
 						latitude, longitude);
 				from_places.setText(address);
 				fAddress = geocodeAddress(address);
@@ -1038,7 +1039,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 					invitemapcenter = cameraPosition.target;
 
-					String address = getAddress(BookaCabFragmentActivity.this,
+					String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
 							invitemapcenter.latitude, invitemapcenter.longitude);
 					Log.d("address", "" + address);
 
@@ -1061,7 +1062,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				if (whichdotclick.equalsIgnoreCase("fromdot")) {
 
 					LatLng mapfromlatlng = invitemapcenter;
-					fromshortname = getAddressshort(
+					fromshortname = MapUtilityMethods.getAddressshort(
 							BookaCabFragmentActivity.this,
 							mapfromlatlng.latitude, mapfromlatlng.longitude);
 
@@ -1092,7 +1093,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				else if (whichdotclick.equalsIgnoreCase("todot")) {
 
 					LatLng maptolatlng = invitemapcenter;
-					toshortname = getAddressshort(
+					toshortname = MapUtilityMethods.getAddressshort(
 							BookaCabFragmentActivity.this,
 							maptolatlng.latitude, maptolatlng.longitude);
 
@@ -1165,7 +1166,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCabFragmentActivity.this,
+				String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
 						latitude, longitude);
 
 				fromlocation.setText(address);
@@ -1208,7 +1209,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCabFragmentActivity.this,
+				String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
 						latitude, longitude);
 
 				fromlocation.setText(address);
@@ -1237,7 +1238,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					fromshortname = getaddressfromautoplace(
+					fromshortname = MapUtilityMethods.getaddressfromautoplace(
 							BookaCabFragmentActivity.this, from_places
 									.getText().toString().trim());
 				}
@@ -1274,7 +1275,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					toshortname = getaddressfromautoplace(
+					toshortname = MapUtilityMethods.getaddressfromautoplace(
 							BookaCabFragmentActivity.this, to_places.getText()
 									.toString().trim());
 				}
@@ -1555,7 +1556,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			Double startLat = Double.parseDouble(RowData[0]);
 			Double startLng = Double.parseDouble(RowData[1]);
 
-			String address = getAddress(BookaCabFragmentActivity.this,
+			String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
 					startLat.doubleValue(), startLng.doubleValue());
 			from_places.setText(address);
 			fAddress = geocodeAddress(address);
@@ -1566,7 +1567,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			Double endLat = Double.parseDouble(RowData[0]);
 			Double endLng = Double.parseDouble(RowData[1]);
 
-			address = getAddress(BookaCabFragmentActivity.this,
+			address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
 					endLat.doubleValue(), endLng.doubleValue());
 			to_places.setText(address);
 			tAddress = geocodeAddress(address);
@@ -2559,26 +2560,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 	 * fromlocation.setText(address); }
 	 */
 
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
-	}
 
 	@Override
 	public void onLocationChanged(Location location) {
@@ -5794,89 +5775,5 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(CompressFormat.JPEG, 70, stream);
 		return stream.toByteArray();
-	}
-
-	public String getaddressfromautoplace(Context ctx, String str) {
-		StringBuilder result = new StringBuilder();
-		StringBuilder result1 = new StringBuilder();
-		String totext = str;
-
-		if (totext.contains(",")) {
-			String[] arr = totext.split(",");
-
-			if (arr.length <= 2) {
-				result.append(totext + ", ");
-			} else {
-				for (int i = 0; i < arr.length; i++) {
-
-					if (i == arr.length - 1 || i == arr.length - 2) {
-
-					} else {
-						result.append(arr[i].toString().trim() + ", ");
-					}
-				}
-			}
-
-			result = result.deleteCharAt(result.length() - 2);
-
-			String[] arr1 = result.toString().split(",");
-
-			result1 = new StringBuilder();
-			for (int i1 = 0; i1 < arr1.length; i1++) {
-
-				if (i1 == arr1.length - 1 || i1 == arr1.length - 2) {
-
-					result1.append(arr1[i1].toString().trim() + ", ");
-				}
-			}
-
-			result1 = result1.deleteCharAt(result1.length() - 2);
-		} else {
-			result1.append(totext);
-		}
-		return result1.toString();
-	}
-
-	public String getAddressshort(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-
-					if (i == 1) {
-						if (address.getAddressLine(i) == null
-								|| address.getAddressLine(i).isEmpty()) {
-
-							result.append(address.getLocality().toString()
-									.trim());
-
-						} else {
-
-							if (address.getAddressLine(i).contains(",")) {
-								String[] arr = address.getAddressLine(i).split(
-										",");
-								result.append(arr[arr.length - 1] + ", "
-										+ address.getLocality());
-							} else {
-
-								result.append(address.getAddressLine(i)
-										.toString().trim()
-										+ ", " + address.getLocality());
-							}
-						}
-					}
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString().trim();
 	}
 }

@@ -23,12 +23,13 @@
         android:background="#FFFFFF" >
 
         <LinearLayout
-            android:id = "@+id/idScrollViewLinearLayout"
+            android:id="@+id/idScrollViewLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <!-- <TextView
+            <!--
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Tell us about your regular travel locations?"
@@ -173,50 +174,35 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="visible" >
-            </LinearLayout> -->
+            </LinearLayout>
+            -->
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/addMore"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/createnewclubbtn"
-        android:text="Add More"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-
     <LinearLayout
-        android:id="@+id/frombottomll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:background="#FFFFFF"
-        android:orientation="horizontal"
-        android:weightSum="2" >
+        android:orientation="vertical" >
 
         <Button
-            android:id="@+id/skip"
+            android:id="@+id/addMore"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="#4279bd"
-            android:text="Skip"
-            android:textColor="#ffffff"
-            android:textSize="13sp" />
-
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:background="#ffffff" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/createnewclubbtn"
+            android:onClick="addMoreClick"
+            android:text="Add More"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
 
         <Button
-            android:id="@+id/done"
+            android:id="@+id/idDoneButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -225,5 +211,84 @@
             android:textColor="#ffffff"
             android:textSize="13sp" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/fromrelative"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/header"
+        android:layout_margin="10dp"
+        android:background="#000000"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/fromlocation" >
+
+            <fragment
+                android:id="@+id/frommap"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                class="com.google.android.gms.maps.SupportMapFragment" />
+
+            <ImageView
+                android:id="@+id/locationmarker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:src="@drawable/locationmarker" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/fromlocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/frombottomll"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/frombottomll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:background="#FFFFFF"
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <Button
+                android:id="@+id/idCancelButtonMap"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="#4279bd"
+                android:text="Cancel"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="#ffffff" />
+
+            <Button
+                android:id="@+id/idDoneButtonMap"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="#4279bd"
+                android:text="Done"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

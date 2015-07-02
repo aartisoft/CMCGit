@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clubmycab.CircularImageView;
-import com.clubmycab.FavoriteLocationsAcivity;
 import com.clubmycab.R;
 import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;

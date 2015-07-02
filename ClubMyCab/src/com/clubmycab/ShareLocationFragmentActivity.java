@@ -78,6 +78,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.UniversalDrawer;
@@ -685,7 +686,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 						// Zoom in the Google Map
 						frommap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-						String address = getAddress(
+						String address = MapUtilityMethods.getAddress(
 								ShareLocationFragmentActivity.this, latitude,
 								longitude);
 
@@ -1322,7 +1323,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 				LatLng mapcenter = cameraPosition.target;
 
-				String address = getAddress(ShareLocationFragmentActivity.this,
+				String address = MapUtilityMethods.getAddress(ShareLocationFragmentActivity.this,
 						mapcenter.latitude, mapcenter.longitude);
 				Log.d("address", "" + address);
 
@@ -2795,27 +2796,6 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		Log.d("str", "" + str);
 		selectrecipientsvalue.setText(str);
 
-	}
-
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
 	}
 
 	public boolean checkuserexist(String name, String number) {

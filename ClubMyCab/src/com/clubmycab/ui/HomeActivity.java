@@ -58,7 +58,6 @@ import android.widget.Toast;
 
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
-import com.clubmycab.InviteFragmentActivity;
 import com.clubmycab.R;
 import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.asynctasks.GlobalAsyncTask;

@@ -2,6 +2,8 @@ package com.clubmycab;
 
 import java.util.ArrayList;
 
+import com.clubmycab.ui.InviteFragmentActivity;
+
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;

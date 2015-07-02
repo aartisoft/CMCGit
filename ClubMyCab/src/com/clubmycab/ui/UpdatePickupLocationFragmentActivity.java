@@ -50,6 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.R;
+import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -386,7 +387,7 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 							.newLatLng(point));
 					updatelocationmarker.setVisibility(View.VISIBLE);
 					memberlocationlatlong = point;
-					memberlocationaddress = getAddress(
+					memberlocationaddress = MapUtilityMethods.getAddress(
 							UpdatePickupLocationFragmentActivity.this, point.latitude,
 							point.longitude);
 
@@ -405,7 +406,7 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 							LatLng mapcenter = cameraPosition.target;
 
 							memberlocationlatlong = mapcenter;
-							memberlocationaddress = getAddress(
+							memberlocationaddress = MapUtilityMethods.getAddress(
 									UpdatePickupLocationFragmentActivity.this,
 									mapcenter.latitude, mapcenter.longitude);
 
@@ -566,7 +567,7 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = getAddress(UpdatePickupLocationFragmentActivity.this,
+				String asd = MapUtilityMethods.getAddress(UpdatePickupLocationFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
@@ -575,26 +576,6 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 		}
 	}
 
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
-	}
 
 	private ArrayList<LatLng> decodePoly(String encoded) {
 		ArrayList<LatLng> poly = new ArrayList<LatLng>();

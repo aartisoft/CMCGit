@@ -37,8 +37,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
-import com.clubmycab.utility.Log;
 
+import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.utility.Log;
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -272,7 +273,7 @@ public class LocationShareService extends Service implements LocationListener {
 			mycurrentlocation = location;
 			// locationManager.removeUpdates(this);
 
-			String lcladdress = getAddress(getApplicationContext(),
+			String lcladdress = MapUtilityMethods.getAddress(getApplicationContext(),
 					mycurrentlocation.getLatitude(),
 					mycurrentlocation.getLongitude());
 
@@ -431,27 +432,6 @@ public class LocationShareService extends Service implements LocationListener {
 		}
 
 		return location;
-	}
-
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
 	}
 
 	// ///////

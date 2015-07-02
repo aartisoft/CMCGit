@@ -8,6 +8,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import FetchClubHandler.FetchClubHandler;
 import android.R.bool;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,7 +47,7 @@ public class GlobalAsyncTask {
 	}
 
 	public interface AsyncTaskResultListener {
-		public void getResult(int result, String error);
+		public void getResult(int result, String response);
 	}
 
 	public class GlobalRequestTask extends AsyncTask<String, Void, Void> {
@@ -81,9 +82,11 @@ public class GlobalAsyncTask {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			} else {
+			} else if (handler instanceof FetchUnreadNotificationCountHandler) {
 				((FetchUnreadNotificationCountHandler) handler)
-						.setCount(response);
+				.setCount(response);
+			} else if (handler instanceof FetchClubHandler) {
+				
 			}
 
 			if (showdialog && dialog.isShowing()) {

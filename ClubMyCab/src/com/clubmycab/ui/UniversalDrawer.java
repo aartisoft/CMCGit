@@ -192,7 +192,7 @@ public class UniversalDrawer {
 				mNav.toggleDrawer();
 				
 				Intent mainIntent = new Intent(context,
-						FavoriteLocationsAcivity.class);
+						FirstLoginClubsActivity.class);
 				context.startActivity(mainIntent);
 				((Activity) context).overridePendingTransition(
 						R.anim.slide_in_right, R.anim.slide_out_left);

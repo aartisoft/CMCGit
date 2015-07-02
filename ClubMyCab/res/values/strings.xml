@@ -55,5 +55,6 @@
     <string name="loading">Loading&#8230;</string>
     <string name="exceptionstring">Something went wrong, please try again!</string>
     <string name="title_activity_wallets_acitivity">WalletsAcitivity</string>
+    <string name="title_activity_favorite_locations_acivity">FavoriteLocationsAcivity</string>
 
 </resources>

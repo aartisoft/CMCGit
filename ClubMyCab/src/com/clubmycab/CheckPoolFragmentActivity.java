@@ -955,7 +955,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 

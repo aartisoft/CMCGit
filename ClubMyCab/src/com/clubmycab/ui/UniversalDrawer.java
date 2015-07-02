@@ -10,7 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clubmycab.CircularImageView;
+import com.clubmycab.FavoriteLocationsAcivity;
 import com.clubmycab.R;
+import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -42,6 +44,7 @@ public class UniversalDrawer {
 	LinearLayout settingslayout;
 	LinearLayout shareapplayout;
 	LinearLayout aboutlayout;
+	LinearLayout sharelocationlayout;
 
 	Context context;
 
@@ -80,6 +83,8 @@ public class UniversalDrawer {
 				.findViewById(R.id.shareapplayout);
 		aboutlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.aboutlayout);
+		sharelocationlayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.sharelocationlayout);
 
 		myprofile = (TextView) ((Activity) context)
 				.findViewById(R.id.myprofile);
@@ -186,21 +191,27 @@ public class UniversalDrawer {
 			@Override
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
+				
+				Intent mainIntent = new Intent(context,
+						FavoriteLocationsAcivity.class);
+				context.startActivity(mainIntent);
+				((Activity) context).overridePendingTransition(
+						R.anim.slide_in_right, R.anim.slide_out_left);
 
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareApp Click")
-						.setAction("ShareApp Click").setLabel("ShareApp Click")
-						.build());
-
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent
-						.putExtra(
-								Intent.EXTRA_TEXT,
-								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				sendIntent.setType("text/plain");
-				context.startActivity(Intent.createChooser(sendIntent,
-						"Share Via"));
+//				tracker.send(new HitBuilders.EventBuilder()
+//						.setCategory("ShareApp Click")
+//						.setAction("ShareApp Click").setLabel("ShareApp Click")
+//						.build());
+//
+//				Intent sendIntent = new Intent();
+//				sendIntent.setAction(Intent.ACTION_SEND);
+//				sendIntent
+//						.putExtra(
+//								Intent.EXTRA_TEXT,
+//								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
+//				sendIntent.setType("text/plain");
+//				context.startActivity(Intent.createChooser(sendIntent,
+//						"Share Via"));
 
 			}
 		});
@@ -224,6 +235,25 @@ public class UniversalDrawer {
 					GlobalVariables.ActivityName = "WalletsAcitivity";
 				}
 
+			}
+		});
+
+		sharemylocation.setOnClickListener(new View.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(View arg0) {
+				mNav.toggleDrawer();
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("ShareLocation Click")
+						.setAction("ShareLocation Click")
+						.setLabel("ShareLocation Click").build());
+
+				Intent mainIntent = new Intent(context,
+						ShareLocationFragmentActivity.class);
+				context.startActivity(mainIntent);
+				((Activity) context).overridePendingTransition(R.anim.slide_in_right,
+						R.anim.slide_out_left);
 			}
 		});
 

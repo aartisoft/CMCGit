@@ -210,7 +210,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 	String[] Imag = { "R.drawable.olacab", "R.drawable.mreucab",
 			"R.drawable.easycab" };
 
-	private static final String API_KEY = "AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0";
 	private static final String LOG_TAG = "ExampleApp";
 	Location mycurrentlocationobject;
 
@@ -2178,7 +2177,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								+ Double.toString(tAddress.getLatitude())
 								+ ","
 								+ Double.toString(tAddress.getLongitude())
-								+ "&sensor=false&units=metric&alternatives=false&mode=driving");
+								+ "&sensor=false&units=metric&alternatives=false&mode=driving&key="+GlobalVariables.GoogleMapsAPIKey);
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -2647,7 +2646,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		try {
 			StringBuilder sb = new StringBuilder(PLACES_API_BASE
 					+ TYPE_AUTOCOMPLETE + OUT_JSON);
-			sb.append("?sensor=false&key=" + API_KEY);
+			sb.append("?sensor=false&key=" + GlobalVariables.GoogleMapsAPIKey);
 			sb.append("&components=country:ind");
 			sb.append("&input=" + URLEncoder.encode(input, "utf8"));
 
@@ -2935,7 +2934,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key=AIzaSyDOEO_G29Qu7VM6_veLVJCoiNUtSJ26Fl0";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 

@@ -73,20 +73,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.ui.AboutPagerFragmentActivity;
 import com.clubmycab.ui.ContactsToInviteActivity;
-import com.clubmycab.ui.MyClubsActivity;
-import com.clubmycab.ui.MyProfileActivity;
-import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
-import com.clubmycab.ui.SettingActivity;
 import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -157,9 +151,6 @@ public class InviteFragmentActivity extends FragmentActivity implements Location
 	private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
 	private static final String OUT_JSON = "/json";
 
-	// private static final String API_KEY =
-	// "AIzaSyBRKgFt6KHJrpcyYjKXHmnUpU6E6HWODGI";
-	private static final String API_KEY = "AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0";
 	private static final String LOG_TAG = "ExampleApp";
 
 	Location mycurrentlocationobject;
@@ -2538,7 +2529,7 @@ public class InviteFragmentActivity extends FragmentActivity implements Location
 		try {
 			StringBuilder sb = new StringBuilder(PLACES_API_BASE
 					+ TYPE_AUTOCOMPLETE + OUT_JSON);
-			sb.append("?sensor=false&key=" + API_KEY);
+			sb.append("?sensor=false&key=" + GlobalVariables.GoogleMapsAPIKey);
 			sb.append("&components=country:ind");
 			sb.append("&input=" + URLEncoder.encode(input, "utf8"));
 

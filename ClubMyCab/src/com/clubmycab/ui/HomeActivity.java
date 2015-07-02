@@ -81,7 +81,7 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 	LinearLayout homeclubmycabll;
 	LinearLayout homebookacabll;
-	LinearLayout homehereiamll;
+	//LinearLayout homehereiamll;
 
 	ImageView sidemenu;
 	private SimpleSideDrawer mNav;
@@ -387,7 +387,7 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 		homeclubmycabll = (LinearLayout) findViewById(R.id.homeclubmycabll);
 		homebookacabll = (LinearLayout) findViewById(R.id.homebookacabll);
-		homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
+		//homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
@@ -475,38 +475,38 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			}
 		});
 
-		homehereiamll.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-
-				Animation animScale = AnimationUtils.loadAnimation(
-						HomeActivity.this, R.anim.button_click_anim);
-				homehereiamll.startAnimation(animScale);
-
-				Handler mHandler2 = new Handler();
-				Runnable mRunnable2 = new Runnable() {
-					@Override
-					public void run() {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("ShareLocation (HomePage)")
-								.setAction("ShareLocation (HomePage)")
-								.setLabel("ShareLocation (HomePage)").build());
-
-						logger.logEvent("HomePage ShareLocation Click");
-
-						Intent mainIntent = new Intent(HomeActivity.this,
-								ShareLocationFragmentActivity.class);
-						startActivityForResult(mainIntent, 500);
-						overridePendingTransition(R.anim.slide_in_right,
-								R.anim.slide_out_left);
-
-					}
-				};
-				mHandler2.postDelayed(mRunnable2, 500);
-
-			}
-		});
+//		homehereiamll.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//
+//				Animation animScale = AnimationUtils.loadAnimation(
+//						HomeActivity.this, R.anim.button_click_anim);
+//				homehereiamll.startAnimation(animScale);
+//
+//				Handler mHandler2 = new Handler();
+//				Runnable mRunnable2 = new Runnable() {
+//					@Override
+//					public void run() {
+//
+//						tracker.send(new HitBuilders.EventBuilder()
+//								.setCategory("ShareLocation (HomePage)")
+//								.setAction("ShareLocation (HomePage)")
+//								.setLabel("ShareLocation (HomePage)").build());
+//
+//						logger.logEvent("HomePage ShareLocation Click");
+//
+//						Intent mainIntent = new Intent(HomeActivity.this,
+//								ShareLocationFragmentActivity.class);
+//						startActivityForResult(mainIntent, 500);
+//						overridePendingTransition(R.anim.slide_in_right,
+//								R.anim.slide_out_left);
+//
+//					}
+//				};
+//				mHandler2.postDelayed(mRunnable2, 500);
+//
+//			}
+//		});
 
 		profilepic.setOnClickListener(new View.OnClickListener() {
 

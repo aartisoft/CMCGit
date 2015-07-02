@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
+public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
     private ArrayList<String> resultList;
     private ArrayList<String> autocomplete;
     InviteFragmentActivity reg = new InviteFragmentActivity();

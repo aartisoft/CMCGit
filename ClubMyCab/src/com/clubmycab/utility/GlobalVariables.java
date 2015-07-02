@@ -4,6 +4,7 @@ public class GlobalVariables {
 
 	//Test Commit Ekansh
 	//Test commit Rohit
+	//Test commit 2 Rohit
 	public static final String ServiceUrl = "http://180.179.207.159/cmc/cmcservice"; // Production
 	// public static final String ServiceUrl =
 	// "http://180.179.208.23/cmc/cmcservice"; // UAT

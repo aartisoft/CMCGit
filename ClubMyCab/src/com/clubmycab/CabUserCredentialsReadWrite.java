@@ -23,6 +23,7 @@ public class CabUserCredentialsReadWrite {
     
     public static final String KEY_JSON_CAB_NAME_UBER = "KeyJSONCabNameUber";
     public static final String KEY_JSON_CAB_NAME_MEGA = "KeyJSONCabNameMega";
+    public static final String KEY_JSON_CAB_NAME_TFS = "KeyJSONCabNameTFS";
     
     public CabUserCredentialsReadWrite(Context context) {
         mContext = context;

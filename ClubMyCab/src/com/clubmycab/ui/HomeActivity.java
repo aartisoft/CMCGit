@@ -59,13 +59,11 @@ import android.widget.Toast;
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
-import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.xmlhandler.FetchUnreadNotificationCountHandler;
-import com.clubmycab.xmlhandler.QueryWalletHandler;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -592,6 +590,13 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 		} else {
 			new ConnectionTaskForFetchMyClubs().execute();
 		}
+		
+		SharedPreferences mPrefs11111 = getSharedPreferences(
+				"FavoriteLocation", 0);
+		String favoritelocation = mPrefs11111.getString(
+				"favoritelocation", "");
+		
+		
 	}
 
 	private void selectImage() {

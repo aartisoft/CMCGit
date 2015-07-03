@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -293,8 +292,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				double latitude = mycurrentlocationobject.getLatitude();
 				double longitude = mycurrentlocationobject.getLongitude();
 
-				String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
-						latitude, longitude);
+				String address = MapUtilityMethods.getAddress(
+						BookaCabFragmentActivity.this, latitude, longitude);
 				from_places.setText(address);
 				fAddress = geocodeAddress(address);
 				Log.d("AutoSearchCabAsync", "AutoSearchCabAsync address : "
@@ -505,7 +504,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(BookaCabFragmentActivity.this);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("BookACab");
@@ -549,7 +549,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
-		
+
 		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
 
 			unreadnoticountrl.setVisibility(View.GONE);
@@ -570,12 +570,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		});
 
 		// ///////////////
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			new ConnectionTaskForreadunreadnotification()
-//					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//		} else {
-//			new ConnectionTaskForreadunreadnotification().execute();
-//		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		notificationimg.setOnClickListener(new View.OnClickListener() {
 
@@ -1039,8 +1039,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 					invitemapcenter = cameraPosition.target;
 
-					String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
-							invitemapcenter.latitude, invitemapcenter.longitude);
+					String address = MapUtilityMethods
+							.getAddress(BookaCabFragmentActivity.this,
+									invitemapcenter.latitude,
+									invitemapcenter.longitude);
 					Log.d("address", "" + address);
 
 					fromlocation.setText(address);
@@ -1166,8 +1168,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
-						latitude, longitude);
+				String address = MapUtilityMethods.getAddress(
+						BookaCabFragmentActivity.this, latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1209,8 +1211,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
-						latitude, longitude);
+				String address = MapUtilityMethods.getAddress(
+						BookaCabFragmentActivity.this, latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1556,8 +1558,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			Double startLat = Double.parseDouble(RowData[0]);
 			Double startLng = Double.parseDouble(RowData[1]);
 
-			String address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
-					startLat.doubleValue(), startLng.doubleValue());
+			String address = MapUtilityMethods.getAddress(
+					BookaCabFragmentActivity.this, startLat.doubleValue(),
+					startLng.doubleValue());
 			from_places.setText(address);
 			fAddress = geocodeAddress(address);
 
@@ -1567,8 +1570,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			Double endLat = Double.parseDouble(RowData[0]);
 			Double endLng = Double.parseDouble(RowData[1]);
 
-			address = MapUtilityMethods.getAddress(BookaCabFragmentActivity.this,
-					endLat.doubleValue(), endLng.doubleValue());
+			address = MapUtilityMethods.getAddress(
+					BookaCabFragmentActivity.this, endLat.doubleValue(),
+					endLng.doubleValue());
 			to_places.setText(address);
 			tAddress = geocodeAddress(address);
 
@@ -2178,7 +2182,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								+ Double.toString(tAddress.getLatitude())
 								+ ","
 								+ Double.toString(tAddress.getLongitude())
-								+ "&sensor=false&units=metric&alternatives=false&mode=driving&key="+GlobalVariables.GoogleMapsAPIKey);
+								+ "&sensor=false&units=metric&alternatives=false&mode=driving&key="
+								+ GlobalVariables.GoogleMapsAPIKey);
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -2560,7 +2565,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 	 * fromlocation.setText(address); }
 	 */
 
-
 	@Override
 	public void onLocationChanged(Location location) {
 
@@ -2915,7 +2919,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+					+ GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 
@@ -3551,10 +3556,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 									.contains("uber")) {
 								// editTextUserName.setVisibility(View.VISIBLE);
 								// editTextPassword.setVisibility(View.VISIBLE);
-
+								//
 								// Log.d("BookaCab", "contains(uber) : " +
 								// cabUserCredentialsReadWrite.readArrayFromFile());
-
+								//
 								// try {
 								// for (int i = 0; i < jsonArray.length(); i++)
 								// {
@@ -3585,7 +3590,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								// editTextUserName.setVisibility(View.VISIBLE);
 								// editTextPassword.setVisibility(View.VISIBLE);
 								//
-								// // Log.d("BookaCab", "contains(uber) : " +
+								// // Log.d("BookaCab", "contains(mega) : " +
 								// //
 								// cabUserCredentialsReadWrite.readArrayFromFile());
 								//
@@ -3613,6 +3618,39 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								// } catch (Exception e) {
 								// // TODO: handle exception
 								// }
+							} else if (mCabSearchArray.getJSONObject(position)
+									.get("CabName").toString().toLowerCase()
+									.contains("taxiforsure")) {
+								editTextUserName.setVisibility(View.VISIBLE);
+								editTextPassword.setVisibility(View.VISIBLE);
+
+								Log.d("BookaCab",
+										"contains(taxiforsure) : "
+												+ cabUserCredentialsReadWrite
+														.readArrayFromFile());
+
+								try {
+									for (int i = 0; i < jsonArray.length(); i++) {
+										if (jsonArray
+												.getJSONObject(i)
+												.get("CabName")
+												.toString()
+												.equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS)) {
+											jsonObject = jsonArray
+													.getJSONObject(i);
+											editTextUserName
+													.setText(jsonObject.get(
+															"Username")
+															.toString());
+											editTextPassword
+													.setText(jsonObject.get(
+															"Password")
+															.toString());
+										}
+									}
+								} catch (Exception e) {
+									// TODO: handle exception
+								}
 							}
 						} catch (Exception e) {
 
@@ -3666,7 +3704,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 										// mUberPassword = editTextPassword
 										// .getText().toString();
 										// }
-
 										cabBookUberMegaPosition = position;
 										bookUberCab(
 												mCabSearchArray
@@ -3678,7 +3715,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 														.get("productId")
 														.toString(), fAddress,
 												tAddress);
-
 									} else if (mCabSearchArray
 											.getJSONObject(position)
 											.get("CabName").toString()
@@ -3717,6 +3753,42 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 										// }
 										cabBookUberMegaPosition = position;
 										bookMegaCab(fAddress, tAddress);
+
+									} else if (mCabSearchArray
+											.getJSONObject(position)
+											.get("CabName").toString()
+											.toLowerCase()
+											.contains("taxiforsure")) {
+
+										if (editTextUserName.getText()
+												.toString().isEmpty()
+												|| editTextPassword.getText()
+														.toString().isEmpty()) {
+											Toast.makeText(
+													BookaCabFragmentActivity.this,
+													"Please enter Username/Password",
+													Toast.LENGTH_LONG).show();
+										} else {
+											JSONObject jsonObject = new JSONObject();
+											jsonObject
+													.put("CabName",
+															CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS);
+											jsonObject.put("Username",
+													editTextUserName.getText()
+															.toString());
+											jsonObject.put("Password",
+													editTextPassword.getText()
+															.toString());
+
+											CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
+													BookaCabFragmentActivity.this);
+											cabUserCredentialsReadWrite
+													.saveToFile(jsonObject
+															.toString());
+
+										}
+										// cabBookUberMegaPosition = position;
+										// bookMegaCab(fAddress, tAddress);
 
 									} else {
 
@@ -4194,25 +4266,38 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			return;
 		}
 
-		GetUberRequestIDAsync getUberRequestIDAsync = new GetUberRequestIDAsync();
-		String param = "cabType=" + cabType + "&productid=" + productID
-				+ "&lat=" + String.valueOf(startAddress.getLatitude())
-				+ "&lon=" + String.valueOf(startAddress.getLongitude())
-				+ "&elat=" + String.valueOf(endAddress.getLatitude())
-				+ "&elon=" + String.valueOf(endAddress.getLongitude())
-				+ "&cabID=";
-		mUberBookingInputParams = "&productid=" + productID + "&lat="
-				+ String.valueOf(startAddress.getLatitude()) + "&lon="
-				+ String.valueOf(startAddress.getLongitude()) + "&elat="
-				+ String.valueOf(endAddress.getLatitude()) + "&elon="
-				+ String.valueOf(endAddress.getLongitude());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getUberRequestIDAsync.executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, param);
-		} else {
-			getUberRequestIDAsync.execute(param);
-		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
+		builder.setMessage("Please provide us with your Uber account information on the next page, you need to do this only once");
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				GetUberRequestIDAsync getUberRequestIDAsync = new GetUberRequestIDAsync();
+				String param = "cabType=" + cabType + "&productid=" + productID
+						+ "&lat=" + String.valueOf(startAddress.getLatitude())
+						+ "&lon=" + String.valueOf(startAddress.getLongitude())
+						+ "&elat=" + String.valueOf(endAddress.getLatitude())
+						+ "&elon=" + String.valueOf(endAddress.getLongitude())
+						+ "&cabID=";
+				mUberBookingInputParams = "&productid=" + productID + "&lat="
+						+ String.valueOf(startAddress.getLatitude()) + "&lon="
+						+ String.valueOf(startAddress.getLongitude())
+						+ "&elat=" + String.valueOf(endAddress.getLatitude())
+						+ "&elon=" + String.valueOf(endAddress.getLongitude());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					getUberRequestIDAsync.executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, param);
+				} else {
+					getUberRequestIDAsync.execute(param);
+				}
+			}
+		});
+		AlertDialog dialog = builder.show();
+		TextView messageText = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageText.setGravity(Gravity.CENTER);
+		dialog.show();
 	}
 
 	public class GetUberRequestIDAsync extends AsyncTask<String, Void, String> {
@@ -5348,8 +5433,17 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					// logString2 += (jsonObject.get("CabName").toString() +
 					// " ");
 				} else {
-					hashMap.put(Double.parseDouble(jsonObject.get(sortString)
-							.toString()), jsonObject);
+					Double key = Double.parseDouble(jsonObject.get(sortString)
+							.toString());
+					if (hashMap.get(key) != null) {
+						// in case of same timeEstimate values for 2 cabs, one
+						// value gets over-written, adding small constant to
+						// differentiate keys
+						hashMap.put((key + 0.01), jsonObject);
+					} else {
+						hashMap.put(key, jsonObject);
+					}
+
 					// logString += (jsonObject.get("CabName").toString() +
 					// " ");
 				}
@@ -5474,99 +5568,101 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		builder.show();
 	}
 
-//	private class ConnectionTaskForreadunreadnotification extends
-//			AsyncTask<String, Void, Void> {
-//
-//		@Override
-//		protected void onPreExecute() {
-//
-//		}
-//
-//		@Override
-//		protected Void doInBackground(String... args) {
-//			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-//			try {
-//				mAuth1.connection();
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				exceptioncheck = true;
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(Void v) {
-//
-//			if (exceptioncheck) {
-//				exceptioncheck = false;
-//				Toast.makeText(BookaCabFragmentActivity.this,
-//						getResources().getString(R.string.exceptionstring),
-//						Toast.LENGTH_LONG).show();
-//				return;
-//			}
-//
-//			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-//
-//				unreadnoticountrl.setVisibility(View.GONE);
-//
-//			} else {
-//
-//				unreadnoticountrl.setVisibility(View.VISIBLE);
-//				unreadnoticount.setText(readunreadnotiresp);
-//			}
-//		}
-//
-//	}
-//
-//	public class AuthenticateConnectionreadunreadnotification {
-//
-//		public AuthenticateConnectionreadunreadnotification() {
-//
-//		}
-//
-//		public void connection() throws Exception {
-//
-//			// Connect to google.com
-//			HttpClient httpClient = new DefaultHttpClient();
-//
-//			String url_select = GlobalVariables.ServiceUrl
-//					+ "/FetchUnreadNotificationCount.php";
-//
-//			HttpPost httpPost = new HttpPost(url_select);
-//			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-//					"MobileNumber", MobileNumberstr);
-//
-//			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-//			nameValuePairList.add(MobileNumberBasicNameValuePair);
-//
-//			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-//					nameValuePairList);
-//			httpPost.setEntity(urlEncodedFormEntity);
-//			HttpResponse httpResponse = httpClient.execute(httpPost);
-//
-//			Log.d("httpResponse", "" + httpResponse);
-//
-//			InputStream inputStream = httpResponse.getEntity().getContent();
-//			InputStreamReader inputStreamReader = new InputStreamReader(
-//					inputStream);
-//
-//			BufferedReader bufferedReader = new BufferedReader(
-//					inputStreamReader);
-//
-//			StringBuilder stringBuilder = new StringBuilder();
-//
-//			String bufferedStrChunk = null;
-//
-//			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-//				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-//						.toString();
-//			}
-//
-//			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-//
-//		}
-//	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(BookaCabFragmentActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	//
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumberstr);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	private class ConnectionTaskForfetchimagename extends
 			AsyncTask<String, Void, Void> {

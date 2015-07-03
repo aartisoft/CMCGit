@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -35,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.clubmycab.PlacesAutoCompleteAdapter;
 import com.clubmycab.R;
@@ -70,11 +72,13 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 	RelativeLayout fromrelative;
 	Button doneButtonMap;
 	Button cancelButtonMap;
+	Button addMoreButton;
 	LocationManager locationManager;
 	LatLng latlong;
 	String shortname;
 	int currentIndex = 0;
 	int currentSelectedIndex;
+	int remainigfavorites = 3;
 	HashMap<String, AddressModel> favLocationHashMap = new HashMap<String, AddressModel>();
 
 	AddressModel addressModel;
@@ -98,6 +102,10 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 		cancelButtonMap = (Button) findViewById(R.id.idCancelButtonMap);
 		cancelButtonMap.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		addMoreButton = (Button) findViewById(R.id.addMore);
+		addMoreButton.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		doneButtonMap.setOnClickListener(new View.OnClickListener() {
@@ -128,8 +136,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 				((AutoCompleteTextView) childView).setText(fromlocationname);
 
-				String jnd = locationAutoCompleteTextView.getText().toString()
-						.trim();
+				String jnd = ((AutoCompleteTextView) childView).getText()
+						.toString().trim();
 
 				Geocoder fcoder = new Geocoder(FavoriteLocationsAcivity.this);
 				try {
@@ -154,8 +162,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 					Log.d("Value", "" + childView.getTag());
 
-					favLocationHashMap.put(((AutoCompleteTextView) childView)
-							.getText().toString(), addressModel);
+					favLocationHashMap.put(((TextView) childView).getText()
+							.toString(), addressModel);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -177,6 +185,23 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		addFavoriteLocationView("Where do you live?");
 		addFavoriteLocationView("Where do you work?");
 
+	}
+
+	public void onDoneButtonClick(View v) {
+		SharedPreferences sharedprefernce = getSharedPreferences(
+				"FavoriteLocations", 0);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(favLocationHashMap);
+		SharedPreferences.Editor editor = sharedprefernce.edit();
+		editor.putString("favoritelocation", json);
+		editor.commit();
+
+//		String jsonstr = sharedprefernce.getString("favoritelocation", "");
+//		HashMap<String, AddressModel> obj = gson.fromJson(jsonstr,
+//				HashMap.class);
+//
+//		Log.d("Data::", obj.toString());
 	}
 
 	public void addFavoriteLocationView(String tagname) {
@@ -562,11 +587,17 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		super.onStop();
 	}
 
+	public void onSkipButtonClick(View v) {
+		Intent mainIntent = new Intent(FavoriteLocationsAcivity.this, FirstLoginClubsActivity.class);
+		startActivity(mainIntent);
+	}
+
 	public void addMoreClick(View v) {
+
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-		alert.setTitle("Favorite Location");
-		alert.setMessage("Enter the name of you regular location.");
+		alert.setTitle("Favorite Location Tag");
+		alert.setMessage("Enter the tag name of you regular location.");
 
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
@@ -576,8 +607,21 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String value = input.getText().toString();
 
-				addFavoriteLocationView(value);
-				// Do something with value!
+				if (input.getText().toString().equals("")) {
+					Toast.makeText(getApplicationContext(), "Enter tag name.",
+							Toast.LENGTH_SHORT).show();
+					return;
+				} else {
+					addFavoriteLocationView(value);
+					// Do something with value!
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+					remainigfavorites = remainigfavorites - 1;
+					if (remainigfavorites == 0)
+						addMoreButton.setVisibility(View.GONE);
+					addMoreButton.setText("Add More (" + remainigfavorites
+							+ " remaining )");
+				}
 			}
 		});
 
@@ -585,6 +629,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						// Canceled.
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
 					}
 				});
 

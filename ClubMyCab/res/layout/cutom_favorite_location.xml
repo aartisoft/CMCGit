@@ -37,9 +37,9 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="start"
                     android:hint="Start Typing Address"
-                    android:width="240dp"
                     android:singleLine="true"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:width="240dp" />
 
                 <ImageView
                     android:id="@+id/idclearedittextimg"
@@ -52,17 +52,17 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/edittext_clear_button"
                     android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/idMapButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/threedotsformap" />
             </RelativeLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/idMapButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/threedotsformap" />
     </RelativeLayout>
 
 </LinearLayout>

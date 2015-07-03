@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="start"
-                    android:hint="Start Typing Address"
+                    android:hint="Type Address or Select here >"
                     android:singleLine="true"
                     android:textSize="15sp"
                     android:width="240dp" />

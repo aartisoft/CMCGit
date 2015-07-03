@@ -25,6 +25,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -79,7 +80,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 	int currentIndex = 0;
 	int currentSelectedIndex;
 	int remainigfavorites = 3;
-	HashMap<String, AddressModel> favLocationHashMap = new HashMap<String, AddressModel>();
+	HashMap<String, String> favLocationHashMap = new HashMap<String, String>();
 
 	AddressModel addressModel;
 
@@ -162,8 +163,11 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 					Log.d("Value", "" + childView.getTag());
 
+					Gson gson = new Gson();
+					String json = gson.toJson(addressModel);
+
 					favLocationHashMap.put(((TextView) childView).getText()
-							.toString(), addressModel);
+							.toString(), json);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -188,6 +192,13 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 	}
 
 	public void onDoneButtonClick(View v) {
+
+		if (favLocationHashMap.size() == 0) {
+			Toast.makeText(getApplicationContext(),
+					"Fill atleast one location ..", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		SharedPreferences sharedprefernce = getSharedPreferences(
 				"FavoriteLocations", 0);
 
@@ -197,11 +208,16 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		editor.putString("favoritelocation", json);
 		editor.commit();
 
+		Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
+				FirstLoginClubsActivity.class);
+		startActivity(mainIntent);
+
 //		String jsonstr = sharedprefernce.getString("favoritelocation", "");
-//		HashMap<String, AddressModel> obj = gson.fromJson(jsonstr,
-//				HashMap.class);
+//		HashMap<String, String> hashmap = gson.fromJson(jsonstr, HashMap.class);
+//		AddressModel addressModel = (AddressModel) gson.fromJson(
+//				hashmap.get("Where do you live?"), AddressModel.class);
 //
-//		Log.d("Data::", obj.toString());
+//		Log.d("Data::", addressModel.toString());
 	}
 
 	public void addFavoriteLocationView(String tagname) {
@@ -225,6 +241,20 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 				this, R.layout.list_item));
 		locationAutoCompleteTextView
 				.setTag("customlocationAutoCompleteTextView" + currentIndex);
+
+		locationAutoCompleteTextView
+				.setOnTouchListener(new View.OnTouchListener() {
+
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						// TODO Auto-generated method stub
+						String tag = (String) v.getTag();
+						currentSelectedIndex = Integer.parseInt(tag
+								.substring(tag.length() - 1));
+						return false;
+					}
+				});
+
 		locationAutoCompleteTextView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -237,9 +267,18 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 								.getApplicationWindowToken(),
 								InputMethodManager.HIDE_NOT_ALWAYS);
 
-						locationAddress = MapUtilityMethods.geocodeAddress(
-								locationAutoCompleteTextView.getText()
-										.toString(),
+						String newTag = "customlocationAutoCompleteTextView"
+								+ Integer.toString(currentSelectedIndex);
+						View parentview = FavoriteLocationsAcivity.this
+								.findViewById(android.R.id.content);
+						View childView = parentview.findViewWithTag(newTag);
+
+						Log.d("Value", "" + childView.getTag());
+
+						String jnd = ((AutoCompleteTextView) childView)
+								.getText().toString().trim();
+
+						locationAddress = MapUtilityMethods.geocodeAddress(jnd,
 								FavoriteLocationsAcivity.this);
 
 						addressModel = new AddressModel();
@@ -249,17 +288,19 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 										locationAddress.getLatitude(),
 										locationAddress.getLongitude()));
 
-						String newTag = "customlocationTagNameTextView"
+						newTag = "customlocationTagNameTextView"
 								+ Integer.toString(currentSelectedIndex);
-						View parentview = FavoriteLocationsAcivity.this
+						parentview = FavoriteLocationsAcivity.this
 								.findViewById(android.R.id.content);
-						View childView = parentview.findViewWithTag(newTag);
+						childView = parentview.findViewWithTag(newTag);
 
 						Log.d("Value", "" + childView.getTag());
 
-						favLocationHashMap.put(
-								((AutoCompleteTextView) childView).getText()
-										.toString(), addressModel);
+						Gson gson = new Gson();
+						String json = gson.toJson(addressModel);
+
+						favLocationHashMap.put(((TextView) childView).getText()
+								.toString(), json);
 
 					}
 				});
@@ -588,7 +629,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 	}
 
 	public void onSkipButtonClick(View v) {
-		Intent mainIntent = new Intent(FavoriteLocationsAcivity.this, FirstLoginClubsActivity.class);
+		Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
+				FirstLoginClubsActivity.class);
 		startActivity(mainIntent);
 	}
 
@@ -596,8 +638,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-		alert.setTitle("Favorite Location Tag");
-		alert.setMessage("Enter the tag name of you regular location.");
+		alert.setTitle("");
+		alert.setMessage("What do you want to call this location? e.g. Airport, MyAdda");
 
 		// Set an EditText view to get user input
 		final EditText input = new EditText(this);

@@ -377,7 +377,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <ProgressBar
                     android:id="@+id/inviteloadingprogressbar"
@@ -404,7 +404,7 @@
                 android:layout_margin="10dp"
                 android:background="#FFFFFF"
                 android:orientation="vertical"
-                android:visibility="visible" >
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:id="@+id/recentridesll"

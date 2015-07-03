@@ -78,7 +78,13 @@ public class SplashActivity extends Activity {
 			builder.show();
 			return;
 		}
-
+		
+		
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				"HomeActivityDisplayTravel", 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean("DisplayTravel", true);
+		editor.commit();
 		
 
 		SharedPreferences mPrefs1 = getSharedPreferences("FacebookData", 0);

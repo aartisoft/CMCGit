@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -265,7 +264,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		}
 
 		inviteloadingll = (LinearLayout) findViewById(R.id.inviteloadingll);
-		inviteloadingll.setVisibility(View.VISIBLE);
+		inviteloadingll.setVisibility(View.GONE);
 
 		topthreeridesll = (LinearLayout) findViewById(R.id.topthreeridesll);
 		topthreeridesll.setVisibility(View.GONE);
@@ -1910,6 +1909,49 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			profilepic.setImageBitmap(yourSelectedImage);
 			drawerprofilepic.setImageBitmap(yourSelectedImage);
 		}
+		
+		
+		Intent fromToIntent = getIntent();
+		if (fromToIntent.getStringExtra("StartAddLatLng") != null
+				&& fromToIntent.getStringExtra("EndAddLatLng") != null) {
+
+			Log.d("InviteFragment",
+					"StartAddLatLng : "
+							+ fromToIntent.getStringExtra("StartAddLatLng")
+							+ " EndAddLatLng : "
+							+ fromToIntent.getStringExtra("EndAddLatLng"));
+			String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
+					.toString().split(",");
+
+			Double startLat = Double.parseDouble(RowData[0]);
+			Double startLng = Double.parseDouble(RowData[1]);
+
+			String address = MapUtilityMethods.getAddress(
+					InviteFragmentActivity.this, startLat.doubleValue(),
+					startLng.doubleValue());
+			from_places.setText(address);
+			fAddress = geocodeAddress(address);
+
+			RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
+					.split(",");
+
+			Double endLat = Double.parseDouble(RowData[0]);
+			Double endLng = Double.parseDouble(RowData[1]);
+
+			address = MapUtilityMethods.getAddress(
+					InviteFragmentActivity.this, endLat.doubleValue(),
+					endLng.doubleValue());
+			to_places.setText(address);
+			tAddress = geocodeAddress(address);
+
+			from_places.setEnabled(false);
+			to_places.setEnabled(false);
+			threedotsfrom.setEnabled(false);
+			threedotsto.setEnabled(false);
+			clearedittextimgfrom.setVisibility(View.GONE);
+			clearedittextimgto.setVisibility(View.GONE);
+
+		} 
 	}
 
 	// ///////
@@ -2075,7 +2117,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					if (FromLocation.size() >= 3) {
 
 						inviteloadingll.setVisibility(View.GONE);
-						topthreeridesll.setVisibility(View.VISIBLE);
+						topthreeridesll.setVisibility(View.GONE);
 
 						topthreeadaptor = new TopThreeRidesAdaptor(
 								InviteFragmentActivity.this, FromShortName,
@@ -2656,7 +2698,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				if (FromLocation.size() > 0) {
 
 					inviteloadingll.setVisibility(View.GONE);
-					topthreeridesll.setVisibility(View.VISIBLE);
+					topthreeridesll.setVisibility(View.GONE);
 
 					topthreeadaptor = new TopThreeRidesAdaptor(
 							InviteFragmentActivity.this, FromShortName,
@@ -2721,7 +2763,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					if (FromLocation.size() >= 3) {
 
 						inviteloadingll.setVisibility(View.GONE);
-						topthreeridesll.setVisibility(View.VISIBLE);
+						topthreeridesll.setVisibility(View.GONE);
 
 						FromLocationNew.clear();
 						ToLocationNew.clear();
@@ -2791,7 +2833,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					} else {
 
 						inviteloadingll.setVisibility(View.GONE);
-						topthreeridesll.setVisibility(View.VISIBLE);
+						topthreeridesll.setVisibility(View.GONE);
 
 						FromLocationNew.clear();
 						ToLocationNew.clear();

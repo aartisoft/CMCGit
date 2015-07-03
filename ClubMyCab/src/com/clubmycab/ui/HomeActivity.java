@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -47,20 +48,26 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
+import com.clubmycab.MemberRideFragmentActivity;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.model.AddressModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.xmlhandler.FetchUnreadNotificationCountHandler;
@@ -68,6 +75,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
 public class HomeActivity extends Activity implements AsyncTaskResultListener {
@@ -78,7 +86,7 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 	LinearLayout homeclubmycabll;
 	LinearLayout homebookacabll;
-	//LinearLayout homehereiamll;
+	// LinearLayout homehereiamll;
 
 	ImageView sidemenu;
 	private SimpleSideDrawer mNav;
@@ -121,6 +129,11 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 	AppEventsLogger logger;
 	boolean exceptioncheck = false;
+
+	String StartAddLatLngIntent;
+	String EndAddLatLngIntent;
+	String StartAddShortNameIntent;
+	String EndAddShortNameIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -384,7 +397,7 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 		homeclubmycabll = (LinearLayout) findViewById(R.id.homeclubmycabll);
 		homebookacabll = (LinearLayout) findViewById(R.id.homebookacabll);
-		//homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
+		// homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
@@ -428,6 +441,17 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 						Intent mainIntent = new Intent(HomeActivity.this,
 								InviteFragmentActivity.class);
+						if (!StartAddLatLngIntent.isEmpty() && !EndAddLatLngIntent.isEmpty()) {
+							mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
+							mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
+							mainIntent.putExtra("FromShortName", StartAddShortNameIntent);
+							mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
+							StartAddLatLngIntent = "";
+							EndAddLatLngIntent = "";
+							StartAddShortNameIntent = "";
+							EndAddShortNameIntent = "";
+						}
+						
 						startActivityForResult(mainIntent, 500);
 						overridePendingTransition(R.anim.slide_in_right,
 								R.anim.slide_out_left);
@@ -461,6 +485,17 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 						Intent mainIntent = new Intent(HomeActivity.this,
 								BookaCabFragmentActivity.class);
+						if (!StartAddLatLngIntent.isEmpty() && !EndAddLatLngIntent.isEmpty()) {
+							mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
+							mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
+							mainIntent.putExtra("FromShortName", StartAddShortNameIntent);
+							mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
+							StartAddLatLngIntent = "";
+							EndAddLatLngIntent = "";
+							StartAddShortNameIntent = "";
+							EndAddShortNameIntent = "";
+						}
+						
 						startActivityForResult(mainIntent, 500);
 						overridePendingTransition(R.anim.slide_in_right,
 								R.anim.slide_out_left);
@@ -472,38 +507,38 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			}
 		});
 
-//		homehereiamll.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//
-//				Animation animScale = AnimationUtils.loadAnimation(
-//						HomeActivity.this, R.anim.button_click_anim);
-//				homehereiamll.startAnimation(animScale);
-//
-//				Handler mHandler2 = new Handler();
-//				Runnable mRunnable2 = new Runnable() {
-//					@Override
-//					public void run() {
-//
-//						tracker.send(new HitBuilders.EventBuilder()
-//								.setCategory("ShareLocation (HomePage)")
-//								.setAction("ShareLocation (HomePage)")
-//								.setLabel("ShareLocation (HomePage)").build());
-//
-//						logger.logEvent("HomePage ShareLocation Click");
-//
-//						Intent mainIntent = new Intent(HomeActivity.this,
-//								ShareLocationFragmentActivity.class);
-//						startActivityForResult(mainIntent, 500);
-//						overridePendingTransition(R.anim.slide_in_right,
-//								R.anim.slide_out_left);
-//
-//					}
-//				};
-//				mHandler2.postDelayed(mRunnable2, 500);
-//
-//			}
-//		});
+		// homehereiamll.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// Animation animScale = AnimationUtils.loadAnimation(
+		// HomeActivity.this, R.anim.button_click_anim);
+		// homehereiamll.startAnimation(animScale);
+		//
+		// Handler mHandler2 = new Handler();
+		// Runnable mRunnable2 = new Runnable() {
+		// @Override
+		// public void run() {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareLocation (HomePage)")
+		// .setAction("ShareLocation (HomePage)")
+		// .setLabel("ShareLocation (HomePage)").build());
+		//
+		// logger.logEvent("HomePage ShareLocation Click");
+		//
+		// Intent mainIntent = new Intent(HomeActivity.this,
+		// ShareLocationFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		//
+		// }
+		// };
+		// mHandler2.postDelayed(mRunnable2, 500);
+		//
+		// }
+		// });
 
 		profilepic.setOnClickListener(new View.OnClickListener() {
 
@@ -591,12 +626,138 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			new ConnectionTaskForFetchMyClubs().execute();
 		}
 		
+		StartAddLatLngIntent = "";
+		EndAddLatLngIntent = "";
+		StartAddShortNameIntent = "";
+		EndAddShortNameIntent = "";
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				"HomeActivityDisplayTravel", 0);
+		boolean shouldDisplay = sharedPreferences.getBoolean("DisplayTravel",
+				false);
+
 		SharedPreferences mPrefs11111 = getSharedPreferences(
-				"FavoriteLocation", 0);
-		String favoritelocation = mPrefs11111.getString(
-				"favoritelocation", "");
-		
-		
+				"FavoriteLocations", 0);
+		String favoritelocation = mPrefs11111.getString("favoritelocation", "");
+		Log.d("HomeActivity", "favoritelocation : " + favoritelocation);
+		if (!favoritelocation.isEmpty() && shouldDisplay) {
+
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putBoolean("DisplayTravel", false);
+			editor.commit();
+
+			Gson gson = new Gson();
+			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
+					HashMap.class);
+
+			if (hashMap.size() > 0) {
+				
+				final AddressModel home = (AddressModel) gson.fromJson(
+						hashMap.get("Where do you live?"), AddressModel.class);
+				final AddressModel work = (AddressModel) gson.fromJson(
+						hashMap.get("Where do you work?"), AddressModel.class);
+				
+				Log.d("HomeActivity", "hashMap : " + hashMap);
+				Log.d("HomeActivity", "home : " + home.getAddress().toString() + " work : " + work.getAddress().toString());
+
+				if (home != null && work != null) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							HomeActivity.this);
+					View builderView = (View) getLayoutInflater().inflate(
+							R.layout.dialog_travel_homepage, null);
+
+					ListView listView = (ListView) builderView
+							.findViewById(R.id.listViewTravelHomePage);
+
+					builder.setView(builderView);
+					final AlertDialog dialog = builder.create();
+
+					ArrayList<String> arrayList = new ArrayList<String>();
+					arrayList.add("Home to Office");
+					arrayList.add("Office to Home");
+					arrayList.add("Will choose later");
+					listView.setAdapter(new CustomListViewAdapter(
+							HomeActivity.this, arrayList));
+
+					listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+						@Override
+						public void onItemClick(AdapterView<?> parent,
+								View view, int position, long id) {
+
+							switch (position) {
+							case 0: {
+
+								StartAddLatLngIntent = home.getAddress()
+										.getLatitude()
+										+ ","
+										+ home.getAddress().getLongitude();
+								StartAddShortNameIntent = home.getShortname();
+								EndAddLatLngIntent = work.getAddress()
+										.getLatitude()
+										+ ","
+										+ work.getAddress().getLongitude();
+								EndAddShortNameIntent = work.getShortname();
+
+								break;
+							}
+
+							case 1: {
+
+								EndAddLatLngIntent = home.getAddress()
+										.getLatitude()
+										+ ","
+										+ home.getAddress().getLongitude();
+								EndAddShortNameIntent = home.getShortname();
+								StartAddLatLngIntent = work.getAddress()
+										.getLatitude()
+										+ ","
+										+ work.getAddress().getLongitude();
+								StartAddShortNameIntent = work.getShortname();
+
+								break;
+							}
+
+							}
+							dialog.dismiss();
+						}
+					});
+
+					dialog.show();
+				}
+			}
+		}
+
+	}
+
+	private class CustomListViewAdapter extends ArrayAdapter<String> {
+
+		private final Activity context;
+		private ArrayList<String> mDataSource;
+
+		public CustomListViewAdapter(Activity context,
+				ArrayList<String> listDataSource) {
+
+			super(context, 0, listDataSource);
+
+			this.context = context;
+			this.mDataSource = listDataSource;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			if (convertView == null) {
+				convertView = (View) context.getLayoutInflater().inflate(
+						R.layout.list_item_travel_homepage, null);
+			}
+
+			TextView textView = (TextView) convertView
+					.findViewById(R.id.textViewListItemTravelHomePage);
+			textView.setText(mDataSource.get(position));
+
+			return convertView;
+		}
 	}
 
 	private void selectImage() {

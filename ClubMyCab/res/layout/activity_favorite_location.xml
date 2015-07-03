@@ -25,7 +25,6 @@
             android:id="@+id/idScrollViewLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            
             android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>
@@ -63,9 +62,9 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="#4279bd"
+                android:onClick="onSkipButtonClick"
                 android:text="Skip"
                 android:textColor="#ffffff"
-                android:onClick="onSkipButtonClick"
                 android:textSize="13sp" />
 
             <View
@@ -80,7 +79,7 @@
                 android:layout_weight="1"
                 android:background="#4279bd"
                 android:onClick="onDoneButtonClick"
-                android:text="Done"
+                android:text="Save"
                 android:textColor="#ffffff"
                 android:textSize="13sp" />
         </LinearLayout>

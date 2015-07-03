@@ -212,12 +212,13 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 				FirstLoginClubsActivity.class);
 		startActivity(mainIntent);
 
-//		String jsonstr = sharedprefernce.getString("favoritelocation", "");
-//		HashMap<String, String> hashmap = gson.fromJson(jsonstr, HashMap.class);
-//		AddressModel addressModel = (AddressModel) gson.fromJson(
-//				hashmap.get("Where do you live?"), AddressModel.class);
-//
-//		Log.d("Data::", addressModel.toString());
+		// String jsonstr = sharedprefernce.getString("favoritelocation", "");
+		// HashMap<String, String> hashmap = gson.fromJson(jsonstr,
+		// HashMap.class);
+		// AddressModel addressModel = (AddressModel) gson.fromJson(
+		// hashmap.get("Where do you live?"), AddressModel.class);
+		//
+		// Log.d("Data::", addressModel.toString());
 	}
 
 	public void addFavoriteLocationView(String tagname) {
@@ -234,6 +235,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		clearedittextImage = (ImageView) view
 				.findViewById(R.id.idclearedittextimg);
 		clearedittextImage.setVisibility(View.GONE);
+		clearedittextImage.setTag("customlocationClearButton" + currentIndex);
 
 		locationAutoCompleteTextView = (AutoCompleteTextView) view
 				.findViewById(R.id.idLocationAutoComplete);
@@ -254,6 +256,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 						return false;
 					}
 				});
+		
 
 		locationAutoCompleteTextView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -290,8 +293,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 						newTag = "customlocationTagNameTextView"
 								+ Integer.toString(currentSelectedIndex);
-						parentview = FavoriteLocationsAcivity.this
-								.findViewById(android.R.id.content);
+//						parentview = FavoriteLocationsAcivity.this
+//								.findViewById(android.R.id.content);
 						childView = parentview.findViewWithTag(newTag);
 
 						Log.d("Value", "" + childView.getTag());

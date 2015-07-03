@@ -251,7 +251,7 @@ public class FirstLoginClubsActivity extends Activity implements
 			noofmembers.setText("("
 					+ MemberClubNoofMembers.get(position).toString().trim()
 					+ ")");
-			
+
 			removeclub.setVisibility(View.GONE);
 
 			return itemView;

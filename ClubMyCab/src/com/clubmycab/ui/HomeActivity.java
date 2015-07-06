@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -36,6 +37,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -45,28 +48,32 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
-import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
-import com.clubmycab.MemberRideFragmentActivity;
+import com.clubmycab.PlacesAutoCompleteAdapter;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -75,6 +82,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
@@ -87,6 +95,7 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	LinearLayout homeclubmycabll;
 	LinearLayout homebookacabll;
 	// LinearLayout homehereiamll;
+	LinearLayout homebtnsll, officetohomell, hometoofficell;
 
 	ImageView sidemenu;
 	private SimpleSideDrawer mNav;
@@ -102,6 +111,15 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	TextView sharethisapp;
 	TextView mypreferences;
 	TextView about;
+
+	AutoCompleteTextView from_places;
+	AutoCompleteTextView to_places;
+	Button threedotsfrom;
+	Button threedotsto;
+	ImageView clearedittextimgfrom;
+	ImageView clearedittextimgto;
+
+	Address fAddress, tAddress;
 
 	String FullName;
 	String MobileNumber;
@@ -134,6 +152,11 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	String EndAddLatLngIntent;
 	String StartAddShortNameIntent;
 	String EndAddShortNameIntent;
+
+	Boolean flagchk;
+	String fromshortname;
+	String toshortname;
+	LatLng invitemapcenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -439,22 +462,37 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 						logger.logEvent("HomePage ClubMyCab Click");
 
+						Log.d("HomeActivity",
+								"homeclubmycabll click StartAddLatLngIntent : "
+										+ StartAddLatLngIntent
+										+ " EndAddLatLngIntent : "
+										+ EndAddLatLngIntent);
+
 						Intent mainIntent = new Intent(HomeActivity.this,
 								InviteFragmentActivity.class);
-						if (!StartAddLatLngIntent.isEmpty() && !EndAddLatLngIntent.isEmpty()) {
-							mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
-							mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
-							mainIntent.putExtra("FromShortName", StartAddShortNameIntent);
-							mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
+						if (!StartAddLatLngIntent.isEmpty()
+								&& !EndAddLatLngIntent.isEmpty()) {
+							mainIntent.putExtra("StartAddLatLng",
+									StartAddLatLngIntent);
+							mainIntent.putExtra("EndAddLatLng",
+									EndAddLatLngIntent);
+							mainIntent.putExtra("FromShortName",
+									StartAddShortNameIntent);
+							mainIntent.putExtra("ToShortName",
+									EndAddShortNameIntent);
 							StartAddLatLngIntent = "";
 							EndAddLatLngIntent = "";
 							StartAddShortNameIntent = "";
 							EndAddShortNameIntent = "";
+
+							startActivityForResult(mainIntent, 500);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
+						} else {
+							Toast.makeText(HomeActivity.this,
+									"Please enter both from & to locations",
+									Toast.LENGTH_LONG).show();
 						}
-						
-						startActivityForResult(mainIntent, 500);
-						overridePendingTransition(R.anim.slide_in_right,
-								R.anim.slide_out_left);
 
 					}
 				};
@@ -485,21 +523,29 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 						Intent mainIntent = new Intent(HomeActivity.this,
 								BookaCabFragmentActivity.class);
-						if (!StartAddLatLngIntent.isEmpty() && !EndAddLatLngIntent.isEmpty()) {
-							mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
-							mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
-							mainIntent.putExtra("FromShortName", StartAddShortNameIntent);
-							mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
+						if (!StartAddLatLngIntent.isEmpty()
+								&& !EndAddLatLngIntent.isEmpty()) {
+							mainIntent.putExtra("StartAddLatLng",
+									StartAddLatLngIntent);
+							mainIntent.putExtra("EndAddLatLng",
+									EndAddLatLngIntent);
+							mainIntent.putExtra("FromShortName",
+									StartAddShortNameIntent);
+							mainIntent.putExtra("ToShortName",
+									EndAddShortNameIntent);
 							StartAddLatLngIntent = "";
 							EndAddLatLngIntent = "";
 							StartAddShortNameIntent = "";
 							EndAddShortNameIntent = "";
-						}
-						
-						startActivityForResult(mainIntent, 500);
-						overridePendingTransition(R.anim.slide_in_right,
-								R.anim.slide_out_left);
 
+							startActivityForResult(mainIntent, 500);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
+						} else {
+							Toast.makeText(HomeActivity.this,
+									"Please enter both from & to locations",
+									Toast.LENGTH_LONG).show();
+						}
 					}
 				};
 				mHandler2.postDelayed(mRunnable2, 500);
@@ -619,145 +665,404 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			}
 		}
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForFetchMyClubs()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForFetchMyClubs().execute();
-		}
-		
-		StartAddLatLngIntent = "";
-		EndAddLatLngIntent = "";
-		StartAddShortNameIntent = "";
-		EndAddShortNameIntent = "";
-		SharedPreferences sharedPreferences = getSharedPreferences(
-				"HomeActivityDisplayTravel", 0);
-		boolean shouldDisplay = sharedPreferences.getBoolean("DisplayTravel",
-				false);
-
 		SharedPreferences mPrefs11111 = getSharedPreferences(
 				"FavoriteLocations", 0);
-		String favoritelocation = mPrefs11111.getString("favoritelocation", "");
+		final String favoritelocation = mPrefs11111.getString(
+				"favoritelocation", "");
 		Log.d("HomeActivity", "favoritelocation : " + favoritelocation);
-		if (!favoritelocation.isEmpty() && shouldDisplay) {
 
-			SharedPreferences.Editor editor = sharedPreferences.edit();
-			editor.putBoolean("DisplayTravel", false);
-			editor.commit();
+		AddressModel homeAddressModel = null, workAddressModel = null;
+
+		if (!favoritelocation.isEmpty()) {
 
 			Gson gson = new Gson();
 			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
 					HashMap.class);
 
 			if (hashMap.size() > 0) {
-				
-				final AddressModel home = (AddressModel) gson.fromJson(
+
+				homeAddressModel = (AddressModel) gson.fromJson(
 						hashMap.get("Where do you live?"), AddressModel.class);
-				final AddressModel work = (AddressModel) gson.fromJson(
+				workAddressModel = (AddressModel) gson.fromJson(
 						hashMap.get("Where do you work?"), AddressModel.class);
-				
+
 				Log.d("HomeActivity", "hashMap : " + hashMap);
-				Log.d("HomeActivity", "home : " + home.getAddress().toString() + " work : " + work.getAddress().toString());
+				Log.d("HomeActivity", "homeAddressModel : "
+						+ homeAddressModel.getAddress().toString()
+						+ " workAddressModel : "
+						+ workAddressModel.getAddress().toString());
+			}
+		}
 
-				if (home != null && work != null) {
+		final AddressModel home = homeAddressModel, work = workAddressModel;
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							HomeActivity.this);
-					View builderView = (View) getLayoutInflater().inflate(
-							R.layout.dialog_travel_homepage, null);
+		homebtnsll = (LinearLayout) findViewById(R.id.homebtnsll);
+		homebtnsll.setVisibility(View.GONE);
 
-					ListView listView = (ListView) builderView
-							.findViewById(R.id.listViewTravelHomePage);
+		hometoofficell = (LinearLayout) findViewById(R.id.hometoofficell);
+		hometoofficell.setOnClickListener(new View.OnClickListener() {
 
-					builder.setView(builderView);
-					final AlertDialog dialog = builder.create();
+			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+			@Override
+			public void onClick(View v) {
+				if (!favoritelocation.isEmpty()) {
 
-					ArrayList<String> arrayList = new ArrayList<String>();
-					arrayList.add("Home to Office");
-					arrayList.add("Office to Home");
-					arrayList.add("Will choose later");
-					listView.setAdapter(new CustomListViewAdapter(
-							HomeActivity.this, arrayList));
-
-					listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-						@Override
-						public void onItemClick(AdapterView<?> parent,
-								View view, int position, long id) {
-
-							switch (position) {
-							case 0: {
-
-								StartAddLatLngIntent = home.getAddress()
-										.getLatitude()
-										+ ","
-										+ home.getAddress().getLongitude();
-								StartAddShortNameIntent = home.getShortname();
-								EndAddLatLngIntent = work.getAddress()
-										.getLatitude()
-										+ ","
-										+ work.getAddress().getLongitude();
-								EndAddShortNameIntent = work.getShortname();
-
-								break;
-							}
-
-							case 1: {
-
-								EndAddLatLngIntent = home.getAddress()
-										.getLatitude()
-										+ ","
-										+ home.getAddress().getLongitude();
-								EndAddShortNameIntent = home.getShortname();
-								StartAddLatLngIntent = work.getAddress()
-										.getLatitude()
-										+ ","
-										+ work.getAddress().getLongitude();
-								StartAddShortNameIntent = work.getShortname();
-
-								break;
-							}
-
-							}
-							dialog.dismiss();
+					if (home != null && work != null) {
+						resetIntentParams(true);
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+							hometoofficell.setBackground(getResources()
+									.getDrawable(R.drawable.border_selected));
+							officetohomell.setBackground(getResources()
+									.getDrawable(R.drawable.border));
+						} else {
+							hometoofficell.setBackgroundDrawable(getResources()
+									.getDrawable(R.drawable.border_selected));
+							officetohomell.setBackgroundDrawable(getResources()
+									.getDrawable(R.drawable.border));
 						}
-					});
 
-					dialog.show();
+						StartAddLatLngIntent = home.getAddress().getLatitude()
+								+ "," + home.getAddress().getLongitude();
+						StartAddShortNameIntent = home.getShortname();
+						EndAddLatLngIntent = work.getAddress().getLatitude()
+								+ "," + work.getAddress().getLongitude();
+						EndAddShortNameIntent = work.getShortname();
+
+						homebtnsll.setVisibility(View.VISIBLE);
+					}
+				} else {
+					showNoFavoritesDialog();
 				}
 			}
-		}
+		});
 
-	}
+		officetohomell = (LinearLayout) findViewById(R.id.officetohomell);
+		officetohomell.setOnClickListener(new View.OnClickListener() {
 
-	private class CustomListViewAdapter extends ArrayAdapter<String> {
+			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+			@Override
+			public void onClick(View v) {
+				if (!favoritelocation.isEmpty()) {
 
-		private final Activity context;
-		private ArrayList<String> mDataSource;
+					if (home != null && work != null) {
+						resetIntentParams(true);
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+							officetohomell.setBackground(getResources()
+									.getDrawable(R.drawable.border_selected));
+							hometoofficell.setBackground(getResources()
+									.getDrawable(R.drawable.border));
+						} else {
+							officetohomell.setBackgroundDrawable(getResources()
+									.getDrawable(R.drawable.border_selected));
+							hometoofficell.setBackgroundDrawable(getResources()
+									.getDrawable(R.drawable.border));
+						}
 
-		public CustomListViewAdapter(Activity context,
-				ArrayList<String> listDataSource) {
+						EndAddLatLngIntent = home.getAddress().getLatitude()
+								+ "," + home.getAddress().getLongitude();
+						EndAddShortNameIntent = home.getShortname();
+						StartAddLatLngIntent = work.getAddress().getLatitude()
+								+ "," + work.getAddress().getLongitude();
+						StartAddShortNameIntent = work.getShortname();
 
-			super(context, 0, listDataSource);
+						homebtnsll.setVisibility(View.VISIBLE);
+					}
+				} else {
+					showNoFavoritesDialog();
+				}
+			}
+		});
 
-			this.context = context;
-			this.mDataSource = listDataSource;
-		}
+		from_places = (AutoCompleteTextView) findViewById(R.id.from_places);
+		from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+				R.layout.list_item));
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		from_places.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View view, MotionEvent motionEvent) {
 
-			if (convertView == null) {
-				convertView = (View) context.getLayoutInflater().inflate(
-						R.layout.list_item_travel_homepage, null);
+				resetIntentParams(false);
+
+				return false;
+			}
+		});
+
+		from_places
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView v, int actionId,
+							KeyEvent event) {
+						if (event != null
+								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+							dismissKeyboard();
+						}
+
+						return false;
+					}
+				});
+
+		from_places
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						fAddress = null; // reset previous
+
+						dismissKeyboard();
+
+						fAddress = geocodeAddress(from_places.getText()
+								.toString());
+						if (fAddress == null) {
+							Toast.makeText(
+									HomeActivity.this,
+									"Could not locate the address, please try using the map or a different address",
+									Toast.LENGTH_LONG).show();
+						} else {
+							StartAddLatLngIntent = fAddress.getLatitude() + ","
+									+ fAddress.getLongitude();
+							StartAddShortNameIntent = fromshortname;
+
+							if (fAddress != null && tAddress != null) {
+								homebtnsll.setVisibility(View.VISIBLE);
+							}
+						}
+					}
+				});
+
+		clearedittextimgfrom = (ImageView) findViewById(R.id.clearedittextimgfrom);
+		clearedittextimgfrom.setVisibility(View.GONE);
+
+		to_places = (AutoCompleteTextView) findViewById(R.id.to_places);
+		to_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+				R.layout.list_item));
+
+		to_places.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+
+				resetIntentParams(false);
+
+				return false;
+			}
+		});
+		to_places
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView v, int actionId,
+							KeyEvent event) {
+						if (event != null
+								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+							dismissKeyboard();
+						}
+
+						return false;
+					}
+				});
+		to_places.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// Log.d(TAG, "mAutoFrom onItemClick");
+				tAddress = null; // reset previous
+
+				dismissKeyboard();
+
+				tAddress = geocodeAddress(to_places.getText().toString());
+				if (tAddress == null) {
+					Toast.makeText(
+							HomeActivity.this,
+							"Could not locate the address, please try using the map or a different address",
+							Toast.LENGTH_LONG).show();
+				} else {
+					EndAddLatLngIntent = tAddress.getLatitude() + ","
+							+ tAddress.getLongitude();
+					EndAddShortNameIntent = toshortname;
+
+					if (fAddress != null && tAddress != null) {
+						homebtnsll.setVisibility(View.VISIBLE);
+					}
+				}
+
+			}
+		});
+
+		clearedittextimgto = (ImageView) findViewById(R.id.clearedittextimgto);
+		clearedittextimgto.setVisibility(View.GONE);
+
+		from_places.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence cs, int arg1, int arg2,
+					int arg3) {
+				// When user changed the Text
+
+				String text = from_places.getText().toString().trim();
+				if (text.isEmpty() || text.equalsIgnoreCase("")) {
+					clearedittextimgfrom.setVisibility(View.GONE);
+				} else {
+					clearedittextimgfrom.setVisibility(View.VISIBLE);
+				}
+
+				Log.d("from onTextChanged", "from onTextChanged");
+
+				if (flagchk) {
+					flagchk = false;
+				} else {
+					fromshortname = MapUtilityMethods.getaddressfromautoplace(
+							HomeActivity.this, from_places.getText().toString()
+									.trim());
+				}
 			}
 
-			TextView textView = (TextView) convertView
-					.findViewById(R.id.textViewListItemTravelHomePage);
-			textView.setText(mDataSource.get(position));
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+			}
 
-			return convertView;
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+			}
+		});
+
+		to_places.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence cs, int arg1, int arg2,
+					int arg3) {
+				// When user changed the Text
+
+				String text = to_places.getText().toString().trim();
+				if (text.isEmpty() || text.equalsIgnoreCase("")) {
+					clearedittextimgto.setVisibility(View.GONE);
+				} else {
+					clearedittextimgto.setVisibility(View.VISIBLE);
+				}
+
+				Log.d("to onTextChanged", "to onTextChanged");
+
+				if (flagchk) {
+					flagchk = false;
+				} else {
+					toshortname = MapUtilityMethods.getaddressfromautoplace(
+							HomeActivity.this, to_places.getText().toString()
+									.trim());
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+			}
+		});
+
+		clearedittextimgfrom.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				from_places.setText("");
+				fAddress = null;
+				fromshortname = "";
+			}
+		});
+
+		clearedittextimgto.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				to_places.setText("");
+				tAddress = null;
+				toshortname = "";
+			}
+		});
+
+		flagchk = true;
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void resetIntentParams(boolean clearAutocomplete) {
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			officetohomell.setBackground(getResources().getDrawable(
+					R.drawable.border));
+			hometoofficell.setBackground(getResources().getDrawable(
+					R.drawable.border));
+		} else {
+			officetohomell.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.border));
+			hometoofficell.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.border));
 		}
+
+		if (clearAutocomplete) {
+			from_places.setText("");
+			fAddress = null;
+			fromshortname = "";
+
+			to_places.setText("");
+			tAddress = null;
+			toshortname = "";
+
+			StartAddLatLngIntent = "";
+			EndAddLatLngIntent = "";
+			StartAddShortNameIntent = "";
+			EndAddShortNameIntent = "";
+		}
+	}
+
+	private void showNoFavoritesDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+		builder.setMessage("You have not saved your home & office locations. Save them in favorites to activate these options, would you like to do that now?");
+		builder.setCancelable(false);
+
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(HomeActivity.this,
+						SettingActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		builder.setNegativeButton("Later", null);
+
+		builder.show();
+	}
+
+	private Address geocodeAddress(String addressString) {
+		Address addressReturn = null;
+		Geocoder geocoder = new Geocoder(this);
+		try {
+			ArrayList<Address> arrayList = (ArrayList<Address>) geocoder
+					.getFromLocationName(addressString, 1);
+			Log.d("geocodeAddress", "geocodeAddress : " + arrayList.toString());
+			if (arrayList.size() > 0) {
+				addressReturn = arrayList.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return addressReturn;
+	}
+
+	private void dismissKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus()
+				.getWindowToken(), 0);
 	}
 
 	private void selectImage() {
@@ -1507,170 +1812,6 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 		}
 	}
 
-	// ////////////////////
-	// ///////
-	private class ConnectionTaskForFetchMyClubs extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionFetchMyClubs mAuth1 = new AuthenticateConnectionFetchMyClubs();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(HomeActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (myclubsresp.equalsIgnoreCase("No Users of your Club")) {
-
-				SharedPreferences mPrefs11111 = getSharedPreferences(
-						"NoClubsAlert", 0);
-				String AlertPreference = mPrefs11111.getString(
-						"AlertPreference", "");
-				Log.d("HomePage", "AlertPreference : " + AlertPreference);
-
-				if (AlertPreference.isEmpty()) {
-					showNoClubDialog();
-				} else if (AlertPreference.contains("Remind")) {
-					String[] string = AlertPreference.split("\\|");
-					long diff = System.currentTimeMillis()
-							- Long.parseLong(string[1]);
-					Log.d("HomePage", "AlertPreference Remind current : "
-							+ System.currentTimeMillis() + " last : "
-							+ string[1] + " diff : " + diff);
-					if (diff > (12 * 60 * 1000)) {
-						showNoClubDialog();
-					}
-				}
-
-			}
-
-		}
-	}
-
-	private void showNoClubDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-
-		builder.setMessage("You are not a member of any clubs yet! Let's start by creating your first.");
-		builder.setPositiveButton("OK\r\n",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						Intent mainIntent = new Intent(HomeActivity.this,
-								MyClubsActivity.class);
-						startActivity(mainIntent);
-					}
-				});
-		builder.setNeutralButton("Remind me later",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences sharedPreferences1 = getSharedPreferences(
-								"NoClubsAlert", 0);
-						SharedPreferences.Editor editor1 = sharedPreferences1
-								.edit();
-						editor1.putString(
-								"AlertPreference",
-								"Remind|"
-										+ Long.toString(System
-												.currentTimeMillis()));
-						editor1.commit();
-					}
-				});
-		builder.setNegativeButton("Don't show this again",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences sharedPreferences1 = getSharedPreferences(
-								"NoClubsAlert", 0);
-						SharedPreferences.Editor editor1 = sharedPreferences1
-								.edit();
-						editor1.putString("AlertPreference", "Don't");
-						editor1.commit();
-					}
-				});
-		AlertDialog dialog = builder.show();
-		TextView messageText = (TextView) dialog
-				.findViewById(android.R.id.message);
-		messageText.setGravity(Gravity.CENTER);
-		dialog.show();
-	}
-
-	public class AuthenticateConnectionFetchMyClubs {
-
-		public AuthenticateConnectionFetchMyClubs() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber.toString().trim());
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(UserNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-			myclubsresp = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				myclubsresp = stringBuilder.append(bufferedStrChunk).toString();
-			}
-
-			Log.d("myclubsresp", "" + myclubsresp);
-
-			SharedPreferences sharedPreferences1 = getSharedPreferences(
-					"MyClubs", 0);
-			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-			editor1.putString("clubs", myclubsresp.toString().trim());
-			editor1.commit();
-
-			// ///////////////
-		}
-	}
-
 	public boolean isOnline() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -1684,6 +1825,45 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	protected void onResume() {
 		super.onResume();
 		AppEventsLogger.activateApp(this);
+
+		String PoolResponseSplash = getIntent().getStringExtra(
+				"PoolResponseSplash");
+
+		Log.d("HomeActivity", "onResume PoolResponseSplash : "
+				+ PoolResponseSplash);
+
+		if (PoolResponseSplash == null || PoolResponseSplash.isEmpty()
+				|| PoolResponseSplash.equalsIgnoreCase("null")
+				|| PoolResponseSplash.equalsIgnoreCase("No Pool Created Yet!!")
+				|| PoolResponseSplash.equalsIgnoreCase("[]")) {
+			resetIntentParams(true);
+		} else {
+
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"HomeActivityDisplayRides", 0);
+			boolean shouldDisplay = sharedPreferences.getBoolean(
+					"DisplayRides", false);
+
+			if (shouldDisplay) {
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putBoolean("DisplayRides", false);
+				editor.commit();
+
+				Intent mainIntent = new Intent(HomeActivity.this,
+						MyRidesActivity.class);
+				mainIntent.putExtra("PoolResponseSplash", PoolResponseSplash);
+				startActivity(mainIntent);
+
+				finish(); // to ensure when there are active rides to display,
+							// the user simply exits the app rather than
+							// returning to this page
+
+			} else {
+				resetIntentParams(true);
+			}
+
+		}
+
 	}
 
 	@Override

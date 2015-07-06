@@ -73,7 +73,8 @@
             android:name=".ui.HomeActivity"
             android:label="@string/title_activity_home_page"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
 
         <meta-data

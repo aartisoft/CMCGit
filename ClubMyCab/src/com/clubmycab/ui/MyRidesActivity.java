@@ -73,7 +73,7 @@ public class MyRidesActivity extends Activity {
 	PagingListView listView;
 
 	boolean exceptioncheck = false;
-	
+
 	Tracker tracker;
 
 	ArrayList<String> CabId = new ArrayList<String>();
@@ -125,12 +125,13 @@ public class MyRidesActivity extends Activity {
 	String readunreadnotiresp;
 	Bitmap mIcon11;
 
-	
 	RelativeLayout myridesrl;
 
 	Button showhistory;
 	String latestcabid;
 	boolean cabchk;
+	
+	boolean shouldGoBack = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +141,8 @@ public class MyRidesActivity extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MyRidesActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -160,8 +162,6 @@ public class MyRidesActivity extends Activity {
 			builder.show();
 			return;
 		}
-		
-
 
 		myridesrl = (RelativeLayout) findViewById(R.id.myridesrl);
 		myridesrl.setOnClickListener(new OnClickListener() {
@@ -174,161 +174,164 @@ public class MyRidesActivity extends Activity {
 			}
 		});
 
-		
+		// mNav = new SimpleSideDrawer(this);
+		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
+		//
+		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v) {
+		//
+		// // mainhomepagerl.setAlpha((float) 0.3);
+		// mNav.toggleLeftDrawer();
+		//
+		// }
+		// });
+		//
+		// myprofile = (TextView) findViewById(R.id.myprofile);
+		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myrides = (TextView) findViewById(R.id.myrides);
+		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// bookacab = (TextView) findViewById(R.id.bookacab);
+		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
+		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myclubs = (TextView) findViewById(R.id.myclubs);
+		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
+		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// mypreferences = (TextView) findViewById(R.id.mypreferences);
+		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// about = (TextView) findViewById(R.id.about);
+		// about.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		//
+		// myprofile.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(MyRidesActivity.this,
+		// MyProfileActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myrides.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		// }
+		// });
+		//
+		// bookacab.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(MyRidesActivity.this,
+		// BookaCabFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// sharemylocation.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(MyRidesActivity.this,
+		// ShareLocationFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myclubs.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(MyRidesActivity.this,
+		// MyClubsActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// sharethisapp.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent sendIntent = new Intent();
+		// sendIntent.setAction(Intent.ACTION_SEND);
+		// sendIntent
+		// .putExtra(
+		// Intent.EXTRA_TEXT,
+		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
+		// sendIntent.setType("text/plain");
+		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
+		//
+		// }
+		// });
+		//
+		// mypreferences.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(MyRidesActivity.this,
+		// SettingActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// about.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// Intent mainIntent = new Intent(MyRidesActivity.this,
+		// AboutPagerFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
 
-//		mNav = new SimpleSideDrawer(this);
-//		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-//
-//		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//
-//				// mainhomepagerl.setAlpha((float) 0.3);
-//				mNav.toggleLeftDrawer();
-//
-//			}
-//		});
-//
-//		myprofile = (TextView) findViewById(R.id.myprofile);
-//		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		myrides = (TextView) findViewById(R.id.myrides);
-//		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		bookacab = (TextView) findViewById(R.id.bookacab);
-//		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-//		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		myclubs = (TextView) findViewById(R.id.myclubs);
-//		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-//		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		mypreferences = (TextView) findViewById(R.id.mypreferences);
-//		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		about = (TextView) findViewById(R.id.about);
-//		about.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//
-//		myprofile.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent mainIntent = new Intent(MyRidesActivity.this, MyProfileActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		myrides.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//			}
-//		});
-//
-//		bookacab.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent mainIntent = new Intent(MyRidesActivity.this, BookaCabFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		sharemylocation.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent mainIntent = new Intent(MyRidesActivity.this,
-//						ShareLocationFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		myclubs.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent mainIntent = new Intent(MyRidesActivity.this, MyClubsActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		sharethisapp.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent sendIntent = new Intent();
-//				sendIntent.setAction(Intent.ACTION_SEND);
-//				sendIntent
-//						.putExtra(
-//								Intent.EXTRA_TEXT,
-//								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-//				sendIntent.setType("text/plain");
-//				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-//
-//			}
-//		});
-//
-//		mypreferences.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent mainIntent = new Intent(MyRidesActivity.this,
-//						SettingActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		about.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				Intent mainIntent = new Intent(MyRidesActivity.this, AboutPagerFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-		
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(MyRidesActivity.this);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("MyRides");
 
-		
-		UniversalDrawer drawer = new UniversalDrawer(this,tracker);
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
@@ -365,7 +368,7 @@ public class MyRidesActivity extends Activity {
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
-		
+
 		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
 
 			unreadnoticountrl.setVisibility(View.GONE);
@@ -377,12 +380,12 @@ public class MyRidesActivity extends Activity {
 		}
 
 		// ///////////////
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			new ConnectionTaskForreadunreadnotification()
-//					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//		} else {
-//			new ConnectionTaskForreadunreadnotification().execute();
-//		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -403,11 +406,36 @@ public class MyRidesActivity extends Activity {
 
 		mypoollist = (ListView) findViewById(R.id.mypoollist);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForFetchPool()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		String PoolResponseSplash = getIntent().getStringExtra(
+				"PoolResponseSplash");
+
+		Log.d("MyRidesActivity", "PoolResponseSplash : " + PoolResponseSplash);
+
+		if (PoolResponseSplash == null || PoolResponseSplash.isEmpty()
+				|| PoolResponseSplash.equalsIgnoreCase("null")) {
+			
+			shouldGoBack = true;
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForFetchPool()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				new ConnectionTaskForFetchPool().execute();
+			}
+
 		} else {
-			new ConnectionTaskForFetchPool().execute();
+			
+			shouldGoBack = false;
+					
+			poolresponse = PoolResponseSplash;
+			ConnectionTaskForFetchPoolPostExecute();
+			Log.d("MyRidesActivity", "PoolResponseSplash OwnerName size : "
+					+ OwnerName.size());
+			if (OwnerName.size() == 1) {
+				mypoollist.performItemClick(
+						mypoollist.getAdapter().getView(0, null, null), 0,
+						mypoollist.getAdapter().getItemId(0));
+			}
 		}
 	}
 
@@ -453,373 +481,368 @@ public class MyRidesActivity extends Activity {
 				return;
 			}
 
-			if (poolresponse.equalsIgnoreCase("No Pool Created Yet!!")
-					|| poolresponse.equalsIgnoreCase("[]")) {
-				Toast.makeText(MyRidesActivity.this, "No active rides!",
-						Toast.LENGTH_LONG).show();
-			} else {
-
-				CabId.clear();
-				MobileNumber.clear();
-				OwnerName.clear();
-				FromLocation.clear();
-				ToLocation.clear();
-
-				FromShortName.clear();
-				ToShortName.clear();
-
-				TravelDate.clear();
-				TravelTime.clear();
-				Seats.clear();
-				RemainingSeats.clear();
-				Seat_Status.clear();
-				Distance.clear();
-				OpenTime.clear();
-				CabStatus.clear();
-				imagename.clear();
-
-				BookingRefNo.clear();
-				DriverName.clear();
-				DriverNumber.clear();
-				CarNumber.clear();
-
-				try {
-					JSONArray subArray = new JSONArray(poolresponse);
-					String allcabids = "s";
-					for (int i = 0; i < subArray.length(); i++) {
-						try {
-							CabId.add(subArray.getJSONObject(i)
-									.getString("CabId").toString());
-
-							allcabids += "'"
-									+ subArray.getJSONObject(i)
-											.getString("CabId").toString()
-											.trim() + "',";
-
-							MobileNumber.add(subArray.getJSONObject(i)
-									.getString("MobileNumber").toString());
-							OwnerName.add(subArray.getJSONObject(i)
-									.getString("OwnerName").toString());
-							FromLocation.add(subArray.getJSONObject(i)
-									.getString("FromLocation").toString());
-							ToLocation.add(subArray.getJSONObject(i)
-									.getString("ToLocation").toString());
-
-							FromShortName.add(subArray.getJSONObject(i)
-									.getString("FromShortName").toString());
-							ToShortName.add(subArray.getJSONObject(i)
-									.getString("ToShortName").toString());
-
-							TravelDate.add(subArray.getJSONObject(i)
-									.getString("TravelDate").toString());
-							TravelTime.add(subArray.getJSONObject(i)
-									.getString("TravelTime").toString());
-							Seats.add(subArray.getJSONObject(i)
-									.getString("Seats").toString());
-							RemainingSeats.add(subArray.getJSONObject(i)
-									.getString("RemainingSeats").toString());
-							Seat_Status.add(subArray.getJSONObject(i)
-									.getString("Seat_Status").toString());
-							Distance.add(subArray.getJSONObject(i)
-									.getString("Distance").toString());
-							OpenTime.add(subArray.getJSONObject(i)
-									.getString("OpenTime").toString());
-							CabStatus.add(subArray.getJSONObject(i)
-									.getString("CabStatus").toString());
-							imagename.add(subArray.getJSONObject(i)
-									.getString("imagename").toString());
-
-							BookingRefNo.add(subArray.getJSONObject(i)
-									.getString("BookingRefNo").toString());
-							DriverName.add(subArray.getJSONObject(i)
-									.getString("DriverName").toString());
-							DriverNumber.add(subArray.getJSONObject(i)
-									.getString("DriverNumber").toString());
-							CarNumber.add(subArray.getJSONObject(i)
-									.getString("CarNumber").toString());
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-
-					DatabaseHandler db = new DatabaseHandler(MyRidesActivity.this);
-					allcabids = allcabids.substring(1, allcabids.length() - 1);
-					db.deleteArchieveChats(allcabids);
-
-					adapter = new ListViewAdapter(MyRidesActivity.this, FromShortName,
-							ToShortName, TravelDate, TravelTime, Seat_Status,
-							OwnerName, imagename);
-					mypoollist.setAdapter(adapter);
-
-					mypoollist
-							.setOnItemClickListener(new OnItemClickListener() {
-								@Override
-								public void onItemClick(AdapterView<?> arg0,
-										View arg1, int arg2, long arg3) {
-
-									Log.d("arg2", "" + arg2);
-
-									if (MobileNumber.get(arg2)
-											.equalsIgnoreCase(MobileNumberstr)) {
-
-										final Intent mainIntent = new Intent(
-												MyRidesActivity.this, CheckPoolFragmentActivity.class);
-										mainIntent.putExtra("CabId",
-												CabId.get(arg2));
-										mainIntent.putExtra("MobileNumber",
-												MobileNumber.get(arg2));
-										mainIntent.putExtra("OwnerName",
-												OwnerName.get(arg2));
-										mainIntent.putExtra("OwnerImage",
-												imagename.get(arg2));
-										mainIntent.putExtra("FromLocation",
-												FromLocation.get(arg2));
-										mainIntent.putExtra("ToLocation",
-												ToLocation.get(arg2));
-
-										mainIntent.putExtra("FromShortName",
-												FromShortName.get(arg2));
-										mainIntent.putExtra("ToShortName",
-												ToShortName.get(arg2));
-
-										mainIntent.putExtra("TravelDate",
-												TravelDate.get(arg2));
-										mainIntent.putExtra("TravelTime",
-												TravelTime.get(arg2));
-										mainIntent.putExtra("Seats",
-												Seats.get(arg2));
-										mainIntent.putExtra("RemainingSeats",
-												RemainingSeats.get(arg2));
-										mainIntent.putExtra("Seat_Status",
-												Seat_Status.get(arg2));
-										mainIntent.putExtra("Distance",
-												Distance.get(arg2));
-										mainIntent.putExtra("OpenTime",
-												OpenTime.get(arg2));
-
-										mainIntent.putExtra("CabStatus",
-												CabStatus.get(arg2));
-
-										mainIntent.putExtra("BookingRefNo",
-												BookingRefNo.get(arg2));
-										mainIntent.putExtra("DriverName",
-												DriverName.get(arg2));
-										mainIntent.putExtra("DriverNumber",
-												DriverNumber.get(arg2));
-										mainIntent.putExtra("CarNumber",
-												CarNumber.get(arg2));
-
-										MyRidesActivity.this.startActivity(mainIntent);
-
-									} else {
-
-										final Intent mainIntent = new Intent(
-												MyRidesActivity.this, MemberRideFragmentActivity.class);
-										mainIntent.putExtra("CabId",
-												CabId.get(arg2));
-										mainIntent.putExtra("MobileNumber",
-												MobileNumber.get(arg2));
-										mainIntent.putExtra("OwnerName",
-												OwnerName.get(arg2));
-										mainIntent.putExtra("OwnerImage",
-												imagename.get(arg2));
-										mainIntent.putExtra("FromLocation",
-												FromLocation.get(arg2));
-										mainIntent.putExtra("ToLocation",
-												ToLocation.get(arg2));
-
-										mainIntent.putExtra("FromShortName",
-												FromShortName.get(arg2));
-										mainIntent.putExtra("ToShortName",
-												ToShortName.get(arg2));
-
-										mainIntent.putExtra("TravelDate",
-												TravelDate.get(arg2));
-										mainIntent.putExtra("TravelTime",
-												TravelTime.get(arg2));
-										mainIntent.putExtra("Seats",
-												Seats.get(arg2));
-										mainIntent.putExtra("RemainingSeats",
-												RemainingSeats.get(arg2));
-										mainIntent.putExtra("Seat_Status",
-												Seat_Status.get(arg2));
-										mainIntent.putExtra("Distance",
-												Distance.get(arg2));
-										mainIntent.putExtra("OpenTime",
-												OpenTime.get(arg2));
-
-										mainIntent.putExtra("CabStatus",
-												CabStatus.get(arg2));
-
-										mainIntent.putExtra("BookingRefNo",
-												BookingRefNo.get(arg2));
-										mainIntent.putExtra("DriverName",
-												DriverName.get(arg2));
-										mainIntent.putExtra("DriverNumber",
-												DriverNumber.get(arg2));
-										mainIntent.putExtra("CarNumber",
-												CarNumber.get(arg2));
-
-										MyRidesActivity.this.startActivity(mainIntent);
-									}
-								}
-							});
-
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-
-			showhistory = (Button) findViewById(R.id.showhistory);
-			showhistory.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-
-					showhistory.setVisibility(View.GONE);
-					mypoollist.setVisibility(View.GONE);
-					listView = (PagingListView) findViewById(R.id.paging_list_view);
-					listView.setVisibility(View.VISIBLE);
-
-					showhisadaptor = new ShowHistoryRidesAdaptor(MyRidesActivity.this);
-
-					latestcabid = "";
-					cabchk = false;
-
-					listView.setAdapter(showhisadaptor);
-					listView.setHasMoreItems(true);
-					listView.setPagingableListener(new PagingListView.Pagingable() {
-						@Override
-						public void onLoadMoreItems() {
-							if (!cabchk) {
-								// new CountryAsyncTask().execute();
-								new ConnectionTaskForShowRidesHistory()
-										.executeOnExecutor(
-												AsyncTask.THREAD_POOL_EXECUTOR,
-												latestcabid);
-							} else {
-								listView.onFinishLoading(false, null);
-							}
-						}
-					});
-
-					listView.setOnItemClickListener(new OnItemClickListener() {
-						@Override
-						public void onItemClick(AdapterView<?> arg0, View arg1,
-								int arg2, long arg3) {
-
-							Log.d("arg2", "" + arg2);
-
-							if (MobileNumber.get(arg2).equalsIgnoreCase(
-									MobileNumberstr)) {
-
-								final Intent mainIntent = new Intent(
-										MyRidesActivity.this, CheckPoolFragmentActivity.class);
-								mainIntent.putExtra("CabId", CabId.get(arg2));
-								mainIntent.putExtra("MobileNumber",
-										MobileNumber.get(arg2));
-								mainIntent.putExtra("OwnerName",
-										OwnerName.get(arg2));
-								mainIntent.putExtra("OwnerImage",
-										imagename.get(arg2));
-								mainIntent.putExtra("FromLocation",
-										FromLocation.get(arg2));
-								mainIntent.putExtra("ToLocation",
-										ToLocation.get(arg2));
-
-								mainIntent.putExtra("FromShortName",
-										FromShortName.get(arg2));
-								mainIntent.putExtra("ToShortName",
-										ToShortName.get(arg2));
-
-								mainIntent.putExtra("TravelDate",
-										TravelDate.get(arg2));
-								mainIntent.putExtra("TravelTime",
-										TravelTime.get(arg2));
-								mainIntent.putExtra("Seats", Seats.get(arg2));
-								mainIntent.putExtra("RemainingSeats",
-										RemainingSeats.get(arg2));
-								mainIntent.putExtra("Seat_Status",
-										Seat_Status.get(arg2));
-								mainIntent.putExtra("Distance",
-										Distance.get(arg2));
-								mainIntent.putExtra("OpenTime",
-										OpenTime.get(arg2));
-
-								mainIntent.putExtra("CabStatus",
-										CabStatus.get(arg2));
-
-								mainIntent.putExtra("BookingRefNo",
-										BookingRefNo.get(arg2));
-								mainIntent.putExtra("DriverName",
-										DriverName.get(arg2));
-								mainIntent.putExtra("DriverNumber",
-										DriverNumber.get(arg2));
-								mainIntent.putExtra("CarNumber",
-										CarNumber.get(arg2));
-
-								MyRidesActivity.this.startActivity(mainIntent);
-
-							} else {
-
-								final Intent mainIntent = new Intent(
-										MyRidesActivity.this, MemberRideFragmentActivity.class);
-								mainIntent.putExtra("CabId", CabId.get(arg2));
-								mainIntent.putExtra("MobileNumber",
-										MobileNumber.get(arg2));
-								mainIntent.putExtra("OwnerName",
-										OwnerName.get(arg2));
-								mainIntent.putExtra("OwnerImage",
-										imagename.get(arg2));
-								mainIntent.putExtra("FromLocation",
-										FromLocation.get(arg2));
-								mainIntent.putExtra("ToLocation",
-										ToLocation.get(arg2));
-
-								mainIntent.putExtra("FromShortName",
-										FromShortName.get(arg2));
-								mainIntent.putExtra("ToShortName",
-										ToShortName.get(arg2));
-
-								mainIntent.putExtra("TravelDate",
-										TravelDate.get(arg2));
-								mainIntent.putExtra("TravelTime",
-										TravelTime.get(arg2));
-								mainIntent.putExtra("Seats", Seats.get(arg2));
-								mainIntent.putExtra("RemainingSeats",
-										RemainingSeats.get(arg2));
-								mainIntent.putExtra("Seat_Status",
-										Seat_Status.get(arg2));
-								mainIntent.putExtra("Distance",
-										Distance.get(arg2));
-								mainIntent.putExtra("OpenTime",
-										OpenTime.get(arg2));
-
-								mainIntent.putExtra("CabStatus",
-										CabStatus.get(arg2));
-
-								mainIntent.putExtra("BookingRefNo",
-										BookingRefNo.get(arg2));
-								mainIntent.putExtra("DriverName",
-										DriverName.get(arg2));
-								mainIntent.putExtra("DriverNumber",
-										DriverNumber.get(arg2));
-								mainIntent.putExtra("CarNumber",
-										CarNumber.get(arg2));
-
-								MyRidesActivity.this.startActivity(mainIntent);
-							}
-						}
-					});
-
-				}
-			});
+			ConnectionTaskForFetchPoolPostExecute();
 		}
 
+	}
+
+	private void ConnectionTaskForFetchPoolPostExecute() {
+		if (poolresponse.equalsIgnoreCase("No Pool Created Yet!!")
+				|| poolresponse.equalsIgnoreCase("[]")) {
+			Toast.makeText(MyRidesActivity.this, "No active rides!",
+					Toast.LENGTH_LONG).show();
+		} else {
+
+			CabId.clear();
+			MobileNumber.clear();
+			OwnerName.clear();
+			FromLocation.clear();
+			ToLocation.clear();
+
+			FromShortName.clear();
+			ToShortName.clear();
+
+			TravelDate.clear();
+			TravelTime.clear();
+			Seats.clear();
+			RemainingSeats.clear();
+			Seat_Status.clear();
+			Distance.clear();
+			OpenTime.clear();
+			CabStatus.clear();
+			imagename.clear();
+
+			BookingRefNo.clear();
+			DriverName.clear();
+			DriverNumber.clear();
+			CarNumber.clear();
+
+			try {
+				JSONArray subArray = new JSONArray(poolresponse);
+				String allcabids = "s";
+				for (int i = 0; i < subArray.length(); i++) {
+					try {
+						CabId.add(subArray.getJSONObject(i).getString("CabId")
+								.toString());
+
+						allcabids += "'"
+								+ subArray.getJSONObject(i).getString("CabId")
+										.toString().trim() + "',";
+
+						MobileNumber.add(subArray.getJSONObject(i)
+								.getString("MobileNumber").toString());
+						OwnerName.add(subArray.getJSONObject(i)
+								.getString("OwnerName").toString());
+						FromLocation.add(subArray.getJSONObject(i)
+								.getString("FromLocation").toString());
+						ToLocation.add(subArray.getJSONObject(i)
+								.getString("ToLocation").toString());
+
+						FromShortName.add(subArray.getJSONObject(i)
+								.getString("FromShortName").toString());
+						ToShortName.add(subArray.getJSONObject(i)
+								.getString("ToShortName").toString());
+
+						TravelDate.add(subArray.getJSONObject(i)
+								.getString("TravelDate").toString());
+						TravelTime.add(subArray.getJSONObject(i)
+								.getString("TravelTime").toString());
+						Seats.add(subArray.getJSONObject(i).getString("Seats")
+								.toString());
+						RemainingSeats.add(subArray.getJSONObject(i)
+								.getString("RemainingSeats").toString());
+						Seat_Status.add(subArray.getJSONObject(i)
+								.getString("Seat_Status").toString());
+						Distance.add(subArray.getJSONObject(i)
+								.getString("Distance").toString());
+						OpenTime.add(subArray.getJSONObject(i)
+								.getString("OpenTime").toString());
+						CabStatus.add(subArray.getJSONObject(i)
+								.getString("CabStatus").toString());
+						imagename.add(subArray.getJSONObject(i)
+								.getString("imagename").toString());
+
+						BookingRefNo.add(subArray.getJSONObject(i)
+								.getString("BookingRefNo").toString());
+						DriverName.add(subArray.getJSONObject(i)
+								.getString("DriverName").toString());
+						DriverNumber.add(subArray.getJSONObject(i)
+								.getString("DriverNumber").toString());
+						CarNumber.add(subArray.getJSONObject(i)
+								.getString("CarNumber").toString());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				DatabaseHandler db = new DatabaseHandler(MyRidesActivity.this);
+				allcabids = allcabids.substring(1, allcabids.length() - 1);
+				db.deleteArchieveChats(allcabids);
+
+				adapter = new ListViewAdapter(MyRidesActivity.this,
+						FromShortName, ToShortName, TravelDate, TravelTime,
+						Seat_Status, OwnerName, imagename);
+				mypoollist.setAdapter(adapter);
+
+				mypoollist.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+
+						Log.d("arg2", "" + arg2);
+
+						if (MobileNumber.get(arg2).equalsIgnoreCase(
+								MobileNumberstr)) {
+
+							final Intent mainIntent = new Intent(
+									MyRidesActivity.this,
+									CheckPoolFragmentActivity.class);
+							mainIntent.putExtra("CabId", CabId.get(arg2));
+							mainIntent.putExtra("MobileNumber",
+									MobileNumber.get(arg2));
+							mainIntent.putExtra("OwnerName",
+									OwnerName.get(arg2));
+							mainIntent.putExtra("OwnerImage",
+									imagename.get(arg2));
+							mainIntent.putExtra("FromLocation",
+									FromLocation.get(arg2));
+							mainIntent.putExtra("ToLocation",
+									ToLocation.get(arg2));
+
+							mainIntent.putExtra("FromShortName",
+									FromShortName.get(arg2));
+							mainIntent.putExtra("ToShortName",
+									ToShortName.get(arg2));
+
+							mainIntent.putExtra("TravelDate",
+									TravelDate.get(arg2));
+							mainIntent.putExtra("TravelTime",
+									TravelTime.get(arg2));
+							mainIntent.putExtra("Seats", Seats.get(arg2));
+							mainIntent.putExtra("RemainingSeats",
+									RemainingSeats.get(arg2));
+							mainIntent.putExtra("Seat_Status",
+									Seat_Status.get(arg2));
+							mainIntent.putExtra("Distance", Distance.get(arg2));
+							mainIntent.putExtra("OpenTime", OpenTime.get(arg2));
+
+							mainIntent.putExtra("CabStatus",
+									CabStatus.get(arg2));
+
+							mainIntent.putExtra("BookingRefNo",
+									BookingRefNo.get(arg2));
+							mainIntent.putExtra("DriverName",
+									DriverName.get(arg2));
+							mainIntent.putExtra("DriverNumber",
+									DriverNumber.get(arg2));
+							mainIntent.putExtra("CarNumber",
+									CarNumber.get(arg2));
+
+							MyRidesActivity.this.startActivity(mainIntent);
+
+						} else {
+
+							final Intent mainIntent = new Intent(
+									MyRidesActivity.this,
+									MemberRideFragmentActivity.class);
+							mainIntent.putExtra("CabId", CabId.get(arg2));
+							mainIntent.putExtra("MobileNumber",
+									MobileNumber.get(arg2));
+							mainIntent.putExtra("OwnerName",
+									OwnerName.get(arg2));
+							mainIntent.putExtra("OwnerImage",
+									imagename.get(arg2));
+							mainIntent.putExtra("FromLocation",
+									FromLocation.get(arg2));
+							mainIntent.putExtra("ToLocation",
+									ToLocation.get(arg2));
+
+							mainIntent.putExtra("FromShortName",
+									FromShortName.get(arg2));
+							mainIntent.putExtra("ToShortName",
+									ToShortName.get(arg2));
+
+							mainIntent.putExtra("TravelDate",
+									TravelDate.get(arg2));
+							mainIntent.putExtra("TravelTime",
+									TravelTime.get(arg2));
+							mainIntent.putExtra("Seats", Seats.get(arg2));
+							mainIntent.putExtra("RemainingSeats",
+									RemainingSeats.get(arg2));
+							mainIntent.putExtra("Seat_Status",
+									Seat_Status.get(arg2));
+							mainIntent.putExtra("Distance", Distance.get(arg2));
+							mainIntent.putExtra("OpenTime", OpenTime.get(arg2));
+
+							mainIntent.putExtra("CabStatus",
+									CabStatus.get(arg2));
+
+							mainIntent.putExtra("BookingRefNo",
+									BookingRefNo.get(arg2));
+							mainIntent.putExtra("DriverName",
+									DriverName.get(arg2));
+							mainIntent.putExtra("DriverNumber",
+									DriverNumber.get(arg2));
+							mainIntent.putExtra("CarNumber",
+									CarNumber.get(arg2));
+
+							MyRidesActivity.this.startActivity(mainIntent);
+						}
+					}
+				});
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		showhistory = (Button) findViewById(R.id.showhistory);
+		showhistory.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				showhistory.setVisibility(View.GONE);
+				mypoollist.setVisibility(View.GONE);
+				listView = (PagingListView) findViewById(R.id.paging_list_view);
+				listView.setVisibility(View.VISIBLE);
+
+				showhisadaptor = new ShowHistoryRidesAdaptor(
+						MyRidesActivity.this);
+
+				latestcabid = "";
+				cabchk = false;
+
+				listView.setAdapter(showhisadaptor);
+				listView.setHasMoreItems(true);
+				listView.setPagingableListener(new PagingListView.Pagingable() {
+					@Override
+					public void onLoadMoreItems() {
+						if (!cabchk) {
+							// new CountryAsyncTask().execute();
+							new ConnectionTaskForShowRidesHistory()
+									.executeOnExecutor(
+											AsyncTask.THREAD_POOL_EXECUTOR,
+											latestcabid);
+						} else {
+							listView.onFinishLoading(false, null);
+						}
+					}
+				});
+
+				listView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+
+						Log.d("arg2", "" + arg2);
+
+						if (MobileNumber.get(arg2).equalsIgnoreCase(
+								MobileNumberstr)) {
+
+							final Intent mainIntent = new Intent(
+									MyRidesActivity.this,
+									CheckPoolFragmentActivity.class);
+							mainIntent.putExtra("CabId", CabId.get(arg2));
+							mainIntent.putExtra("MobileNumber",
+									MobileNumber.get(arg2));
+							mainIntent.putExtra("OwnerName",
+									OwnerName.get(arg2));
+							mainIntent.putExtra("OwnerImage",
+									imagename.get(arg2));
+							mainIntent.putExtra("FromLocation",
+									FromLocation.get(arg2));
+							mainIntent.putExtra("ToLocation",
+									ToLocation.get(arg2));
+
+							mainIntent.putExtra("FromShortName",
+									FromShortName.get(arg2));
+							mainIntent.putExtra("ToShortName",
+									ToShortName.get(arg2));
+
+							mainIntent.putExtra("TravelDate",
+									TravelDate.get(arg2));
+							mainIntent.putExtra("TravelTime",
+									TravelTime.get(arg2));
+							mainIntent.putExtra("Seats", Seats.get(arg2));
+							mainIntent.putExtra("RemainingSeats",
+									RemainingSeats.get(arg2));
+							mainIntent.putExtra("Seat_Status",
+									Seat_Status.get(arg2));
+							mainIntent.putExtra("Distance", Distance.get(arg2));
+							mainIntent.putExtra("OpenTime", OpenTime.get(arg2));
+
+							mainIntent.putExtra("CabStatus",
+									CabStatus.get(arg2));
+
+							mainIntent.putExtra("BookingRefNo",
+									BookingRefNo.get(arg2));
+							mainIntent.putExtra("DriverName",
+									DriverName.get(arg2));
+							mainIntent.putExtra("DriverNumber",
+									DriverNumber.get(arg2));
+							mainIntent.putExtra("CarNumber",
+									CarNumber.get(arg2));
+
+							MyRidesActivity.this.startActivity(mainIntent);
+
+						} else {
+
+							final Intent mainIntent = new Intent(
+									MyRidesActivity.this,
+									MemberRideFragmentActivity.class);
+							mainIntent.putExtra("CabId", CabId.get(arg2));
+							mainIntent.putExtra("MobileNumber",
+									MobileNumber.get(arg2));
+							mainIntent.putExtra("OwnerName",
+									OwnerName.get(arg2));
+							mainIntent.putExtra("OwnerImage",
+									imagename.get(arg2));
+							mainIntent.putExtra("FromLocation",
+									FromLocation.get(arg2));
+							mainIntent.putExtra("ToLocation",
+									ToLocation.get(arg2));
+
+							mainIntent.putExtra("FromShortName",
+									FromShortName.get(arg2));
+							mainIntent.putExtra("ToShortName",
+									ToShortName.get(arg2));
+
+							mainIntent.putExtra("TravelDate",
+									TravelDate.get(arg2));
+							mainIntent.putExtra("TravelTime",
+									TravelTime.get(arg2));
+							mainIntent.putExtra("Seats", Seats.get(arg2));
+							mainIntent.putExtra("RemainingSeats",
+									RemainingSeats.get(arg2));
+							mainIntent.putExtra("Seat_Status",
+									Seat_Status.get(arg2));
+							mainIntent.putExtra("Distance", Distance.get(arg2));
+							mainIntent.putExtra("OpenTime", OpenTime.get(arg2));
+
+							mainIntent.putExtra("CabStatus",
+									CabStatus.get(arg2));
+
+							mainIntent.putExtra("BookingRefNo",
+									BookingRefNo.get(arg2));
+							mainIntent.putExtra("DriverName",
+									DriverName.get(arg2));
+							mainIntent.putExtra("DriverNumber",
+									DriverNumber.get(arg2));
+							mainIntent.putExtra("CarNumber",
+									CarNumber.get(arg2));
+
+							MyRidesActivity.this.startActivity(mainIntent);
+						}
+					}
+				});
+
+			}
+		});
 	}
 
 	public class AuthenticateConnectionFetchPool {
@@ -1156,106 +1179,113 @@ public class MyRidesActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-
-		Intent mainIntent = new Intent(MyRidesActivity.this, HomeActivity.class);
-		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		startActivityForResult(mainIntent, 500);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+		
+		if (shouldGoBack) {
+			Intent mainIntent = new Intent(MyRidesActivity.this, HomeActivity.class);
+			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			startActivityForResult(mainIntent, 500);
+			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+		} else {
+			finish();
+		}
+		
 	}
 
 	// ///////
-//	private class ConnectionTaskForreadunreadnotification extends
-//			AsyncTask<String, Void, Void> {
-//
-//		@Override
-//		protected void onPreExecute() {
-//
-//		}
-//
-//		@Override
-//		protected Void doInBackground(String... args) {
-//			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-//			try {
-//				mAuth1.connection();
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				exceptioncheck = true;
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(Void v) {
-//
-//			if (exceptioncheck) {
-//				exceptioncheck = false;
-//				Toast.makeText(MyRidesActivity.this,
-//						getResources().getString(R.string.exceptionstring),
-//						Toast.LENGTH_LONG).show();
-//				return;
-//			}
-//
-//			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-//
-//				unreadnoticountrl.setVisibility(View.GONE);
-//
-//			} else {
-//
-//				unreadnoticountrl.setVisibility(View.VISIBLE);
-//				unreadnoticount.setText(readunreadnotiresp);
-//			}
-//		}
-//
-//	}
-//
-//	public class AuthenticateConnectionreadunreadnotification {
-//
-//		public AuthenticateConnectionreadunreadnotification() {
-//
-//		}
-//
-//		public void connection() throws Exception {
-//
-//			// Connect to google.com
-//			HttpClient httpClient = new DefaultHttpClient();
-//			String url_select11 = GlobalVariables.ServiceUrl
-//					+ "/FetchUnreadNotificationCount.php";
-//			HttpPost httpPost = new HttpPost(url_select11);
-//			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-//					"MobileNumber", MobileNumberstr);
-//
-//			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-//			nameValuePairList.add(MobileNumberBasicNameValuePair);
-//
-//			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-//					nameValuePairList);
-//			httpPost.setEntity(urlEncodedFormEntity);
-//			HttpResponse httpResponse = httpClient.execute(httpPost);
-//
-//			Log.d("httpResponse", "" + httpResponse);
-//
-//			InputStream inputStream = httpResponse.getEntity().getContent();
-//			InputStreamReader inputStreamReader = new InputStreamReader(
-//					inputStream);
-//
-//			BufferedReader bufferedReader = new BufferedReader(
-//					inputStreamReader);
-//
-//			StringBuilder stringBuilder = new StringBuilder();
-//
-//			String bufferedStrChunk = null;
-//
-//			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-//				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-//						.toString();
-//			}
-//
-//			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-//
-//		}
-//	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(MyRidesActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select11 = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	// HttpPost httpPost = new HttpPost(url_select11);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumberstr);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	public boolean isOnline() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

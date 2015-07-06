@@ -16,6 +16,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,8 +47,8 @@ public class SplashActivity extends Activity {
 	String LastRegisteredAppVersion;
 	String AppVersion;
 	String forceupdateversion;
+	String poolresponse;
 
-	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -58,7 +59,8 @@ public class SplashActivity extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					SplashActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -78,14 +80,6 @@ public class SplashActivity extends Activity {
 			builder.show();
 			return;
 		}
-		
-		
-		SharedPreferences sharedPreferences = getSharedPreferences(
-				"HomeActivityDisplayTravel", 0);
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putBoolean("DisplayTravel", true);
-		editor.commit();
-		
 
 		SharedPreferences mPrefs1 = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs1.getString("FullName", "");
@@ -110,7 +104,8 @@ public class SplashActivity extends Activity {
 		if ((FullName.isEmpty() || FullName == null)
 				&& (MobileNumber.isEmpty() || MobileNumber == null)) {
 
-			Intent mainIntent = new Intent(SplashActivity.this, AboutPagerFragmentActivity.class);
+			Intent mainIntent = new Intent(SplashActivity.this,
+					AboutPagerFragmentActivity.class);
 			mainIntent.putExtra("mStartedFrom", "mStartedFrom");
 			startActivity(mainIntent);
 			overridePendingTransition(R.anim.slide_in_right,
@@ -212,19 +207,20 @@ public class SplashActivity extends Activity {
 
 			} else {
 				if (verifyotp.equalsIgnoreCase("false")) {
-					Intent mainIntent = new Intent(SplashActivity.this, OTPActivity.class);
+					Intent mainIntent = new Intent(SplashActivity.this,
+							OTPActivity.class);
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);
 					finish();
 				} else {
 
-					Intent mainIntent = new Intent(SplashActivity.this, HomeActivity.class);
-					mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					startActivityForResult(mainIntent, 500);
-					overridePendingTransition(R.anim.slide_in_right,
-							R.anim.slide_out_left);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForFetchPool()
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					} else {
+						new ConnectionTaskForFetchPool().execute();
+					}
 				}
 			}
 
@@ -391,6 +387,109 @@ public class SplashActivity extends Activity {
 
 			Log.d("forceupdateversion", "" + forceupdateversion);
 
+		}
+	}
+
+	private class ConnectionTaskForFetchPool extends
+			AsyncTask<String, Void, Void> {
+		private ProgressDialog dialog = new ProgressDialog(SplashActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionFetchPool mAuth1 = new AuthenticateConnectionFetchPool();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(SplashActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+
+
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"HomeActivityDisplayRides", 0);
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putBoolean("DisplayRides", true);
+			editor.commit();
+
+			Intent mainIntent = new Intent(SplashActivity.this,
+					HomeActivity.class);
+			mainIntent.putExtra("PoolResponseSplash", poolresponse);
+			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			startActivityForResult(mainIntent, 500);
+			overridePendingTransition(R.anim.slide_in_right,
+					R.anim.slide_out_left);
+
+		}
+	}
+
+	public class AuthenticateConnectionFetchPool {
+
+		public AuthenticateConnectionFetchPool() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select11 = GlobalVariables.ServiceUrl
+					+ "/FetchMyPools.php";
+			HttpPost httpPost = new HttpPost(url_select11);
+			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+					"MobileNumber", MobileNumber.toString().trim());
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(MobileNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse FetchMyPools", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				poolresponse = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("poolresponse", "" + stringBuilder.toString());
 		}
 	}
 

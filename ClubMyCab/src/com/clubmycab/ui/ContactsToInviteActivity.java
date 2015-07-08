@@ -65,7 +65,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CheckPoolFragmentActivity;
 import com.clubmycab.CircularImageView;
 import com.clubmycab.ClubListClass;
@@ -76,7 +75,6 @@ import com.clubmycab.ContactObject;
 import com.clubmycab.ContactsAdapter;
 import com.clubmycab.ContactsListClass;
 import com.clubmycab.R;
-import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;

@@ -111,6 +111,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	EditText seatsedittext;
 
 	Button invite;
+	Button datetoday, datechoose, timehalfhour, timechoose;
 
 	Calendar myCalendar = Calendar.getInstance();
 
@@ -670,6 +671,9 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		timeedittext = (EditText) findViewById(R.id.timeedittext);
 		seatsedittext = (EditText) findViewById(R.id.seatsedittext);
 
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		dateedittext.setText(simpleDateFormat.format(new Date()));
+
 		clearedittextimgfrom = (ImageView) findViewById(R.id.clearedittextimgfrom);
 		clearedittextimgfrom.setVisibility(View.GONE);
 
@@ -1062,8 +1066,9 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				} else if (whichdotclick.equalsIgnoreCase("todot")) {
 
 					maptolatlng = invitemapcenter;
-					toshortname = MapUtilityMethods.getAddressshort(InviteFragmentActivity.this,
-							maptolatlng.latitude, maptolatlng.longitude);
+					toshortname = MapUtilityMethods.getAddressshort(
+							InviteFragmentActivity.this, maptolatlng.latitude,
+							maptolatlng.longitude);
 
 					tAddress = null; // reset previous
 
@@ -1538,8 +1543,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
 
 		calendar.add(Calendar.MINUTE, 30);
-		int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		int minute = calendar.get(Calendar.MINUTE);
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int minute = calendar.get(Calendar.MINUTE);
 
 		final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
 				InviteFragmentActivity.this, hour, minute, false, false);
@@ -1558,12 +1563,34 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			}
 		}
 
-		dateedittext.setOnClickListener(new OnClickListener() {
+		datetoday = (Button) findViewById(R.id.datetoday);
+		datetoday.setOnClickListener(new View.OnClickListener() {
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				datetoday.setBackgroundColor(getResources().getColor(
+						R.color.color_dark_blue));
+				datechoose.setBackgroundColor(getResources().getColor(
+						R.color.color_light_blue));
+
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"dd/MM/yyyy");
+				dateedittext.setText(simpleDateFormat.format(new Date()));
+			}
+		});
+
+		datechoose = (Button) findViewById(R.id.datechoose);
+		datechoose.setBackgroundColor(getResources().getColor(
+				R.color.color_light_blue));
+		datechoose.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				datechoose.setBackgroundColor(getResources().getColor(
+						R.color.color_dark_blue));
+				datetoday.setBackgroundColor(getResources().getColor(
+						R.color.color_light_blue));
 
 				datePickerDialog.setVibrate(isVibrate());
 				datePickerDialog.setYearRange(1985, 2028);
@@ -1574,31 +1601,34 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		dateedittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		timehalfhour = (Button) findViewById(R.id.timehalfhour);
+		updateTime(hour, minute);
+		timehalfhour.setOnClickListener(new View.OnClickListener() {
 
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-
-					datePickerDialog.setVibrate(isVibrate());
-					datePickerDialog.setYearRange(1985, 2028);
-					datePickerDialog
-							.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
-					datePickerDialog.show(getSupportFragmentManager(),
-							DATEPICKER_TAG);
-				}
-			}
-
-		});
-
-		// time selection
-		timeedittext.setOnClickListener(new OnClickListener() {
-
-			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				timehalfhour.setBackgroundColor(getResources().getColor(
+						R.color.color_dark_blue));
+				timechoose.setBackgroundColor(getResources().getColor(
+						R.color.color_light_blue));
+				
+				updateTime(hour, minute);
+
+			}
+		});
+
+		timechoose = (Button) findViewById(R.id.timechoose);
+		timechoose.setBackgroundColor(getResources().getColor(
+				R.color.color_light_blue));
+		timechoose.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				timehalfhour.setBackgroundColor(getResources().getColor(
+						R.color.color_light_blue));
+				timechoose.setBackgroundColor(getResources().getColor(
+						R.color.color_dark_blue));
 
 				timePickerDialog.setVibrate(isVibrate());
 				timePickerDialog
@@ -1608,22 +1638,74 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		timeedittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		// dateedittext.setOnClickListener(new OnClickListener() {
+		//
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		//
+		// datePickerDialog.setVibrate(isVibrate());
+		// datePickerDialog.setYearRange(1985, 2028);
+		// datePickerDialog
+		// .setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+		// datePickerDialog.show(getSupportFragmentManager(),
+		// DATEPICKER_TAG);
+		// }
+		// });
+		//
+		// dateedittext.setOnFocusChangeListener(new
+		// View.OnFocusChangeListener() {
+		//
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// if (hasFocus) {
+		//
+		// datePickerDialog.setVibrate(isVibrate());
+		// datePickerDialog.setYearRange(1985, 2028);
+		// datePickerDialog
+		// .setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+		// datePickerDialog.show(getSupportFragmentManager(),
+		// DATEPICKER_TAG);
+		// }
+		// }
+		//
+		// });
 
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-
-					timePickerDialog.setVibrate(isVibrate());
-					timePickerDialog
-							.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
-					timePickerDialog.show(getSupportFragmentManager(),
-							TIMEPICKER_TAG);
-				}
-			}
-
-		});
+		// time selection
+		// timeedittext.setOnClickListener(new OnClickListener() {
+		//
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		//
+		// timePickerDialog.setVibrate(isVibrate());
+		// timePickerDialog
+		// .setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
+		// timePickerDialog.show(getSupportFragmentManager(),
+		// TIMEPICKER_TAG);
+		// }
+		// });
+		//
+		// timeedittext.setOnFocusChangeListener(new
+		// View.OnFocusChangeListener() {
+		//
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// if (hasFocus) {
+		//
+		// timePickerDialog.setVibrate(isVibrate());
+		// timePickerDialog
+		// .setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
+		// timePickerDialog.show(getSupportFragmentManager(),
+		// TIMEPICKER_TAG);
+		// }
+		// }
+		//
+		// });
 
 		seatsedittext.setOnClickListener(new OnClickListener() {
 
@@ -1830,7 +1912,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 								Intent mainIntent = new Intent(
 										InviteFragmentActivity.this,
-										ContactsToInviteActivity.class);
+										ContactsInviteForRideActivity.class);
 								mainIntent.putExtra("fromcome", "invite");
 								mainIntent.putExtra("CabId", CabId);
 								mainIntent.putExtra("MobileNumber",
@@ -1909,8 +1991,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			profilepic.setImageBitmap(yourSelectedImage);
 			drawerprofilepic.setImageBitmap(yourSelectedImage);
 		}
-		
-		
+
 		Intent fromToIntent = getIntent();
 		if (fromToIntent.getStringExtra("StartAddLatLng") != null
 				&& fromToIntent.getStringExtra("EndAddLatLng") != null) {
@@ -1938,9 +2019,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			Double endLat = Double.parseDouble(RowData[0]);
 			Double endLng = Double.parseDouble(RowData[1]);
 
-			address = MapUtilityMethods.getAddress(
-					InviteFragmentActivity.this, endLat.doubleValue(),
-					endLng.doubleValue());
+			address = MapUtilityMethods.getAddress(InviteFragmentActivity.this,
+					endLat.doubleValue(), endLng.doubleValue());
 			to_places.setText(address);
 			tAddress = geocodeAddress(address);
 
@@ -1951,7 +2031,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			clearedittextimgfrom.setVisibility(View.GONE);
 			clearedittextimgto.setVisibility(View.GONE);
 
-		} 
+		}
 	}
 
 	// ///////

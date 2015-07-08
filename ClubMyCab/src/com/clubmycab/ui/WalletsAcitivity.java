@@ -11,6 +11,7 @@ import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.clubmycab.xmlhandler.QueryWalletHandler;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -28,21 +29,24 @@ public class WalletsAcitivity extends Activity implements
 
 		response = (TextView) findViewById(R.id.textView1);
 
-		String email = "divey@mobikwik.com";
-		String mobilenumber = "9999900000";
+		String email = "testingone@mail.com";
+		String mobilenumber = "8200012345";
 		String msgcode = "500";
 		String action = "existingusercheck";
 
-		String checksumstring = GlobalMethods.calculateCheckSumForService(
-				"'existingusercheck''9999900000'MyMerchantName''MBK9005''500'",
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ action + "''" + mobilenumber + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
 				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = "https://" + GlobalVariables.Mobikwik_ServerURL
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
 				+ "/querywallet";
-		String params = "email=" + email + "&cell=" + mobilenumber
+		String params = "cell=" + mobilenumber
 				+ "&msgcode=" + msgcode + "&action=" + action + "&mid="
 				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
 				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
-				+ checksumstring + "";
+				+ checksumstring;
+		Log.d("WalletsActivity", "endpoint : " + endpoint + " params : " + params);
 		new GlobalAsyncTask(this, endpoint, params, new QueryWalletHandler(),
 				this, true);
 
@@ -82,6 +86,8 @@ public class WalletsAcitivity extends Activity implements
 		// TODO Auto-generated method stub
 
 		response.setText(error);
+		
+		Log.d("WalletsActivity", "getResult : " + error);
 
 	}
 }

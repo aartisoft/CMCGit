@@ -159,29 +159,29 @@ public class FirstLoginClubsActivity extends Activity implements
 			Log.d("MemberClubOwnerName", "" + MemberClubOwnerName);
 			Log.d("MemberClubMembers", "" + MemberClubMembers);
 
-			buttonCreateClub.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent mainIntent = new Intent(
-							FirstLoginClubsActivity.this, MyClubsActivity.class);
-					startActivity(mainIntent);
-					finish();
-				}
-			});
-
-			buttonContinue.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent mainIntent = new Intent(
-							FirstLoginClubsActivity.this, HomeActivity.class);
-					startActivity(mainIntent);
-					finish();
-				}
-			});
-
 		}
+
+		buttonCreateClub.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent mainIntent = new Intent(FirstLoginClubsActivity.this,
+						MyClubsActivity.class);
+				startActivity(mainIntent);
+				finish();
+			}
+		});
+
+		buttonContinue.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent mainIntent = new Intent(FirstLoginClubsActivity.this,
+						HomeActivity.class);
+				startActivity(mainIntent);
+				finish();
+			}
+		});
 
 	}
 

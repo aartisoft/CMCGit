@@ -23,6 +23,7 @@ import org.apache.http.message.BasicNameValuePair;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,6 +40,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -46,8 +50,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -55,8 +60,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -82,11 +85,19 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
-public class HomeActivity extends Activity implements AsyncTaskResultListener {
+public class HomeActivity extends FragmentActivity implements
+		AsyncTaskResultListener, LocationListener {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -118,6 +129,15 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	Button threedotsto;
 	ImageView clearedittextimgfrom;
 	ImageView clearedittextimgto;
+	RelativeLayout fromrelative;
+	RelativeLayout contentrelativehomepage;
+	TextView fromlocation;
+	Button fromdone;
+	Button cancel;
+	private GoogleMap myMap;
+	String whichdotclick;
+	LocationManager locationManager;
+	Location mycurrentlocationobject;
 
 	Address fAddress, tAddress;
 
@@ -418,8 +438,8 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 		// }
 		// });
 
-		homeclubmycabll = (LinearLayout) findViewById(R.id.homeclubmycabll);
-		homebookacabll = (LinearLayout) findViewById(R.id.homebookacabll);
+		// homeclubmycabll = (LinearLayout) findViewById(R.id.homeclubmycabll);
+		// homebookacabll = (LinearLayout) findViewById(R.id.homebookacabll);
 		// homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
@@ -442,116 +462,116 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
 
-		homeclubmycabll.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-
-				Animation animScale = AnimationUtils.loadAnimation(
-						HomeActivity.this, R.anim.button_click_anim);
-				homeclubmycabll.startAnimation(animScale);
-
-				Handler mHandler2 = new Handler();
-				Runnable mRunnable2 = new Runnable() {
-					@Override
-					public void run() {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("ClubMyCab Click")
-								.setAction("ClubMyCab Click")
-								.setLabel("ClubMyCab Click").build());
-
-						logger.logEvent("HomePage ClubMyCab Click");
-
-						Log.d("HomeActivity",
-								"homeclubmycabll click StartAddLatLngIntent : "
-										+ StartAddLatLngIntent
-										+ " EndAddLatLngIntent : "
-										+ EndAddLatLngIntent);
-
-						Intent mainIntent = new Intent(HomeActivity.this,
-								InviteFragmentActivity.class);
-						if (!StartAddLatLngIntent.isEmpty()
-								&& !EndAddLatLngIntent.isEmpty()) {
-							mainIntent.putExtra("StartAddLatLng",
-									StartAddLatLngIntent);
-							mainIntent.putExtra("EndAddLatLng",
-									EndAddLatLngIntent);
-							mainIntent.putExtra("FromShortName",
-									StartAddShortNameIntent);
-							mainIntent.putExtra("ToShortName",
-									EndAddShortNameIntent);
-							StartAddLatLngIntent = "";
-							EndAddLatLngIntent = "";
-							StartAddShortNameIntent = "";
-							EndAddShortNameIntent = "";
-
-							startActivityForResult(mainIntent, 500);
-							overridePendingTransition(R.anim.slide_in_right,
-									R.anim.slide_out_left);
-						} else {
-							Toast.makeText(HomeActivity.this,
-									"Please enter both from & to locations",
-									Toast.LENGTH_LONG).show();
-						}
-
-					}
-				};
-				mHandler2.postDelayed(mRunnable2, 500);
-
-			}
-		});
-
-		homebookacabll.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-
-				Animation animScale = AnimationUtils.loadAnimation(
-						HomeActivity.this, R.anim.button_click_anim);
-				homebookacabll.startAnimation(animScale);
-
-				Handler mHandler2 = new Handler();
-				Runnable mRunnable2 = new Runnable() {
-					@Override
-					public void run() {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("Book A Cab (HomePage)")
-								.setAction("BookaCab Click")
-								.setLabel("BookaCab Click").build());
-
-						logger.logEvent("HomePage BookaCab Click");
-
-						Intent mainIntent = new Intent(HomeActivity.this,
-								BookaCabFragmentActivity.class);
-						if (!StartAddLatLngIntent.isEmpty()
-								&& !EndAddLatLngIntent.isEmpty()) {
-							mainIntent.putExtra("StartAddLatLng",
-									StartAddLatLngIntent);
-							mainIntent.putExtra("EndAddLatLng",
-									EndAddLatLngIntent);
-							mainIntent.putExtra("FromShortName",
-									StartAddShortNameIntent);
-							mainIntent.putExtra("ToShortName",
-									EndAddShortNameIntent);
-							StartAddLatLngIntent = "";
-							EndAddLatLngIntent = "";
-							StartAddShortNameIntent = "";
-							EndAddShortNameIntent = "";
-
-							startActivityForResult(mainIntent, 500);
-							overridePendingTransition(R.anim.slide_in_right,
-									R.anim.slide_out_left);
-						} else {
-							Toast.makeText(HomeActivity.this,
-									"Please enter both from & to locations",
-									Toast.LENGTH_LONG).show();
-						}
-					}
-				};
-				mHandler2.postDelayed(mRunnable2, 500);
-
-			}
-		});
+		// homeclubmycabll.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// Animation animScale = AnimationUtils.loadAnimation(
+		// HomeActivity.this, R.anim.button_click_anim);
+		// homeclubmycabll.startAnimation(animScale);
+		//
+		// Handler mHandler2 = new Handler();
+		// Runnable mRunnable2 = new Runnable() {
+		// @Override
+		// public void run() {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ClubMyCab Click")
+		// .setAction("ClubMyCab Click")
+		// .setLabel("ClubMyCab Click").build());
+		//
+		// logger.logEvent("HomePage ClubMyCab Click");
+		//
+		// Log.d("HomeActivity",
+		// "homeclubmycabll click StartAddLatLngIntent : "
+		// + StartAddLatLngIntent
+		// + " EndAddLatLngIntent : "
+		// + EndAddLatLngIntent);
+		//
+		// Intent mainIntent = new Intent(HomeActivity.this,
+		// InviteFragmentActivity.class);
+		// if (!StartAddLatLngIntent.isEmpty()
+		// && !EndAddLatLngIntent.isEmpty()) {
+		// mainIntent.putExtra("StartAddLatLng",
+		// StartAddLatLngIntent);
+		// mainIntent.putExtra("EndAddLatLng",
+		// EndAddLatLngIntent);
+		// mainIntent.putExtra("FromShortName",
+		// StartAddShortNameIntent);
+		// mainIntent.putExtra("ToShortName",
+		// EndAddShortNameIntent);
+		// StartAddLatLngIntent = "";
+		// EndAddLatLngIntent = "";
+		// StartAddShortNameIntent = "";
+		// EndAddShortNameIntent = "";
+		//
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// } else {
+		// Toast.makeText(HomeActivity.this,
+		// "Please enter both from & to locations",
+		// Toast.LENGTH_LONG).show();
+		// }
+		//
+		// }
+		// };
+		// mHandler2.postDelayed(mRunnable2, 500);
+		//
+		// }
+		// });
+		//
+		// homebookacabll.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// Animation animScale = AnimationUtils.loadAnimation(
+		// HomeActivity.this, R.anim.button_click_anim);
+		// homebookacabll.startAnimation(animScale);
+		//
+		// Handler mHandler2 = new Handler();
+		// Runnable mRunnable2 = new Runnable() {
+		// @Override
+		// public void run() {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("Book A Cab (HomePage)")
+		// .setAction("BookaCab Click")
+		// .setLabel("BookaCab Click").build());
+		//
+		// logger.logEvent("HomePage BookaCab Click");
+		//
+		// Intent mainIntent = new Intent(HomeActivity.this,
+		// BookaCabFragmentActivity.class);
+		// if (!StartAddLatLngIntent.isEmpty()
+		// && !EndAddLatLngIntent.isEmpty()) {
+		// mainIntent.putExtra("StartAddLatLng",
+		// StartAddLatLngIntent);
+		// mainIntent.putExtra("EndAddLatLng",
+		// EndAddLatLngIntent);
+		// mainIntent.putExtra("FromShortName",
+		// StartAddShortNameIntent);
+		// mainIntent.putExtra("ToShortName",
+		// EndAddShortNameIntent);
+		// StartAddLatLngIntent = "";
+		// EndAddLatLngIntent = "";
+		// StartAddShortNameIntent = "";
+		// EndAddShortNameIntent = "";
+		//
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// } else {
+		// Toast.makeText(HomeActivity.this,
+		// "Please enter both from & to locations",
+		// Toast.LENGTH_LONG).show();
+		// }
+		// }
+		// };
+		// mHandler2.postDelayed(mRunnable2, 500);
+		//
+		// }
+		// });
 
 		// homehereiamll.setOnClickListener(new View.OnClickListener() {
 		// @Override
@@ -687,17 +707,15 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 						hashMap.get("Where do you work?"), AddressModel.class);
 
 				Log.d("HomeActivity", "hashMap : " + hashMap);
-				Log.d("HomeActivity", "homeAddressModel : "
-						+ homeAddressModel.getAddress().toString()
-						+ " workAddressModel : "
-						+ workAddressModel.getAddress().toString());
+				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel
+						+ " workAddressModel : " + workAddressModel);
 			}
 		}
 
 		final AddressModel home = homeAddressModel, work = workAddressModel;
 
-		homebtnsll = (LinearLayout) findViewById(R.id.homebtnsll);
-		homebtnsll.setVisibility(View.GONE);
+		// homebtnsll = (LinearLayout) findViewById(R.id.homebtnsll);
+		// homebtnsll.setVisibility(View.GONE);
 
 		hometoofficell = (LinearLayout) findViewById(R.id.hometoofficell);
 		hometoofficell.setOnClickListener(new View.OnClickListener() {
@@ -705,6 +723,8 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 			@Override
 			public void onClick(View v) {
+				Log.d("HomeActivity", "home : " + home + " work : " + work);
+
 				if (!favoritelocation.isEmpty()) {
 
 					if (home != null && work != null) {
@@ -728,7 +748,10 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 								+ "," + work.getAddress().getLongitude();
 						EndAddShortNameIntent = work.getShortname();
 
-						homebtnsll.setVisibility(View.VISIBLE);
+						// homebtnsll.setVisibility(View.VISIBLE);
+						showButtonsDialog();
+					} else {
+						showNoFavoritesDialog();
 					}
 				} else {
 					showNoFavoritesDialog();
@@ -765,7 +788,10 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 								+ "," + work.getAddress().getLongitude();
 						StartAddShortNameIntent = work.getShortname();
 
-						homebtnsll.setVisibility(View.VISIBLE);
+						// homebtnsll.setVisibility(View.VISIBLE);
+						showButtonsDialog();
+					} else {
+						showNoFavoritesDialog();
 					}
 				} else {
 					showNoFavoritesDialog();
@@ -781,6 +807,15 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 
 				resetIntentParams(false);
+
+				StartAddLatLngIntent = "";
+				StartAddShortNameIntent = "";
+
+				if (to_places.getText().toString().isEmpty()
+						&& tAddress == null) {
+					EndAddLatLngIntent = "";
+					EndAddShortNameIntent = "";
+				}
 
 				return false;
 			}
@@ -824,7 +859,8 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 							StartAddShortNameIntent = fromshortname;
 
 							if (fAddress != null && tAddress != null) {
-								homebtnsll.setVisibility(View.VISIBLE);
+								// homebtnsll.setVisibility(View.VISIBLE);
+								showButtonsDialog();
 							}
 						}
 					}
@@ -841,6 +877,15 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 
 				resetIntentParams(false);
+
+				EndAddLatLngIntent = "";
+				EndAddShortNameIntent = "";
+
+				if (from_places.getText().toString().isEmpty()
+						&& fAddress == null) {
+					StartAddLatLngIntent = "";
+					StartAddShortNameIntent = "";
+				}
 
 				return false;
 			}
@@ -881,7 +926,8 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 					EndAddShortNameIntent = toshortname;
 
 					if (fAddress != null && tAddress != null) {
-						homebtnsll.setVisibility(View.VISIBLE);
+						// homebtnsll.setVisibility(View.VISIBLE);
+						showButtonsDialog();
 					}
 				}
 
@@ -991,6 +1037,348 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 		});
 
 		flagchk = true;
+
+		threedotsfrom = (Button) findViewById(R.id.threedotsfrom);
+		threedotsfrom.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		threedotsto = (Button) findViewById(R.id.threedotsto);
+		threedotsto.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		fromrelative = (RelativeLayout) findViewById(R.id.fromrelative);
+		contentrelativehomepage = (RelativeLayout) findViewById(R.id.contentrelativehomepage);
+
+		fromlocation = (TextView) findViewById(R.id.fromlocation);
+		fromdone = (Button) findViewById(R.id.fromdone);
+
+		fromlocation.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Bold.ttf"));
+		fromdone.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		cancel = (Button) findViewById(R.id.cancel);
+		cancel.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		// Getting Google Play availability status
+		int status = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getBaseContext());
+
+		// Showing status
+		if (status != ConnectionResult.SUCCESS) { // Google Play Services are
+													// not available
+
+			int requestCode = 10;
+			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this,
+					requestCode);
+			dialog.show();
+
+		} else {
+			myMap = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.frommap)).getMap();
+
+			myMap.setMyLocationEnabled(true);
+
+			myMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+				@Override
+				public void onCameraChange(CameraPosition cameraPosition) {
+
+					invitemapcenter = cameraPosition.target;
+
+					String address = MapUtilityMethods.getAddress(
+							HomeActivity.this, invitemapcenter.latitude,
+							invitemapcenter.longitude);
+					Log.d("address", "" + address);
+
+					fromlocation.setText(address);
+
+				}
+			});
+		}
+		// from_places.setText("Select Source");
+		fromdone.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				fromrelative.setVisibility(View.GONE);
+				contentrelativehomepage.setVisibility(View.VISIBLE);
+				String fromlocationname = fromlocation.getText().toString()
+						.trim();
+				flagchk = true;
+				if (whichdotclick.equalsIgnoreCase("fromdot")) {
+
+					LatLng mapfromlatlng = invitemapcenter;
+					fromshortname = MapUtilityMethods.getAddressshort(
+							HomeActivity.this, mapfromlatlng.latitude,
+							mapfromlatlng.longitude);
+
+					fAddress = null; // reset previous
+
+					from_places.setText(fromlocationname);
+
+					String jnd = from_places.getText().toString().trim();
+
+					Geocoder fcoder = new Geocoder(HomeActivity.this);
+					try {
+						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+								.getFromLocationName(jnd, 50);
+
+						for (Address add : adresses) {
+							// flongitude = (float) add.getLongitude();
+							// flatitude = (float) add.getLatitude();
+							fAddress = add;
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+
+				else if (whichdotclick.equalsIgnoreCase("todot")) {
+
+					LatLng maptolatlng = invitemapcenter;
+					toshortname = MapUtilityMethods.getAddressshort(
+							HomeActivity.this, maptolatlng.latitude,
+							maptolatlng.longitude);
+
+					tAddress = null; // reset previous
+
+					to_places.setText(fromlocationname);
+
+					String jnd2 = to_places.getText().toString().trim();
+
+					Geocoder tcoder = new Geocoder(HomeActivity.this);
+					try {
+						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
+								.getFromLocationName(jnd2, 50);
+
+						for (Address add : adresses) {
+							// tlongitude = (float) add.getLongitude();
+							// tlatitude = (float) add.getLatitude();
+							tAddress = add;
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+
+				if (fAddress != null && tAddress != null) {
+					// homebtnsll.setVisibility(View.VISIBLE);
+					StartAddLatLngIntent = fAddress.getLatitude() + ","
+							+ fAddress.getLongitude();
+					StartAddShortNameIntent = fromshortname;
+					EndAddLatLngIntent = tAddress.getLatitude() + ","
+							+ tAddress.getLongitude();
+					EndAddShortNameIntent = toshortname;
+
+					showButtonsDialog();
+				}
+			}
+		});
+
+		cancel.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				fromrelative.setVisibility(View.GONE);
+				contentrelativehomepage.setVisibility(View.VISIBLE);
+			}
+		});
+
+		threedotsfrom.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dismissKeyboard();
+				whichdotclick = "fromdot";
+
+				double latitude, longitude;
+				if (!from_places.getText().toString().trim().isEmpty()
+						&& fAddress != null) {
+					// Getting latitude of the current location
+					latitude = fAddress.getLatitude();
+
+					// Getting longitude of the current location
+					longitude = fAddress.getLongitude();
+				} else {
+					// Getting latitude of the current location
+					latitude = mycurrentlocationobject.getLatitude();
+
+					// Getting longitude of the current location
+					longitude = mycurrentlocationobject.getLongitude();
+				}
+
+				// Creating a LatLng object for the current location
+				LatLng currentlatLng = new LatLng(latitude, longitude);
+
+				// Showing the current location in Google Map
+				myMap.moveCamera(CameraUpdateFactory.newLatLng(currentlatLng));
+
+				// Zoom in the Google Map
+				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+				String address = MapUtilityMethods.getAddress(
+						HomeActivity.this, latitude, longitude);
+
+				fromlocation.setText(address);
+
+				fromrelative.setVisibility(View.VISIBLE);
+				contentrelativehomepage.setVisibility(View.GONE);
+			}
+		});
+
+		threedotsto.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// TODO Auto-generated method stub
+				dismissKeyboard();
+				whichdotclick = "todot";
+
+				double latitude, longitude;
+				if (!to_places.getText().toString().trim().isEmpty()
+						&& tAddress != null) {
+					// Getting latitude of the current location
+					latitude = tAddress.getLatitude();
+
+					// Getting longitude of the current location
+					longitude = tAddress.getLongitude();
+				} else {
+					// Getting latitude of the current location
+					latitude = mycurrentlocationobject.getLatitude();
+
+					// Getting longitude of the current location
+					longitude = mycurrentlocationobject.getLongitude();
+				}
+
+				// Creating a LatLng object for the current location
+				LatLng currentlatLng = new LatLng(latitude, longitude);
+
+				// Showing the current location in Google Map
+				myMap.moveCamera(CameraUpdateFactory.newLatLng(currentlatLng));
+
+				// Zoom in the Google Map
+				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+				String address = MapUtilityMethods.getAddress(
+						HomeActivity.this, latitude, longitude);
+
+				fromlocation.setText(address);
+
+				fromrelative.setVisibility(View.VISIBLE);
+				contentrelativehomepage.setVisibility(View.GONE);
+
+			}
+		});
+	}
+
+	private void showButtonsDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_home_page, null);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.homeclubmycabll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("ClubMyCab Click")
+						.setAction("ClubMyCab Click")
+						.setLabel("ClubMyCab Click").build());
+
+				logger.logEvent("HomePage ClubMyCab Click");
+
+				Log.d("HomeActivity",
+						"homeclubmycabll click StartAddLatLngIntent : "
+								+ StartAddLatLngIntent
+								+ " EndAddLatLngIntent : " + EndAddLatLngIntent);
+
+				Intent mainIntent = new Intent(HomeActivity.this,
+						InviteFragmentActivity.class);
+				if (!StartAddLatLngIntent.isEmpty()
+						&& !EndAddLatLngIntent.isEmpty()) {
+					mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
+					mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
+					mainIntent.putExtra("FromShortName",
+							StartAddShortNameIntent);
+					mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
+					StartAddLatLngIntent = "";
+					EndAddLatLngIntent = "";
+					StartAddShortNameIntent = "";
+					EndAddShortNameIntent = "";
+
+					startActivityForResult(mainIntent, 500);
+					overridePendingTransition(R.anim.slide_in_right,
+							R.anim.slide_out_left);
+				} else {
+					Toast.makeText(HomeActivity.this,
+							"Please enter both from & to locations",
+							Toast.LENGTH_LONG).show();
+				}
+
+				dialog.dismiss();
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.homebookacabll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Book A Cab (HomePage)")
+						.setAction("BookaCab Click").setLabel("BookaCab Click")
+						.build());
+
+				logger.logEvent("HomePage BookaCab Click");
+
+				Intent mainIntent = new Intent(HomeActivity.this,
+						BookaCabFragmentActivity.class);
+				if (!StartAddLatLngIntent.isEmpty()
+						&& !EndAddLatLngIntent.isEmpty()) {
+					mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
+					mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
+					mainIntent.putExtra("FromShortName",
+							StartAddShortNameIntent);
+					mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
+					StartAddLatLngIntent = "";
+					EndAddLatLngIntent = "";
+					StartAddShortNameIntent = "";
+					EndAddShortNameIntent = "";
+
+					startActivityForResult(mainIntent, 500);
+					overridePendingTransition(R.anim.slide_in_right,
+							R.anim.slide_out_left);
+				} else {
+					Toast.makeText(HomeActivity.this,
+							"Please enter both from & to locations",
+							Toast.LENGTH_LONG).show();
+				}
+
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -1032,7 +1420,8 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				Intent intent = new Intent(HomeActivity.this,
-						SettingActivity.class);
+						FavoriteLocationsAcivity.class);
+				intent.putExtra("NotFromRegistration", true);
 				startActivity(intent);
 			}
 		});
@@ -1493,13 +1882,20 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 
 	@Override
 	public void onBackPressed() {
-		if (back_pressed + 2000 > System.currentTimeMillis()) {
-			super.onBackPressed();
+		
+		if (fromrelative.getVisibility() == View.VISIBLE) {
+			fromrelative.setVisibility(View.GONE);
+			contentrelativehomepage.setVisibility(View.VISIBLE);
 		} else {
-			Toast.makeText(getBaseContext(), "Press once again to exit!",
-					Toast.LENGTH_SHORT).show();
-			back_pressed = System.currentTimeMillis();
+			if (back_pressed + 2000 > System.currentTimeMillis()) {
+				super.onBackPressed();
+			} else {
+				Toast.makeText(getBaseContext(), "Press once again to exit!",
+						Toast.LENGTH_SHORT).show();
+				back_pressed = System.currentTimeMillis();
+			}
 		}
+		
 	}
 
 	// // ///////
@@ -1822,6 +2218,35 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 	}
 
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		Log.d("onStart", "onStart");
+
+		// Check if Internet present
+		if (!isOnline()) {
+			return;
+		}
+		Location location = getLocation();
+
+		if (location != null) {
+			onLocationChanged(location);
+		}
+
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		Log.d("onStop", "onStop");
+
+		if (locationManager != null)
+			locationManager.removeUpdates(this);
+
+		super.onStop();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		AppEventsLogger.activateApp(this);
@@ -1885,5 +2310,126 @@ public class HomeActivity extends Activity implements AsyncTaskResultListener {
 			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
 		}
 
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		mycurrentlocationobject = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public Location getLocation() {
+		Location location = null;
+		try {
+			locationManager = (LocationManager) this
+					.getSystemService(LOCATION_SERVICE);
+
+			// getting GPS status
+			boolean isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			// getting network status
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				// no network provider is enabled
+				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				dialog.setMessage("Please check your location services");
+				dialog.setPositiveButton("Retry",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent intent = getIntent();
+								intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+								finish();
+
+								startActivity(intent);
+
+							}
+						});
+				dialog.setNegativeButton("Settings",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent myIntent = new Intent(
+										Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								startActivity(myIntent);
+								// get gps
+
+							}
+						});
+				dialog.show();
+				return null;
+			} else {
+
+				double lat = 0;
+				double lng = 0;
+				// get the location by gps
+				if (isGPSEnabled) {
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 20000, 1, this);
+						Log.d("GPS Enabled", "GPS Enabled");
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							if (location != null) {
+								lat = location.getLatitude();
+								lng = location.getLongitude();
+							}
+						}
+					}
+				}
+
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 20000, 1, this);
+					Log.d("Network", "Network");
+					if (locationManager != null) {
+						location = locationManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						if (location != null) {
+							lat = location.getLatitude();
+							lng = location.getLongitude();
+						}
+					}
+				}
+
+				Log.d("lat", "" + lat);
+				Log.d("lng", "" + lng);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return location;
 	}
 }

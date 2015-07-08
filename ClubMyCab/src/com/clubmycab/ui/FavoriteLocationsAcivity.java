@@ -84,10 +84,15 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 	AddressModel addressModel;
 
+	boolean notfromregistration = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_favorite_location);
+
+		notfromregistration = getIntent().getBooleanExtra(
+				"NotFromRegistration", false);
 
 		flagchk = true;
 
@@ -186,8 +191,37 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			}
 		});
 
+		if (notfromregistration) {
+			SharedPreferences mPrefs11111 = getSharedPreferences(
+					"FavoriteLocations", 0);
+			final String favoritelocation = mPrefs11111.getString(
+					"favoritelocation", "");
+			Log.d("FavoriteLocationsAcivity", "favoritelocation : "
+					+ favoritelocation);
+
+			if (!favoritelocation.isEmpty()) {
+
+				Gson gson = new Gson();
+				HashMap<String, String> hashMap = gson.fromJson(
+						favoritelocation, HashMap.class);
+
+				if (hashMap.size() > 0) {
+					favLocationHashMap = hashMap;
+				}
+			}
+		}
+
 		addFavoriteLocationView("Where do you live?");
 		addFavoriteLocationView("Where do you work?");
+
+		if (favLocationHashMap.size() > 0) {
+			for (String key : favLocationHashMap.keySet()) {
+				if (!key.equals("Where do you live?")
+						&& !key.equals("Where do you work?")) {
+					addFavoriteLocationView(key);
+				}
+			}
+		}
 
 	}
 
@@ -208,9 +242,13 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		editor.putString("favoritelocation", json);
 		editor.commit();
 
-		Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
-				FirstLoginClubsActivity.class);
-		startActivity(mainIntent);
+		if (notfromregistration) {
+			finish();
+		} else {
+			Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
+					FirstLoginClubsActivity.class);
+			startActivity(mainIntent);
+		}
 
 		// String jsonstr = sharedprefernce.getString("favoritelocation", "");
 		// HashMap<String, String> hashmap = gson.fromJson(jsonstr,
@@ -219,6 +257,17 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		// hashmap.get("Where do you live?"), AddressModel.class);
 		//
 		// Log.d("Data::", addressModel.toString());
+	}
+
+	public void onSkipButtonClick(View v) {
+
+		if (notfromregistration) {
+			finish();
+		} else {
+			Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
+					FirstLoginClubsActivity.class);
+			startActivity(mainIntent);
+		}
 	}
 
 	public void addFavoriteLocationView(String tagname) {
@@ -239,6 +288,15 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 		locationAutoCompleteTextView = (AutoCompleteTextView) view
 				.findViewById(R.id.idLocationAutoComplete);
+		if (favLocationHashMap.size() > 0) {
+			Gson gson = new Gson();
+			AddressModel addressModel = (AddressModel) gson.fromJson(
+					favLocationHashMap.get(tagname), AddressModel.class);
+			if (addressModel != null && !addressModel.getShortname().isEmpty()) {
+				locationAutoCompleteTextView.setText(addressModel
+						.getShortname());
+			}
+		}
 		locationAutoCompleteTextView.setAdapter(new PlacesAutoCompleteAdapter(
 				this, R.layout.list_item));
 		locationAutoCompleteTextView
@@ -256,7 +314,6 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 						return false;
 					}
 				});
-		
 
 		locationAutoCompleteTextView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -293,8 +350,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 
 						newTag = "customlocationTagNameTextView"
 								+ Integer.toString(currentSelectedIndex);
-//						parentview = FavoriteLocationsAcivity.this
-//								.findViewById(android.R.id.content);
+						// parentview = FavoriteLocationsAcivity.this
+						// .findViewById(android.R.id.content);
 						childView = parentview.findViewWithTag(newTag);
 
 						Log.d("Value", "" + childView.getTag());
@@ -631,10 +688,14 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		super.onStop();
 	}
 
-	public void onSkipButtonClick(View v) {
-		Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
-				FirstLoginClubsActivity.class);
-		startActivity(mainIntent);
+	@Override
+	public void onBackPressed() {
+
+		if (fromrelative.getVisibility() == View.VISIBLE) {
+			fromrelative.setVisibility(View.GONE);
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 	public void addMoreClick(View v) {

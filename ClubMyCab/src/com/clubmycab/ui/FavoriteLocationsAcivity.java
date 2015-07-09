@@ -159,6 +159,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 							.getAddressshort(FavoriteLocationsAcivity.this,
 									locationAddress.getLatitude(),
 									locationAddress.getLongitude()));
+					addressModel.setLongname(fromlocationname);
 
 					newTag = "customlocationTagNameTextView"
 							+ Integer.toString(currentSelectedIndex);
@@ -347,6 +348,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 								.getAddressshort(FavoriteLocationsAcivity.this,
 										locationAddress.getLatitude(),
 										locationAddress.getLongitude()));
+						addressModel.setLongname(jnd);
 
 						newTag = "customlocationTagNameTextView"
 								+ Integer.toString(currentSelectedIndex);

@@ -1,6 +1,7 @@
 package com.clubmycab.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,14 +40,13 @@ public class WalletsAcitivity extends Activity implements
 				+ GlobalVariables.Mobikwik_MerchantName + "''"
 				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
 				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = GlobalVariables.Mobikwik_ServerURL
-				+ "/querywallet";
-		String params = "cell=" + mobilenumber
-				+ "&msgcode=" + msgcode + "&action=" + action + "&mid="
-				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
-				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
-				+ checksumstring;
-		Log.d("WalletsActivity", "endpoint : " + endpoint + " params : " + params);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
+		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
+				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
+				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
+				+ "&checksum=" + checksumstring;
+		Log.d("WalletsActivity", "endpoint : " + endpoint + " params : "
+				+ params);
 		new GlobalAsyncTask(this, endpoint, params, new QueryWalletHandler(),
 				this, true);
 
@@ -86,8 +86,20 @@ public class WalletsAcitivity extends Activity implements
 		// TODO Auto-generated method stub
 
 		response.setText(error);
-		
+
 		Log.d("WalletsActivity", "getResult : " + error);
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+
+		Intent mainIntent = new Intent(WalletsAcitivity.this,
+				HomeActivity.class);
+		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivityForResult(mainIntent, 500);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 }

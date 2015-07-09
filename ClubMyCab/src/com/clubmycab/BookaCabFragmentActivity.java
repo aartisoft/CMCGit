@@ -100,6 +100,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
 import com.clubmycab.ui.MyRidesActivity;
@@ -120,6 +121,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
 public class BookaCabFragmentActivity extends FragmentActivity implements
@@ -1535,8 +1537,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		rideObject = null;
 
 		Intent fromToIntent = getIntent();
-		if (fromToIntent.getStringExtra("StartAddLatLng") == null
-				&& fromToIntent.getStringExtra("EndAddLatLng") == null) {
+		String startString = fromToIntent.getStringExtra("StartAddressModel");
+		String endString = fromToIntent.getStringExtra("EndAddressModel");
+
+		if (startString == null && endString == null) {
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchPool()
@@ -1547,34 +1551,57 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 		} else {
 
-			Log.d("BookaCab",
-					"StartAddLatLng : "
-							+ fromToIntent.getStringExtra("StartAddLatLng")
-							+ " EndAddLatLng : "
-							+ fromToIntent.getStringExtra("EndAddLatLng"));
-			String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
-					.toString().split(",");
+			Log.d("BookaCab", "StartAddressModel : " + startString
+					+ " EndAddressModel : " + endString);
 
-			Double startLat = Double.parseDouble(RowData[0]);
-			Double startLng = Double.parseDouble(RowData[1]);
+			Gson gson = new Gson();
+			AddressModel startAddressModel = (AddressModel) gson.fromJson(
+					startString, AddressModel.class);
+			fAddress = startAddressModel.getAddress();
+			fromshortname = startAddressModel.getShortname();
+			from_places.setText(startAddressModel.getLongname());
 
-			String address = MapUtilityMethods.getAddress(
-					BookaCabFragmentActivity.this, startLat.doubleValue(),
-					startLng.doubleValue());
-			from_places.setText(address);
-			fAddress = geocodeAddress(address);
+			AddressModel endAddressModel = (AddressModel) gson.fromJson(
+					endString, AddressModel.class);
+			tAddress = endAddressModel.getAddress();
+			toshortname = endAddressModel.getShortname();
+			to_places.setText(endAddressModel.getLongname());
 
-			RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
-					.split(",");
+			from_places.setEnabled(false);
+			to_places.setEnabled(false);
+			threedotsfrom.setEnabled(false);
+			threedotsto.setEnabled(false);
+			clearedittextimgfrom.setVisibility(View.GONE);
+			clearedittextimgto.setVisibility(View.GONE);
 
-			Double endLat = Double.parseDouble(RowData[0]);
-			Double endLng = Double.parseDouble(RowData[1]);
-
-			address = MapUtilityMethods.getAddress(
-					BookaCabFragmentActivity.this, endLat.doubleValue(),
-					endLng.doubleValue());
-			to_places.setText(address);
-			tAddress = geocodeAddress(address);
+			// Log.d("BookaCab",
+			// "StartAddLatLng : "
+			// + fromToIntent.getStringExtra("StartAddLatLng")
+			// + " EndAddLatLng : "
+			// + fromToIntent.getStringExtra("EndAddLatLng"));
+			// String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
+			// .toString().split(",");
+			//
+			// Double startLat = Double.parseDouble(RowData[0]);
+			// Double startLng = Double.parseDouble(RowData[1]);
+			//
+			// String address = MapUtilityMethods.getAddress(
+			// BookaCabFragmentActivity.this, startLat.doubleValue(),
+			// startLng.doubleValue());
+			// from_places.setText(address);
+			// fAddress = geocodeAddress(address);
+			//
+			// RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
+			// .split(",");
+			//
+			// Double endLat = Double.parseDouble(RowData[0]);
+			// Double endLng = Double.parseDouble(RowData[1]);
+			//
+			// address = MapUtilityMethods.getAddress(
+			// BookaCabFragmentActivity.this, endLat.doubleValue(),
+			// endLng.doubleValue());
+			// to_places.setText(address);
+			// tAddress = geocodeAddress(address);
 
 			from_places.setEnabled(false);
 			to_places.setEnabled(false);
@@ -1586,10 +1613,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			rideObject = new RideObject(fromToIntent.getStringExtra("CabId"),
 					fromToIntent.getStringExtra("TravelDate"),
 					fromToIntent.getStringExtra("TravelTime"),
-					fromToIntent.getStringExtra("FromShortName"),
-					fromToIntent.getStringExtra("ToShortName"), from_places
-							.getText().toString(), to_places.getText()
-							.toString());
+					startAddressModel.getShortname(),
+					endAddressModel.getShortname(),
+					startAddressModel.getLongname(),
+					endAddressModel.getLongname());
 
 			performCabSearch();
 		}
@@ -1929,8 +1956,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 	private void performCabSearch() {
 
-		if (from_places.getText().toString().trim().isEmpty()
-				|| fAddress == null) {
+		if (fAddress == null) {
 
 			from_places.requestFocus();
 
@@ -1963,8 +1989,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				return;
 			} else {
 				Log.d("BookaCab", "performCabSearch");
-				if (to_places.getText().toString().trim().isEmpty()
-						|| tAddress == null) {
+				if (tAddress == null) {
 					PerformCabSearchTimeAsync performCabSearchTimeAsync = new PerformCabSearchTimeAsync();
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						performCabSearchTimeAsync

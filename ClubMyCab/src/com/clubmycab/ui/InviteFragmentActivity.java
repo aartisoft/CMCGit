@@ -3,13 +3,8 @@ package com.clubmycab.ui;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +20,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -37,9 +31,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -47,18 +39,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -73,30 +60,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
-import com.clubmycab.FavoritesLocationReadWrite;
 import com.clubmycab.Helper;
 import com.clubmycab.PlacesAutoCompleteAdapter;
 import com.clubmycab.R;
 import com.clubmycab.TopThreeRidesAdaptor;
-import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
 public class InviteFragmentActivity extends FragmentActivity implements
-		LocationListener, OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+		OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
 	TextView textFrom;
 	TextView textTo;
@@ -150,12 +133,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	String FullName;
 	String MobileNumber;
 	String CabId;
-
-	private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-	private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
-	private static final String OUT_JSON = "/json";
-
-	private static final String LOG_TAG = "ExampleApp";
 
 	Location mycurrentlocationobject;
 
@@ -542,110 +519,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		homeofficellvalues.setVisibility(View.GONE);
 		homeofficellvaluesto.setVisibility(View.GONE);
 
-		homeimg.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				for (int i = 0; i < type.size(); i++) {
-
-					if (type.get(i).toString().trim().equalsIgnoreCase("Home")) {
-
-						from_places.setText(Address.get(i).toString().trim());
-						fAddress = new Address(null);
-						fAddress.setLatitude(Double.parseDouble(Latitude.get(i)
-								.toString().trim()));
-						fAddress.setLongitude(Double.parseDouble(Longitude
-								.get(i).toString().trim()));
-						fAddress.setLocality(Locality.get(i).toString().trim());
-
-						fromshortname = ShortAddress.get(i).toString().trim();
-					}
-				}
-
-				homeofficellvalues.setVisibility(View.GONE);
-			}
-		});
-
-		officeimg.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				for (int i = 0; i < type.size(); i++) {
-
-					if (type.get(i).toString().trim()
-							.equalsIgnoreCase("Office")) {
-
-						from_places.setText(Address.get(i).toString().trim());
-						fAddress = new Address(null);
-						fAddress.setLatitude(Double.parseDouble(Latitude.get(i)
-								.toString().trim()));
-						fAddress.setLongitude(Double.parseDouble(Longitude
-								.get(i).toString().trim()));
-						fAddress.setLocality(Locality.get(i).toString().trim());
-
-						fromshortname = ShortAddress.get(i).toString().trim();
-					}
-				}
-
-				homeofficellvalues.setVisibility(View.GONE);
-			}
-		});
-
-		homeimgto.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				for (int i = 0; i < type.size(); i++) {
-
-					if (type.get(i).toString().trim().equalsIgnoreCase("Home")) {
-						to_places.setText(Address.get(i).toString().trim());
-						tAddress = new Address(null);
-						tAddress.setLatitude(Double.parseDouble(Latitude.get(i)
-								.toString().trim()));
-						tAddress.setLongitude(Double.parseDouble(Longitude
-								.get(i).toString().trim()));
-						tAddress.setLocality(Locality.get(i).toString().trim());
-
-						toshortname = ShortAddress.get(i).toString().trim();
-					}
-				}
-
-				homeofficellvaluesto.setVisibility(View.GONE);
-			}
-		});
-
-		officeimgto.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				for (int i = 0; i < type.size(); i++) {
-
-					if (type.get(i).toString().trim()
-							.equalsIgnoreCase("Office")) {
-						to_places.setText(Address.get(i).toString().trim());
-						tAddress = new Address(null);
-						tAddress.setLatitude(Double.parseDouble(Latitude.get(i)
-								.toString().trim()));
-						tAddress.setLongitude(Double.parseDouble(Longitude
-								.get(i).toString().trim()));
-						tAddress.setLocality(Locality.get(i).toString().trim());
-
-						toshortname = ShortAddress.get(i).toString().trim();
-					}
-				}
-
-				homeofficellvaluesto.setVisibility(View.GONE);
-			}
-		});
-
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
 
@@ -742,799 +615,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		cancel.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-		from_places.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-
-				homeofficellvaluesto.setVisibility(View.GONE);
-
-				FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-						InviteFragmentActivity.this);
-				JSONArray saveasjsonarray;
-				try {
-					saveasjsonarray = favoritesLocationReadWrite.readFromFile();
-					if (saveasjsonarray.length() > 0) {
-						Log.d("saveasjsonarray", "" + saveasjsonarray);
-						type.clear();
-						Latitude.clear();
-						Longitude.clear();
-						Address.clear();
-						Locality.clear();
-						ShortAddress.clear();
-						for (int i = 0; i < saveasjsonarray.length(); i++) {
-
-							try {
-								type.add(saveasjsonarray.getJSONObject(i)
-										.getString("type").toString().trim());
-								Latitude.add(saveasjsonarray.getJSONObject(i)
-										.getString("Latitude").toString()
-										.trim());
-								Longitude.add(saveasjsonarray.getJSONObject(i)
-										.getString("Longitude").toString()
-										.trim());
-								Address.add(saveasjsonarray.getJSONObject(i)
-										.getString("Address").toString().trim());
-								Locality.add(saveasjsonarray.getJSONObject(i)
-										.getString("Locality").toString()
-										.trim());
-								ShortAddress.add(saveasjsonarray
-										.getJSONObject(i)
-										.getString("shortaddress").toString()
-										.trim());
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					} else {
-						Log.d("saveasjsonarray", "null");
-					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				if (type.contains("Home") && type.contains("Office")) {
-					homeofficellvalues.setVisibility(View.VISIBLE);
-					homeimg.setVisibility(View.VISIBLE);
-					officeimg.setVisibility(View.VISIBLE);
-				} else if (type.contains("Home") && !type.contains("Office")) {
-					homeofficellvalues.setVisibility(View.VISIBLE);
-					homeimg.setVisibility(View.VISIBLE);
-					officeimg.setVisibility(View.GONE);
-				} else if (!type.contains("Home") && type.contains("Office")) {
-					homeofficellvalues.setVisibility(View.VISIBLE);
-					homeimg.setVisibility(View.GONE);
-					officeimg.setVisibility(View.VISIBLE);
-				}
-				return false;
-			}
-		});
-
-		from_places
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						fAddress = null; // reset previous
-						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						in.hideSoftInputFromWindow(
-								from_places.getApplicationWindowToken(),
-								InputMethodManager.HIDE_NOT_ALWAYS);
-
-						fAddress = geocodeAddress(from_places.getText()
-								.toString());
-					}
-				});
-		from_places.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence cs, int arg1, int arg2,
-					int arg3) {
-				// When user changed the Text
-
-				String text = from_places.getText().toString().trim();
-				if (text.isEmpty() || text.equalsIgnoreCase("")) {
-					clearedittextimgfrom.setVisibility(View.GONE);
-				} else {
-					clearedittextimgfrom.setVisibility(View.VISIBLE);
-				}
-
-				Log.d("from onTextChanged", "from onTextChanged");
-
-				if (flagchk) {
-					flagchk = false;
-				} else {
-					fromshortname = MapUtilityMethods.getaddressfromautoplace(
-							InviteFragmentActivity.this, from_places.getText()
-									.toString().trim());
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
-
-		to_places.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-
-				homeofficellvalues.setVisibility(View.GONE);
-
-				FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-						InviteFragmentActivity.this);
-				JSONArray saveasjsonarray;
-				try {
-					saveasjsonarray = favoritesLocationReadWrite.readFromFile();
-					if (saveasjsonarray.length() > 0) {
-						Log.d("saveasjsonarray", "" + saveasjsonarray);
-						type.clear();
-						Latitude.clear();
-						Longitude.clear();
-						Address.clear();
-						Locality.clear();
-						ShortAddress.clear();
-						for (int i = 0; i < saveasjsonarray.length(); i++) {
-
-							try {
-								type.add(saveasjsonarray.getJSONObject(i)
-										.getString("type").toString().trim());
-								Latitude.add(saveasjsonarray.getJSONObject(i)
-										.getString("Latitude").toString()
-										.trim());
-								Longitude.add(saveasjsonarray.getJSONObject(i)
-										.getString("Longitude").toString()
-										.trim());
-								Address.add(saveasjsonarray.getJSONObject(i)
-										.getString("Address").toString().trim());
-								Locality.add(saveasjsonarray.getJSONObject(i)
-										.getString("Locality").toString()
-										.trim());
-								ShortAddress.add(saveasjsonarray
-										.getJSONObject(i)
-										.getString("shortaddress").toString()
-										.trim());
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					} else {
-						Log.d("saveasjsonarray", "null");
-					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				if (type.contains("Home") && type.contains("Office")) {
-					homeofficellvaluesto.setVisibility(View.VISIBLE);
-					homeimgto.setVisibility(View.VISIBLE);
-					officeimgto.setVisibility(View.VISIBLE);
-				} else if (type.contains("Home") && !type.contains("Office")) {
-					homeofficellvaluesto.setVisibility(View.VISIBLE);
-					homeimgto.setVisibility(View.VISIBLE);
-					officeimgto.setVisibility(View.GONE);
-				} else if (!type.contains("Home") && type.contains("Office")) {
-					homeofficellvaluesto.setVisibility(View.VISIBLE);
-					homeimgto.setVisibility(View.GONE);
-					officeimgto.setVisibility(View.VISIBLE);
-				}
-				return false;
-			}
-		});
-
-		to_places.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// Log.d(TAG, "mAutoFrom onItemClick");
-				tAddress = null; // reset previous
-				InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				in.hideSoftInputFromWindow(
-						to_places.getApplicationWindowToken(),
-						InputMethodManager.HIDE_NOT_ALWAYS);
-
-				tAddress = geocodeAddress(to_places.getText().toString());
-
-			}
-		});
-		to_places.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence cs, int arg1, int arg2,
-					int arg3) {
-				// When user changed the Text
-
-				String text = to_places.getText().toString().trim();
-				if (text.isEmpty() || text.equalsIgnoreCase("")) {
-					clearedittextimgto.setVisibility(View.GONE);
-				} else {
-					clearedittextimgto.setVisibility(View.VISIBLE);
-				}
-
-				Log.d("to onTextChanged", "to onTextChanged");
-
-				if (flagchk) {
-					flagchk = false;
-				} else {
-					toshortname = MapUtilityMethods.getaddressfromautoplace(
-							InviteFragmentActivity.this, to_places.getText()
-									.toString().trim());
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
-
-		clearedittextimgfrom.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				from_places.setText("");
-			}
-		});
-
-		clearedittextimgto.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				to_places.setText("");
-			}
-		});
-
-		myMap = ((SupportMapFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.frommap)).getMap();
-
-		myMap.setMyLocationEnabled(true);
-
-		myMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-			@Override
-			public void onCameraChange(CameraPosition cameraPosition) {
-
-				invitemapcenter = cameraPosition.target;
-
-				String address = MapUtilityMethods.getAddress(
-						InviteFragmentActivity.this, invitemapcenter.latitude,
-						invitemapcenter.longitude);
-				Log.d("address", "" + address);
-
-				fromlocation.setText(address);
-
-			}
-		});
-
-		fromdone.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				fromrelative.setVisibility(View.GONE);
-				String fromlocationname = fromlocation.getText().toString()
-						.trim();
-				flagchk = true;
-				if (whichdotclick.equalsIgnoreCase("fromdot")) {
-
-					mapfromlatlng = invitemapcenter;
-					fromshortname = MapUtilityMethods.getAddressshort(
-							InviteFragmentActivity.this,
-							mapfromlatlng.latitude, mapfromlatlng.longitude);
-
-					fAddress = null; // reset previous
-
-					from_places.setText(fromlocationname);
-
-					String jnd = from_places.getText().toString().trim();
-
-					Geocoder fcoder = new Geocoder(InviteFragmentActivity.this);
-					try {
-						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
-								.getFromLocationName(jnd, 50);
-
-						for (Address add : adresses) {
-							fAddress = add;
-						}
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				} else if (whichdotclick.equalsIgnoreCase("todot")) {
-
-					maptolatlng = invitemapcenter;
-					toshortname = MapUtilityMethods.getAddressshort(
-							InviteFragmentActivity.this, maptolatlng.latitude,
-							maptolatlng.longitude);
-
-					tAddress = null; // reset previous
-
-					to_places.setText(fromlocationname);
-
-					String jnd2 = to_places.getText().toString().trim();
-
-					Geocoder tcoder = new Geocoder(InviteFragmentActivity.this);
-					try {
-						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
-								.getFromLocationName(jnd2, 50);
-
-						for (Address add : adresses) {
-							tAddress = add;
-						}
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				}
-			}
-		});
-
-		cancel.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				fromrelative.setVisibility(View.GONE);
-			}
-		});
-
-		threedotsfrom.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				whichdotclick = "fromdot";
-
-				if (from_places.getText().toString().trim().isEmpty()
-						|| from_places.getText().toString()
-								.equalsIgnoreCase("")) {
-
-					if (mycurrentlocationobject != null) {
-
-						// Getting latitude of the current location
-						double latitude = mycurrentlocationobject.getLatitude();
-
-						// Getting longitude of the current location
-						double longitude = mycurrentlocationobject
-								.getLongitude();
-
-						// Creating a LatLng object for the current location
-						LatLng currentlatLng = new LatLng(latitude, longitude);
-
-						// Showing the current location in Google Map
-						myMap.moveCamera(CameraUpdateFactory
-								.newLatLng(currentlatLng));
-
-						// Zoom in the Google Map
-						myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-						String address = MapUtilityMethods.getAddress(
-								InviteFragmentActivity.this, latitude,
-								longitude);
-
-						fromlocation.setText(address);
-						fromrelative.setVisibility(View.VISIBLE);
-
-					} else {
-
-						// no network provider is enabled
-						AlertDialog.Builder dialog = new AlertDialog.Builder(
-								InviteFragmentActivity.this);
-						dialog.setMessage("Please check your location services");
-						dialog.setPositiveButton("Retry",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(
-											DialogInterface paramDialogInterface,
-											int paramInt) {
-										Intent intent = getIntent();
-										intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-										finish();
-
-										startActivity(intent);
-
-									}
-								});
-						dialog.setNegativeButton("Settings",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(
-											DialogInterface paramDialogInterface,
-											int paramInt) {
-										Intent myIntent = new Intent(
-												Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-										startActivity(myIntent);
-										// get gps
-
-									}
-								});
-						dialog.show();
-
-					}
-
-				} else {
-
-					String jnd = from_places.getText().toString().trim();
-
-					Geocoder coder = new Geocoder(InviteFragmentActivity.this);
-					try {
-						ArrayList<Address> adresses = (ArrayList<Address>) coder
-								.getFromLocationName(jnd, 50);
-						double longitude = 0;
-						double latitude = 0;
-						for (Address add : adresses) {
-							longitude = add.getLongitude();
-							latitude = add.getLatitude();
-						}
-
-						// Creating a LatLng object for the current location
-						LatLng currentlatLng = new LatLng(latitude, longitude);
-
-						// Showing the current location in Google Map
-						myMap.moveCamera(CameraUpdateFactory
-								.newLatLng(currentlatLng));
-
-						// Zoom in the Google Map
-						myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-						fromlocation.setText(jnd);
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-
-					fromrelative.setVisibility(View.VISIBLE);
-
-				}
-			}
-		});
-
-		mTextViewSetHomeFavFrom = (TextView) findViewById(R.id.textViewHome);
-		mTextViewSetHomeFavFrom.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				// Log.d("RateMyClub", "onClick mTextViewSetHomeFav : ");
-
-				try {
-					if (from_places.getText().toString().isEmpty()) {
-						Toast.makeText(InviteFragmentActivity.this,
-								"Please enter an address to save",
-								Toast.LENGTH_LONG).show();
-					} else {
-						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("type", "Home");
-						jsonObject.put("Latitude",
-								Double.toString(fAddress.getLatitude()));
-						jsonObject.put("Longitude",
-								Double.toString(fAddress.getLongitude()));
-						jsonObject.put("Address", from_places.getText()
-								.toString());
-						jsonObject.put("Locality", fAddress.getLocality()
-								.toString());
-						jsonObject.put("shortaddress", fromshortname);
-
-						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								InviteFragmentActivity.this);
-
-						if (favoritesLocationReadWrite.saveToFile(jsonObject
-								.toString())) {
-							Toast.makeText(InviteFragmentActivity.this,
-									"Saved!", Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(InviteFragmentActivity.this,
-									"Error saving. Please try again!",
-									Toast.LENGTH_LONG).show();
-						}
-						Log.d("RateMyClub", "onClick mTextViewSetHomeFav : "
-								+ favoritesLocationReadWrite.readFromFile());
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-			}
-		});
-
-		mTextViewSetOfficeFavFrom = (TextView) findViewById(R.id.textViewOffice);
-		mTextViewSetOfficeFavFrom
-				.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
-						// Log.d("RateMyClub",
-						// "onClick mTextViewSetOfficeFav : ");
-
-						try {
-							if (from_places.getText().toString().isEmpty()
-									|| fAddress == null) {
-								Toast.makeText(InviteFragmentActivity.this,
-										"Please enter an address to save",
-										Toast.LENGTH_LONG).show();
-							} else {
-								JSONObject jsonObject = new JSONObject();
-								jsonObject.put("type", "Office");
-								jsonObject.put("Latitude",
-										Double.toString(fAddress.getLatitude()));
-								jsonObject.put("Longitude", Double
-										.toString(fAddress.getLongitude()));
-								jsonObject.put("Address", from_places.getText()
-										.toString());
-								jsonObject.put("Locality", fAddress
-										.getLocality().toString());
-								jsonObject.put("shortaddress", fromshortname);
-
-								FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-										InviteFragmentActivity.this);
-								if (favoritesLocationReadWrite
-										.saveToFile(jsonObject.toString())) {
-									Toast.makeText(InviteFragmentActivity.this,
-											"Saved!", Toast.LENGTH_LONG).show();
-								} else {
-									Toast.makeText(InviteFragmentActivity.this,
-											"Error saving. Please try again!",
-											Toast.LENGTH_LONG).show();
-								}
-
-								Log.d("RateMyClub",
-										"onClick mTextViewSetOfficeFav : "
-												+ favoritesLocationReadWrite
-														.readFromFile());
-							}
-
-						} catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
-					}
-				});
-
-		mTextViewSetHomeFavTo = (TextView) findViewById(R.id.textViewHomeTo);
-		mTextViewSetHomeFavTo.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				// Log.d("RateMyClub", "onClick mTextViewSetHomeFav : ");
-
-				try {
-					if (to_places.getText().toString().isEmpty()
-							|| tAddress == null) {
-						Toast.makeText(InviteFragmentActivity.this,
-								"Please enter an address to save",
-								Toast.LENGTH_LONG).show();
-					} else {
-						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("type", "Home");
-						jsonObject.put("Latitude",
-								Double.toString(tAddress.getLatitude()));
-						jsonObject.put("Longitude",
-								Double.toString(tAddress.getLongitude()));
-						jsonObject.put("Address", to_places.getText()
-								.toString());
-						jsonObject.put("Locality", tAddress.getLocality()
-								.toString());
-						jsonObject.put("shortaddress", toshortname);
-
-						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								InviteFragmentActivity.this);
-						if (favoritesLocationReadWrite.saveToFile(jsonObject
-								.toString())) {
-							Toast.makeText(InviteFragmentActivity.this,
-									"Saved!", Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(InviteFragmentActivity.this,
-									"Error saving. Please try again!",
-									Toast.LENGTH_LONG).show();
-						}
-
-						Log.d("RateMyClub", "onClick mTextViewSetHomeFavTo : "
-								+ favoritesLocationReadWrite.readFromFile());
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-			}
-		});
-
-		mTextViewSetOfficeFavTo = (TextView) findViewById(R.id.textViewOfficeTo);
-		mTextViewSetOfficeFavTo.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				// Log.d("RateMyClub", "onClick mTextViewSetOfficeFav : ");
-
-				try {
-					if (to_places.getText().toString().isEmpty()
-							|| tAddress == null) {
-						Toast.makeText(InviteFragmentActivity.this,
-								"Please enter an address to save",
-								Toast.LENGTH_LONG).show();
-					} else {
-						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("type", "Office");
-						jsonObject.put("Latitude",
-								Double.toString(tAddress.getLatitude()));
-						jsonObject.put("Longitude",
-								Double.toString(tAddress.getLongitude()));
-						jsonObject.put("Address", to_places.getText()
-								.toString());
-						jsonObject.put("Locality", tAddress.getLocality()
-								.toString());
-						jsonObject.put("shortaddress", toshortname);
-
-						FavoritesLocationReadWrite favoritesLocationReadWrite = new FavoritesLocationReadWrite(
-								InviteFragmentActivity.this);
-						if (favoritesLocationReadWrite.saveToFile(jsonObject
-								.toString())) {
-							Toast.makeText(InviteFragmentActivity.this,
-									"Saved!", Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(InviteFragmentActivity.this,
-									"Error saving. Please try again!",
-									Toast.LENGTH_LONG).show();
-						}
-
-						Log.d("RateMyClub",
-								"onClick mTextViewSetOfficeFavTo : "
-										+ favoritesLocationReadWrite
-												.readFromFile());
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-			}
-		});
-
-		threedotsto.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				// TODO Auto-generated method stub
-				whichdotclick = "todot";
-
-				if (to_places.getText().toString().trim().isEmpty()
-						|| to_places.getText().toString().equalsIgnoreCase("")) {
-
-					if (mycurrentlocationobject != null) {
-
-						// Getting latitude of the current location
-						double latitude = mycurrentlocationobject.getLatitude();
-
-						// Getting longitude of the current location
-						double longitude = mycurrentlocationobject
-								.getLongitude();
-
-						// Creating a LatLng object for the current location
-						LatLng currentlatLng = new LatLng(latitude, longitude);
-
-						// Showing the current location in Google Map
-						myMap.moveCamera(CameraUpdateFactory
-								.newLatLng(currentlatLng));
-
-						// Zoom in the Google Map
-						myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-						String address = MapUtilityMethods.getAddress(
-								InviteFragmentActivity.this, latitude,
-								longitude);
-
-						fromlocation.setText(address);
-						fromrelative.setVisibility(View.VISIBLE);
-					} else {
-
-						// no network provider is enabled
-						AlertDialog.Builder dialog = new AlertDialog.Builder(
-								InviteFragmentActivity.this);
-						dialog.setMessage("Please check your location services");
-						dialog.setPositiveButton("Retry",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(
-											DialogInterface paramDialogInterface,
-											int paramInt) {
-										Intent intent = getIntent();
-										intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-										finish();
-
-										startActivity(intent);
-
-									}
-								});
-						dialog.setNegativeButton("Settings",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(
-											DialogInterface paramDialogInterface,
-											int paramInt) {
-										Intent myIntent = new Intent(
-												Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-										startActivity(myIntent);
-										// get gps
-
-									}
-								});
-						dialog.show();
-
-					}
-
-				} else {
-
-					String jnd = to_places.getText().toString().trim();
-
-					Geocoder coder = new Geocoder(InviteFragmentActivity.this);
-					try {
-						ArrayList<Address> adresses = (ArrayList<Address>) coder
-								.getFromLocationName(jnd, 50);
-						double longitude = 0;
-						double latitude = 0;
-						for (Address add : adresses) {
-							longitude = add.getLongitude();
-							latitude = add.getLatitude();
-						}
-
-						// Creating a LatLng object for the current location
-						LatLng currentlatLng = new LatLng(latitude, longitude);
-
-						// Showing the current location in Google Map
-						myMap.moveCamera(CameraUpdateFactory
-								.newLatLng(currentlatLng));
-
-						// Zoom in the Google Map
-						myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-						fromlocation.setText(jnd);
-
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-
-					fromrelative.setVisibility(View.VISIBLE);
-				}
-
-			}
-		});
-
 		final Calendar calendar = Calendar.getInstance();
 
 		final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
@@ -1611,7 +691,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 						R.color.color_dark_blue));
 				timechoose.setBackgroundColor(getResources().getColor(
 						R.color.color_light_blue));
-				
+
 				updateTime(hour, minute);
 
 			}
@@ -1785,8 +865,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					@Override
 					public void run() {
 
-						if (from_places.getText().toString().trim().isEmpty()
-								|| fAddress == null) {
+						if (fAddress == null) {
 
 							from_places.requestFocus();
 
@@ -1801,9 +880,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							messageText.setGravity(Gravity.CENTER);
 							dialog.show();
 
-						} else if (to_places.getText().toString().trim()
-								.isEmpty()
-								|| tAddress == null) {
+						} else if (tAddress == null) {
 
 							to_places.requestFocus();
 
@@ -1951,12 +1028,12 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		});
 
 		// ///////////////
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new fetchtopthreerides()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new fetchtopthreerides().execute();
-		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new fetchtopthreerides()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new fetchtopthreerides().execute();
+		// }
 
 		// ///////////////
 		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1993,36 +1070,24 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		}
 
 		Intent fromToIntent = getIntent();
-		if (fromToIntent.getStringExtra("StartAddLatLng") != null
-				&& fromToIntent.getStringExtra("EndAddLatLng") != null) {
+		String startString = fromToIntent.getStringExtra("StartAddressModel");
+		String endString = fromToIntent.getStringExtra("EndAddressModel");
 
-			Log.d("InviteFragment",
-					"StartAddLatLng : "
-							+ fromToIntent.getStringExtra("StartAddLatLng")
-							+ " EndAddLatLng : "
-							+ fromToIntent.getStringExtra("EndAddLatLng"));
-			String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
-					.toString().split(",");
+		if (startString != null && endString != null) {
 
-			Double startLat = Double.parseDouble(RowData[0]);
-			Double startLng = Double.parseDouble(RowData[1]);
+			Log.d("InviteFragment", "StartAddressModel : " + startString
+					+ " EndAddressModel : " + endString);
 
-			String address = MapUtilityMethods.getAddress(
-					InviteFragmentActivity.this, startLat.doubleValue(),
-					startLng.doubleValue());
-			from_places.setText(address);
-			fAddress = geocodeAddress(address);
+			Gson gson = new Gson();
+			AddressModel startAddressModel = (AddressModel) gson.fromJson(
+					startString, AddressModel.class);
+			fAddress = startAddressModel.getAddress();
+			fromshortname = startAddressModel.getShortname();
 
-			RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
-					.split(",");
-
-			Double endLat = Double.parseDouble(RowData[0]);
-			Double endLng = Double.parseDouble(RowData[1]);
-
-			address = MapUtilityMethods.getAddress(InviteFragmentActivity.this,
-					endLat.doubleValue(), endLng.doubleValue());
-			to_places.setText(address);
-			tAddress = geocodeAddress(address);
+			AddressModel endAddressModel = (AddressModel) gson.fromJson(
+					endString, AddressModel.class);
+			tAddress = endAddressModel.getAddress();
+			toshortname = endAddressModel.getShortname();
 
 			from_places.setEnabled(false);
 			to_places.setEnabled(false);
@@ -2030,6 +1095,31 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			threedotsto.setEnabled(false);
 			clearedittextimgfrom.setVisibility(View.GONE);
 			clearedittextimgto.setVisibility(View.GONE);
+
+			// String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
+			// .toString().split(",");
+			//
+			// Double startLat = Double.parseDouble(RowData[0]);
+			// Double startLng = Double.parseDouble(RowData[1]);
+			//
+			// String address = MapUtilityMethods.getAddress(
+			// InviteFragmentActivity.this, startLat.doubleValue(),
+			// startLng.doubleValue());
+			// from_places.setText(address);
+			// fAddress = geocodeAddress(address);
+			//
+			// RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
+			// .split(",");
+			//
+			// Double endLat = Double.parseDouble(RowData[0]);
+			// Double endLng = Double.parseDouble(RowData[1]);
+			//
+			// address =
+			// MapUtilityMethods.getAddress(InviteFragmentActivity.this,
+			// endLat.doubleValue(), endLng.doubleValue());
+			// to_places.setText(address);
+			// tAddress = geocodeAddress(address);
+			//
 
 		}
 	}
@@ -2132,184 +1222,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 	// ////////////////////////
 
-	// ///////
-	private class fetchtopthreerides extends AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionfetchtopthreerides mAuth1 = new AuthenticateConnectionfetchtopthreerides();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(InviteFragmentActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			// //////////////////////////
-			if (activeridesresp.equalsIgnoreCase("No Pool Created Yet!!")
-					|| activeridesresp.equalsIgnoreCase("[]")) {
-
-				new ConnectionTaskForShowRidesHistory().executeOnExecutor(
-						AsyncTask.THREAD_POOL_EXECUTOR, "");
-			} else {
-
-				try {
-					JSONArray subArray = new JSONArray(activeridesresp);
-					for (int i = 0; i < subArray.length(); i++) {
-						FromLocation.add(subArray.getJSONObject(i)
-								.getString("FromLocation").toString().trim());
-						ToLocation.add(subArray.getJSONObject(i)
-								.getString("ToLocation").toString().trim());
-						FromShortName.add(subArray.getJSONObject(i)
-								.getString("FromShortName").toString().trim());
-						ToShortName.add(subArray.getJSONObject(i)
-								.getString("ToShortName").toString().trim());
-						Seats.add(subArray.getJSONObject(i).getString("Seats")
-								.toString().trim());
-
-						TravelDate.add(subArray.getJSONObject(i)
-								.getString("TravelDate").toString().trim());
-						TravelTime.add(subArray.getJSONObject(i)
-								.getString("TravelTime").toString().trim());
-						Seat_Status.add(subArray.getJSONObject(i)
-								.getString("Seat_Status").toString().trim());
-					}
-
-					if (FromLocation.size() >= 3) {
-
-						inviteloadingll.setVisibility(View.GONE);
-						topthreeridesll.setVisibility(View.GONE);
-
-						topthreeadaptor = new TopThreeRidesAdaptor(
-								InviteFragmentActivity.this, FromShortName,
-								ToShortName, TravelDate, TravelTime,
-								Seat_Status);
-						topthreerideslist.setAdapter(topthreeadaptor);
-						Helper.getListViewSize(topthreerideslist);
-
-						topthreerideslist
-								.setOnItemClickListener(new OnItemClickListener() {
-
-									@Override
-									public void onItemClick(
-											AdapterView<?> parent, View view,
-											int position, long id) {
-										// TODO Auto-generated method stub
-
-										from_places.setText(FromLocation
-												.get(position).toString()
-												.trim());
-										to_places.setText(ToLocation
-												.get(position).toString()
-												.trim());
-										dateedittext.setText("");
-										timeedittext.setText("");
-										seatsedittext.setText(Seats
-												.get(position).toString()
-												.trim());
-
-										fromshortname = FromShortName
-												.get(position).toString()
-												.trim();
-
-										toshortname = ToShortName.get(position)
-												.toString().trim();
-									}
-								});
-
-					} else {
-
-						new ConnectionTaskForShowRidesHistory()
-								.executeOnExecutor(
-										AsyncTask.THREAD_POOL_EXECUTOR, "");
-					}
-
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionfetchtopthreerides {
-
-		public AuthenticateConnectionfetchtopthreerides() {
-
-		}
-
-		public void connection() throws Exception {
-
-			FromLocation.clear();
-			ToLocation.clear();
-			FromShortName.clear();
-			ToShortName.clear();
-			Seats.clear();
-			TravelDate.clear();
-			TravelTime.clear();
-			Seat_Status.clear();
-
-			// Connect to google.com
-			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/FetchMyPools.php";
-			HttpPost httpPost1 = new HttpPost(url_select11);
-			BasicNameValuePair MobileNumberBasicNameValuePair1 = new BasicNameValuePair(
-					"MobileNumber", MobileNumber);
-
-			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
-			nameValuePairList1.add(MobileNumberBasicNameValuePair1);
-
-			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
-					nameValuePairList1);
-			httpPost1.setEntity(urlEncodedFormEntity1);
-			HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
-
-			Log.d("httpResponse FetchMyPools", "" + httpResponse1);
-
-			InputStream inputStream1 = httpResponse1.getEntity().getContent();
-			InputStreamReader inputStreamReader1 = new InputStreamReader(
-					inputStream1);
-
-			BufferedReader bufferedReader1 = new BufferedReader(
-					inputStreamReader1);
-
-			StringBuilder stringBuilder1 = new StringBuilder();
-
-			String bufferedStrChunk1 = null;
-
-			while ((bufferedStrChunk1 = bufferedReader1.readLine()) != null) {
-				activeridesresp = stringBuilder1.append(bufferedStrChunk1)
-						.toString();
-			}
-
-			Log.d("activeridesresp", "" + stringBuilder1.toString());
-
-		}
-	}
-
-	// ///////
 	private class ConnectionTaskForfetchimagename extends
 			AsyncTask<String, Void, Void> {
 
@@ -2441,175 +1353,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 	// //////////////////////
 
-	public Location getLocation() {
-		Location location = null;
-		try {
-			locationManager = (LocationManager) this
-					.getSystemService(LOCATION_SERVICE);
-
-			// getting GPS status
-			boolean isGPSEnabled = locationManager
-					.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-			// getting network status
-			boolean isNetworkEnabled = locationManager
-					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-			if (!isGPSEnabled && !isNetworkEnabled) {
-				// no network provider is enabled
-				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-				dialog.setMessage("Please check your location services");
-				dialog.setPositiveButton("Retry",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(
-									DialogInterface paramDialogInterface,
-									int paramInt) {
-								Intent intent = getIntent();
-								intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-								finish();
-
-								startActivity(intent);
-
-							}
-						});
-				dialog.setNegativeButton("Settings",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(
-									DialogInterface paramDialogInterface,
-									int paramInt) {
-								Intent myIntent = new Intent(
-										Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-								startActivity(myIntent);
-								// get gps
-
-							}
-						});
-				dialog.show();
-				return null;
-			} else {
-
-				double lat = 0;
-				double lng = 0;
-				// get the location by gps
-				if (isGPSEnabled) {
-					if (location == null) {
-						locationManager.requestLocationUpdates(
-								LocationManager.GPS_PROVIDER, 20000, 1, this);
-						Log.d("GPS Enabled", "GPS Enabled");
-						if (locationManager != null) {
-							location = locationManager
-									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-							if (location != null) {
-								lat = location.getLatitude();
-								lng = location.getLongitude();
-							}
-						}
-					}
-				}
-
-				// First get location from Network Provider
-				if (isNetworkEnabled) {
-					locationManager.requestLocationUpdates(
-							LocationManager.NETWORK_PROVIDER, 20000, 1, this);
-					Log.d("Network", "Network");
-					if (locationManager != null) {
-						location = locationManager
-								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-						if (location != null) {
-							lat = location.getLatitude();
-							lng = location.getLongitude();
-						}
-					}
-				}
-
-				Log.d("lat", "" + lat);
-				Log.d("lng", "" + lng);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return location;
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-
-		mycurrentlocationobject = location;
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-	}
-
-	public ArrayList<String> autocomplete(String input) {
-		ArrayList<String> resultList = null;
-
-		HttpURLConnection conn = null;
-		StringBuilder jsonResults = new StringBuilder();
-		try {
-			StringBuilder sb = new StringBuilder(PLACES_API_BASE
-					+ TYPE_AUTOCOMPLETE + OUT_JSON);
-			sb.append("?sensor=false&key=" + GlobalVariables.GoogleMapsAPIKey);
-			sb.append("&components=country:ind");
-			sb.append("&input=" + URLEncoder.encode(input, "utf8"));
-
-			URL url = new URL(sb.toString());
-			conn = (HttpURLConnection) url.openConnection();
-			InputStreamReader in = new InputStreamReader(conn.getInputStream());
-
-			// Load the results into a StringBuilder
-			int read;
-			char[] buff = new char[1024];
-			while ((read = in.read(buff)) != -1) {
-				jsonResults.append(buff, 0, read);
-			}
-		} catch (MalformedURLException e) {
-			Log.e(LOG_TAG, "Error processing Places API URL" + e);
-			return resultList;
-		} catch (IOException e) {
-			Log.e(LOG_TAG, "Error connecting to Places API" + e);
-			return resultList;
-		} finally {
-			if (conn != null) {
-				conn.disconnect();
-			}
-		}
-
-		try {
-			// Create a JSON object hierarchy from the results
-			JSONObject jsonObj = new JSONObject(jsonResults.toString());
-			JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
-
-			// Extract the Place descriptions from the results
-			resultList = new ArrayList<String>(predsJsonArray.length());
-			for (int i = 0; i < predsJsonArray.length(); i++) {
-				resultList.add(predsJsonArray.getJSONObject(i).getString(
-						"description"));
-			}
-		} catch (JSONException e) {
-			Log.e("LOG_TAG", "Cannot process JSON results" + e);
-		}
-
-		return resultList;
-	}
-
 	@Override
 	public void onBackPressed() {
 
@@ -2623,54 +1366,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		}
 	}
 
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		Log.d("onStart", "onStart");
-
-		// Check if Internet present
-		if (!isOnline()) {
-			return;
-		}
-
-		Location location = getLocation();
-
-		if (location != null) {
-			onLocationChanged(location);
-		}
-
-		super.onStart();
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		Log.d("onStop", "onStop");
-
-		if (locationManager != null)
-			locationManager.removeUpdates(this);
-
-		super.onStop();
-	}
-
 	// ///////
-
-	private Address geocodeAddress(String addressString) {
-		Address addressReturn = null;
-		Geocoder geocoder = new Geocoder(this);
-		try {
-			ArrayList<Address> arrayList = (ArrayList<Address>) geocoder
-					.getFromLocationName(addressString, 1);
-			Log.d("geocodeAddress", "geocodeAddress : " + arrayList.toString());
-			if (arrayList.size() > 0) {
-				addressReturn = arrayList.get(0);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return addressReturn;
-	}
 
 	public boolean isOnline() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

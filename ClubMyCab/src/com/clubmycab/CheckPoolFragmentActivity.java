@@ -1,7 +1,6 @@
 package com.clubmycab;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.Format;
@@ -11,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -62,10 +60,6 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
-
-import com.clubmycab.maps.MapUtilityMethods;
-import com.clubmycab.utility.Log;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,9 +80,12 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
+import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -104,6 +101,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 
 public class CheckPoolFragmentActivity extends FragmentActivity implements
 		FareCalculatorInterface {
@@ -188,7 +186,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	ArrayList<String> phonenoarraynew = new ArrayList<String>();
 	ArrayList<String> imagearraynew = new ArrayList<String>();
 
-	RelativeLayout contexthelpcheckpool; 
+	RelativeLayout contexthelpcheckpool;
 
 	Tracker tracker;
 
@@ -248,8 +246,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			return;
 		}
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(CheckPoolFragmentActivity.this);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(CheckPoolFragmentActivity.this);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("Owner Created Pool");
@@ -324,7 +324,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				builder.setTitle("Fare Split");
 				builder.setMessage("Please enter fare to split :");
 				builder.setCancelable(false);
-				final EditText input = new EditText(CheckPoolFragmentActivity.this);
+				final EditText input = new EditText(
+						CheckPoolFragmentActivity.this);
 				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 						LinearLayout.LayoutParams.MATCH_PARENT,
 						LinearLayout.LayoutParams.MATCH_PARENT);
@@ -341,7 +342,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 								Double fare = 0.0;
 								if (input.getText().toString().isEmpty()) {
-									Toast.makeText(CheckPoolFragmentActivity.this,
+									Toast.makeText(
+											CheckPoolFragmentActivity.this,
 											"Please enter a valid fare",
 											Toast.LENGTH_LONG).show();
 								} else if (!input.getText().toString()
@@ -349,7 +351,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									fare = Double.parseDouble(input.getText()
 											.toString());
 									if (fare <= 0.0) {
-										Toast.makeText(CheckPoolFragmentActivity.this,
+										Toast.makeText(
+												CheckPoolFragmentActivity.this,
 												"Please enter a valid fare",
 												Toast.LENGTH_LONG).show();
 									} else {
@@ -492,7 +495,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 				} else {
-					Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+					Intent mainIntent = new Intent(
+							CheckPoolFragmentActivity.this,
 							ContactsToInviteActivity.class);
 					mainIntent.putExtra("fromcome", "checkpool");
 					mainIntent.putExtra("CabId", CabId);
@@ -530,18 +534,45 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 				} else {
-					String StartAddLatLng = startaddlatlng.get(0).latitude
-							+ "," + startaddlatlng.get(0).longitude;
-					String EndAddLatLng = endaddlatlng.get(0).latitude + ","
-							+ endaddlatlng.get(0).longitude;
 
-					final Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+					String addressString = MapUtilityMethods.getAddress(
+							CheckPoolFragmentActivity.this,
+							startaddlatlng.get(0).latitude,
+							startaddlatlng.get(0).longitude);
+					Address address = geocodeAddress(addressString);
+
+					AddressModel startAddressModel = new AddressModel();
+					startAddressModel.setAddress(address);
+					startAddressModel.setShortname(FromShortName);
+					startAddressModel.setLongname(addressString);
+
+					addressString = MapUtilityMethods.getAddress(
+							CheckPoolFragmentActivity.this,
+							endaddlatlng.get(0).latitude,
+							endaddlatlng.get(0).longitude);
+					address = geocodeAddress(addressString);
+
+					AddressModel endAddressModel = new AddressModel();
+					endAddressModel.setAddress(address);
+					endAddressModel.setShortname(ToShortName);
+					endAddressModel.setLongname(addressString);
+
+					// String StartAddLatLng = startaddlatlng.get(0).latitude
+					// + "," + startaddlatlng.get(0).longitude;
+					// String EndAddLatLng = endaddlatlng.get(0).latitude + ","
+					// + endaddlatlng.get(0).longitude;
+
+					final Intent mainIntent = new Intent(
+							CheckPoolFragmentActivity.this,
 							BookaCabFragmentActivity.class);
-					mainIntent.putExtra("StartAddLatLng", StartAddLatLng);
-					mainIntent.putExtra("EndAddLatLng", EndAddLatLng);
+					Gson gson = new Gson();
+					mainIntent.putExtra("StartAddressModel",
+							gson.toJson(startAddressModel).toString());
+					mainIntent.putExtra("EndAddressModel",
+							gson.toJson(endAddressModel).toString());
 					mainIntent.putExtra("CabId", CabId);
-					mainIntent.putExtra("FromShortName", FromShortName);
-					mainIntent.putExtra("ToShortName", ToShortName);
+					// mainIntent.putExtra("FromShortName", FromShortName);
+					// mainIntent.putExtra("ToShortName", ToShortName);
 					mainIntent.putExtra("TravelDate", TravelDate);
 					mainIntent.putExtra("TravelTime", TravelTime);
 					CheckPoolFragmentActivity.this.startActivity(mainIntent);
@@ -789,6 +820,23 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 	}
 
+	private Address geocodeAddress(String addressString) {
+		Address addressReturn = null;
+		Geocoder geocoder = new Geocoder(this);
+		try {
+			ArrayList<Address> arrayList = (ArrayList<Address>) geocoder
+					.getFromLocationName(addressString, 1);
+			Log.d("geocodeAddress", "geocodeAddress : " + arrayList.toString());
+			if (arrayList.size() > 0) {
+				addressReturn = arrayList.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return addressReturn;
+	}
+
 	// ///////
 
 	private class ConnectionTaskForDirections extends
@@ -958,7 +1006,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+					+ GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 
@@ -1055,7 +1104,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = MapUtilityMethods.getAddress(CheckPoolFragmentActivity.this,
+				String asd = MapUtilityMethods.getAddress(
+						CheckPoolFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
@@ -1520,7 +1570,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = MapUtilityMethods.getAddress(CheckPoolFragmentActivity.this,
+				String asd = MapUtilityMethods.getAddress(
+						CheckPoolFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
@@ -1534,7 +1585,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	private class ConnectionTaskForownercancelpool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(CheckPoolFragmentActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				CheckPoolFragmentActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1573,7 +1625,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
-			Intent mainIntent = new Intent(CheckPoolFragmentActivity.this, HomeActivity.class);
+			Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+					HomeActivity.class);
 			mainIntent.putExtra("from", "normal");
 			mainIntent.putExtra("message", "null");
 			mainIntent.putExtra("CabId", "null");
@@ -1692,7 +1745,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 								dialog.dismiss();
 
-								onedialog = new ProgressDialog(CheckPoolFragmentActivity.this);
+								onedialog = new ProgressDialog(
+										CheckPoolFragmentActivity.this);
 								onedialog.setMessage("Please Wait...");
 								onedialog.setCancelable(false);
 								onedialog.setCanceledOnTouchOutside(false);
@@ -1933,7 +1987,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	private class ConnectionTaskForsendcustommessage extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(CheckPoolFragmentActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				CheckPoolFragmentActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -2118,7 +2173,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				joinedmembersll.setVisibility(View.VISIBLE);
 
 				ListViewAdapterJoined adapter = new ListViewAdapterJoined(
-						CheckPoolFragmentActivity.this, joinedMemberImageName, JoinedMemberName);
+						CheckPoolFragmentActivity.this, joinedMemberImageName,
+						JoinedMemberName);
 				joinedmemberslist.setAdapter(adapter);
 
 			} catch (JSONException e) {
@@ -2216,7 +2272,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		if (comefrom != null) {
 
 			if (!chatlayoutmainrl.isShown()) {
-				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this, HomeActivity.class);
+				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+						HomeActivity.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);

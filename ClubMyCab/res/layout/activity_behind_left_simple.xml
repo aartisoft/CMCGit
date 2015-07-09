@@ -32,7 +32,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/drawerprofilepic"
                 android:gravity="center_vertical"
-                android:text="Ekansh Srivastava"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
         </RelativeLayout>

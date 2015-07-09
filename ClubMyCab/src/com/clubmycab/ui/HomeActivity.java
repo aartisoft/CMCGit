@@ -168,10 +168,12 @@ public class HomeActivity extends FragmentActivity implements
 	AppEventsLogger logger;
 	boolean exceptioncheck = false;
 
-	String StartAddLatLngIntent;
-	String EndAddLatLngIntent;
-	String StartAddShortNameIntent;
-	String EndAddShortNameIntent;
+	// String StartAddLatLngIntent;
+	// String EndAddLatLngIntent;
+	// String StartAddShortNameIntent;
+	// String EndAddShortNameIntent;
+
+	AddressModel addressModelFrom, addressModelTo, home, work;
 
 	Boolean flagchk;
 	String fromshortname;
@@ -182,6 +184,17 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_page);
+
+		SharedPreferences mPrefs1 = getSharedPreferences("QuitApplication", 0);
+		boolean shouldQuitApp = mPrefs1.getBoolean("quitapplication", false);
+		if (shouldQuitApp) {
+
+			SharedPreferences.Editor editor = mPrefs1.edit();
+			editor.putBoolean("quitapplication", false);
+			editor.commit();
+
+			finish();
+		}
 
 		// Check if Internet present
 		if (!isOnline()) {
@@ -244,6 +257,7 @@ public class HomeActivity extends FragmentActivity implements
 
 		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
+		GlobalVariables.ActivityName = "HomeActivity";
 
 		// mNav = new SimpleSideDrawer(this);
 		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
@@ -643,6 +657,13 @@ public class HomeActivity extends FragmentActivity implements
 		String params = "MobileNumber=" + MobileNumber;
 		new GlobalAsyncTask(this, endpoint, params,
 				new FetchUnreadNotificationCountHandler(), this, false);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new ConnectionTaskForFetchClubs()
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			new ConnectionTaskForFetchClubs().execute();
+		}
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -685,35 +706,6 @@ public class HomeActivity extends FragmentActivity implements
 			}
 		}
 
-		SharedPreferences mPrefs11111 = getSharedPreferences(
-				"FavoriteLocations", 0);
-		final String favoritelocation = mPrefs11111.getString(
-				"favoritelocation", "");
-		Log.d("HomeActivity", "favoritelocation : " + favoritelocation);
-
-		AddressModel homeAddressModel = null, workAddressModel = null;
-
-		if (!favoritelocation.isEmpty()) {
-
-			Gson gson = new Gson();
-			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
-					HashMap.class);
-
-			if (hashMap.size() > 0) {
-
-				homeAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get("Where do you live?"), AddressModel.class);
-				workAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get("Where do you work?"), AddressModel.class);
-
-				Log.d("HomeActivity", "hashMap : " + hashMap);
-				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel
-						+ " workAddressModel : " + workAddressModel);
-			}
-		}
-
-		final AddressModel home = homeAddressModel, work = workAddressModel;
-
 		// homebtnsll = (LinearLayout) findViewById(R.id.homebtnsll);
 		// homebtnsll.setVisibility(View.GONE);
 
@@ -725,34 +717,25 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				Log.d("HomeActivity", "home : " + home + " work : " + work);
 
-				if (!favoritelocation.isEmpty()) {
-
-					if (home != null && work != null) {
-						resetIntentParams(true);
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-							hometoofficell.setBackground(getResources()
-									.getDrawable(R.drawable.border_selected));
-							officetohomell.setBackground(getResources()
-									.getDrawable(R.drawable.border));
-						} else {
-							hometoofficell.setBackgroundDrawable(getResources()
-									.getDrawable(R.drawable.border_selected));
-							officetohomell.setBackgroundDrawable(getResources()
-									.getDrawable(R.drawable.border));
-						}
-
-						StartAddLatLngIntent = home.getAddress().getLatitude()
-								+ "," + home.getAddress().getLongitude();
-						StartAddShortNameIntent = home.getShortname();
-						EndAddLatLngIntent = work.getAddress().getLatitude()
-								+ "," + work.getAddress().getLongitude();
-						EndAddShortNameIntent = work.getShortname();
-
-						// homebtnsll.setVisibility(View.VISIBLE);
-						showButtonsDialog();
+				if (home != null && work != null) {
+					resetIntentParams(true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+						hometoofficell.setBackground(getResources()
+								.getDrawable(R.drawable.border_selected));
+						officetohomell.setBackground(getResources()
+								.getDrawable(R.drawable.border));
 					} else {
-						showNoFavoritesDialog();
+						hometoofficell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border_selected));
+						officetohomell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border));
 					}
+
+					addressModelFrom = home;
+					addressModelTo = work;
+
+					// homebtnsll.setVisibility(View.VISIBLE);
+					showButtonsDialog();
 				} else {
 					showNoFavoritesDialog();
 				}
@@ -765,34 +748,25 @@ public class HomeActivity extends FragmentActivity implements
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 			@Override
 			public void onClick(View v) {
-				if (!favoritelocation.isEmpty()) {
-
-					if (home != null && work != null) {
-						resetIntentParams(true);
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-							officetohomell.setBackground(getResources()
-									.getDrawable(R.drawable.border_selected));
-							hometoofficell.setBackground(getResources()
-									.getDrawable(R.drawable.border));
-						} else {
-							officetohomell.setBackgroundDrawable(getResources()
-									.getDrawable(R.drawable.border_selected));
-							hometoofficell.setBackgroundDrawable(getResources()
-									.getDrawable(R.drawable.border));
-						}
-
-						EndAddLatLngIntent = home.getAddress().getLatitude()
-								+ "," + home.getAddress().getLongitude();
-						EndAddShortNameIntent = home.getShortname();
-						StartAddLatLngIntent = work.getAddress().getLatitude()
-								+ "," + work.getAddress().getLongitude();
-						StartAddShortNameIntent = work.getShortname();
-
-						// homebtnsll.setVisibility(View.VISIBLE);
-						showButtonsDialog();
+				if (home != null && work != null) {
+					resetIntentParams(true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+						officetohomell.setBackground(getResources()
+								.getDrawable(R.drawable.border_selected));
+						hometoofficell.setBackground(getResources()
+								.getDrawable(R.drawable.border));
 					} else {
-						showNoFavoritesDialog();
+						officetohomell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border_selected));
+						hometoofficell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border));
 					}
+
+					addressModelFrom = work;
+					addressModelTo = home;
+
+					// homebtnsll.setVisibility(View.VISIBLE);
+					showButtonsDialog();
 				} else {
 					showNoFavoritesDialog();
 				}
@@ -808,13 +782,11 @@ public class HomeActivity extends FragmentActivity implements
 
 				resetIntentParams(false);
 
-				StartAddLatLngIntent = "";
-				StartAddShortNameIntent = "";
+				addressModelFrom = null;
 
 				if (to_places.getText().toString().isEmpty()
 						&& tAddress == null) {
-					EndAddLatLngIntent = "";
-					EndAddShortNameIntent = "";
+					addressModelTo = null;
 				}
 
 				return false;
@@ -854,9 +826,10 @@ public class HomeActivity extends FragmentActivity implements
 									"Could not locate the address, please try using the map or a different address",
 									Toast.LENGTH_LONG).show();
 						} else {
-							StartAddLatLngIntent = fAddress.getLatitude() + ","
-									+ fAddress.getLongitude();
-							StartAddShortNameIntent = fromshortname;
+							addressModelFrom = new AddressModel();
+							addressModelFrom.setAddress(fAddress);
+							addressModelFrom.setShortname(fromshortname);
+							addressModelFrom.setLongname(from_places.getText().toString());
 
 							if (fAddress != null && tAddress != null) {
 								// homebtnsll.setVisibility(View.VISIBLE);
@@ -878,13 +851,11 @@ public class HomeActivity extends FragmentActivity implements
 
 				resetIntentParams(false);
 
-				EndAddLatLngIntent = "";
-				EndAddShortNameIntent = "";
+				addressModelTo = null;
 
 				if (from_places.getText().toString().isEmpty()
 						&& fAddress == null) {
-					StartAddLatLngIntent = "";
-					StartAddShortNameIntent = "";
+					addressModelFrom = null;
 				}
 
 				return false;
@@ -921,9 +892,10 @@ public class HomeActivity extends FragmentActivity implements
 							"Could not locate the address, please try using the map or a different address",
 							Toast.LENGTH_LONG).show();
 				} else {
-					EndAddLatLngIntent = tAddress.getLatitude() + ","
-							+ tAddress.getLongitude();
-					EndAddShortNameIntent = toshortname;
+					addressModelTo = new AddressModel();
+					addressModelTo.setAddress(tAddress);
+					addressModelTo.setShortname(toshortname);
+					addressModelTo.setLongname(to_places.getText().toString());
 
 					if (fAddress != null && tAddress != null) {
 						// homebtnsll.setVisibility(View.VISIBLE);
@@ -1133,6 +1105,11 @@ public class HomeActivity extends FragmentActivity implements
 							fAddress = add;
 						}
 
+						addressModelFrom = new AddressModel();
+						addressModelFrom.setAddress(fAddress);
+						addressModelFrom.setShortname(fromshortname);
+						addressModelFrom.setLongname(from_places.getText().toString());
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1163,6 +1140,11 @@ public class HomeActivity extends FragmentActivity implements
 							tAddress = add;
 						}
 
+						addressModelTo = new AddressModel();
+						addressModelTo.setAddress(tAddress);
+						addressModelTo.setShortname(toshortname);
+						addressModelTo.setLongname(to_places.getText().toString());
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1171,13 +1153,6 @@ public class HomeActivity extends FragmentActivity implements
 
 				if (fAddress != null && tAddress != null) {
 					// homebtnsll.setVisibility(View.VISIBLE);
-					StartAddLatLngIntent = fAddress.getLatitude() + ","
-							+ fAddress.getLongitude();
-					StartAddShortNameIntent = fromshortname;
-					EndAddLatLngIntent = tAddress.getLatitude() + ","
-							+ tAddress.getLongitude();
-					EndAddShortNameIntent = toshortname;
-
 					showButtonsDialog();
 				}
 			}
@@ -1306,23 +1281,23 @@ public class HomeActivity extends FragmentActivity implements
 				logger.logEvent("HomePage ClubMyCab Click");
 
 				Log.d("HomeActivity",
-						"homeclubmycabll click StartAddLatLngIntent : "
-								+ StartAddLatLngIntent
-								+ " EndAddLatLngIntent : " + EndAddLatLngIntent);
+						"homeclubmycabll click addressModelFrom : "
+								+ addressModelFrom.getShortname()
+								+ " addressModelTo : "
+								+ addressModelTo.getShortname());
 
 				Intent mainIntent = new Intent(HomeActivity.this,
 						InviteFragmentActivity.class);
-				if (!StartAddLatLngIntent.isEmpty()
-						&& !EndAddLatLngIntent.isEmpty()) {
-					mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
-					mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
-					mainIntent.putExtra("FromShortName",
-							StartAddShortNameIntent);
-					mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
-					StartAddLatLngIntent = "";
-					EndAddLatLngIntent = "";
-					StartAddShortNameIntent = "";
-					EndAddShortNameIntent = "";
+				if (addressModelFrom != null && addressModelTo != null) {
+
+					Gson gson = new Gson();
+
+					mainIntent.putExtra("StartAddressModel",
+							gson.toJson(addressModelFrom).toString());
+					mainIntent.putExtra("EndAddressModel",
+							gson.toJson(addressModelTo).toString());
+					addressModelFrom = null;
+					addressModelTo = null;
 
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
@@ -1353,17 +1328,16 @@ public class HomeActivity extends FragmentActivity implements
 
 				Intent mainIntent = new Intent(HomeActivity.this,
 						BookaCabFragmentActivity.class);
-				if (!StartAddLatLngIntent.isEmpty()
-						&& !EndAddLatLngIntent.isEmpty()) {
-					mainIntent.putExtra("StartAddLatLng", StartAddLatLngIntent);
-					mainIntent.putExtra("EndAddLatLng", EndAddLatLngIntent);
-					mainIntent.putExtra("FromShortName",
-							StartAddShortNameIntent);
-					mainIntent.putExtra("ToShortName", EndAddShortNameIntent);
-					StartAddLatLngIntent = "";
-					EndAddLatLngIntent = "";
-					StartAddShortNameIntent = "";
-					EndAddShortNameIntent = "";
+				if (addressModelFrom != null && addressModelTo != null) {
+
+					Gson gson = new Gson();
+
+					mainIntent.putExtra("StartAddressModel",
+							gson.toJson(addressModelFrom).toString());
+					mainIntent.putExtra("EndAddressModel",
+							gson.toJson(addressModelTo).toString());
+					addressModelFrom = null;
+					addressModelTo = null;
 
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
@@ -1405,11 +1379,41 @@ public class HomeActivity extends FragmentActivity implements
 			tAddress = null;
 			toshortname = "";
 
-			StartAddLatLngIntent = "";
-			EndAddLatLngIntent = "";
-			StartAddShortNameIntent = "";
-			EndAddShortNameIntent = "";
+			addressModelFrom = null;
+			addressModelTo = null;
 		}
+	}
+
+	private void getWorkHomeAddress() {
+		SharedPreferences mPrefs11111 = getSharedPreferences(
+				"FavoriteLocations", 0);
+		final String favoritelocation = mPrefs11111.getString(
+				"favoritelocation", "");
+		Log.d("HomeActivity", "favoritelocation : " + favoritelocation);
+
+		AddressModel homeAddressModel = null, workAddressModel = null;
+
+		if (!favoritelocation.isEmpty()) {
+
+			Gson gson = new Gson();
+			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
+					HashMap.class);
+
+			if (hashMap.size() > 0) {
+
+				homeAddressModel = (AddressModel) gson.fromJson(
+						hashMap.get("Where do you live?"), AddressModel.class);
+				workAddressModel = (AddressModel) gson.fromJson(
+						hashMap.get("Where do you work?"), AddressModel.class);
+
+				Log.d("HomeActivity", "hashMap : " + hashMap);
+				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel
+						+ " workAddressModel : " + workAddressModel);
+			}
+		}
+
+		home = homeAddressModel;
+		work = workAddressModel;
 	}
 
 	private void showNoFavoritesDialog() {
@@ -1882,7 +1886,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		
+
 		if (fromrelative.getVisibility() == View.VISIBLE) {
 			fromrelative.setVisibility(View.GONE);
 			contentrelativehomepage.setVisibility(View.VISIBLE);
@@ -1895,7 +1899,7 @@ public class HomeActivity extends FragmentActivity implements
 				back_pressed = System.currentTimeMillis();
 			}
 		}
-		
+
 	}
 
 	// // ///////
@@ -2207,6 +2211,95 @@ public class HomeActivity extends FragmentActivity implements
 			// ///////////////
 		}
 	}
+	
+	// ///////
+		private class ConnectionTaskForFetchClubs extends
+				AsyncTask<String, Void, Void> {
+
+			@Override
+			protected void onPreExecute() {
+			}
+
+			@Override
+			protected Void doInBackground(String... args) {
+				AuthenticateConnectionFetchMyClubs mAuth1 = new AuthenticateConnectionFetchMyClubs();
+				try {
+					mAuth1.connection();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					exceptioncheck = true;
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void v) {
+
+				if (exceptioncheck) {
+					exceptioncheck = false;
+					Toast.makeText(HomeActivity.this,
+							getResources().getString(R.string.exceptionstring),
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+			}
+		}
+
+		public class AuthenticateConnectionFetchMyClubs {
+
+			public AuthenticateConnectionFetchMyClubs() {
+
+			}
+
+			public void connection() throws Exception {
+
+				// Connect to google.com
+				HttpClient httpClient = new DefaultHttpClient();
+				String url_select = GlobalVariables.ServiceUrl
+						+ "/Fetch_Club.php";
+				HttpPost httpPost = new HttpPost(url_select);
+				BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
+						"OwnerNumber", MobileNumber);
+
+				List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+				nameValuePairList.add(UserNumberBasicNameValuePair);
+
+				UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+						nameValuePairList);
+				httpPost.setEntity(urlEncodedFormEntity);
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+
+				Log.d("httpResponse", "" + httpResponse);
+
+				InputStream inputStream = httpResponse.getEntity().getContent();
+				InputStreamReader inputStreamReader = new InputStreamReader(
+						inputStream);
+
+				BufferedReader bufferedReader = new BufferedReader(
+						inputStreamReader);
+
+				StringBuilder stringBuilder = new StringBuilder();
+
+				String bufferedStrChunk = null;
+				String myprofileresp = null;
+
+				while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+					myprofileresp = stringBuilder.append(bufferedStrChunk)
+							.toString();
+				}
+
+				Log.d("myclubsresp", "" + myprofileresp);
+
+				SharedPreferences sharedPreferences1 = getSharedPreferences(
+						"MyClubs", 0);
+				SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+				editor1.putString("clubs", myprofileresp.toString().trim());
+				editor1.commit();
+
+				// ///////////////
+			}
+		}
 
 	public boolean isOnline() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -2250,6 +2343,8 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		AppEventsLogger.activateApp(this);
+		
+		getWorkHomeAddress();
 
 		String PoolResponseSplash = getIntent().getStringExtra(
 				"PoolResponseSplash");

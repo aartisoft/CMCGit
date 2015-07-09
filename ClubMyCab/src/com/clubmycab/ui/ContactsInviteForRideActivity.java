@@ -532,6 +532,8 @@ public class ContactsInviteForRideActivity extends Activity {
 
 		SharedPreferences mPrefs111111 = getSharedPreferences("MyClubs", 0);
 		String clubs1 = mPrefs111111.getString("clubs", "");
+		
+		Log.d("ContactsInviteForRideActivity", "getClubs : " + clubs1);
 
 		if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 
@@ -940,7 +942,19 @@ public class ContactsInviteForRideActivity extends Activity {
 			builder.setPositiveButton("I'm done here",
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							ContactsInviteForRideActivity.this.finish();
+							
+							SharedPreferences sharedPreferences1 = getSharedPreferences(
+									"QuitApplication", 0);
+							SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+							editor1.putBoolean("quitapplication", true);
+							editor1.commit();
+							
+							Intent mainIntent = new Intent(
+									ContactsInviteForRideActivity.this,
+									HomeActivity.class);
+							mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+									| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+							startActivity(mainIntent);
 						}
 					});
 
@@ -949,11 +963,14 @@ public class ContactsInviteForRideActivity extends Activity {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							Intent mainIntent = new Intent(ContactsInviteForRideActivity.this, HomeActivity.class);
+							Intent mainIntent = new Intent(
+									ContactsInviteForRideActivity.this,
+									HomeActivity.class);
 							mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 									| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 							startActivityForResult(mainIntent, 500);
-							overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
 						}
 					});
 

@@ -78,6 +78,12 @@ public class FirstLoginClubsActivity extends Activity implements
 	public void getResult(int result, String response) {
 
 		Log.d("FirstLoginClubsActivity", "getResult : " + response);
+		
+		SharedPreferences sharedPreferences1 = getSharedPreferences(
+				"MyClubs", 0);
+		SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+		editor1.putString("clubs", response.toString().trim());
+		editor1.commit();
 
 		if (response.equalsIgnoreCase("No Users of your Club")) {
 			textViewMessage.setText(getResources().getString(

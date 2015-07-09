@@ -13,6 +13,7 @@ import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
 import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
@@ -51,6 +52,7 @@ public class UniversalDrawer {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.tracker = tracker;
+		Log.d("UniversalDrawer", "ActivityName : " + GlobalVariables.ActivityName);
 	}
 
 	public void createDrawer() {
@@ -144,6 +146,7 @@ public class UniversalDrawer {
 			@Override
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
+				Log.d("UniversalDrawer", "myrideslayout ActivityName : " + GlobalVariables.ActivityName);
 
 				if (!GlobalVariables.ActivityName.equals("MyRidesActivity")) {
 
@@ -192,7 +195,7 @@ public class UniversalDrawer {
 				mNav.toggleDrawer();
 
 				Intent mainIntent = new Intent(context,
-						WalletsAcitivity.class);
+						FavoriteLocationsAcivity.class);
 				context.startActivity(mainIntent);
 				((Activity) context).overridePendingTransition(
 						R.anim.slide_in_right, R.anim.slide_out_left);
@@ -243,16 +246,19 @@ public class UniversalDrawer {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareLocation Click")
-						.setAction("ShareLocation Click")
-						.setLabel("ShareLocation Click").build());
+				if (!GlobalVariables.ActivityName.equals("ShareLocationFragmentActivity")) {
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("ShareLocation Click")
+							.setAction("ShareLocation Click")
+							.setLabel("ShareLocation Click").build());
 
-				Intent mainIntent = new Intent(context,
-						ShareLocationFragmentActivity.class);
-				context.startActivity(mainIntent);
-				((Activity) context).overridePendingTransition(
-						R.anim.slide_in_right, R.anim.slide_out_left);
+					Intent mainIntent = new Intent(context,
+							ShareLocationFragmentActivity.class);
+					context.startActivity(mainIntent);
+					((Activity) context).overridePendingTransition(
+							R.anim.slide_in_right, R.anim.slide_out_left);
+					GlobalVariables.ActivityName = "ShareLocationFragmentActivity";
+				}
 			}
 		});
 

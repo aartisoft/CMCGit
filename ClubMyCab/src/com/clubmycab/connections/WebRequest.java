@@ -18,11 +18,7 @@ public class WebRequest {
 
 	private static final int MAX_REDIRECTS = 5;
 	String response;
-
-	// This message only gets visible when the already logged-in user updates
-	// the app to v2.5,
-	// and HttpsURLConnection fails to establish a trusted connection
-	// (SSLException)
+	
 	public static final String MESSAGE_SSL_EXCEPTION = "This connection is not trusted. Please logout and retry.";
 
 	private InputStream mInputStream;
@@ -96,10 +92,13 @@ public class WebRequest {
 				throw new WebRequestException("HTTP Error " + responseCode);
 			}
 		} catch (MalformedURLException e) {
+			e.printStackTrace();
 			throw new WebRequestException(e.getMessage());
 		} catch (SSLException e) {
+			e.printStackTrace();
 			throw new WebRequestException(MESSAGE_SSL_EXCEPTION);
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new WebRequestException(e.getMessage());
 		}
 	}

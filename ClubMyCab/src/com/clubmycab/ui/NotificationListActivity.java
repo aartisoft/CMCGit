@@ -46,12 +46,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.AllNotificationListViewAdapter;
-import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CheckPoolFragmentActivity;
 import com.clubmycab.CircularImageView;
 import com.clubmycab.MemberRideFragmentActivity;
 import com.clubmycab.R;
-import com.clubmycab.ShareLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
-import FetchClubHandler.FetchClubHandler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -70,17 +69,89 @@ public class FirstLoginClubsActivity extends Activity implements
 		String params = "OwnerNumber=" + MobileNumber;
 
 		// move this call to wallets page
-		new GlobalAsyncTask(this, endpoint, params, new FetchClubHandler(),
-				this, true);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"Fetch_Club", false);
+	}
+
+	private class MembersClubsAdaptor extends BaseAdapter {
+
+		// Declare Variables
+		Context context;
+		ArrayList<String> MemberClubPoolId;
+		ArrayList<String> MemberClubPoolName;
+		ArrayList<String> MemberClubNoofMembers;
+		ArrayList<String> MemberClubOwnerName;
+		LayoutInflater inflater;
+
+		public MembersClubsAdaptor(Context context,
+				ArrayList<String> memclubpoolid,
+				ArrayList<String> memclubpoolname,
+				ArrayList<String> memclubnoofmembers,
+				ArrayList<String> memclubownername) {
+			this.context = context;
+			this.MemberClubPoolId = memclubpoolid;
+			this.MemberClubPoolName = memclubpoolname;
+			this.MemberClubNoofMembers = memclubnoofmembers;
+			this.MemberClubOwnerName = memclubownername;
+		}
+
+		@Override
+		public int getCount() {
+			return MemberClubPoolId.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@SuppressLint("ViewHolder")
+		@Override
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			View itemView = inflater.inflate(R.layout.membersclubs_listrow,
+					parent, false);
+
+			// Locate the TextViews in listview_item.xml
+
+			TextView Mname = (TextView) itemView.findViewById(R.id.nameofclub);
+			TextView noofmembers = (TextView) itemView
+					.findViewById(R.id.noofmembers);
+			TextView clubownername = (TextView) itemView
+					.findViewById(R.id.clubownername);
+			ImageView removeclub = (ImageView) itemView
+					.findViewById(R.id.removeclub);
+
+			Mname.setText(MemberClubPoolName.get(position).toString().trim());
+			clubownername
+					.setText("("
+							+ MemberClubOwnerName.get(position).toString()
+									.trim() + ")");
+			noofmembers.setText("("
+					+ MemberClubNoofMembers.get(position).toString().trim()
+					+ ")");
+
+			removeclub.setVisibility(View.GONE);
+
+			return itemView;
+		}
 	}
 
 	@Override
-	public void getResult(int result, String response) {
-
+	public void getResult(String response, String uniqueID) {
 		Log.d("FirstLoginClubsActivity", "getResult : " + response);
-		
-		SharedPreferences sharedPreferences1 = getSharedPreferences(
-				"MyClubs", 0);
+
+		SharedPreferences sharedPreferences1 = getSharedPreferences("MyClubs",
+				0);
 		SharedPreferences.Editor editor1 = sharedPreferences1.edit();
 		editor1.putString("clubs", response.toString().trim());
 		editor1.commit();
@@ -188,80 +259,6 @@ public class FirstLoginClubsActivity extends Activity implements
 				finish();
 			}
 		});
-
-	}
-
-	private class MembersClubsAdaptor extends BaseAdapter {
-
-		// Declare Variables
-		Context context;
-		ArrayList<String> MemberClubPoolId;
-		ArrayList<String> MemberClubPoolName;
-		ArrayList<String> MemberClubNoofMembers;
-		ArrayList<String> MemberClubOwnerName;
-		LayoutInflater inflater;
-
-		public MembersClubsAdaptor(Context context,
-				ArrayList<String> memclubpoolid,
-				ArrayList<String> memclubpoolname,
-				ArrayList<String> memclubnoofmembers,
-				ArrayList<String> memclubownername) {
-			this.context = context;
-			this.MemberClubPoolId = memclubpoolid;
-			this.MemberClubPoolName = memclubpoolname;
-			this.MemberClubNoofMembers = memclubnoofmembers;
-			this.MemberClubOwnerName = memclubownername;
-		}
-
-		@Override
-		public int getCount() {
-			return MemberClubPoolId.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		@SuppressLint("ViewHolder")
-		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-
-			inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			View itemView = inflater.inflate(R.layout.membersclubs_listrow,
-					parent, false);
-
-			// Locate the TextViews in listview_item.xml
-
-			TextView Mname = (TextView) itemView.findViewById(R.id.nameofclub);
-			TextView noofmembers = (TextView) itemView
-					.findViewById(R.id.noofmembers);
-			TextView clubownername = (TextView) itemView
-					.findViewById(R.id.clubownername);
-			ImageView removeclub = (ImageView) itemView
-					.findViewById(R.id.removeclub);
-
-			Mname.setText(MemberClubPoolName.get(position).toString().trim());
-			clubownername
-					.setText("("
-							+ MemberClubOwnerName.get(position).toString()
-									.trim() + ")");
-			noofmembers.setText("("
-					+ MemberClubNoofMembers.get(position).toString().trim()
-					+ ")");
-
-			removeclub.setVisibility(View.GONE);
-
-			return itemView;
-		}
 	}
 
 }

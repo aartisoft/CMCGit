@@ -278,14 +278,18 @@
 
         <activity
             android:name="com.clubmycab.ui.FavoriteLocationsAcivity"
-            android:label="@string/title_activity_favorite_locations_acivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="com.clubmycab.ui.FirstLoginClubsActivity"
-            android:label="@string/title_activity_favorite_locations_acivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.clubmycab.ui.FirstLoginWalletsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >

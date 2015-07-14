@@ -82,6 +82,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 	int remainigfavorites = 3;
 	HashMap<String, String> favLocationHashMap = new HashMap<String, String>();
 
+	HashMap<Integer, String> invalidAddressHashMap = new HashMap<Integer, String>();
+
 	AddressModel addressModel;
 
 	boolean notfromregistration = false;
@@ -153,27 +155,38 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 					for (Address add : adresses) {
 						locationAddress = add;
 					}
-					addressModel = new AddressModel();
-					addressModel.setAddress(locationAddress);
-					addressModel.setShortname(MapUtilityMethods
-							.getAddressshort(FavoriteLocationsAcivity.this,
-									locationAddress.getLatitude(),
-									locationAddress.getLongitude()));
-					addressModel.setLongname(fromlocationname);
 
-					newTag = "customlocationTagNameTextView"
-							+ Integer.toString(currentSelectedIndex);
-					parentview = FavoriteLocationsAcivity.this
-							.findViewById(android.R.id.content);
-					childView = parentview.findViewWithTag(newTag);
+					if (locationAddress != null) {
+						addressModel = new AddressModel();
+						addressModel.setAddress(locationAddress);
+						addressModel.setShortname(MapUtilityMethods
+								.getAddressshort(FavoriteLocationsAcivity.this,
+										locationAddress.getLatitude(),
+										locationAddress.getLongitude()));
+						addressModel.setLongname(fromlocationname);
 
-					Log.d("Value", "" + childView.getTag());
+						newTag = "customlocationTagNameTextView"
+								+ Integer.toString(currentSelectedIndex);
+						parentview = FavoriteLocationsAcivity.this
+								.findViewById(android.R.id.content);
+						childView = parentview.findViewWithTag(newTag);
 
-					Gson gson = new Gson();
-					String json = gson.toJson(addressModel);
+						Log.d("Value", "" + childView.getTag());
 
-					favLocationHashMap.put(((TextView) childView).getText()
-							.toString(), json);
+						Gson gson = new Gson();
+						String json = gson.toJson(addressModel);
+
+						favLocationHashMap.put(((TextView) childView).getText()
+								.toString(), json);
+
+						invalidAddressHashMap.put(
+								Integer.valueOf(currentSelectedIndex), "");
+					} else {
+						Toast.makeText(
+								FavoriteLocationsAcivity.this,
+								"Sorry, we could not find the location you entered, please try again",
+								Toast.LENGTH_LONG).show();
+					}
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -234,6 +247,18 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			return;
 		}
 
+		for (Integer key : invalidAddressHashMap.keySet()) {
+			String string = invalidAddressHashMap.get(key);
+			if (!string.isEmpty() && string != "") {
+				Toast.makeText(
+						FavoriteLocationsAcivity.this,
+						string
+								+ " is not a valid address, please tap on one of the suggested places or try with a different address",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
 		SharedPreferences sharedprefernce = getSharedPreferences(
 				"FavoriteLocations", 0);
 
@@ -247,7 +272,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			finish();
 		} else {
 			Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
-					FirstLoginClubsActivity.class);
+					FirstLoginWalletsActivity.class);
 			startActivity(mainIntent);
 		}
 
@@ -266,7 +291,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			finish();
 		} else {
 			Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
-					FirstLoginClubsActivity.class);
+					FirstLoginWalletsActivity.class);
 			startActivity(mainIntent);
 		}
 	}
@@ -342,27 +367,38 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 						locationAddress = MapUtilityMethods.geocodeAddress(jnd,
 								FavoriteLocationsAcivity.this);
 
-						addressModel = new AddressModel();
-						addressModel.setAddress(locationAddress);
-						addressModel.setShortname(MapUtilityMethods
-								.getAddressshort(FavoriteLocationsAcivity.this,
-										locationAddress.getLatitude(),
-										locationAddress.getLongitude()));
-						addressModel.setLongname(jnd);
+						if (locationAddress != null) {
+							addressModel = new AddressModel();
+							addressModel.setAddress(locationAddress);
+							addressModel.setShortname(MapUtilityMethods
+									.getAddressshort(
+											FavoriteLocationsAcivity.this,
+											locationAddress.getLatitude(),
+											locationAddress.getLongitude()));
+							addressModel.setLongname(jnd);
 
-						newTag = "customlocationTagNameTextView"
-								+ Integer.toString(currentSelectedIndex);
-						// parentview = FavoriteLocationsAcivity.this
-						// .findViewById(android.R.id.content);
-						childView = parentview.findViewWithTag(newTag);
+							newTag = "customlocationTagNameTextView"
+									+ Integer.toString(currentSelectedIndex);
+							// parentview = FavoriteLocationsAcivity.this
+							// .findViewById(android.R.id.content);
+							childView = parentview.findViewWithTag(newTag);
 
-						Log.d("Value", "" + childView.getTag());
+							Log.d("Value", "" + childView.getTag());
 
-						Gson gson = new Gson();
-						String json = gson.toJson(addressModel);
+							Gson gson = new Gson();
+							String json = gson.toJson(addressModel);
 
-						favLocationHashMap.put(((TextView) childView).getText()
-								.toString(), json);
+							favLocationHashMap.put(((TextView) childView)
+									.getText().toString(), json);
+
+							invalidAddressHashMap.put(
+									Integer.valueOf(currentSelectedIndex), "");
+						} else {
+							Toast.makeText(
+									FavoriteLocationsAcivity.this,
+									"Sorry, we could not find the location you entered, please try again",
+									Toast.LENGTH_LONG).show();
+						}
 
 					}
 				});
@@ -400,8 +436,12 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			}
 
 			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
+			public void afterTextChanged(Editable editable) {
+				// Log.d("afterTextChanged", "editable : " +
+				// editable.toString());
+				invalidAddressHashMap.put(
+						Integer.valueOf(currentSelectedIndex),
+						editable.toString());
 			}
 		});
 

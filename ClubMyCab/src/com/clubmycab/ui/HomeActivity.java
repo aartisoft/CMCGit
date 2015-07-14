@@ -656,8 +656,9 @@ public class HomeActivity extends FragmentActivity implements
 		;
 		String params = "MobileNumber=" + MobileNumber;
 		new GlobalAsyncTask(this, endpoint, params,
-				new FetchUnreadNotificationCountHandler(), this, false);
-		
+				new FetchUnreadNotificationCountHandler(), this, false,
+				"FetchUnreadNotificationCount", false);
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForFetchClubs()
 					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -829,7 +830,8 @@ public class HomeActivity extends FragmentActivity implements
 							addressModelFrom = new AddressModel();
 							addressModelFrom.setAddress(fAddress);
 							addressModelFrom.setShortname(fromshortname);
-							addressModelFrom.setLongname(from_places.getText().toString());
+							addressModelFrom.setLongname(from_places.getText()
+									.toString());
 
 							if (fAddress != null && tAddress != null) {
 								// homebtnsll.setVisibility(View.VISIBLE);
@@ -1108,7 +1110,8 @@ public class HomeActivity extends FragmentActivity implements
 						addressModelFrom = new AddressModel();
 						addressModelFrom.setAddress(fAddress);
 						addressModelFrom.setShortname(fromshortname);
-						addressModelFrom.setLongname(from_places.getText().toString());
+						addressModelFrom.setLongname(from_places.getText()
+								.toString());
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1143,7 +1146,8 @@ public class HomeActivity extends FragmentActivity implements
 						addressModelTo = new AddressModel();
 						addressModelTo.setAddress(tAddress);
 						addressModelTo.setShortname(toshortname);
-						addressModelTo.setLongname(to_places.getText().toString());
+						addressModelTo.setLongname(to_places.getText()
+								.toString());
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -2211,95 +2215,94 @@ public class HomeActivity extends FragmentActivity implements
 			// ///////////////
 		}
 	}
-	
+
 	// ///////
-		private class ConnectionTaskForFetchClubs extends
-				AsyncTask<String, Void, Void> {
+	private class ConnectionTaskForFetchClubs extends
+			AsyncTask<String, Void, Void> {
 
-			@Override
-			protected void onPreExecute() {
-			}
-
-			@Override
-			protected Void doInBackground(String... args) {
-				AuthenticateConnectionFetchMyClubs mAuth1 = new AuthenticateConnectionFetchMyClubs();
-				try {
-					mAuth1.connection();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					exceptioncheck = true;
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void v) {
-
-				if (exceptioncheck) {
-					exceptioncheck = false;
-					Toast.makeText(HomeActivity.this,
-							getResources().getString(R.string.exceptionstring),
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-			}
+		@Override
+		protected void onPreExecute() {
 		}
 
-		public class AuthenticateConnectionFetchMyClubs {
-
-			public AuthenticateConnectionFetchMyClubs() {
-
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionFetchMyClubs mAuth1 = new AuthenticateConnectionFetchMyClubs();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
 			}
+			return null;
+		}
 
-			public void connection() throws Exception {
+		@Override
+		protected void onPostExecute(Void v) {
 
-				// Connect to google.com
-				HttpClient httpClient = new DefaultHttpClient();
-				String url_select = GlobalVariables.ServiceUrl
-						+ "/Fetch_Club.php";
-				HttpPost httpPost = new HttpPost(url_select);
-				BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
-						"OwnerNumber", MobileNumber);
-
-				List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-				nameValuePairList.add(UserNumberBasicNameValuePair);
-
-				UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-						nameValuePairList);
-				httpPost.setEntity(urlEncodedFormEntity);
-				HttpResponse httpResponse = httpClient.execute(httpPost);
-
-				Log.d("httpResponse", "" + httpResponse);
-
-				InputStream inputStream = httpResponse.getEntity().getContent();
-				InputStreamReader inputStreamReader = new InputStreamReader(
-						inputStream);
-
-				BufferedReader bufferedReader = new BufferedReader(
-						inputStreamReader);
-
-				StringBuilder stringBuilder = new StringBuilder();
-
-				String bufferedStrChunk = null;
-				String myprofileresp = null;
-
-				while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-					myprofileresp = stringBuilder.append(bufferedStrChunk)
-							.toString();
-				}
-
-				Log.d("myclubsresp", "" + myprofileresp);
-
-				SharedPreferences sharedPreferences1 = getSharedPreferences(
-						"MyClubs", 0);
-				SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-				editor1.putString("clubs", myprofileresp.toString().trim());
-				editor1.commit();
-
-				// ///////////////
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(HomeActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			}
 		}
+	}
+
+	public class AuthenticateConnectionFetchMyClubs {
+
+		public AuthenticateConnectionFetchMyClubs() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
+					"OwnerNumber", MobileNumber);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(UserNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String myprofileresp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				myprofileresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("myclubsresp", "" + myprofileresp);
+
+			SharedPreferences sharedPreferences1 = getSharedPreferences(
+					"MyClubs", 0);
+			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+			editor1.putString("clubs", myprofileresp.toString().trim());
+			editor1.commit();
+
+			// ///////////////
+		}
+	}
 
 	public boolean isOnline() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -2343,7 +2346,7 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		AppEventsLogger.activateApp(this);
-		
+
 		getWorkHomeAddress();
 
 		String PoolResponseSplash = getIntent().getStringExtra(
@@ -2390,21 +2393,6 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		AppEventsLogger.deactivateApp(this);
-	}
-
-	@Override
-	public void getResult(int result, String error) {
-		// TODO Auto-generated method stub
-		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
-
-			unreadnoticountrl.setVisibility(View.GONE);
-
-		} else {
-
-			unreadnoticountrl.setVisibility(View.VISIBLE);
-			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
-		}
-
 	}
 
 	@Override
@@ -2526,5 +2514,21 @@ public class HomeActivity extends FragmentActivity implements
 		}
 
 		return location;
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		if (uniqueID.equals("FetchUnreadNotificationCount")) {
+			if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+				unreadnoticountrl.setVisibility(View.GONE);
+
+			} else {
+
+				unreadnoticountrl.setVisibility(View.VISIBLE);
+				unreadnoticount
+						.setText(GlobalVariables.UnreadNotificationCount);
+			}
+		}
 	}
 }

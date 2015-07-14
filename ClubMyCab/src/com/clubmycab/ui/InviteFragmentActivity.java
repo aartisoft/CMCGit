@@ -1083,11 +1083,13 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					startString, AddressModel.class);
 			fAddress = startAddressModel.getAddress();
 			fromshortname = startAddressModel.getShortname();
+			from_places.setText(startAddressModel.getLongname());
 
 			AddressModel endAddressModel = (AddressModel) gson.fromJson(
 					endString, AddressModel.class);
 			tAddress = endAddressModel.getAddress();
 			toshortname = endAddressModel.getShortname();
+			to_places.setText(endAddressModel.getLongname());
 
 			from_places.setEnabled(false);
 			to_places.setEnabled(false);

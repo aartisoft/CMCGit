@@ -202,7 +202,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 	private JSONArray mCabSearchArray;
 	private GridView mGridViewCabSearch;
 	private String mUberBookingInputParams, mUberUsername, mUberPassword;
-	private int cabBookUberMegaPosition;
+	private int cabBookingPosition;
 
 	private ProgressDialog dialog12;
 
@@ -3273,6 +3273,510 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		}
 	}
 
+	private void bookNowButtonPress(int position, String userName,
+			String password) {
+		try {
+
+			if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("uber")) {
+
+				// if (editTextUserName.getText()
+				// .toString().isEmpty()
+				// || editTextPassword.getText()
+				// .toString().isEmpty()) {
+				// Toast.makeText(
+				// BookaCab.this,
+				// "Please enter Username/Password",
+				// Toast.LENGTH_LONG).show();
+				// } else {
+				// JSONObject jsonObject = new
+				// JSONObject();
+				// jsonObject
+				// .put("CabName",
+				// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER);
+				// jsonObject.put("Username",
+				// editTextUserName.getText()
+				// .toString());
+				// jsonObject.put("Password",
+				// editTextPassword.getText()
+				// .toString());
+				//
+				// CabUserCredentialsReadWrite
+				// cabUserCredentialsReadWrite = new
+				// CabUserCredentialsReadWrite(
+				// BookaCab.this);
+				// cabUserCredentialsReadWrite
+				// .saveToFile(jsonObject
+				// .toString());
+				//
+				// mUberUsername = editTextUserName
+				// .getText().toString();
+				// mUberPassword = editTextPassword
+				// .getText().toString();
+				// }
+				cabBookingPosition = position;
+				bookUberCab(
+						mCabSearchArray.getJSONObject(position).get("CabName")
+								.toString(),
+						mCabSearchArray.getJSONObject(position)
+								.get("productId").toString(), fAddress,
+						tAddress);
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("mega")) {
+
+				// if (editTextUserName.getText()
+				// .toString().isEmpty()
+				// || editTextPassword.getText()
+				// .toString().isEmpty()) {
+				// Toast.makeText(
+				// BookaCab.this,
+				// "Please enter Username/Password",
+				// Toast.LENGTH_LONG).show();
+				// } else {
+				// JSONObject jsonObject = new
+				// JSONObject();
+				// jsonObject
+				// .put("CabName",
+				// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA);
+				// jsonObject.put("Username",
+				// editTextUserName.getText()
+				// .toString());
+				// jsonObject.put("Password",
+				// editTextPassword.getText()
+				// .toString());
+				//
+				// CabUserCredentialsReadWrite
+				// cabUserCredentialsReadWrite = new
+				// CabUserCredentialsReadWrite(
+				// BookaCab.this);
+				// cabUserCredentialsReadWrite
+				// .saveToFile(jsonObject
+				// .toString());
+				//
+				//
+				// }
+				cabBookingPosition = position;
+				bookMegaCab(fAddress, tAddress);
+
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("taxiforsure")) {
+
+				if (userName.isEmpty() || password.isEmpty()) {
+					Toast.makeText(BookaCabFragmentActivity.this,
+							"Please enter Username/Password", Toast.LENGTH_LONG)
+							.show();
+				} else {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("CabName",
+							CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS);
+					jsonObject.put("Username", userName);
+					jsonObject.put("Password", password);
+
+					CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
+							BookaCabFragmentActivity.this);
+					cabUserCredentialsReadWrite.saveToFile(jsonObject
+							.toString());
+
+					cabBookingPosition = position;
+
+					String carType = mCabSearchArray.getJSONObject(position)
+							.get("carType").toString().trim();
+					String etaApp = Long.toString(Math.round(Double
+							.valueOf(mCabSearchArray.getJSONObject(position)
+									.get("timeEstimate").toString()) / 60));
+
+					bookTFSCab(fAddress, userName, password, carType, etaApp);
+				}
+
+			} else {
+
+				updateCMCRecords(
+						mCabSearchArray.getJSONObject(position)
+								.get("CabNameID").toString(),
+						mCabSearchArray.getJSONObject(position).get("CarType")
+								.toString(),
+						"2",
+						fAddress,
+						tAddress,
+						"",
+						"",
+						false,
+						true,
+						"",
+						"http://"
+								+ mCabSearchArray.getJSONObject(position)
+										.get("CabMobileSite").toString(),
+						mCabSearchArray.getJSONObject(position)
+								.get("CabPackageName").toString(), false);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+	private void gridviewItemClick(final int position) {
+		// Log.d("BookaCab",
+		// "mGridViewCabSearch onItemClick position : " +
+		// position);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.book_cab_detail_dialog, null);
+
+		final EditText editTextUserName = (EditText) builderView
+				.findViewById(R.id.editTextBookCabUserName);
+		final EditText editTextPassword = (EditText) builderView
+				.findViewById(R.id.editTextBookCabPassword);
+
+		String jsonString = "";
+		TextView textView = (TextView) builderView
+				.findViewById(R.id.textViewCabName);
+		try {
+			jsonString = mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString();
+			textView.setText((jsonString.isEmpty() || jsonString
+					.equalsIgnoreCase("null")) ? "-" : jsonString);
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView.findViewById(R.id.textViewCabType);
+		try {
+			jsonString = mCabSearchArray.getJSONObject(position).get("CarType")
+					.toString();
+			textView.setText((jsonString.isEmpty() || jsonString
+					.equalsIgnoreCase("null")) ? "-" : jsonString);
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView.findViewById(R.id.textViewEstTime);
+		try {
+			textView.setText("Est. time: "
+					+ String.format(
+							"%d%n",
+							Math.round(Double.parseDouble(mCabSearchArray
+									.getJSONObject(position)
+									.get("timeEstimate").toString()) / 60))
+					+ "mins");
+		} catch (Exception e) {
+			textView.setText("Est. time: -");
+		}
+		textView = (TextView) builderView.findViewById(R.id.textViewEstPrice);
+		try {
+			String lowString = mCabSearchArray.getJSONObject(position)
+					.get("low_estimate").toString();
+			String highString = mCabSearchArray.getJSONObject(position)
+					.get("high_estimate").toString();
+			if (lowString.isEmpty() || highString.isEmpty()
+					|| lowString.equalsIgnoreCase("na")
+					|| lowString.equalsIgnoreCase("null")
+					|| highString.equalsIgnoreCase("na")
+					|| highString.equalsIgnoreCase("null")) {
+				textView.setText("Est. price: " + "-");
+			} else {
+				textView.setText("Est. price: \u20B9"
+						+ mCabSearchArray.getJSONObject(position)
+								.get("low_estimate").toString()
+						+ "-"
+						+ mCabSearchArray.getJSONObject(position)
+								.get("high_estimate").toString());
+			}
+
+		} catch (Exception e) {
+			textView.setText("Est. price: " + "-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabBaseFare);
+		try {
+			String baseFareString = mCabSearchArray.getJSONObject(position)
+					.get("BaseFare").toString();
+			String baseKmString = mCabSearchArray.getJSONObject(position)
+					.get("BaseFareKM").toString();
+			if (baseFareString.isEmpty()
+					|| baseFareString.equalsIgnoreCase("na")
+					|| baseFareString.equalsIgnoreCase("null")
+					|| baseKmString.isEmpty()
+					|| baseKmString.equalsIgnoreCase("na")
+					|| baseKmString.equalsIgnoreCase("null")) {
+				textView.setText("-");
+			} else {
+				textView.setText("\u20B9"
+						+ mCabSearchArray.getJSONObject(position)
+								.get("BaseFare").toString()
+						+ " for first "
+						+ mCabSearchArray.getJSONObject(position)
+								.get("BaseFareKM").toString() + "Kms");
+			}
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabRatePerKM);
+		try {
+			jsonString = mCabSearchArray.getJSONObject(position)
+					.get("RatePerKMAfterBaseFare").toString();
+			if (jsonString.isEmpty() || jsonString.equalsIgnoreCase("na")
+					|| jsonString.equalsIgnoreCase("null")) {
+				textView.setText("-");
+			} else {
+				textView.setText("\u20B9" + jsonString + " per Km");
+			}
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabNightBase);
+		try {
+			Double multiplier = Double.parseDouble(mCabSearchArray
+					.getJSONObject(position).get("NightTimeRateMultiplier")
+					.toString());
+			Long nightRate = Math
+					.round(multiplier
+							* Double.parseDouble(mCabSearchArray
+									.getJSONObject(position).get("BaseFare")
+									.toString()));
+
+			textView.setText("\u20B9"
+					+ Long.toString(nightRate)
+					+ " for first "
+					+ mCabSearchArray.getJSONObject(position).get("BaseFareKM")
+							.toString() + "Kms");
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabNightPer);
+		try {
+			Double multiplier = Double.parseDouble(mCabSearchArray
+					.getJSONObject(position).get("NightTimeRateMultiplier")
+					.toString());
+			Long nightRate = Math.round(multiplier
+					* Double.parseDouble(mCabSearchArray
+							.getJSONObject(position)
+							.get("RatePerKMAfterBaseFare").toString()));
+
+			textView.setText("\u20B9" + Long.toString(nightRate) + " per Km");
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabNightTime);
+		try {
+			String startString = mCabSearchArray.getJSONObject(position)
+					.get("NightTimeStartHours").toString();
+			String endString = mCabSearchArray.getJSONObject(position)
+					.get("NightTimeEndHours").toString();
+			if (startString.isEmpty() || startString.equalsIgnoreCase("na")
+					|| startString.equalsIgnoreCase("null")
+					|| endString.isEmpty() || endString.equalsIgnoreCase("na")
+					|| endString.equalsIgnoreCase("null")) {
+				textView.setText("-");
+			} else {
+				textView.setText(mCabSearchArray.getJSONObject(position)
+						.get("NightTimeStartHours").toString()
+						+ " hrs - "
+						+ mCabSearchArray.getJSONObject(position)
+								.get("NightTimeEndHours").toString() + " hrs");
+			}
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+
+		RatingBar ratingBar = (RatingBar) builderView
+				.findViewById(R.id.ratingBarBookCab);
+		try {
+
+			ratingBar.setRating(Float.parseFloat(mCabSearchArray
+					.getJSONObject(position).get("Rating").toString()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewNumberOfRatings);
+
+		try {
+			if (mCabSearchArray.getJSONObject(position).get("NoofReviews")
+					.toString().equals("0")) {
+				textView.setText("");
+			} else {
+				textView.setText("("
+						+ mCabSearchArray.getJSONObject(position)
+								.get("NoofReviews").toString() + ")");
+			}
+		} catch (Exception e) {
+			textView.setText("");
+		}
+
+		ImageView imageView = (ImageView) builderView
+				.findViewById(R.id.imageButtonCallNow);
+		imageView.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				try {
+					String phoneString = mCabSearchArray
+							.getJSONObject(position).get("CabContactNo")
+							.toString();
+					if (phoneString.isEmpty()
+							|| phoneString.equalsIgnoreCase("null")
+							|| phoneString.equalsIgnoreCase("na")) {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Phone number could not be retrieved",
+								Toast.LENGTH_LONG).show();
+					} else {
+						updateCMCRecords(
+								mCabSearchArray.getJSONObject(position)
+										.get("CabNameID").toString(),
+								mCabSearchArray.getJSONObject(position)
+										.get("CarType").toString(), "3",
+								fAddress, tAddress, "", "", true, false,
+								phoneString, "", "", false);
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					Toast.makeText(BookaCabFragmentActivity.this,
+							"Phone number could not be retrieved",
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		try {
+			CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
+					BookaCabFragmentActivity.this);
+			JSONArray jsonArray = cabUserCredentialsReadWrite
+					.readArrayFromFile();
+			JSONObject jsonObject = new JSONObject();
+
+			if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("uber")) {
+				// editTextUserName.setVisibility(View.VISIBLE);
+				// editTextPassword.setVisibility(View.VISIBLE);
+				//
+				// Log.d("BookaCab", "contains(uber) : " +
+				// cabUserCredentialsReadWrite.readArrayFromFile());
+				//
+				// try {
+				// for (int i = 0; i < jsonArray.length(); i++)
+				// {
+				// if (jsonArray
+				// .getJSONObject(i)
+				// .get("CabName")
+				// .toString()
+				// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER))
+				// {
+				// jsonObject = jsonArray
+				// .getJSONObject(i);
+				// editTextUserName
+				// .setText(jsonObject.get(
+				// "Username")
+				// .toString());
+				// editTextPassword
+				// .setText(jsonObject.get(
+				// "Password")
+				// .toString());
+				// }
+				// }
+				// } catch (Exception e) {
+				// // TODO: handle exception
+				// }
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("mega")) {
+				// editTextUserName.setVisibility(View.VISIBLE);
+				// editTextPassword.setVisibility(View.VISIBLE);
+				//
+				// // Log.d("BookaCab", "contains(mega) : " +
+				// //
+				// cabUserCredentialsReadWrite.readArrayFromFile());
+				//
+				// try {
+				// for (int i = 0; i < jsonArray.length(); i++)
+				// {
+				// if (jsonArray
+				// .getJSONObject(i)
+				// .get("CabName")
+				// .toString()
+				// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA))
+				// {
+				// jsonObject = jsonArray
+				// .getJSONObject(i);
+				// editTextUserName
+				// .setText(jsonObject.get(
+				// "Username")
+				// .toString());
+				// editTextPassword
+				// .setText(jsonObject.get(
+				// "Password")
+				// .toString());
+				// }
+				// }
+				// } catch (Exception e) {
+				// // TODO: handle exception
+				// }
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("taxiforsure")) {
+				editTextUserName.setVisibility(View.VISIBLE);
+				editTextPassword.setVisibility(View.VISIBLE);
+
+				Log.d("BookaCab", "contains(taxiforsure) : "
+						+ cabUserCredentialsReadWrite.readArrayFromFile());
+
+				try {
+					for (int i = 0; i < jsonArray.length(); i++) {
+						if (jsonArray
+								.getJSONObject(i)
+								.get("CabName")
+								.toString()
+								.equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS)) {
+							jsonObject = jsonArray.getJSONObject(i);
+							editTextUserName.setText(jsonObject.get("Username")
+									.toString());
+							editTextPassword.setText(jsonObject.get("Password")
+									.toString());
+						}
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		} catch (Exception e) {
+
+		}
+		Button button = (Button) builderView.findViewById(R.id.buttonBookNow);
+		button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+
+				dismissKeyboard();
+
+				bookNowButtonPress(position, editTextUserName.getText()
+						.toString(), editTextPassword.getText().toString());
+			}
+		});
+
+		builder.setView(builderView);
+		AlertDialog dialog = builder.create();
+
+		dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				Log.d("BookaCab", "dialog onDismiss");
+				mGridViewCabSearch.setFocusableInTouchMode(true);
+				mGridViewCabSearch.requestFocus();
+				dismissKeyboard();
+			}
+		});
+
+		dialog.show();
+	}
+
 	private void updateGridView() {
 
 		if (mCabSearchArray.length() > 0
@@ -3287,588 +3791,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
-							final int position, long id) {
-						// Log.d("BookaCab",
-						// "mGridViewCabSearch onItemClick position : " +
-						// position);
-
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								BookaCabFragmentActivity.this);
-						View builderView = (View) getLayoutInflater().inflate(
-								R.layout.book_cab_detail_dialog, null);
-
-						final EditText editTextUserName = (EditText) builderView
-								.findViewById(R.id.editTextBookCabUserName);
-						final EditText editTextPassword = (EditText) builderView
-								.findViewById(R.id.editTextBookCabPassword);
-
-						String jsonString = "";
-						TextView textView = (TextView) builderView
-								.findViewById(R.id.textViewCabName);
-						try {
-							jsonString = mCabSearchArray
-									.getJSONObject(position).get("CabName")
-									.toString();
-							textView.setText((jsonString.isEmpty() || jsonString
-									.equalsIgnoreCase("null")) ? "-"
-									: jsonString);
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewCabType);
-						try {
-							jsonString = mCabSearchArray
-									.getJSONObject(position).get("CarType")
-									.toString();
-							textView.setText((jsonString.isEmpty() || jsonString
-									.equalsIgnoreCase("null")) ? "-"
-									: jsonString);
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewEstTime);
-						try {
-							textView.setText("Est. time: "
-									+ String.format("%d%n", Math.round(Double
-											.parseDouble(mCabSearchArray
-													.getJSONObject(position)
-													.get("timeEstimate")
-													.toString()) / 60))
-									+ "mins");
-						} catch (Exception e) {
-							textView.setText("Est. time: -");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewEstPrice);
-						try {
-							String lowString = mCabSearchArray
-									.getJSONObject(position)
-									.get("low_estimate").toString();
-							String highString = mCabSearchArray
-									.getJSONObject(position)
-									.get("high_estimate").toString();
-							if (lowString.isEmpty() || highString.isEmpty()
-									|| lowString.equalsIgnoreCase("na")
-									|| lowString.equalsIgnoreCase("null")
-									|| highString.equalsIgnoreCase("na")
-									|| highString.equalsIgnoreCase("null")) {
-								textView.setText("Est. price: " + "-");
-							} else {
-								textView.setText("Est. price: \u20B9"
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("low_estimate").toString()
-										+ "-"
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("high_estimate")
-												.toString());
-							}
-
-						} catch (Exception e) {
-							textView.setText("Est. price: " + "-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabBaseFare);
-						try {
-							String baseFareString = mCabSearchArray
-									.getJSONObject(position).get("BaseFare")
-									.toString();
-							String baseKmString = mCabSearchArray
-									.getJSONObject(position).get("BaseFareKM")
-									.toString();
-							if (baseFareString.isEmpty()
-									|| baseFareString.equalsIgnoreCase("na")
-									|| baseFareString.equalsIgnoreCase("null")
-									|| baseKmString.isEmpty()
-									|| baseKmString.equalsIgnoreCase("na")
-									|| baseKmString.equalsIgnoreCase("null")) {
-								textView.setText("-");
-							} else {
-								textView.setText("\u20B9"
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("BaseFare").toString()
-										+ " for first "
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("BaseFareKM").toString()
-										+ "Kms");
-							}
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabRatePerKM);
-						try {
-							jsonString = mCabSearchArray
-									.getJSONObject(position)
-									.get("RatePerKMAfterBaseFare").toString();
-							if (jsonString.isEmpty()
-									|| jsonString.equalsIgnoreCase("na")
-									|| jsonString.equalsIgnoreCase("null")) {
-								textView.setText("-");
-							} else {
-								textView.setText("\u20B9" + jsonString
-										+ " per Km");
-							}
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabNightBase);
-						try {
-							Double multiplier = Double
-									.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("NightTimeRateMultiplier")
-											.toString());
-							Long nightRate = Math.round(multiplier
-									* Double.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("BaseFare").toString()));
-
-							textView.setText("\u20B9"
-									+ Long.toString(nightRate)
-									+ " for first "
-									+ mCabSearchArray.getJSONObject(position)
-											.get("BaseFareKM").toString()
-									+ "Kms");
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabNightPer);
-						try {
-							Double multiplier = Double
-									.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("NightTimeRateMultiplier")
-											.toString());
-							Long nightRate = Math.round(multiplier
-									* Double.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("RatePerKMAfterBaseFare")
-											.toString()));
-
-							textView.setText("\u20B9"
-									+ Long.toString(nightRate) + " per Km");
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabNightTime);
-						try {
-							String startString = mCabSearchArray
-									.getJSONObject(position)
-									.get("NightTimeStartHours").toString();
-							String endString = mCabSearchArray
-									.getJSONObject(position)
-									.get("NightTimeEndHours").toString();
-							if (startString.isEmpty()
-									|| startString.equalsIgnoreCase("na")
-									|| startString.equalsIgnoreCase("null")
-									|| endString.isEmpty()
-									|| endString.equalsIgnoreCase("na")
-									|| endString.equalsIgnoreCase("null")) {
-								textView.setText("-");
-							} else {
-								textView.setText(mCabSearchArray
-										.getJSONObject(position)
-										.get("NightTimeStartHours").toString()
-										+ " hrs - "
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("NightTimeEndHours")
-												.toString() + " hrs");
-							}
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-
-						RatingBar ratingBar = (RatingBar) builderView
-								.findViewById(R.id.ratingBarBookCab);
-						try {
-
-							ratingBar.setRating(Float
-									.parseFloat(mCabSearchArray
-											.getJSONObject(position)
-											.get("Rating").toString()));
-
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewNumberOfRatings);
-
-						try {
-							if (mCabSearchArray.getJSONObject(position)
-									.get("NoofReviews").toString().equals("0")) {
-								textView.setText("");
-							} else {
-								textView.setText("("
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("NoofReviews").toString()
-										+ ")");
-							}
-						} catch (Exception e) {
-							textView.setText("");
-						}
-
-						ImageView imageView = (ImageView) builderView
-								.findViewById(R.id.imageButtonCallNow);
-						imageView
-								.setOnClickListener(new View.OnClickListener() {
-
-									@Override
-									public void onClick(View view) {
-										try {
-											String phoneString = mCabSearchArray
-													.getJSONObject(position)
-													.get("CabContactNo")
-													.toString();
-											if (phoneString.isEmpty()
-													|| phoneString
-															.equalsIgnoreCase("null")
-													|| phoneString
-															.equalsIgnoreCase("na")) {
-												Toast.makeText(
-														BookaCabFragmentActivity.this,
-														"Phone number could not be retrieved",
-														Toast.LENGTH_LONG)
-														.show();
-											} else {
-												updateCMCRecords(
-														mCabSearchArray
-																.getJSONObject(
-																		position)
-																.get("CabNameID")
-																.toString(),
-														mCabSearchArray
-																.getJSONObject(
-																		position)
-																.get("CarType")
-																.toString(),
-														"3", fAddress,
-														tAddress, "", "", true,
-														false, phoneString, "",
-														"", false);
-											}
-										} catch (Exception e) {
-											// TODO: handle exception
-											e.printStackTrace();
-											Toast.makeText(
-													BookaCabFragmentActivity.this,
-													"Phone number could not be retrieved",
-													Toast.LENGTH_LONG).show();
-										}
-									}
-								});
-
-						try {
-							CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
-									BookaCabFragmentActivity.this);
-							JSONArray jsonArray = cabUserCredentialsReadWrite
-									.readArrayFromFile();
-							JSONObject jsonObject = new JSONObject();
-
-							if (mCabSearchArray.getJSONObject(position)
-									.get("CabName").toString().toLowerCase()
-									.contains("uber")) {
-								// editTextUserName.setVisibility(View.VISIBLE);
-								// editTextPassword.setVisibility(View.VISIBLE);
-								//
-								// Log.d("BookaCab", "contains(uber) : " +
-								// cabUserCredentialsReadWrite.readArrayFromFile());
-								//
-								// try {
-								// for (int i = 0; i < jsonArray.length(); i++)
-								// {
-								// if (jsonArray
-								// .getJSONObject(i)
-								// .get("CabName")
-								// .toString()
-								// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER))
-								// {
-								// jsonObject = jsonArray
-								// .getJSONObject(i);
-								// editTextUserName
-								// .setText(jsonObject.get(
-								// "Username")
-								// .toString());
-								// editTextPassword
-								// .setText(jsonObject.get(
-								// "Password")
-								// .toString());
-								// }
-								// }
-								// } catch (Exception e) {
-								// // TODO: handle exception
-								// }
-							} else if (mCabSearchArray.getJSONObject(position)
-									.get("CabName").toString().toLowerCase()
-									.contains("mega")) {
-								// editTextUserName.setVisibility(View.VISIBLE);
-								// editTextPassword.setVisibility(View.VISIBLE);
-								//
-								// // Log.d("BookaCab", "contains(mega) : " +
-								// //
-								// cabUserCredentialsReadWrite.readArrayFromFile());
-								//
-								// try {
-								// for (int i = 0; i < jsonArray.length(); i++)
-								// {
-								// if (jsonArray
-								// .getJSONObject(i)
-								// .get("CabName")
-								// .toString()
-								// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA))
-								// {
-								// jsonObject = jsonArray
-								// .getJSONObject(i);
-								// editTextUserName
-								// .setText(jsonObject.get(
-								// "Username")
-								// .toString());
-								// editTextPassword
-								// .setText(jsonObject.get(
-								// "Password")
-								// .toString());
-								// }
-								// }
-								// } catch (Exception e) {
-								// // TODO: handle exception
-								// }
-							} else if (mCabSearchArray.getJSONObject(position)
-									.get("CabName").toString().toLowerCase()
-									.contains("taxiforsure")) {
-								editTextUserName.setVisibility(View.VISIBLE);
-								editTextPassword.setVisibility(View.VISIBLE);
-
-								Log.d("BookaCab",
-										"contains(taxiforsure) : "
-												+ cabUserCredentialsReadWrite
-														.readArrayFromFile());
-
-								try {
-									for (int i = 0; i < jsonArray.length(); i++) {
-										if (jsonArray
-												.getJSONObject(i)
-												.get("CabName")
-												.toString()
-												.equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS)) {
-											jsonObject = jsonArray
-													.getJSONObject(i);
-											editTextUserName
-													.setText(jsonObject.get(
-															"Username")
-															.toString());
-											editTextPassword
-													.setText(jsonObject.get(
-															"Password")
-															.toString());
-										}
-									}
-								} catch (Exception e) {
-									// TODO: handle exception
-								}
-							}
-						} catch (Exception e) {
-
-						}
-						Button button = (Button) builderView
-								.findViewById(R.id.buttonBookNow);
-						button.setOnClickListener(new View.OnClickListener() {
-
-							@Override
-							public void onClick(View view) {
-
-								dismissKeyboard();
-
-								try {
-
-									if (mCabSearchArray.getJSONObject(position)
-											.get("CabName").toString()
-											.toLowerCase().contains("uber")) {
-
-										// if (editTextUserName.getText()
-										// .toString().isEmpty()
-										// || editTextPassword.getText()
-										// .toString().isEmpty()) {
-										// Toast.makeText(
-										// BookaCab.this,
-										// "Please enter Username/Password",
-										// Toast.LENGTH_LONG).show();
-										// } else {
-										// JSONObject jsonObject = new
-										// JSONObject();
-										// jsonObject
-										// .put("CabName",
-										// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER);
-										// jsonObject.put("Username",
-										// editTextUserName.getText()
-										// .toString());
-										// jsonObject.put("Password",
-										// editTextPassword.getText()
-										// .toString());
-										//
-										// CabUserCredentialsReadWrite
-										// cabUserCredentialsReadWrite = new
-										// CabUserCredentialsReadWrite(
-										// BookaCab.this);
-										// cabUserCredentialsReadWrite
-										// .saveToFile(jsonObject
-										// .toString());
-										//
-										// mUberUsername = editTextUserName
-										// .getText().toString();
-										// mUberPassword = editTextPassword
-										// .getText().toString();
-										// }
-										cabBookUberMegaPosition = position;
-										bookUberCab(
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CabName")
-														.toString(),
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("productId")
-														.toString(), fAddress,
-												tAddress);
-									} else if (mCabSearchArray
-											.getJSONObject(position)
-											.get("CabName").toString()
-											.toLowerCase().contains("mega")) {
-
-										// if (editTextUserName.getText()
-										// .toString().isEmpty()
-										// || editTextPassword.getText()
-										// .toString().isEmpty()) {
-										// Toast.makeText(
-										// BookaCab.this,
-										// "Please enter Username/Password",
-										// Toast.LENGTH_LONG).show();
-										// } else {
-										// JSONObject jsonObject = new
-										// JSONObject();
-										// jsonObject
-										// .put("CabName",
-										// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA);
-										// jsonObject.put("Username",
-										// editTextUserName.getText()
-										// .toString());
-										// jsonObject.put("Password",
-										// editTextPassword.getText()
-										// .toString());
-										//
-										// CabUserCredentialsReadWrite
-										// cabUserCredentialsReadWrite = new
-										// CabUserCredentialsReadWrite(
-										// BookaCab.this);
-										// cabUserCredentialsReadWrite
-										// .saveToFile(jsonObject
-										// .toString());
-										//
-										//
-										// }
-										cabBookUberMegaPosition = position;
-										bookMegaCab(fAddress, tAddress);
-
-									} else if (mCabSearchArray
-											.getJSONObject(position)
-											.get("CabName").toString()
-											.toLowerCase()
-											.contains("taxiforsure")) {
-
-										if (editTextUserName.getText()
-												.toString().isEmpty()
-												|| editTextPassword.getText()
-														.toString().isEmpty()) {
-											Toast.makeText(
-													BookaCabFragmentActivity.this,
-													"Please enter Username/Password",
-													Toast.LENGTH_LONG).show();
-										} else {
-											JSONObject jsonObject = new JSONObject();
-											jsonObject
-													.put("CabName",
-															CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS);
-											jsonObject.put("Username",
-													editTextUserName.getText()
-															.toString());
-											jsonObject.put("Password",
-													editTextPassword.getText()
-															.toString());
-
-											CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
-													BookaCabFragmentActivity.this);
-											cabUserCredentialsReadWrite
-													.saveToFile(jsonObject
-															.toString());
-
-										}
-										// cabBookUberMegaPosition = position;
-										// bookMegaCab(fAddress, tAddress);
-
-									} else {
-
-										updateCMCRecords(
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CabNameID")
-														.toString(),
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CarType")
-														.toString(),
-												"2",
-												fAddress,
-												tAddress,
-												"",
-												"",
-												false,
-												true,
-												"",
-												"http://"
-														+ mCabSearchArray
-																.getJSONObject(
-																		position)
-																.get("CabMobileSite")
-																.toString(),
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CabPackageName")
-														.toString(), false);
-									}
-
-								} catch (Exception e) {
-									// TODO: handle exception
-									e.printStackTrace();
-								}
-							}
-						});
-
-						builder.setView(builderView);
-						AlertDialog dialog = builder.create();
-
-						dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
-
-							@Override
-							public void onDismiss(DialogInterface dialog) {
-								Log.d("BookaCab", "dialog onDismiss");
-								mGridViewCabSearch
-										.setFocusableInTouchMode(true);
-								mGridViewCabSearch.requestFocus();
-								dismissKeyboard();
-							}
-						});
-
-						dialog.show();
+							int position, long id) {
+						gridviewItemClick(position);
 					}
 				});
 
@@ -4002,45 +3926,60 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					textView.setText("");
 				}
 
-				// Button button = (Button) convertView
-				// .findViewById(R.id.buttonBookNow);
-				// button.setTag("BookNowButton" + position);
-				// button.setOnClickListener(new View.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(View view) {
-				// int pos = Integer.parseInt(view.getTag().toString()
-				// .replace("BookNowButton", ""));
-				// try {
-				//
-				// if (mEntries.getJSONObject(pos).get("CabName")
-				// .toString().toLowerCase().contains("uber")) {
-				// // Log.d("BookaCab",
-				// // "BookNowButton fAddress : " +
-				// // fAddress.toString() + " tAddress : " +
-				// // tAddress.toString());
-				// bookUberCab(
-				// mEntries.getJSONObject(pos)
-				// .get("CabName").toString(),
-				// mEntries.getJSONObject(pos)
-				// .get("productId").toString(),
-				// fAddress, tAddress);
-				// } else {
-				// openAppOrMSite(
-				// mEntries.getJSONObject(pos)
-				// .get("CabPackageName")
-				// .toString(), "http://"
-				// + mEntries.getJSONObject(pos)
-				// .get("CabMobileSite")
-				// .toString());
-				// }
-				//
-				// } catch (Exception e) {
-				// // TODO: handle exception
-				// e.printStackTrace();
-				// }
-				// }
-				// });
+				Button button = (Button) convertView
+						.findViewById(R.id.buttonBookNow);
+				button.setTag("BookNowButton" + position);
+				button.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+
+						int pos = Integer.parseInt(view.getTag().toString()
+								.replace("BookNowButton", ""));
+						Log.d("BookaCab", "buttonBookNow onClick pos : " + pos);
+
+						try {
+							if (mCabSearchArray.getJSONObject(pos)
+									.get("CabName").toString().toLowerCase()
+									.contains("taxiforsure")) {
+								gridviewItemClick(pos);
+							} else {
+								bookNowButtonPress(pos, "", "");
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						// try {
+						//
+						// if (mEntries.getJSONObject(pos).get("CabName")
+						// .toString().toLowerCase().contains("uber")) {
+						// // Log.d("BookaCab",
+						// // "BookNowButton fAddress : " +
+						// // fAddress.toString() + " tAddress : " +
+						// // tAddress.toString());
+						// bookUberCab(
+						// mEntries.getJSONObject(pos)
+						// .get("CabName").toString(),
+						// mEntries.getJSONObject(pos)
+						// .get("productId").toString(),
+						// fAddress, tAddress);
+						// } else {
+						// openAppOrMSite(
+						// mEntries.getJSONObject(pos)
+						// .get("CabPackageName")
+						// .toString(), "http://"
+						// + mEntries.getJSONObject(pos)
+						// .get("CabMobileSite")
+						// .toString());
+						// }
+						//
+						// } catch (Exception e) {
+						// // TODO: handle exception
+						// e.printStackTrace();
+						// }
+					}
+				});
 				//
 				// ImageView imageButton = (ImageView) convertView
 				// .findViewById(R.id.imageButtonCallNow);
@@ -4751,12 +4690,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 														updateCMCRecords(
 																mCabSearchArray
 																		.getJSONObject(
-																				cabBookUberMegaPosition)
+																				cabBookingPosition)
 																		.get("CabNameID")
 																		.toString(),
 																mCabSearchArray
 																		.getJSONObject(
-																				cabBookUberMegaPosition)
+																				cabBookingPosition)
 																		.get("CarType")
 																		.toString(),
 																"1", fAddress,
@@ -4933,6 +4872,301 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			});
 		}
 
+	}
+
+	private void bookTFSCab(final Address startAddress, String username,
+			String password, String carType, String etaApp) {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		} else if (startAddress == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
+			builder.setTitle("");
+			builder.setMessage("Please provide From location to make a booking.");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		BookTFSAsync bookTFSAsync = new BookTFSAsync();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+		Date date = Calendar.getInstance().getTime();
+		String dateString, timeString;
+		try {
+			dateString = simpleDateFormat.format(date);
+			timeString = simpleTimeFormat.format(date);
+			// Log.d("BookaCab", "updateCMCRecords dateString : " + dateString
+			// + " timeString : " + timeString);
+		} catch (Exception e) {
+			e.printStackTrace();
+			dateString = "";
+			timeString = "";
+		}
+
+		String param = "type=booking" + "&username=" + username + "&password="
+				+ password + "&car_type=" + carType + "&source=app"
+				+ "&pickup_time=" + timeString + "&pickup_date=" + dateString
+				+ "&city=" + startAddress.getLocality() + "&pickup_area="
+				+ from_places.getText().toString().trim() + "&landmark="
+				+ from_places.getText().toString().trim() + "&pickup_latitude="
+				+ String.valueOf(startAddress.getLatitude())
+				+ "&pickup_longitude="
+				+ String.valueOf(startAddress.getLongitude())
+				+ "&eta_from_app=" + etaApp;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			bookTFSAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					param);
+		} else {
+			bookTFSAsync.execute(param);
+		}
+	}
+
+	public class BookTFSAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		@Override
+		protected void onPreExecute() {
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
+
+			dialog12.setMessage("Please Wait...");
+			dialog12.setCancelable(false);
+			dialog12.setCanceledOnTouchOutside(false);
+			dialog12.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("BookTFSAsync", "BookTFSAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl + "/tfs.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("BookTFSAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("BookTFSAsync", "BookTFSAsync response : " + response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (!result.isEmpty()) {
+
+				// try {
+				// JSONObject jsonObject = new JSONObject(result);
+				// String status = jsonObject.get("status").toString();
+				// if (status.equalsIgnoreCase("SUCCESS")) {
+				//
+				// JSONObject jsonObjectData = new JSONObject(jsonObject
+				// .get("data").toString());
+				// String driverName = "", driverPhone = "", vehicleLicense =
+				// "", requestID = "";
+				// try {
+				// driverName = jsonObjectData.get("DriverName")
+				// .toString();
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				//
+				// try {
+				// driverPhone = jsonObjectData.get("DriverNumber")
+				// .toString();
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				//
+				// try {
+				// vehicleLicense = jsonObjectData.get("VehicleNo")
+				// .toString();
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				//
+				// try {
+				// requestID = jsonObject.get("Jobno").toString();
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				//
+				// if (rideObject != null) {
+				// rideObject.driverName = driverName;
+				// rideObject.driverPhone = driverPhone;
+				// rideObject.vehicle = vehicleLicense;
+				// } else {
+				// rideObject.driverName = driverName;
+				// rideObject.driverPhone = driverPhone;
+				// rideObject.vehicle = vehicleLicense;
+				// }
+				//
+				// final String driverNameFinal = driverName, driverPhoneFinal =
+				// driverPhone, vehicleLicenseFinal = vehicleLicense,
+				// requestIDFinal = requestID;
+				//
+				// runOnUiThread(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// BookaCabFragmentActivity.this);
+				// builder.setTitle("Success");
+				// builder.setMessage("Cab booked succesfully!\r\n"
+				// + "Driver : "
+				// + driverNameFinal
+				// + " ("
+				// + driverPhoneFinal
+				// + ")\r\n"
+				// + "Vehicle : " + vehicleLicenseFinal);
+				// builder.setPositiveButton("OK",
+				// new DialogInterface.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(
+				// DialogInterface dialog,
+				// int which) {
+				//
+				// try {
+				// updateCMCRecords(
+				// mCabSearchArray
+				// .getJSONObject(
+				// cabBookingPosition)
+				// .get("CabNameID")
+				// .toString(),
+				// mCabSearchArray
+				// .getJSONObject(
+				// cabBookingPosition)
+				// .get("CarType")
+				// .toString(),
+				// "1", fAddress,
+				// tAddress, "",
+				// requestIDFinal,
+				// false, false, "",
+				// "", "", true);
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				// }
+				// });
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// }
+				// });
+				//
+				// } else {
+				// final String reason = jsonObject.get("data").toString();
+				//
+				// runOnUiThread(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// BookaCabFragmentActivity.this);
+				// builder.setTitle("Cab could not be booked");
+				// builder.setMessage(reason);
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				// }
+				// });
+				// }
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog12.isShowing()) {
+				dialog12.dismiss();
+			}
+		}
 	}
 
 	private void bookMegaCab(final Address startAddress,
@@ -5135,12 +5369,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 													updateCMCRecords(
 															mCabSearchArray
 																	.getJSONObject(
-																			cabBookUberMegaPosition)
+																			cabBookingPosition)
 																	.get("CabNameID")
 																	.toString(),
 															mCabSearchArray
 																	.getJSONObject(
-																			cabBookUberMegaPosition)
+																			cabBookingPosition)
 																	.get("CarType")
 																	.toString(),
 															"1", fAddress,

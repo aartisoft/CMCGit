@@ -12,68 +12,70 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.clubmycab.ui.InviteFragmentActivity;
-import com.clubmycab.utility.GlobalVariables;
-import com.clubmycab.utility.Log;
-
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
+import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+
+public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements
+		Filterable {
 	private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
 	private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
 	private static final String OUT_JSON = "/json";
-	
-    private ArrayList<String> resultList;
-    private ArrayList<String> autocomplete;
-//    InviteFragmentActivity reg = new InviteFragmentActivity();
-    
-    public PlacesAutoCompleteAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-    }
-    
-    @Override
-    public int getCount() {
-        return resultList.size();
-    }
 
-    @Override
-    public String getItem(int index) {
-        return resultList.get(index);
-    }
+	private ArrayList<String> resultList;
+//	private ArrayList<String> autocomplete;
 
-    @Override
-    public Filter getFilter() {
-        Filter filter = new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new FilterResults();
-                if (constraint != null) {
-                    // Retrieve the autocomplete results.
-                    resultList = autocomplete(constraint.toString());
-                    
-                    // Assign the data to the FilterResults
-                    filterResults.values = resultList;
-                    filterResults.count = resultList.size();
-                }
-                return filterResults;
-            }
+	// InviteFragmentActivity reg = new InviteFragmentActivity();
 
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                if (results != null && results.count > 0) {
-                    notifyDataSetChanged();
-                }
-                else {
-                    notifyDataSetInvalidated();
-                }
-            }};
-        return filter;
-    }
-    
-    public ArrayList<String> autocomplete(String input) {
+	public PlacesAutoCompleteAdapter(Context context, int textViewResourceId) {
+		super(context, textViewResourceId);
+	}
+
+	@Override
+	public int getCount() {
+		return resultList.size();
+	}
+
+	@Override
+	public String getItem(int index) {
+		return resultList.get(index);
+	}
+
+	@Override
+	public Filter getFilter() {
+		Filter filter = new Filter() {
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults filterResults = new FilterResults();
+				if (constraint != null) {
+					// Retrieve the autocomplete results.
+					resultList = autocomplete(constraint.toString());
+
+					// Assign the data to the FilterResults
+					filterResults.values = resultList;
+					filterResults.count = resultList.size();
+				}
+				return filterResults;
+			}
+
+			@Override
+			protected void publishResults(CharSequence constraint,
+					FilterResults results) {
+				if (results != null && results.count > 0) {
+					notifyDataSetChanged();
+				} else {
+					notifyDataSetInvalidated();
+				}
+			}
+		};
+		return filter;
+	}
+
+	public ArrayList<String> autocomplete(String input) {
 		ArrayList<String> resultList = null;
 
 		HttpURLConnection conn = null;
@@ -96,10 +98,12 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
 				jsonResults.append(buff, 0, read);
 			}
 		} catch (MalformedURLException e) {
-			Log.e("PlacesAutoCompleteAdapter", "Error processing Places API URL" + e);
+			Log.e("PlacesAutoCompleteAdapter",
+					"Error processing Places API URL" + e);
 			return resultList;
 		} catch (IOException e) {
-			Log.e("PlacesAutoCompleteAdapter", "Error connecting to Places API" + e);
+			Log.e("PlacesAutoCompleteAdapter", "Error connecting to Places API"
+					+ e);
 			return resultList;
 		} finally {
 			if (conn != null) {
@@ -118,8 +122,10 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
 				resultList.add(predsJsonArray.getJSONObject(i).getString(
 						"description"));
 			}
+			// Log.d("PlacesAutoCompleteAdapter", "resultList : " + resultList);
 		} catch (JSONException e) {
-			Log.e("LOG_TAG", "Cannot process JSON results" + e);
+			Log.e("PlacesAutoCompleteAdapter", "Cannot process JSON results"
+					+ e);
 		}
 
 		return resultList;

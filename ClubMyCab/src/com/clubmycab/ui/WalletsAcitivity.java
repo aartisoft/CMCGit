@@ -13,7 +13,6 @@ import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
-import com.clubmycab.xmlhandler.QueryWalletHandler;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
@@ -21,14 +20,14 @@ public class WalletsAcitivity extends Activity implements
 		AsyncTaskResultListener {
 
 	Tracker tracker;
-	TextView response;
+	TextView responseTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
 
-		response = (TextView) findViewById(R.id.textView1);
+		responseTextView = (TextView) findViewById(R.id.textView1);
 
 		String email = "testingone@mail.com";
 		String mobilenumber = "8200012345";
@@ -47,8 +46,8 @@ public class WalletsAcitivity extends Activity implements
 				+ "&checksum=" + checksumstring;
 		Log.d("WalletsActivity", "endpoint : " + endpoint + " params : "
 				+ params);
-		new GlobalAsyncTask(this, endpoint, params, new QueryWalletHandler(),
-				this, true);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"querywallet", true);
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(WalletsAcitivity.this);
@@ -82,16 +81,6 @@ public class WalletsAcitivity extends Activity implements
 	}
 
 	@Override
-	public void getResult(int result, String error) {
-		// TODO Auto-generated method stub
-
-		response.setText(error);
-
-		Log.d("WalletsActivity", "getResult : " + error);
-
-	}
-
-	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 
@@ -101,5 +90,14 @@ public class WalletsAcitivity extends Activity implements
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		if (uniqueID.equals("querywallet")) {
+			responseTextView.setText(response);
+
+			Log.d("WalletsActivity", "getResult : " + response);
+		}
 	}
 }

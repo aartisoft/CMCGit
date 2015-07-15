@@ -965,6 +965,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 								e.printStackTrace();
 							}
 
+							Log.d("InviteFragmentActivity",
+									"Invite click currentTime : " + currentTime
+											+ " rideTime : " + rideTime);
+
 							if (rideTime.compareTo(currentTime) < 0) {
 								timeedittext.requestFocus();
 

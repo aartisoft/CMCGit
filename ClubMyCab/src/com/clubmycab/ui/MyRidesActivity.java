@@ -55,6 +55,7 @@ import com.clubmycab.PagingListView;
 import com.clubmycab.R;
 import com.clubmycab.SafeAsyncTask;
 import com.clubmycab.ShowHistoryRidesAdaptor;
+import com.clubmycab.UpcomingStartTripAlarm;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -130,7 +131,7 @@ public class MyRidesActivity extends Activity {
 	Button showhistory;
 	String latestcabid;
 	boolean cabchk;
-	
+
 	boolean shouldGoBack = true;
 
 	@Override
@@ -406,15 +407,45 @@ public class MyRidesActivity extends Activity {
 
 		mypoollist = (ListView) findViewById(R.id.mypoollist);
 
-		String PoolResponseSplash = getIntent().getStringExtra(
-				"PoolResponseSplash");
+		String comefrom = getIntent().getStringExtra("comefrom");
 
-		Log.d("MyRidesActivity", "PoolResponseSplash : " + PoolResponseSplash);
+		Log.d("MyRidesActivity", "comefrom : " + comefrom);
 
-		if (PoolResponseSplash == null || PoolResponseSplash.isEmpty()
-				|| PoolResponseSplash.equalsIgnoreCase("null")) {
-			
-			shouldGoBack = true;
+		if (comefrom == null || comefrom.isEmpty()
+				|| comefrom.equalsIgnoreCase("null")) {
+			String PoolResponseSplash = getIntent().getStringExtra(
+					"PoolResponseSplash");
+
+			Log.d("MyRidesActivity", "PoolResponseSplash : "
+					+ PoolResponseSplash);
+
+			if (PoolResponseSplash == null || PoolResponseSplash.isEmpty()
+					|| PoolResponseSplash.equalsIgnoreCase("null")) {
+
+				shouldGoBack = true;
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForFetchPool()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				} else {
+					new ConnectionTaskForFetchPool().execute();
+				}
+
+			} else {
+
+				shouldGoBack = false;
+
+				poolresponse = PoolResponseSplash;
+				ConnectionTaskForFetchPoolPostExecute();
+				Log.d("MyRidesActivity", "PoolResponseSplash OwnerName size : "
+						+ OwnerName.size());
+				if (OwnerName.size() == 1) {
+					mypoollist.performItemClick(mypoollist.getAdapter()
+							.getView(0, null, null), 0, mypoollist.getAdapter()
+							.getItemId(0));
+				}
+			}
+		} else {
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchPool()
@@ -423,19 +454,6 @@ public class MyRidesActivity extends Activity {
 				new ConnectionTaskForFetchPool().execute();
 			}
 
-		} else {
-			
-			shouldGoBack = false;
-					
-			poolresponse = PoolResponseSplash;
-			ConnectionTaskForFetchPoolPostExecute();
-			Log.d("MyRidesActivity", "PoolResponseSplash OwnerName size : "
-					+ OwnerName.size());
-			if (OwnerName.size() == 1) {
-				mypoollist.performItemClick(
-						mypoollist.getAdapter().getView(0, null, null), 0,
-						mypoollist.getAdapter().getItemId(0));
-			}
 		}
 	}
 
@@ -482,6 +500,39 @@ public class MyRidesActivity extends Activity {
 			}
 
 			ConnectionTaskForFetchPoolPostExecute();
+
+			String comefrom = getIntent().getStringExtra("comefrom");
+
+			if (comefrom != null && !comefrom.isEmpty()
+					&& !comefrom.equalsIgnoreCase("null")) {
+
+				String cabID = getIntent().getStringExtra("cabID");
+				int index = CabId.indexOf(cabID);
+
+				Log.d("MyRidesActivity", "onPostExecute comefrom : " + comefrom
+						+ " cabID : " + cabID + " index : " + index);
+
+				mypoollist.performItemClick(
+						mypoollist.getAdapter().getView(index, null, null),
+						index, mypoollist.getAdapter().getItemId(index));
+
+				// if
+				// (comefrom.equals(UpcomingStartTripAlarm.ALARM_TYPE_UPCOMING))
+				// {
+				//
+				// mypoollist.performItemClick(mypoollist.getAdapter()
+				// .getView(index, null, null), index, mypoollist
+				// .getAdapter().getItemId(index));
+				//
+				// } else if (comefrom
+				// .equals(UpcomingStartTripAlarm.ALARM_TYPE_START_TRIP)) {
+				//
+				// mypoollist.performItemClick(mypoollist.getAdapter()
+				// .getView(index, null, null), index, mypoollist
+				// .getAdapter().getItemId(index));
+				// }
+
+			}
 		}
 
 	}
@@ -1146,6 +1197,8 @@ public class MyRidesActivity extends Activity {
 				rideshistoryresponse = stringBuilder.append(bufferedStrChunk)
 						.toString();
 			}
+
+			Log.d("rideshistoryresponse", "" + stringBuilder.toString());
 		}
 	}
 
@@ -1179,17 +1232,19 @@ public class MyRidesActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		
+
 		if (shouldGoBack) {
-			Intent mainIntent = new Intent(MyRidesActivity.this, HomeActivity.class);
+			Intent mainIntent = new Intent(MyRidesActivity.this,
+					HomeActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);
-			overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+			overridePendingTransition(R.anim.slide_in_right,
+					R.anim.slide_out_left);
 		} else {
 			finish();
 		}
-		
+
 	}
 
 	// ///////

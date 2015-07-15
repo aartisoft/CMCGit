@@ -274,6 +274,8 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        
+        <receiver  android:process=":remote" android:name="UpcomingStartTripAlarm"></receiver>
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 

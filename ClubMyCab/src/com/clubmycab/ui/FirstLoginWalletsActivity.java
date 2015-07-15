@@ -145,7 +145,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		Log.d("otpgenerate", "querywallet endpoint : " + endpoint
 				+ " params : " + params);
 		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
-				null, FirstLoginWalletsActivity.this, true, "otpgenerate", false);
+				null, FirstLoginWalletsActivity.this, true, "otpgenerate", true);
 	}
 
 	@Override

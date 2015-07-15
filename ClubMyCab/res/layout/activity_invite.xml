@@ -328,22 +328,22 @@
 
                         <Button
                             android:id="@+id/datetoday"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:background="@drawable/createnewclubbtn"
+                            android:background="@color/color_dark_blue"
                             android:text="Today"
                             android:textColor="@android:color/white" />
 
                         <Button
                             android:id="@+id/datechoose"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:background="@drawable/createnewclubbtn"
-                            android:text="Choose"
+                            android:background="@color/color_dark_blue"
+                            android:text="Choose Date"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
 
@@ -388,22 +388,22 @@
 
                         <Button
                             android:id="@+id/timehalfhour"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:background="@drawable/createnewclubbtn"
+                            android:background="@color/color_dark_blue"
                             android:text="in 30 mins"
                             android:textColor="@android:color/white" />
 
                         <Button
                             android:id="@+id/timechoose"
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="35dp"
                             android:layout_margin="3dp"
                             android:layout_weight="1"
-                            android:background="@drawable/createnewclubbtn"
-                            android:text="Choose"
+                            android:background="@color/color_dark_blue"
+                            android:text="Choose Time"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
 
@@ -454,6 +454,7 @@
                     android:layout_toRightOf="@+id/seats"
                     android:focusableInTouchMode="false"
                     android:hint="Enter number of seats available"
+                    android:text="3"
                     android:textSize="15sp" />
 
             </RelativeLayout>

@@ -66,6 +66,7 @@ import com.clubmycab.ContactObject;
 import com.clubmycab.ContactsAdapter;
 import com.clubmycab.ContactsListClass;
 import com.clubmycab.R;
+import com.clubmycab.UpcomingStartTripAlarm;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -90,8 +91,8 @@ public class ContactsInviteForRideActivity extends Activity {
 	CircularImageView drawerprofilepic;
 	TextView drawerusername;
 
-	Button contactsbtn;
-	Button myclubbtn;
+	// Button contactsbtn;
+	// Button myclubbtn;
 	TextView validmobiletxt;
 
 	Button sendtocontacts;
@@ -273,8 +274,8 @@ public class ContactsInviteForRideActivity extends Activity {
 
 		// //////////////////
 
-		contactsbtn = (Button) findViewById(R.id.contactsbtn);
-		myclubbtn = (Button) findViewById(R.id.myclubbtn);
+		// contactsbtn = (Button) findViewById(R.id.contactsbtn);
+		// myclubbtn = (Button) findViewById(R.id.myclubbtn);
 		sendtocontacts = (Button) findViewById(R.id.sendbtn);
 		validmobiletxt = (TextView) findViewById(R.id.validmobiletxt);
 
@@ -287,10 +288,10 @@ public class ContactsInviteForRideActivity extends Activity {
 
 		searchfromlist = (EditText) findViewById(R.id.searchfromlist);
 
-		contactsbtn.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myclubbtn.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
+		// contactsbtn.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myclubbtn.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
 		sendtocontacts.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
@@ -298,7 +299,7 @@ public class ContactsInviteForRideActivity extends Activity {
 		searchfromlist.setVisibility(View.GONE);
 		validmobiletxt.setVisibility(View.GONE);
 		mainclublistll.setVisibility(View.VISIBLE);
-		contactsbtn.setVisibility(View.GONE);
+		// contactsbtn.setVisibility(View.GONE);
 
 		sendtocontacts.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -532,7 +533,7 @@ public class ContactsInviteForRideActivity extends Activity {
 
 		SharedPreferences mPrefs111111 = getSharedPreferences("MyClubs", 0);
 		String clubs1 = mPrefs111111.getString("clubs", "");
-		
+
 		Log.d("ContactsInviteForRideActivity", "getClubs : " + clubs1);
 
 		if (clubs1.equalsIgnoreCase("No Users of your Club")) {
@@ -561,8 +562,8 @@ public class ContactsInviteForRideActivity extends Activity {
 
 							flag = 1;
 
-							myclubbtn.setVisibility(View.GONE);
-							contactsbtn.setVisibility(View.VISIBLE);
+							// myclubbtn.setVisibility(View.GONE);
+							// contactsbtn.setVisibility(View.VISIBLE);
 
 							clubcontactslistll.setVisibility(View.VISIBLE);
 							searchfromlist.setVisibility(View.VISIBLE);
@@ -719,7 +720,7 @@ public class ContactsInviteForRideActivity extends Activity {
 
 					flag = 0;
 
-					contactsbtn.setVisibility(View.GONE);
+					// contactsbtn.setVisibility(View.GONE);
 
 					for (int i = 0; i < MyClubPoolName.size(); i++) {
 
@@ -942,13 +943,17 @@ public class ContactsInviteForRideActivity extends Activity {
 			builder.setPositiveButton("I'm done here",
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							
+
+							scheduleUpcomingTripNotification();
+							scheduleStartTripNotification();
+
 							SharedPreferences sharedPreferences1 = getSharedPreferences(
 									"QuitApplication", 0);
-							SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+							SharedPreferences.Editor editor1 = sharedPreferences1
+									.edit();
 							editor1.putBoolean("quitapplication", true);
 							editor1.commit();
-							
+
 							Intent mainIntent = new Intent(
 									ContactsInviteForRideActivity.this,
 									HomeActivity.class);
@@ -963,6 +968,10 @@ public class ContactsInviteForRideActivity extends Activity {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+
+							scheduleUpcomingTripNotification();
+							scheduleStartTripNotification();
+
 							Intent mainIntent = new Intent(
 									ContactsInviteForRideActivity.this,
 									HomeActivity.class);
@@ -1157,6 +1166,26 @@ public class ContactsInviteForRideActivity extends Activity {
 
 			Log.d("sendres", "" + stringBuilder.toString());
 		}
+	}
+
+	private void scheduleUpcomingTripNotification() {
+		String tripTime = TravelDate + " " + TravelTime;
+
+		UpcomingStartTripAlarm upcomingStartTripAlarm = new UpcomingStartTripAlarm();
+		upcomingStartTripAlarm.setAlarm(ContactsInviteForRideActivity.this,
+				tripTime, UpcomingStartTripAlarm.ALARM_TYPE_UPCOMING, CabId,
+				fromshortname, toshortname);
+
+	}
+
+	private void scheduleStartTripNotification() {
+		String tripTime = TravelDate + " " + TravelTime;
+
+		UpcomingStartTripAlarm upcomingStartTripAlarm = new UpcomingStartTripAlarm();
+		upcomingStartTripAlarm.setAlarm(ContactsInviteForRideActivity.this,
+				tripTime, UpcomingStartTripAlarm.ALARM_TYPE_START_TRIP, CabId,
+				fromshortname, toshortname);
+
 	}
 
 	public boolean isOnline() {

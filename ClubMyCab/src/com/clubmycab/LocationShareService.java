@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -20,13 +19,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -39,14 +35,14 @@ import android.os.SystemClock;
 import android.provider.Settings;
 
 import com.clubmycab.maps.MapUtilityMethods;
-import com.clubmycab.utility.Log;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 public class LocationShareService extends Service implements LocationListener {
 
-	private static String TAG = "Inchoo.net tutorial";
+	private static String TAG = "LocationShareService";
 
 	ArrayList<String> recpnames = new ArrayList<String>();
 	ArrayList<String> recpnumbers = new ArrayList<String>();

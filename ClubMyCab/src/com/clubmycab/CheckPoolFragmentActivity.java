@@ -6,10 +6,13 @@ import java.io.InputStreamReader;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import org.apache.http.HttpResponse;
@@ -47,6 +50,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -56,10 +60,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,9 +74,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -178,14 +190,6 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	ImageView mycalculatorbtn;
 	ProgressDialog onedialog;
 
-	ArrayList<String> namearray = new ArrayList<String>();
-	ArrayList<String> phonenoarray = new ArrayList<String>();
-	ArrayList<String> imagearray = new ArrayList<String>();
-
-	ArrayList<String> namearraynew = new ArrayList<String>();
-	ArrayList<String> phonenoarraynew = new ArrayList<String>();
-	ArrayList<String> imagearraynew = new ArrayList<String>();
-
 	RelativeLayout contexthelpcheckpool;
 
 	Tracker tracker;
@@ -214,6 +218,46 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	LinearLayout checkpoolbottomtabsll;
 	boolean exceptioncheck = false;
+
+	// /////////////////
+	Button contactsbtn;
+	Button appFrends;
+	Button myclubbtn;
+
+	ArrayList<String> namearray = new ArrayList<String>();
+	ArrayList<String> phonenoarray = new ArrayList<String>();
+	ArrayList<String> imagearray = new ArrayList<String>();
+
+	ArrayList<String> namearraynew = new ArrayList<String>();
+	ArrayList<String> phonenoarraynew = new ArrayList<String>();
+	ArrayList<String> imagearraynew = new ArrayList<String>();
+
+	ArrayList<String> AppUsersfullnamearr = new ArrayList<String>();
+	ArrayList<String> AppUsersmobilenumberarr = new ArrayList<String>();
+	ArrayList<String> AppUsersimagearr = new ArrayList<String>();
+
+	EditText searchfromlist;
+	ContactsAdapter objAdapter;
+
+	LinearLayout clubcontactslistll;
+	ListView contactslist;
+
+	LinearLayout mainclublistll;
+	ListView listMyclubs;
+	ListView listMembersclubs;
+
+	int flag = 1;
+	Button donebtn;
+
+	String appusers;
+
+	ArrayList<String> selectednames = new ArrayList<String>();
+	ArrayList<String> selectednumbers = new ArrayList<String>();
+
+	Boolean clubcreated;
+	Boolean appusersavailable;
+
+	// /////////////////
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -535,47 +579,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					dialog.show();
 				} else {
 
-					String addressString = MapUtilityMethods.getAddress(
-							CheckPoolFragmentActivity.this,
-							startaddlatlng.get(0).latitude,
-							startaddlatlng.get(0).longitude);
-					Address address = geocodeAddress(addressString);
-
-					AddressModel startAddressModel = new AddressModel();
-					startAddressModel.setAddress(address);
-					startAddressModel.setShortname(FromShortName);
-					startAddressModel.setLongname(addressString);
-
-					addressString = MapUtilityMethods.getAddress(
-							CheckPoolFragmentActivity.this,
-							endaddlatlng.get(0).latitude,
-							endaddlatlng.get(0).longitude);
-					address = geocodeAddress(addressString);
-
-					AddressModel endAddressModel = new AddressModel();
-					endAddressModel.setAddress(address);
-					endAddressModel.setShortname(ToShortName);
-					endAddressModel.setLongname(addressString);
-
-					// String StartAddLatLng = startaddlatlng.get(0).latitude
-					// + "," + startaddlatlng.get(0).longitude;
-					// String EndAddLatLng = endaddlatlng.get(0).latitude + ","
-					// + endaddlatlng.get(0).longitude;
-
-					final Intent mainIntent = new Intent(
-							CheckPoolFragmentActivity.this,
-							BookaCabFragmentActivity.class);
-					Gson gson = new Gson();
-					mainIntent.putExtra("StartAddressModel",
-							gson.toJson(startAddressModel).toString());
-					mainIntent.putExtra("EndAddressModel",
-							gson.toJson(endAddressModel).toString());
-					mainIntent.putExtra("CabId", CabId);
-					// mainIntent.putExtra("FromShortName", FromShortName);
-					// mainIntent.putExtra("ToShortName", ToShortName);
-					mainIntent.putExtra("TravelDate", TravelDate);
-					mainIntent.putExtra("TravelTime", TravelTime);
-					CheckPoolFragmentActivity.this.startActivity(mainIntent);
+					openBookCabPage();
 				}
 			}
 		});
@@ -585,38 +589,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CheckPoolFragmentActivity.this);
-				builder.setMessage("Are you sure you want to cancel the ride?");
-				builder.setCancelable(true);
-				builder.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-
-								tracker.send(new HitBuilders.EventBuilder()
-										.setCategory("Cancel Ride")
-										.setAction("Cancel Ride")
-										.setLabel("Cancel Ride").build());
-
-								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-									new ConnectionTaskForownercancelpool()
-											.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-								} else {
-									new ConnectionTaskForownercancelpool()
-											.execute();
-								}
-							}
-						});
-				builder.setNegativeButton("NO",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-							}
-						});
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
+				cancelTrip();
 			}
 		});
 
@@ -818,6 +791,239 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			}
 		}
+
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+					"dd/MM/yyyy hh:mm aa");
+			Date date = simpleDateFormat.parse(TravelDate + " " + TravelTime);
+
+			// Log.d("CheckPoolFragmentActivity", "startTime : " +
+			// date.getTime());
+
+			if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+				if (BookingRefNo.isEmpty()
+						|| BookingRefNo.equalsIgnoreCase("null")) {
+					showCabBookingDialog(true);
+				} else {
+					showTripStartDialog();
+				}
+			} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+				if (BookingRefNo.isEmpty()
+						|| BookingRefNo.equalsIgnoreCase("null")) {
+					showCabBookingDialog(false);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void showCabBookingDialog(final boolean shouldShowTripStartDialog) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_trip_start_book_cab, null);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstartbookcabll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				openBookCabPage();
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstartalreadybookedll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				if (shouldShowTripStartDialog) {
+					showTripStartDialog();
+				}
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstartowncarll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				if (shouldShowTripStartDialog) {
+					showTripStartDialog();
+				}
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstartcanceltripll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				cancelTrip();
+			}
+		});
+
+		dialog.show();
+	}
+
+	private void showTripStartDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_trip_start, null);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstartnowll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				tripStarted(0);
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstartfivell);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				tripStarted(5);
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.tripstarttenll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				tripStarted(10);
+			}
+		});
+
+		dialog.show();
+	}
+
+	private void tripStarted(final int duration) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		builder.setMessage("Your trip member(s) will now receive your location updates, would you like to share your location with others?");
+		builder.setCancelable(false);
+
+		builder.setPositiveButton("Select receipients",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						showContactsDialog();
+					}
+				});
+
+		builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		});
+
+		builder.show();
+	}
+
+	private void openBookCabPage() {
+		String addressString = MapUtilityMethods.getAddress(
+				CheckPoolFragmentActivity.this, startaddlatlng.get(0).latitude,
+				startaddlatlng.get(0).longitude);
+		Address address = geocodeAddress(addressString);
+
+		AddressModel startAddressModel = new AddressModel();
+		startAddressModel.setAddress(address);
+		startAddressModel.setShortname(FromShortName);
+		startAddressModel.setLongname(addressString);
+
+		addressString = MapUtilityMethods.getAddress(
+				CheckPoolFragmentActivity.this, endaddlatlng.get(0).latitude,
+				endaddlatlng.get(0).longitude);
+		address = geocodeAddress(addressString);
+
+		AddressModel endAddressModel = new AddressModel();
+		endAddressModel.setAddress(address);
+		endAddressModel.setShortname(ToShortName);
+		endAddressModel.setLongname(addressString);
+
+		// String StartAddLatLng = startaddlatlng.get(0).latitude
+		// + "," + startaddlatlng.get(0).longitude;
+		// String EndAddLatLng = endaddlatlng.get(0).latitude + ","
+		// + endaddlatlng.get(0).longitude;
+
+		final Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+				BookaCabFragmentActivity.class);
+		Gson gson = new Gson();
+		mainIntent.putExtra("StartAddressModel", gson.toJson(startAddressModel)
+				.toString());
+		mainIntent.putExtra("EndAddressModel", gson.toJson(endAddressModel)
+				.toString());
+		mainIntent.putExtra("CabId", CabId);
+		// mainIntent.putExtra("FromShortName", FromShortName);
+		// mainIntent.putExtra("ToShortName", ToShortName);
+		mainIntent.putExtra("TravelDate", TravelDate);
+		mainIntent.putExtra("TravelTime", TravelTime);
+		CheckPoolFragmentActivity.this.startActivity(mainIntent);
+	}
+
+	private void cancelTrip() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		builder.setMessage("Are you sure you want to cancel the ride?");
+		builder.setCancelable(true);
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Cancel Ride").setAction("Cancel Ride")
+						.setLabel("Cancel Ride").build());
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForownercancelpool()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				} else {
+					new ConnectionTaskForownercancelpool().execute();
+				}
+			}
+		});
+		builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+			}
+		});
+		AlertDialog dialog = builder.show();
+		TextView messageText = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageText.setGravity(Gravity.CENTER);
+		dialog.show();
 	}
 
 	private Address geocodeAddress(String addressString) {
@@ -3126,4 +3332,801 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			return itemView;
 		}
 	}
+
+	private void showContactsDialog() {
+
+		final Dialog dialog = new Dialog(this);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.sharelocationlistshowpopup);
+
+		// //////////////////
+
+		contactsbtn = (Button) dialog.findViewById(R.id.contactsbtn);
+		appFrends = (Button) dialog.findViewById(R.id.appFrends);
+		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn);
+		donebtn = (Button) dialog.findViewById(R.id.donebtn);
+
+		clubcontactslistll = (LinearLayout) dialog
+				.findViewById(R.id.clubcontactslistll);
+		contactslist = (ListView) dialog.findViewById(R.id.contactslist);
+
+		mainclublistll = (LinearLayout) dialog
+				.findViewById(R.id.mainclublistll);
+		listMyclubs = (ListView) dialog.findViewById(R.id.listMyclubs);
+		listMembersclubs = (ListView) dialog
+				.findViewById(R.id.listMembersclubs);
+
+		searchfromlist = (EditText) dialog.findViewById(R.id.searchfromlist);
+
+		contactsbtn.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+		appFrends.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+		myclubbtn.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+		donebtn.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		contactsbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+
+				flag = 1;
+
+				contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+				contactsbtn.setTextColor(Color.BLACK);
+
+				appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
+				appFrends.setTextColor(Color.WHITE);
+
+				myclubbtn.setBackgroundColor(Color.parseColor("#4279bd"));
+				myclubbtn.setTextColor(Color.WHITE);
+
+				clubcontactslistll.setVisibility(View.VISIBLE);
+				searchfromlist.setVisibility(View.VISIBLE);
+				mainclublistll.setVisibility(View.GONE);
+
+				ContactsListClass.phoneList.clear();
+
+				for (int i = 0; i < namearraynew.size(); i++) {
+
+					ContactObject cp = new ContactObject();
+
+					cp.setName(namearraynew.get(i));
+					cp.setNumber(phonenoarraynew.get(i));
+					cp.setImage(imagearraynew.get(i));
+					cp.setAppUserimagename("contacticon.png");
+
+					ContactsListClass.phoneList.add(cp);
+				}
+
+				Collections.sort(ContactsListClass.phoneList,
+						new Comparator<ContactObject>() {
+							@Override
+							public int compare(ContactObject lhs,
+									ContactObject rhs) {
+								return lhs.getName().compareTo(rhs.getName());
+							}
+						});
+
+				objAdapter = new ContactsAdapter(
+						CheckPoolFragmentActivity.this,
+						ContactsListClass.phoneList);
+				contactslist.setAdapter(objAdapter);
+				contactslist.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+
+						CheckBox chk = (CheckBox) view
+								.findViewById(R.id.contactcheck);
+						ContactObject bean = ContactsListClass.phoneList
+								.get(position);
+						if (bean.isSelected()) {
+							bean.setSelected(false);
+							chk.setChecked(false);
+						} else {
+							bean.setSelected(true);
+							chk.setChecked(true);
+						}
+
+					}
+				});
+
+				searchfromlist.addTextChangedListener(new TextWatcher() {
+
+					@Override
+					public void onTextChanged(CharSequence cs, int arg1,
+							int arg2, int arg3) {
+						// When user changed the Text
+						String text = searchfromlist.getText().toString()
+								.toLowerCase(Locale.getDefault());
+						objAdapter.filter(text);
+					}
+
+					@Override
+					public void beforeTextChanged(CharSequence arg0, int arg1,
+							int arg2, int arg3) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void afterTextChanged(Editable arg0) {
+						// TODO Auto-generated method stub
+					}
+				});
+
+			}
+		});
+
+		myclubbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+
+				flag = 0;
+
+				contactsbtn.setBackgroundColor(Color.parseColor("#4279bd"));
+				contactsbtn.setTextColor(Color.WHITE);
+
+				appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
+				appFrends.setTextColor(Color.WHITE);
+
+				myclubbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+				myclubbtn.setTextColor(Color.BLACK);
+
+				clubcontactslistll.setVisibility(View.GONE);
+				searchfromlist.setVisibility(View.GONE);
+				mainclublistll.setVisibility(View.VISIBLE);
+
+				ClubListClass.ClubList.clear();
+				ClubListClass.MemberClubList.clear();
+
+				SharedPreferences mPrefs111111 = getSharedPreferences(
+						"MyClubs", 0);
+				String clubs1 = mPrefs111111.getString("clubs", "");
+
+				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
+					Toast.makeText(CheckPoolFragmentActivity.this,
+							"No Clubs Created Yet!!", Toast.LENGTH_LONG).show();
+				} else {
+
+					try {
+
+						ArrayList<String> MyClubPoolId = new ArrayList<String>();
+						ArrayList<String> MyClubPoolName = new ArrayList<String>();
+						ArrayList<String> MyClubNoofMembers = new ArrayList<String>();
+						ArrayList<String> MyClubOwnerName = new ArrayList<String>();
+						ArrayList<String> MyClubMembers = new ArrayList<String>();
+
+						ArrayList<String> MemberClubPoolId = new ArrayList<String>();
+						ArrayList<String> MemberClubPoolName = new ArrayList<String>();
+						ArrayList<String> MemberClubNoofMembers = new ArrayList<String>();
+						ArrayList<String> MemberClubOwnerName = new ArrayList<String>();
+						ArrayList<String> MemberClubMembers = new ArrayList<String>();
+
+						JSONArray subArray = new JSONArray(clubs1);
+
+						for (int i = 0; i < subArray.length(); i++) {
+
+							if (subArray.getJSONObject(i)
+									.getString("IsPoolOwner").toString().trim()
+									.equalsIgnoreCase("1")) {
+								MyClubPoolId.add(subArray.getJSONObject(i)
+										.getString("PoolId").toString());
+								MyClubPoolName.add(subArray.getJSONObject(i)
+										.getString("PoolName").toString());
+								MyClubNoofMembers.add(subArray.getJSONObject(i)
+										.getString("NoofMembers").toString());
+								MyClubOwnerName.add(subArray.getJSONObject(i)
+										.getString("OwnerName").toString());
+								MyClubMembers.add(subArray.getJSONObject(i)
+										.getString("Members").toString());
+							} else {
+								MemberClubPoolId.add(subArray.getJSONObject(i)
+										.getString("PoolId").toString());
+								MemberClubPoolName.add(subArray
+										.getJSONObject(i).getString("PoolName")
+										.toString());
+								MemberClubNoofMembers.add(subArray
+										.getJSONObject(i)
+										.getString("NoofMembers").toString());
+								MemberClubOwnerName.add(subArray
+										.getJSONObject(i)
+										.getString("OwnerName").toString());
+								MemberClubMembers.add(subArray.getJSONObject(i)
+										.getString("Members").toString());
+							}
+						}
+
+						Log.d("MyClubPoolId", "" + MyClubPoolId);
+						Log.d("MyClubPoolName", "" + MyClubPoolName);
+						Log.d("MyClubNoofMembers", "" + MyClubNoofMembers);
+						Log.d("MyClubOwnerName", "" + MyClubOwnerName);
+						Log.d("MyClubMembers", "" + MyClubMembers);
+
+						Log.d("MemberClubPoolId", "" + MemberClubPoolId);
+						Log.d("MemberClubPoolName", "" + MemberClubPoolName);
+						Log.d("MemberClubNoofMembers", ""
+								+ MemberClubNoofMembers);
+						Log.d("MemberClubOwnerName", "" + MemberClubOwnerName);
+						Log.d("MemberClubMembers", "" + MemberClubMembers);
+
+						if (MyClubPoolName.size() > 0) {
+
+							for (int i = 0; i < MyClubPoolName.size(); i++) {
+
+								ClubObject cp = new ClubObject();
+
+								cp.setName(MyClubPoolName.get(i).toString()
+										.trim());
+								cp.setClubmembers(MyClubMembers.get(i)
+										.toString().trim());
+
+								cp.setNoofMembers(MyClubNoofMembers.get(i)
+										.toString().trim());
+
+								cp.setClubOwnerName("");
+
+								ClubListClass.ClubList.add(cp);
+							}
+
+							ClubsAdaptor adapter = new ClubsAdaptor(
+									CheckPoolFragmentActivity.this,
+									ClubListClass.ClubList);
+							listMyclubs.setAdapter(adapter);
+							listMyclubs
+									.setOnItemClickListener(new OnItemClickListener() {
+
+										@Override
+										public void onItemClick(
+												AdapterView<?> parent, View v,
+												int position, long id) {
+											// TODO Auto-generated method stub
+											CheckBox chk = (CheckBox) v
+													.findViewById(R.id.myclubcheckBox);
+											ClubObject bean = ClubListClass.ClubList
+													.get(position);
+
+											if (bean.isSelected()) {
+												bean.setSelected(false);
+												chk.setChecked(false);
+											} else {
+												bean.setSelected(true);
+												chk.setChecked(true);
+											}
+
+										}
+									});
+						}
+
+						if (MemberClubPoolName.size() > 0) {
+
+							for (int i = 0; i < MemberClubPoolName.size(); i++) {
+
+								ClubObject cp = new ClubObject();
+
+								cp.setName(MemberClubPoolName.get(i).toString()
+										.trim());
+								cp.setClubmembers(MemberClubMembers.get(i)
+										.toString().trim());
+
+								cp.setNoofMembers(MemberClubNoofMembers.get(i)
+										.toString().trim());
+
+								cp.setClubOwnerName(MemberClubOwnerName.get(i)
+										.toString().trim());
+
+								ClubListClass.MemberClubList.add(cp);
+							}
+
+							ClubsAdaptor adapter = new ClubsAdaptor(
+									CheckPoolFragmentActivity.this,
+									ClubListClass.MemberClubList);
+
+							listMembersclubs.setAdapter(adapter);
+							listMembersclubs
+									.setOnItemClickListener(new OnItemClickListener() {
+
+										@Override
+										public void onItemClick(
+												AdapterView<?> parent, View v,
+												int position, long id) {
+											// TODO Auto-generated method stub
+											CheckBox chk = (CheckBox) v
+													.findViewById(R.id.myclubcheckBox);
+											ClubObject bean = ClubListClass.MemberClubList
+													.get(position);
+
+											if (bean.isSelected()) {
+												bean.setSelected(false);
+												chk.setChecked(false);
+											} else {
+												bean.setSelected(true);
+												chk.setChecked(true);
+											}
+
+										}
+									});
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		});
+
+		donebtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+
+				Animation animScale = AnimationUtils.loadAnimation(
+						CheckPoolFragmentActivity.this,
+						R.anim.button_click_anim);
+				donebtn.startAnimation(animScale);
+
+				Handler mHandler2 = new Handler();
+				Runnable mRunnable2 = new Runnable() {
+					@Override
+					public void run() {
+
+						searchfromlist.setText("");
+
+						selectednames.clear();
+						selectednumbers.clear();
+
+						// Retrive Data from list
+						if (flag == 1) {
+							for (ContactObject bean : ContactsListClass.phoneList) {
+
+								if (bean.isSelected()) {
+									selectednames.add(bean.getName());
+									selectednumbers.add("0091"
+											+ bean.getNumber());
+								}
+							}
+						}
+
+						if (flag == 0) {
+
+							for (ClubObject bean : ClubListClass.ClubList) {
+
+								if (bean.isSelected()) {
+
+									JSONArray subArray;
+									try {
+										subArray = new JSONArray(bean
+												.getClubmembers().toString()
+												.trim());
+										for (int i = 0; i < subArray.length(); i++) {
+											selectednames.add(subArray
+													.getJSONObject(i)
+													.getString("FullName")
+													.toString().trim());
+											selectednumbers.add(subArray
+													.getJSONObject(i)
+													.getString("MemberNumber")
+													.toString().trim());
+										}
+
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+
+								}
+							}
+
+							for (ClubObject bean1 : ClubListClass.MemberClubList) {
+
+								if (bean1.isSelected()) {
+
+									JSONArray subArray;
+									try {
+										subArray = new JSONArray(bean1
+												.getClubmembers().toString()
+												.trim());
+										for (int i = 0; i < subArray.length(); i++) {
+
+											if (subArray.getJSONObject(i)
+													.getString("FullName")
+													.toString().trim() == null
+													|| subArray
+															.getJSONObject(i)
+															.getString(
+																	"FullName")
+															.toString()
+															.trim()
+															.equalsIgnoreCase(
+																	"null")) {
+
+											} else {
+												selectednames.add(subArray
+														.getJSONObject(i)
+														.getString("FullName")
+														.toString().trim());
+												selectednumbers.add(subArray
+														.getJSONObject(i)
+														.getString(
+																"MemberNumber")
+														.toString().trim());
+											}
+										}
+
+										selectednames.add(subArray
+												.getJSONObject(0)
+												.getString("OwnerName")
+												.toString().trim());
+										selectednumbers.add(subArray
+												.getJSONObject(0)
+												.getString("OwnerNumber")
+												.toString().trim());
+
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+
+								}
+							}
+
+							Object[] st = selectednumbers.toArray();
+							for (Object s : st) {
+
+								Log.d("selectednumbers.indexOf(s)", ""
+										+ selectednumbers.indexOf(s));
+								Log.d("selectednumbers.lastIndexOf(s)", ""
+										+ selectednumbers.lastIndexOf(s));
+
+								if (selectednumbers.indexOf(s) != selectednumbers
+										.lastIndexOf(s)) {
+									selectednames.remove(selectednumbers
+											.lastIndexOf(s));
+									selectednumbers.remove(selectednumbers
+											.lastIndexOf(s));
+								}
+							}
+
+							if (selectednumbers.indexOf(MobileNumber) != -1) {
+								selectednames.remove(selectednumbers
+										.indexOf(MobileNumber));
+								selectednumbers.remove(selectednumbers
+										.indexOf(MobileNumber));
+							}
+
+						}
+
+						if (selectednames.size() > 0) {
+
+							// setnamesandnumbersintext(selectednames,
+							// selectednumbers);
+							dialog.dismiss();
+
+						} else {
+							Toast.makeText(CheckPoolFragmentActivity.this,
+									"Please select contact(s)",
+									Toast.LENGTH_LONG).show();
+						}
+
+					}
+				};
+				mHandler2.postDelayed(mRunnable2, 500);
+
+			}
+		});
+
+		SharedPreferences mPrefs11111 = getSharedPreferences("MyClubs", 0);
+		String clubs = mPrefs11111.getString("clubs", "");
+
+		if (clubs.equalsIgnoreCase("No Users of your Club")) {
+			clubcreated = false;
+		} else {
+			clubcreated = true;
+		}
+
+		// ////////////////////
+		if (clubcreated) {
+
+			flag = 0;
+
+			contactsbtn.setBackgroundColor(Color.parseColor("#4279bd"));
+			contactsbtn.setTextColor(Color.WHITE);
+
+			appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
+			appFrends.setTextColor(Color.WHITE);
+
+			myclubbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+			myclubbtn.setTextColor(Color.BLACK);
+
+			clubcontactslistll.setVisibility(View.GONE);
+			searchfromlist.setVisibility(View.GONE);
+			mainclublistll.setVisibility(View.VISIBLE);
+
+			ClubListClass.ClubList.clear();
+			ClubListClass.MemberClubList.clear();
+
+			SharedPreferences mPrefs111111 = getSharedPreferences("MyClubs", 0);
+			String clubs1 = mPrefs111111.getString("clubs", "");
+
+			if (clubs1.equalsIgnoreCase("No Users of your Club")) {
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						"No clubs created yet!", Toast.LENGTH_LONG).show();
+			} else {
+
+				try {
+
+					ArrayList<String> MyClubPoolId = new ArrayList<String>();
+					ArrayList<String> MyClubPoolName = new ArrayList<String>();
+					ArrayList<String> MyClubNoofMembers = new ArrayList<String>();
+					ArrayList<String> MyClubOwnerName = new ArrayList<String>();
+					ArrayList<String> MyClubMembers = new ArrayList<String>();
+
+					ArrayList<String> MemberClubPoolId = new ArrayList<String>();
+					ArrayList<String> MemberClubPoolName = new ArrayList<String>();
+					ArrayList<String> MemberClubNoofMembers = new ArrayList<String>();
+					ArrayList<String> MemberClubOwnerName = new ArrayList<String>();
+					ArrayList<String> MemberClubMembers = new ArrayList<String>();
+
+					JSONArray subArray = new JSONArray(clubs1);
+
+					for (int i = 0; i < subArray.length(); i++) {
+
+						if (subArray.getJSONObject(i).getString("IsPoolOwner")
+								.toString().trim().equalsIgnoreCase("1")) {
+							MyClubPoolId.add(subArray.getJSONObject(i)
+									.getString("PoolId").toString());
+							MyClubPoolName.add(subArray.getJSONObject(i)
+									.getString("PoolName").toString());
+							MyClubNoofMembers.add(subArray.getJSONObject(i)
+									.getString("NoofMembers").toString());
+							MyClubOwnerName.add(subArray.getJSONObject(i)
+									.getString("OwnerName").toString());
+							MyClubMembers.add(subArray.getJSONObject(i)
+									.getString("Members").toString());
+						} else {
+							MemberClubPoolId.add(subArray.getJSONObject(i)
+									.getString("PoolId").toString());
+							MemberClubPoolName.add(subArray.getJSONObject(i)
+									.getString("PoolName").toString());
+							MemberClubNoofMembers.add(subArray.getJSONObject(i)
+									.getString("NoofMembers").toString());
+							MemberClubOwnerName.add(subArray.getJSONObject(i)
+									.getString("OwnerName").toString());
+							MemberClubMembers.add(subArray.getJSONObject(i)
+									.getString("Members").toString());
+						}
+					}
+
+					Log.d("MyClubPoolId", "" + MyClubPoolId);
+					Log.d("MyClubPoolName", "" + MyClubPoolName);
+					Log.d("MyClubNoofMembers", "" + MyClubNoofMembers);
+					Log.d("MyClubOwnerName", "" + MyClubOwnerName);
+					Log.d("MyClubMembers", "" + MyClubMembers);
+
+					Log.d("MemberClubPoolId", "" + MemberClubPoolId);
+					Log.d("MemberClubPoolName", "" + MemberClubPoolName);
+					Log.d("MemberClubNoofMembers", "" + MemberClubNoofMembers);
+					Log.d("MemberClubOwnerName", "" + MemberClubOwnerName);
+					Log.d("MemberClubMembers", "" + MemberClubMembers);
+
+					if (MyClubPoolName.size() > 0) {
+
+						for (int i = 0; i < MyClubPoolName.size(); i++) {
+
+							ClubObject cp = new ClubObject();
+
+							cp.setName(MyClubPoolName.get(i).toString().trim());
+							cp.setClubmembers(MyClubMembers.get(i).toString()
+									.trim());
+
+							cp.setNoofMembers(MyClubNoofMembers.get(i)
+									.toString().trim());
+
+							cp.setClubOwnerName("");
+
+							ClubListClass.ClubList.add(cp);
+						}
+
+						ClubsAdaptor adapter = new ClubsAdaptor(
+								CheckPoolFragmentActivity.this,
+								ClubListClass.ClubList);
+						listMyclubs.setAdapter(adapter);
+						listMyclubs
+								.setOnItemClickListener(new OnItemClickListener() {
+
+									@Override
+									public void onItemClick(
+											AdapterView<?> parent, View v,
+											int position, long id) {
+										// TODO Auto-generated method stub
+										CheckBox chk = (CheckBox) v
+												.findViewById(R.id.myclubcheckBox);
+										ClubObject bean = ClubListClass.ClubList
+												.get(position);
+
+										if (bean.isSelected()) {
+											bean.setSelected(false);
+											chk.setChecked(false);
+										} else {
+											bean.setSelected(true);
+											chk.setChecked(true);
+										}
+
+									}
+								});
+					}
+
+					if (MemberClubPoolName.size() > 0) {
+
+						for (int i = 0; i < MemberClubPoolName.size(); i++) {
+
+							ClubObject cp = new ClubObject();
+
+							cp.setName(MemberClubPoolName.get(i).toString()
+									.trim());
+							cp.setClubmembers(MemberClubMembers.get(i)
+									.toString().trim());
+
+							cp.setNoofMembers(MemberClubNoofMembers.get(i)
+									.toString().trim());
+
+							cp.setClubOwnerName(MemberClubOwnerName.get(i)
+									.toString().trim());
+
+							ClubListClass.MemberClubList.add(cp);
+						}
+
+						ClubsAdaptor adapter = new ClubsAdaptor(
+								CheckPoolFragmentActivity.this,
+								ClubListClass.MemberClubList);
+
+						listMembersclubs.setAdapter(adapter);
+						listMembersclubs
+								.setOnItemClickListener(new OnItemClickListener() {
+
+									@Override
+									public void onItemClick(
+											AdapterView<?> parent, View v,
+											int position, long id) {
+										// TODO Auto-generated method stub
+										CheckBox chk = (CheckBox) v
+												.findViewById(R.id.myclubcheckBox);
+										ClubObject bean = ClubListClass.MemberClubList
+												.get(position);
+
+										if (bean.isSelected()) {
+											bean.setSelected(false);
+											chk.setChecked(false);
+										} else {
+											bean.setSelected(true);
+											chk.setChecked(true);
+										}
+
+									}
+								});
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		else {
+
+			flag = 1;
+
+			contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+			contactsbtn.setTextColor(Color.BLACK);
+
+			appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
+			appFrends.setTextColor(Color.WHITE);
+
+			myclubbtn.setBackgroundColor(Color.parseColor("#4279bd"));
+			myclubbtn.setTextColor(Color.WHITE);
+
+			clubcontactslistll.setVisibility(View.VISIBLE);
+			searchfromlist.setVisibility(View.VISIBLE);
+			mainclublistll.setVisibility(View.GONE);
+
+			ContactsListClass.phoneList.clear();
+
+			for (int i = 0; i < namearraynew.size(); i++) {
+
+				ContactObject cp = new ContactObject();
+
+				cp.setName(namearraynew.get(i));
+				cp.setNumber(phonenoarraynew.get(i));
+				cp.setImage(imagearraynew.get(i));
+				cp.setAppUserimagename("contacticon.png");
+
+				ContactsListClass.phoneList.add(cp);
+			}
+
+			Collections.sort(ContactsListClass.phoneList,
+					new Comparator<ContactObject>() {
+						@Override
+						public int compare(ContactObject lhs, ContactObject rhs) {
+							return lhs.getName().compareTo(rhs.getName());
+						}
+					});
+
+			objAdapter = new ContactsAdapter(CheckPoolFragmentActivity.this,
+					ContactsListClass.phoneList);
+			contactslist.setAdapter(objAdapter);
+			contactslist.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+
+					CheckBox chk = (CheckBox) view
+							.findViewById(R.id.contactcheck);
+					ContactObject bean = ContactsListClass.phoneList
+							.get(position);
+					if (bean.isSelected()) {
+						bean.setSelected(false);
+						chk.setChecked(false);
+					} else {
+						bean.setSelected(true);
+						chk.setChecked(true);
+					}
+
+				}
+			});
+
+			searchfromlist.addTextChangedListener(new TextWatcher() {
+
+				@Override
+				public void onTextChanged(CharSequence cs, int arg1, int arg2,
+						int arg3) {
+					// When user changed the Text
+					String text = searchfromlist.getText().toString()
+							.toLowerCase(Locale.getDefault());
+					objAdapter.filter(text);
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence arg0, int arg1,
+						int arg2, int arg3) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable arg0) {
+					// TODO Auto-generated method stub
+				}
+			});
+
+		}
+
+		dialog.show();
+	}
+
+	// private void setnamesandnumbersintext(ArrayList<String> names,
+	// ArrayList<String> numbers) {
+	//
+	// String str = "";
+	//
+	// for (int i = 0; i < numbers.size(); i++) {
+	//
+	// if (names.get(i).toString().trim() == null
+	// || names.get(i).toString().trim().equalsIgnoreCase("null")) {
+	// str = str + numbers.get(i) + "\n";
+	// } else {
+	// str = str + names.get(i) + "\n";
+	// }
+	// }
+	//
+	// str = str.substring(0, str.length() - 1);
+	//
+	// Log.d("str", "" + str);
+	// selectrecipientsvalue.setText(str);
+	//
+	// }
 }

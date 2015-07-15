@@ -53,15 +53,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -72,7 +67,6 @@ import android.widget.Toast;
 
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
-import com.clubmycab.PlacesAutoCompleteAdapter;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
@@ -97,43 +91,43 @@ import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
 public class HomeActivity extends FragmentActivity implements
-		AsyncTaskResultListener, LocationListener {
+		AsyncTaskResultListener, LocationListener, OnClickListener {
 
-	CircularImageView profilepic;
-	TextView username;
-	ImageView notificationimg;
+	private CircularImageView profilepic;
+	private TextView username;
+	private ImageView notificationimg;
 
-	LinearLayout homeclubmycabll;
-	LinearLayout homebookacabll;
+	private LinearLayout homeclubmycabll;
+	private LinearLayout homebookacabll;
 	// LinearLayout homehereiamll;
-	LinearLayout homebtnsll, officetohomell, hometoofficell;
+	private LinearLayout homebtnsll, officetohomell, hometoofficell;
 
-	ImageView sidemenu;
+	private ImageView sidemenu;
 	private SimpleSideDrawer mNav;
 
-	CircularImageView drawerprofilepic;
-	TextView drawerusername;
+	private CircularImageView drawerprofilepic;
+	private TextView drawerusername;
 
-	TextView myprofile;
-	TextView myrides;
-	TextView bookacab;
-	TextView sharemylocation;
-	TextView myclubs;
-	TextView sharethisapp;
-	TextView mypreferences;
-	TextView about;
+	private TextView myprofile;
+	private TextView myrides;
+	private TextView bookacab;
+	private TextView sharemylocation;
+	private TextView myclubs;
+	private TextView sharethisapp;
+	private TextView mypreferences;
+	private TextView about;
 
 	AutoCompleteTextView from_places;
 	AutoCompleteTextView to_places;
-	Button threedotsfrom;
-	Button threedotsto;
-	ImageView clearedittextimgfrom;
-	ImageView clearedittextimgto;
-	RelativeLayout fromrelative;
-	RelativeLayout contentrelativehomepage;
-	TextView fromlocation;
-	Button fromdone;
-	Button cancel;
+	private Button threedotsfrom;
+	private Button threedotsto;
+	private ImageView clearedittextimgfrom;
+	private ImageView clearedittextimgto;
+	private RelativeLayout fromrelative;
+	private RelativeLayout contentrelativehomepage;
+	private TextView fromlocation;
+	private Button fromdone;
+	private Button cancel;
 	private GoogleMap myMap;
 	String whichdotclick;
 	LocationManager locationManager;
@@ -168,6 +162,9 @@ public class HomeActivity extends FragmentActivity implements
 	AppEventsLogger logger;
 	boolean exceptioncheck = false;
 
+	// flag for refresh page in onresume
+	boolean isCallresetIntentParams = false;
+
 	// String StartAddLatLngIntent;
 	// String EndAddLatLngIntent;
 	// String StartAddShortNameIntent;
@@ -179,12 +176,14 @@ public class HomeActivity extends FragmentActivity implements
 	String fromshortname;
 	String toshortname;
 	LatLng invitemapcenter;
+	private Context mcontext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_page);
-
+		mcontext = this;
+		isCallresetIntentParams = false;
 		SharedPreferences mPrefs1 = getSharedPreferences("QuitApplication", 0);
 		boolean shouldQuitApp = mPrefs1.getBoolean("quitapplication", false);
 		if (shouldQuitApp) {
@@ -716,6 +715,8 @@ public class HomeActivity extends FragmentActivity implements
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 			@Override
 			public void onClick(View v) {
+				// Flag set for refresh address field
+				isCallresetIntentParams = false;
 				Log.d("HomeActivity", "home : " + home + " work : " + work);
 
 				if (home != null && work != null) {
@@ -749,6 +750,8 @@ public class HomeActivity extends FragmentActivity implements
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 			@Override
 			public void onClick(View v) {
+				// Flag set for refresh address field
+				isCallresetIntentParams = false;
 				if (home != null && work != null) {
 					resetIntentParams(true);
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -775,216 +778,202 @@ public class HomeActivity extends FragmentActivity implements
 		});
 
 		from_places = (AutoCompleteTextView) findViewById(R.id.from_places);
-		from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
-				R.layout.list_item));
+		from_places.setOnClickListener(this);
+		// Commented for show list favorites on other page
 
-		from_places.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-
-				resetIntentParams(false);
-
-				addressModelFrom = null;
-
-				if (to_places.getText().toString().isEmpty()
-						&& tAddress == null) {
-					addressModelTo = null;
-				}
-
-				return false;
-			}
-		});
-
-		from_places
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (event != null
-								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-							dismissKeyboard();
-						}
-
-						return false;
-					}
-				});
-
-		from_places
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						fAddress = null; // reset previous
-
-						dismissKeyboard();
-
-						fAddress = geocodeAddress(from_places.getText()
-								.toString());
-						if (fAddress == null) {
-							Toast.makeText(
-									HomeActivity.this,
-									"Could not locate the address, please try using the map or a different address",
-									Toast.LENGTH_LONG).show();
-						} else {
-							addressModelFrom = new AddressModel();
-							addressModelFrom.setAddress(fAddress);
-							addressModelFrom.setShortname(fromshortname);
-							addressModelFrom.setLongname(from_places.getText()
-									.toString());
-
-							if (fAddress != null && tAddress != null) {
-								// homebtnsll.setVisibility(View.VISIBLE);
-								showButtonsDialog();
-							}
-						}
-					}
-				});
+		/*
+		 * from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+		 * R.layout.list_item));
+		 * 
+		 * 
+		 * from_places.setOnTouchListener(new View.OnTouchListener() { public
+		 * boolean onTouch(View view, MotionEvent motionEvent) {
+		 * 
+		 * resetIntentParams(false);
+		 * 
+		 * addressModelFrom = null;
+		 * 
+		 * if (to_places.getText().toString().isEmpty() && tAddress == null) {
+		 * addressModelTo = null; }
+		 * 
+		 * return false; } });
+		 * 
+		 * from_places .setOnEditorActionListener(new
+		 * TextView.OnEditorActionListener() {
+		 * 
+		 * @Override public boolean onEditorAction(TextView v, int actionId,
+		 * KeyEvent event) { if (event != null && (event.getKeyCode() ==
+		 * KeyEvent.KEYCODE_ENTER)) { dismissKeyboard(); }
+		 * 
+		 * return false; } });
+		 * 
+		 * from_places .setOnItemClickListener(new
+		 * AdapterView.OnItemClickListener() {
+		 * 
+		 * @Override public void onItemClick(AdapterView<?> parent, View view,
+		 * int position, long id) { fAddress = null; // reset previous
+		 * 
+		 * dismissKeyboard();
+		 * 
+		 * fAddress = geocodeAddress(from_places.getText() .toString()); if
+		 * (fAddress == null) { Toast.makeText( HomeActivity.this,
+		 * "Could not locate the address, please try using the map or a different address"
+		 * , Toast.LENGTH_LONG).show(); } else { addressModelFrom = new
+		 * AddressModel(); addressModelFrom.setAddress(fAddress);
+		 * addressModelFrom.setShortname(fromshortname);
+		 * addressModelFrom.setLongname(from_places.getText() .toString());
+		 * 
+		 * if (fAddress != null && tAddress != null) { //
+		 * homebtnsll.setVisibility(View.VISIBLE); showButtonsDialog(); } } }
+		 * });
+		 */
 
 		clearedittextimgfrom = (ImageView) findViewById(R.id.clearedittextimgfrom);
 		clearedittextimgfrom.setVisibility(View.GONE);
 
 		to_places = (AutoCompleteTextView) findViewById(R.id.to_places);
-		to_places.setAdapter(new PlacesAutoCompleteAdapter(this,
-				R.layout.list_item));
-
-		to_places.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-
-				resetIntentParams(false);
-
-				addressModelTo = null;
-
-				if (from_places.getText().toString().isEmpty()
-						&& fAddress == null) {
-					addressModelFrom = null;
-				}
-
-				return false;
-			}
-		});
-		to_places
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (event != null
-								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-							dismissKeyboard();
-						}
-
-						return false;
-					}
-				});
-		to_places.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// Log.d(TAG, "mAutoFrom onItemClick");
-				tAddress = null; // reset previous
-
-				dismissKeyboard();
-
-				tAddress = geocodeAddress(to_places.getText().toString());
-				if (tAddress == null) {
-					Toast.makeText(
-							HomeActivity.this,
-							"Could not locate the address, please try using the map or a different address",
-							Toast.LENGTH_LONG).show();
-				} else {
-					addressModelTo = new AddressModel();
-					addressModelTo.setAddress(tAddress);
-					addressModelTo.setShortname(toshortname);
-					addressModelTo.setLongname(to_places.getText().toString());
-
-					if (fAddress != null && tAddress != null) {
-						// homebtnsll.setVisibility(View.VISIBLE);
-						showButtonsDialog();
-					}
-				}
-
-			}
-		});
+		to_places.setOnClickListener(this);
+		// to_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+		// R.layout.list_item));
+		//
+		// to_places.setOnTouchListener(new View.OnTouchListener() {
+		// public boolean onTouch(View view, MotionEvent motionEvent) {
+		//
+		// resetIntentParams(false);
+		//
+		// addressModelTo = null;
+		//
+		// if (from_places.getText().toString().isEmpty()
+		// && fAddress == null) {
+		// addressModelFrom = null;
+		// }
+		//
+		// return false;
+		// }
+		// });
+		// to_places
+		// .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		//
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId,
+		// KeyEvent event) {
+		// if (event != null
+		// && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+		// dismissKeyboard();
+		// }
+		//
+		// return false;
+		// }
+		// });
+		// to_places.setOnItemClickListener(new
+		// AdapterView.OnItemClickListener() {
+		//
+		// @Override
+		// public void onItemClick(AdapterView<?> parent, View view,
+		// int position, long id) {
+		// // Log.d(TAG, "mAutoFrom onItemClick");
+		// tAddress = null; // reset previous
+		//
+		// dismissKeyboard();
+		//
+		// tAddress = geocodeAddress(to_places.getText().toString());
+		// if (tAddress == null) {
+		// Toast.makeText(
+		// HomeActivity.this,
+		// "Could not locate the address, please try using the map or a different address",
+		// Toast.LENGTH_LONG).show();
+		// } else {
+		// addressModelTo = new AddressModel();
+		// addressModelTo.setAddress(tAddress);
+		// addressModelTo.setShortname(toshortname);
+		// addressModelTo.setLongname(to_places.getText().toString());
+		//
+		// if (fAddress != null && tAddress != null) {
+		// // homebtnsll.setVisibility(View.VISIBLE);
+		// showButtonsDialog();
+		// }
+		// }
+		//
+		// }
+		// });
 
 		clearedittextimgto = (ImageView) findViewById(R.id.clearedittextimgto);
 		clearedittextimgto.setVisibility(View.GONE);
 
-		from_places.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence cs, int arg1, int arg2,
-					int arg3) {
-				// When user changed the Text
-
-				String text = from_places.getText().toString().trim();
-				if (text.isEmpty() || text.equalsIgnoreCase("")) {
-					clearedittextimgfrom.setVisibility(View.GONE);
-				} else {
-					clearedittextimgfrom.setVisibility(View.VISIBLE);
-				}
-
-				Log.d("from onTextChanged", "from onTextChanged");
-
-				if (flagchk) {
-					flagchk = false;
-				} else {
-					fromshortname = MapUtilityMethods.getaddressfromautoplace(
-							HomeActivity.this, from_places.getText().toString()
-									.trim());
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
-
-		to_places.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence cs, int arg1, int arg2,
-					int arg3) {
-				// When user changed the Text
-
-				String text = to_places.getText().toString().trim();
-				if (text.isEmpty() || text.equalsIgnoreCase("")) {
-					clearedittextimgto.setVisibility(View.GONE);
-				} else {
-					clearedittextimgto.setVisibility(View.VISIBLE);
-				}
-
-				Log.d("to onTextChanged", "to onTextChanged");
-
-				if (flagchk) {
-					flagchk = false;
-				} else {
-					toshortname = MapUtilityMethods.getaddressfromautoplace(
-							HomeActivity.this, to_places.getText().toString()
-									.trim());
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-			}
-		});
+		// from_places.addTextChangedListener(new TextWatcher() {
+		//
+		// @Override
+		// public void onTextChanged(CharSequence cs, int arg1, int arg2,
+		// int arg3) {
+		// // When user changed the Text
+		//
+		// String text = from_places.getText().toString().trim();
+		// if (text.isEmpty() || text.equalsIgnoreCase("")) {
+		// clearedittextimgfrom.setVisibility(View.GONE);
+		// } else {
+		// clearedittextimgfrom.setVisibility(View.VISIBLE);
+		// }
+		//
+		// Log.d("from onTextChanged", "from onTextChanged");
+		//
+		// if (flagchk) {
+		// flagchk = false;
+		// } else {
+		// fromshortname = MapUtilityMethods.getaddressfromautoplace(
+		// HomeActivity.this, from_places.getText().toString()
+		// .trim());
+		// }
+		// }
+		//
+		// @Override
+		// public void beforeTextChanged(CharSequence arg0, int arg1,
+		// int arg2, int arg3) {
+		// // TODO Auto-generated method stub
+		// }
+		//
+		// @Override
+		// public void afterTextChanged(Editable arg0) {
+		// // TODO Auto-generated method stub
+		// }
+		// });
+		//
+		// to_places.addTextChangedListener(new TextWatcher() {
+		//
+		// @Override
+		// public void onTextChanged(CharSequence cs, int arg1, int arg2,
+		// int arg3) {
+		// // When user changed the Text
+		//
+		// String text = to_places.getText().toString().trim();
+		// if (text.isEmpty() || text.equalsIgnoreCase("")) {
+		// clearedittextimgto.setVisibility(View.GONE);
+		// } else {
+		// clearedittextimgto.setVisibility(View.VISIBLE);
+		// }
+		//
+		// Log.d("to onTextChanged", "to onTextChanged");
+		//
+		// if (flagchk) {
+		// flagchk = false;
+		// } else {
+		// toshortname = MapUtilityMethods.getaddressfromautoplace(
+		// HomeActivity.this, to_places.getText().toString()
+		// .trim());
+		// }
+		// }
+		//
+		// @Override
+		// public void beforeTextChanged(CharSequence arg0, int arg1,
+		// int arg2, int arg3) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		//
+		// @Override
+		// public void afterTextChanged(Editable arg0) {
+		// // TODO Auto-generated method stub
+		// }
+		// });
 
 		clearedittextimgfrom.setOnClickListener(new OnClickListener() {
 
@@ -992,23 +981,23 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				from_places.setText("");
+				// from_places.setText("");
 				fAddress = null;
 				fromshortname = "";
 			}
 		});
 
-		clearedittextimgto.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				to_places.setText("");
-				tAddress = null;
-				toshortname = "";
-			}
-		});
+		// clearedittextimgto.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		//
+		// //to_places.setText("");
+		// // tAddress = null;
+		// toshortname = "";
+		// }
+		// });
 
 		flagchk = true;
 
@@ -1178,7 +1167,7 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				dismissKeyboard();
+				// dismissKeyboard();
 				whichdotclick = "fromdot";
 
 				double latitude, longitude;
@@ -1222,7 +1211,7 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View v) {
 
 				// TODO Auto-generated method stub
-				dismissKeyboard();
+				// dismissKeyboard();
 				whichdotclick = "todot";
 
 				double latitude, longitude;
@@ -1276,7 +1265,7 @@ public class HomeActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
-
+				isCallresetIntentParams = false;
 				tracker.send(new HitBuilders.EventBuilder()
 						.setCategory("ClubMyCab Click")
 						.setAction("ClubMyCab Click")
@@ -1322,7 +1311,7 @@ public class HomeActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
-
+				isCallresetIntentParams = false;
 				tracker.send(new HitBuilders.EventBuilder()
 						.setCategory("Book A Cab (HomePage)")
 						.setAction("BookaCab Click").setLabel("BookaCab Click")
@@ -1386,6 +1375,8 @@ public class HomeActivity extends FragmentActivity implements
 			addressModelFrom = null;
 			addressModelTo = null;
 		}
+		// else
+		// isCallresetIntentParams=false;
 	}
 
 	private void getWorkHomeAddress() {
@@ -1591,6 +1582,83 @@ public class HomeActivity extends FragmentActivity implements
 								AsyncTask.THREAD_POOL_EXECUTOR, picturePath);
 					} else {
 						new ConnectionTaskForImageUpload().execute(picturePath);
+					}
+				}
+			}
+			// Called when come back from FavoritePlaceFindActivity from
+			// from_place
+			else if (requestCode == 3) {
+
+				String value = (String) data.getExtras().getString("address");
+
+				Log.d("from_place:::", value);
+
+				// from_places.append(value);
+				from_places.setText(value);
+
+				if (value.equalsIgnoreCase("") || value.isEmpty()) {
+
+				} else {
+					fAddress = null; // reset previous
+
+					fAddress = geocodeAddress(from_places.getText().toString());
+					if (fAddress == null) {
+						Toast.makeText(
+								HomeActivity.this,
+								"Could not locate the address, please try using the map or a different address",
+								Toast.LENGTH_LONG).show();
+					} else {
+						addressModelFrom = new AddressModel();
+						addressModelFrom.setAddress(fAddress);
+						addressModelFrom.setShortname(fromshortname);
+						addressModelFrom.setLongname(from_places.getText()
+								.toString());
+
+						if (fAddress != null && tAddress != null) {
+							// homebtnsll.setVisibility(View.VISIBLE);
+							showButtonsDialog();
+							// isCallresetIntentParams=false;
+						}
+					}
+				}
+
+			}
+			// Called when come back from FavoritePlaceFindActivity from
+			// to_place
+
+			else if (requestCode == 4) {
+
+				String value = (String) data.getExtras().getString("address");
+				// Toast.makeText(mcontext, "call back to_place:"+value,
+				// Toast.LENGTH_SHORT).show();
+
+				to_places.setText(value);
+
+				if (value.equalsIgnoreCase("") || value.isEmpty()) {
+
+				} else {
+
+					tAddress = null; // reset previous
+
+					tAddress = geocodeAddress(to_places.getText().toString());
+					if (tAddress == null) {
+						Toast.makeText(
+								HomeActivity.this,
+								"Could not locate the address, please try using the map or a different address",
+								Toast.LENGTH_LONG).show();
+					} else {
+						addressModelTo = new AddressModel();
+						addressModelTo.setAddress(tAddress);
+						addressModelTo.setShortname(toshortname);
+						addressModelTo.setLongname(to_places.getText()
+								.toString());
+
+						if (fAddress != null && tAddress != null) {
+							// homebtnsll.setVisibility(View.VISIBLE);
+							showButtonsDialog();
+							// isCallresetIntentParams=false;
+
+						}
 					}
 				}
 			}
@@ -2359,7 +2427,8 @@ public class HomeActivity extends FragmentActivity implements
 				|| PoolResponseSplash.equalsIgnoreCase("null")
 				|| PoolResponseSplash.equalsIgnoreCase("No Pool Created Yet!!")
 				|| PoolResponseSplash.equalsIgnoreCase("[]")) {
-			resetIntentParams(true);
+			if (!isCallresetIntentParams)
+				resetIntentParams(true);
 		} else {
 
 			SharedPreferences sharedPreferences = getSharedPreferences(
@@ -2382,7 +2451,8 @@ public class HomeActivity extends FragmentActivity implements
 							// returning to this page
 
 			} else {
-				resetIntentParams(true);
+				if (!isCallresetIntentParams)
+					resetIntentParams(true);
 			}
 
 		}
@@ -2397,7 +2467,6 @@ public class HomeActivity extends FragmentActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
 		mycurrentlocationobject = location;
 	}
 
@@ -2531,4 +2600,36 @@ public class HomeActivity extends FragmentActivity implements
 			}
 		}
 	}
+
+	@Override
+	public void onClick(View v) {
+
+		switch (v.getId()) {
+		case R.id.from_places:
+			// Open get places list activity
+			isCallresetIntentParams = true;
+			Intent intent = new Intent(HomeActivity.this,
+					FavoritePlaceFindActivity.class);
+
+			startActivityForResult(intent, 3);
+			// overridePendingTransition(R.anim.slide_in_right,
+			// R.anim.slide_out_left);
+
+			break;
+		case R.id.to_places:
+			isCallresetIntentParams = true;
+
+			intent = new Intent(HomeActivity.this,
+					FavoritePlaceFindActivity.class);
+
+			startActivityForResult(intent, 4);
+
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
 }

@@ -26,13 +26,18 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements
 	private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
 	private static final String OUT_JSON = "/json";
 
-	private ArrayList<String> resultList;
+	public  ArrayList<String> resultList=new ArrayList<String>();
+	
 //	private ArrayList<String> autocomplete;
 
 	// InviteFragmentActivity reg = new InviteFragmentActivity();
 
 	public PlacesAutoCompleteAdapter(Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
+		
+		
+		
+		
 	}
 
 	@Override

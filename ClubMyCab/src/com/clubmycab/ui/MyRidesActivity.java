@@ -55,11 +55,11 @@ import com.clubmycab.PagingListView;
 import com.clubmycab.R;
 import com.clubmycab.SafeAsyncTask;
 import com.clubmycab.ShowHistoryRidesAdaptor;
-import com.clubmycab.UpcomingStartTripAlarm;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
 public class MyRidesActivity extends Activity {
@@ -501,6 +501,8 @@ public class MyRidesActivity extends Activity {
 
 			ConnectionTaskForFetchPoolPostExecute();
 
+			clearBookedOrCarPreference();
+
 			String comefrom = getIntent().getStringExtra("comefrom");
 
 			if (comefrom != null && !comefrom.isEmpty()
@@ -531,6 +533,44 @@ public class MyRidesActivity extends Activity {
 				// .getView(index, null, null), index, mypoollist
 				// .getAdapter().getItemId(index));
 				// }
+
+			}
+		}
+
+	}
+
+	private void clearBookedOrCarPreference() {
+
+		if (CabId.size() > 0) {
+
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"AlreadyBookedOrOwnCar", 0);
+			String arrayListString = sharedPreferences.getString("arraylist",
+					"");
+
+			ArrayList<String> arrayList;
+			if (arrayListString == null || arrayListString.isEmpty()) {
+				arrayList = null;
+			} else {
+				Gson gson = new Gson();
+				arrayList = gson.fromJson(arrayListString, ArrayList.class);
+			}
+
+			if (arrayList != null && arrayList.size() > 0) {
+				ArrayList<String> newArrayList = new ArrayList<String>();
+				for (String string : arrayList) {
+					if (CabId.indexOf(string) != -1) {
+						newArrayList.add(string);
+					}
+				}
+
+				Gson gson = new Gson();
+
+				String string = gson.toJson(newArrayList).toString();
+
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("arraylist", string.trim());
+				editor.commit();
 
 			}
 		}

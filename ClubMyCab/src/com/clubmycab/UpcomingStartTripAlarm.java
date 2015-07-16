@@ -35,14 +35,14 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 		String type = intent.getStringExtra(ALARM_TYPE_KEY);
 		Log.d("UpcomingStartTripAlarm", "onReceive : " + type);
 
-//		if (type.equals(ALARM_TYPE_UPCOMING)) {
-//			setAlarm(
-//					context,
-//					Long.toString(System.currentTimeMillis() + (1 * 60 * 1000)),
-//					UpcomingStartTripAlarm.ALARM_TYPE_START_TRIP,
-//					intent.getStringExtra(CAB_ID_KEY), "fromshortname",
-//					"toshortname");
-//		}
+		// if (type.equals(ALARM_TYPE_UPCOMING)) {
+		// setAlarm(
+		// context,
+		// Long.toString(System.currentTimeMillis() + (1 * 60 * 1000)),
+		// UpcomingStartTripAlarm.ALARM_TYPE_START_TRIP,
+		// intent.getStringExtra(CAB_ID_KEY), "fromshortname",
+		// "toshortname");
+		// }
 
 		generateNotification(context, intent);
 
@@ -72,7 +72,8 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 				intent.putExtra(ALARM_TYPE_KEY, ALARM_TYPE_UPCOMING);
 				intent.putExtra(CAB_ID_KEY, cabID);
 				intent.putExtra(MESSAGE_KEY, "You have an upcoming trip from "
-						+ fShortName + " to " + tShortName + ". Click here to view details");
+						+ fShortName + " to " + tShortName
+						+ ". Click here to book a cab");
 
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(
 						context, 0, intent, 0);
@@ -86,7 +87,7 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 						UpcomingStartTripAlarm.class);
 				intent.putExtra(ALARM_TYPE_KEY, ALARM_TYPE_START_TRIP);
 				intent.putExtra(CAB_ID_KEY, cabID);
-				intent.putExtra(MESSAGE_KEY, "You trip from " + fShortName
+				intent.putExtra(MESSAGE_KEY, "Your trip from " + fShortName
 						+ " to " + tShortName + " is about to start");
 
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(
@@ -99,6 +100,20 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void cancelBothAlarms(Context context) {
+		Intent intent = new Intent(context, UpcomingStartTripAlarm.class);
+
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+
+		PendingIntent sender = PendingIntent
+				.getBroadcast(context, 0, intent, 0);
+		alarmManager.cancel(sender);
+
+		sender = PendingIntent.getBroadcast(context, 1, intent, 0);
+		alarmManager.cancel(sender);
 	}
 
 	private void generateNotification(Context context,

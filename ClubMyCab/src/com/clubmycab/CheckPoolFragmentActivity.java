@@ -46,6 +46,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -792,30 +793,85 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		}
 
-		try {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-					"dd/MM/yyyy hh:mm aa");
-			Date date = simpleDateFormat.parse(TravelDate + " " + TravelTime);
+		if (CabStatus.equals("A")) {
+			try {
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"dd/MM/yyyy hh:mm aa");
+				Date date = simpleDateFormat.parse(TravelDate + " "
+						+ TravelTime);
 
-			// Log.d("CheckPoolFragmentActivity", "startTime : " +
-			// date.getTime());
+				ArrayList<String> arrayList = readBookedOrCarPreference();
 
-			if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-				if (BookingRefNo.isEmpty()
-						|| BookingRefNo.equalsIgnoreCase("null")) {
-					showCabBookingDialog(true);
-				} else {
-					showTripStartDialog();
+				// Log.d("CheckPoolFragmentActivity", "startTime : " +
+				// date.getTime());
+
+				if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+					if (BookingRefNo.isEmpty()
+							|| BookingRefNo.equalsIgnoreCase("null")) {
+						if (arrayList == null) {
+							showCabBookingDialog(true);
+						} else if (arrayList != null
+								&& arrayList.indexOf(CabId) == -1) {
+							showCabBookingDialog(true);
+						} else {
+							showTripStartDialog();
+						}
+					} else {
+						showTripStartDialog();
+					}
+				} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+					if (BookingRefNo.isEmpty()
+							|| BookingRefNo.equalsIgnoreCase("null")) {
+						if (arrayList == null) {
+							showCabBookingDialog(true);
+						} else if (arrayList != null
+								&& arrayList.indexOf(CabId) == -1) {
+							showCabBookingDialog(true);
+						}
+					}
 				}
-			} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-				if (BookingRefNo.isEmpty()
-						|| BookingRefNo.equalsIgnoreCase("null")) {
-					showCabBookingDialog(false);
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+	}
+
+	private ArrayList<String> readBookedOrCarPreference() {
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				"AlreadyBookedOrOwnCar", 0);
+		String arrayListString = sharedPreferences.getString("arraylist", "");
+
+		ArrayList<String> arrayList;
+		if (arrayListString == null || arrayListString.isEmpty()) {
+			arrayList = null;
+		} else {
+			Gson gson = new Gson();
+			arrayList = gson.fromJson(arrayListString, ArrayList.class);
+		}
+
+		return arrayList;
+	}
+
+	private void writeBookedOrCarPreference(String cabID) {
+
+		ArrayList<String> arrayList = readBookedOrCarPreference();
+
+		if (arrayList == null) {
+			arrayList = new ArrayList<String>();
+		}
+
+		arrayList.add(cabID);
+
+		Gson gson = new Gson();
+
+		String string = gson.toJson(arrayList).toString();
+
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				"AlreadyBookedOrOwnCar", 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString("arraylist", string.trim());
+		editor.commit();
+
 	}
 
 	private void showCabBookingDialog(final boolean shouldShowTripStartDialog) {
@@ -847,6 +903,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			public void onClick(View view) {
 				dialog.dismiss();
 
+				writeBookedOrCarPreference(CabId);
+
 				if (shouldShowTripStartDialog) {
 					showTripStartDialog();
 				}
@@ -860,6 +918,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View view) {
 				dialog.dismiss();
+
+				writeBookedOrCarPreference(CabId);
 
 				if (shouldShowTripStartDialog) {
 					showTripStartDialog();
@@ -947,6 +1007,35 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				if (MemberName.size() > 0) {
+					selectednames.clear();
+					selectednumbers.clear();
+
+					selectednames = MemberName;
+					selectednumbers = MemberNumber;
+
+					ShareLocationObject myObject = new ShareLocationObject();
+					myObject.recipientsnames = selectednames;
+					myObject.recipientsnumbers = selectednumbers;
+					myObject.sharetilltype = "Destination";
+					myObject.destinationlongname = ToLocation;
+					LatLng latLng = endaddlatlng.get(endaddlatlng.size() - 1);
+					myObject.destinationlatlong = latLng;
+					myObject.destinationtimevalue = System.currentTimeMillis()
+							+ (60000 * 240);
+
+					Gson gson = new Gson();
+					String json = gson.toJson(myObject);
+
+					SharedPreferences locationshapref = getSharedPreferences(
+							"ShareLocationShared", 0);
+					Editor prefsEditor = locationshapref.edit();
+					prefsEditor.putString("ShareLocationObject", json);
+					prefsEditor.commit();
+
+					startService(new Intent(CheckPoolFragmentActivity.this,
+							LocationShareService.class));
+				}
 
 			}
 		});
@@ -1006,6 +1095,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				tracker.send(new HitBuilders.EventBuilder()
 						.setCategory("Cancel Ride").setAction("Cancel Ride")
 						.setLabel("Cancel Ride").build());
+
+				UpcomingStartTripAlarm upcomingStartTripAlarm = new UpcomingStartTripAlarm();
+				upcomingStartTripAlarm
+						.cancelBothAlarms(CheckPoolFragmentActivity.this);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					new ConnectionTaskForownercancelpool()

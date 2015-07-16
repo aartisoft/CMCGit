@@ -5017,133 +5017,131 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 			if (!result.isEmpty()) {
 
-				// try {
-				// JSONObject jsonObject = new JSONObject(result);
-				// String status = jsonObject.get("status").toString();
-				// if (status.equalsIgnoreCase("SUCCESS")) {
-				//
-				// JSONObject jsonObjectData = new JSONObject(jsonObject
-				// .get("data").toString());
-				// String driverName = "", driverPhone = "", vehicleLicense =
-				// "", requestID = "";
-				// try {
-				// driverName = jsonObjectData.get("DriverName")
-				// .toString();
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
-				//
-				// try {
-				// driverPhone = jsonObjectData.get("DriverNumber")
-				// .toString();
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
-				//
-				// try {
-				// vehicleLicense = jsonObjectData.get("VehicleNo")
-				// .toString();
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
-				//
-				// try {
-				// requestID = jsonObject.get("Jobno").toString();
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
-				//
-				// if (rideObject != null) {
-				// rideObject.driverName = driverName;
-				// rideObject.driverPhone = driverPhone;
-				// rideObject.vehicle = vehicleLicense;
-				// } else {
-				// rideObject.driverName = driverName;
-				// rideObject.driverPhone = driverPhone;
-				// rideObject.vehicle = vehicleLicense;
-				// }
-				//
-				// final String driverNameFinal = driverName, driverPhoneFinal =
-				// driverPhone, vehicleLicenseFinal = vehicleLicense,
-				// requestIDFinal = requestID;
-				//
-				// runOnUiThread(new Runnable() {
-				//
-				// @Override
-				// public void run() {
-				//
-				// AlertDialog.Builder builder = new AlertDialog.Builder(
-				// BookaCabFragmentActivity.this);
-				// builder.setTitle("Success");
-				// builder.setMessage("Cab booked succesfully!\r\n"
-				// + "Driver : "
-				// + driverNameFinal
-				// + " ("
-				// + driverPhoneFinal
-				// + ")\r\n"
-				// + "Vehicle : " + vehicleLicenseFinal);
-				// builder.setPositiveButton("OK",
-				// new DialogInterface.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(
-				// DialogInterface dialog,
-				// int which) {
-				//
-				// try {
-				// updateCMCRecords(
-				// mCabSearchArray
-				// .getJSONObject(
-				// cabBookingPosition)
-				// .get("CabNameID")
-				// .toString(),
-				// mCabSearchArray
-				// .getJSONObject(
-				// cabBookingPosition)
-				// .get("CarType")
-				// .toString(),
-				// "1", fAddress,
-				// tAddress, "",
-				// requestIDFinal,
-				// false, false, "",
-				// "", "", true);
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
-				// }
-				// });
-				// AlertDialog dialog = builder.show();
-				// TextView messageText = (TextView) dialog
-				// .findViewById(android.R.id.message);
-				// messageText.setGravity(Gravity.CENTER);
-				// dialog.show();
-				//
-				// }
-				// });
-				//
-				// } else {
-				// final String reason = jsonObject.get("data").toString();
-				//
-				// runOnUiThread(new Runnable() {
-				//
-				// @Override
-				// public void run() {
-				// AlertDialog.Builder builder = new AlertDialog.Builder(
-				// BookaCabFragmentActivity.this);
-				// builder.setTitle("Cab could not be booked");
-				// builder.setMessage(reason);
-				// builder.setPositiveButton("OK", null);
-				// AlertDialog dialog = builder.show();
-				// TextView messageText = (TextView) dialog
-				// .findViewById(android.R.id.message);
-				// messageText.setGravity(Gravity.CENTER);
-				// dialog.show();
-				// }
-				// });
-				// }
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					String status = jsonObject.get("status").toString();
+					if (status.equalsIgnoreCase("SUCCESS")) {
+
+						JSONObject jsonObjectData = new JSONObject(jsonObject
+								.get("response_data").toString());
+						String driverName = "", driverPhone = "", vehicleLicense = "", requestID = "";
+						try {
+							driverName = jsonObjectData.get("driver_name")
+									.toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							driverPhone = jsonObjectData.get("driver_number")
+									.toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							vehicleLicense = jsonObjectData.get(
+									"vehicle_number").toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							requestID = jsonObjectData.get("booking_id").toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						if (rideObject != null) {
+							rideObject.driverName = driverName;
+							rideObject.driverPhone = driverPhone;
+							rideObject.vehicle = vehicleLicense;
+						} else {
+							rideObject.driverName = driverName;
+							rideObject.driverPhone = driverPhone;
+							rideObject.vehicle = vehicleLicense;
+						}
+
+						final String driverNameFinal = driverName, driverPhoneFinal = driverPhone, vehicleLicenseFinal = vehicleLicense, requestIDFinal = requestID;
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										BookaCabFragmentActivity.this);
+								builder.setTitle("Success");
+								builder.setMessage("Cab booked succesfully!\r\n"
+										+ "Driver : "
+										+ driverNameFinal
+										+ " ("
+										+ driverPhoneFinal
+										+ ")\r\n"
+										+ "Vehicle : " + vehicleLicenseFinal);
+								builder.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+
+												try {
+													updateCMCRecords(
+															mCabSearchArray
+																	.getJSONObject(
+																			cabBookingPosition)
+																	.get("CabNameID")
+																	.toString(),
+															mCabSearchArray
+																	.getJSONObject(
+																			cabBookingPosition)
+																	.get("CarType")
+																	.toString(),
+															"1", fAddress,
+															tAddress, "",
+															requestIDFinal,
+															false, false, "",
+															"", "", true);
+												} catch (Exception e) {
+													e.printStackTrace();
+												}
+											}
+										});
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+
+							}
+						});
+
+					} else {
+						final String reason = jsonObject.get("error_desc")
+								.toString();
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										BookaCabFragmentActivity.this);
+								builder.setTitle("Cab could not be booked");
+								builder.setMessage(reason);
+								builder.setPositiveButton("OK", null);
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			} else {
 				runOnUiThread(new Runnable() {

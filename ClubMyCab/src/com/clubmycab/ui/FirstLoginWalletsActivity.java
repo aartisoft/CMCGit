@@ -34,7 +34,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 	private final String LINK_WALLET = "LinkWallet";
 	private final String CREATE_WALLET = "CreateWallet";
 	String walletAction = "";
-	
+
 	String mobilenumber;
 
 	@Override
@@ -48,8 +48,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 		FullName = mPrefs.getString("FullName", "");
 		MobileNumber = mPrefs.getString("MobileNumber", "");
 
-		mobilenumber = "8200012345";
-		// mobilenumber = MobileNumber.substring(4);
+		// mobilenumber = "8200012345";
+		mobilenumber = MobileNumber.substring(4);
 		// String email = "testingone@mail.com";
 
 		otpLinearLayout = (LinearLayout) findViewById(R.id.walletFLLinearLayout);
@@ -66,11 +66,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				if (walletAction.equals(LINK_WALLET)) {
-					generateOTP();
-				} else if (walletAction.equals(CREATE_WALLET)) {
 
-				}
+				generateOTP();
 			}
 		});
 
@@ -79,34 +76,28 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				
-				String msgcode = "507";
-				String amount = "10";
-				String tokenType = "1";
-				String otp = otpEditText.getText().toString().trim();
 
-				String checksumstring = GlobalMethods
-						.calculateCheckSumForService("'" + amount + "''"
-								+ mobilenumber + "''"
-								+ GlobalVariables.Mobikwik_MerchantName + "''"
-								+ GlobalVariables.Mobikwik_Mid + "''" + msgcode
-								+ "''" + otp + "''" + tokenType + "'",
-								GlobalVariables.Mobikwik_14SecretKey);
-				String endpoint = GlobalVariables.Mobikwik_ServerURL
-						+ "/tokengenerate";
-				String params = "cell=" + mobilenumber + "&amount=" + amount
-						+ "&otp=" + otp + "&msgcode=" + msgcode + "&mid="
-						+ GlobalVariables.Mobikwik_Mid + "&merchantname="
-						+ GlobalVariables.Mobikwik_MerchantName + "&tokentype="
-						+ tokenType + "&checksum=" + checksumstring;
-				Log.d("otpgenerate", "tokengenerate endpoint : " + endpoint
-						+ " params : " + params);
-				new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint,
-						params, null, FirstLoginWalletsActivity.this, true,
-						"tokengenerate", true);
+				if (otpEditText.getText().toString().trim().isEmpty()) {
+					Toast.makeText(FirstLoginWalletsActivity.this,
+							"Please enter the OTP", Toast.LENGTH_LONG).show();
+					return;
+				}
+
+				if (walletAction.equals(LINK_WALLET)) {
+					linkWallet();
+				} else if (walletAction.equals(CREATE_WALLET)) {
+					if (emailEditText.getText().toString().trim().isEmpty()) {
+						Toast.makeText(FirstLoginWalletsActivity.this,
+								"Please enter your e-mail", Toast.LENGTH_LONG)
+								.show();
+						return;
+					}
+
+					createWallet();
+				}
 			}
 		});
-		
+
 		String msgcode = "500";
 		String action = "existingusercheck";
 
@@ -146,6 +137,54 @@ public class FirstLoginWalletsActivity extends Activity implements
 				+ " params : " + params);
 		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
 				null, FirstLoginWalletsActivity.this, true, "otpgenerate", true);
+	}
+
+	private void linkWallet() {
+		String msgcode = "507";
+		String amount = "10";
+		String tokenType = "1";
+		String otp = otpEditText.getText().toString().trim();
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ amount + "''" + mobilenumber + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''" + otp
+				+ "''" + tokenType + "'", GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/tokengenerate";
+		String params = "cell=" + mobilenumber + "&amount=" + amount + "&otp="
+				+ otp + "&msgcode=" + msgcode + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&tokentype="
+				+ tokenType + "&checksum=" + checksumstring;
+		Log.d("otpgenerate", "tokengenerate endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, true, "tokengenerate",
+				true);
+	}
+
+	private void createWallet() {
+		String msgcode = "502";
+		String email = emailEditText.getText().toString().trim();
+		String otp = otpEditText.getText().toString().trim();
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ mobilenumber + "''" + email + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''" + otp
+				+ "'", GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/createwalletuser";
+		String params = "email=" + email + "&cell=" + mobilenumber + "&otp="
+				+ otp + "&msgcode=" + msgcode + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("createwalletuser", "createwalletuser endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, true, "createwalletuser",
+				true);
 	}
 
 	@Override
@@ -250,6 +289,41 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("tokengenerate")) {
 			Log.d("FirstLoginWalletActivity", "tokengenerate response : "
 					+ response);
+			
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("SUCCESS")) {
+					String token = jsonObject.getString("token");
+					
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"MobikwikToken", 0);
+					SharedPreferences.Editor editor = sharedPreferences.edit();
+					editor.putString("token", token);
+					editor.commit();
+					
+				} else {
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		} else if (uniqueID.equals("createwalletuser")) {
+			Log.d("FirstLoginWalletActivity", "createwalletuser response : "
+					+ response);
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("SUCCESS")) {
+					Toast.makeText(FirstLoginWalletsActivity.this,
+							"User created succesfully!", Toast.LENGTH_LONG)
+							.show();
+				} else {
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

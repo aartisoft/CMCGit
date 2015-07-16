@@ -937,7 +937,7 @@ public class ContactsInviteForRideActivity extends Activity {
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					ContactsInviteForRideActivity.this);
-			builder.setMessage("Your friend(s) have been informed about the ride! We will let you know when they join, sit back & relax!");
+			builder.setMessage("Your friend(s) have been informed about the ride! We will let you know when they join. Sit back & relax!");
 			builder.setCancelable(false);
 
 			builder.setPositiveButton("I'm done here",

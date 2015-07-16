@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.clubmycab.FindFavoritesPlaceAdapter;
 import com.clubmycab.PlacesAutoCompleteAdapter;
@@ -42,7 +44,7 @@ public class FavoritePlaceFindActivity extends Activity implements
 	public static ArrayList<String> resultTag = new ArrayList<String>();
 
 	private AutoCompleteTextView from_places;
-
+	FindFavoritesPlaceAdapter adapter ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -69,12 +71,12 @@ public class FavoritePlaceFindActivity extends Activity implements
 		//Call to get all saved addresses by user
 		getWorkHomeAddress();
 
-		FindFavoritesPlaceAdapter adap = new FindFavoritesPlaceAdapter(this,
+		adapter= new FindFavoritesPlaceAdapter(this,
 				R.layout.list_item_custom);
-		lvFavoritePlace.setAdapter(adap);
+		lvFavoritePlace.setAdapter(adapter);
 		from_places.setDropDownHeight(0);
 
-		from_places.setAdapter(adap);
+		from_places.setAdapter(adapter);
 
 		
 
@@ -127,11 +129,13 @@ public class FavoritePlaceFindActivity extends Activity implements
 
 				String text = from_places.getText().toString().trim();
 				if (text.isEmpty() || text.equalsIgnoreCase("")) {
+					
+					getWorkHomeAddress();
 
 				} else {
-
+					resultTag.clear();
 				}
-				resultTag.clear();
+				//resultTag.clear();
 
 				Log.d("from onTextChanged", "from onTextChanged");
 
@@ -193,6 +197,9 @@ public class FavoritePlaceFindActivity extends Activity implements
 
 	//Get all saved favorite location from shared preference
 	private void getWorkHomeAddress() {
+	resultTag.clear();
+	FindFavoritesPlaceAdapter.resultList.clear();
+	
 		SharedPreferences mPrefs11111 = getSharedPreferences(
 				"FavoriteLocations", 0);
 		final String favoritelocation = mPrefs11111.getString(
@@ -209,7 +216,9 @@ public class FavoritePlaceFindActivity extends Activity implements
 			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
 					HashMap.class);
 
-			Set keys = hashMap.keySet();
+			//Set keys = hashMap.keySet();
+			SortedSet<String> keys = new TreeSet<String>(hashMap.keySet());
+
 
 			for (Iterator i = keys.iterator(); i.hasNext();) {
 				String key = (String) i.next();
@@ -228,6 +237,10 @@ public class FavoritePlaceFindActivity extends Activity implements
 						AddressModel.class);
 				FindFavoritesPlaceAdapter.resultList.add(addressModel
 						.getLongname());
+				if(adapter!=null)
+					adapter.notifyDataSetChanged();
+			
+
 
 			}
 
@@ -249,5 +262,6 @@ public class FavoritePlaceFindActivity extends Activity implements
 		}
 
 	}
+	
 
 }

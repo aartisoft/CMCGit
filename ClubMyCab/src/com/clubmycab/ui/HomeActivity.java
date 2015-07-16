@@ -1066,7 +1066,8 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				if (locationManager != null)
+					locationManager.removeUpdates(HomeActivity.this);
 				fromrelative.setVisibility(View.GONE);
 				contentrelativehomepage.setVisibility(View.VISIBLE);
 				String fromlocationname = fromlocation.getText().toString()
@@ -1168,40 +1169,51 @@ public class HomeActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				// dismissKeyboard();
-				whichdotclick = "fromdot";
 
-				double latitude, longitude;
-				if (!from_places.getText().toString().trim().isEmpty()
-						&& fAddress != null) {
-					// Getting latitude of the current location
-					latitude = fAddress.getLatitude();
+				if (mycurrentlocationobject == null)
+					mycurrentlocationobject = getLocation();
 
-					// Getting longitude of the current location
-					longitude = fAddress.getLongitude();
-				} else {
-					// Getting latitude of the current location
-					latitude = mycurrentlocationobject.getLatitude();
+				// if (mycurrentlocationobject != null) {
+				// onLocationChanged(mycurrentlocationobject);
+				// }
 
-					// Getting longitude of the current location
-					longitude = mycurrentlocationobject.getLongitude();
+				if (mycurrentlocationobject != null) {
+					whichdotclick = "fromdot";
+
+					double latitude, longitude;
+					if (!from_places.getText().toString().trim().isEmpty()
+							&& fAddress != null) {
+						// Getting latitude of the current location
+						latitude = fAddress.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = fAddress.getLongitude();
+					} else {
+						// Getting latitude of the current location
+						latitude = mycurrentlocationobject.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = mycurrentlocationobject.getLongitude();
+					}
+
+					// Creating a LatLng object for the current location
+					LatLng currentlatLng = new LatLng(latitude, longitude);
+
+					// Showing the current location in Google Map
+					myMap.moveCamera(CameraUpdateFactory
+							.newLatLng(currentlatLng));
+
+					// Zoom in the Google Map
+					myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+					String address = MapUtilityMethods.getAddress(
+							HomeActivity.this, latitude, longitude);
+
+					fromlocation.setText(address);
+
+					fromrelative.setVisibility(View.VISIBLE);
+					contentrelativehomepage.setVisibility(View.GONE);
 				}
-
-				// Creating a LatLng object for the current location
-				LatLng currentlatLng = new LatLng(latitude, longitude);
-
-				// Showing the current location in Google Map
-				myMap.moveCamera(CameraUpdateFactory.newLatLng(currentlatLng));
-
-				// Zoom in the Google Map
-				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-				String address = MapUtilityMethods.getAddress(
-						HomeActivity.this, latitude, longitude);
-
-				fromlocation.setText(address);
-
-				fromrelative.setVisibility(View.VISIBLE);
-				contentrelativehomepage.setVisibility(View.GONE);
 			}
 		});
 
@@ -1210,43 +1222,50 @@ public class HomeActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
+				if (mycurrentlocationobject == null)
+					mycurrentlocationobject = getLocation();
+
 				// TODO Auto-generated method stub
 				// dismissKeyboard();
-				whichdotclick = "todot";
 
-				double latitude, longitude;
-				if (!to_places.getText().toString().trim().isEmpty()
-						&& tAddress != null) {
-					// Getting latitude of the current location
-					latitude = tAddress.getLatitude();
+				if (mycurrentlocationobject != null) {
+					whichdotclick = "todot";
 
-					// Getting longitude of the current location
-					longitude = tAddress.getLongitude();
-				} else {
-					// Getting latitude of the current location
-					latitude = mycurrentlocationobject.getLatitude();
+					double latitude, longitude;
+					if (!to_places.getText().toString().trim().isEmpty()
+							&& tAddress != null) {
+						// Getting latitude of the current location
+						latitude = tAddress.getLatitude();
 
-					// Getting longitude of the current location
-					longitude = mycurrentlocationobject.getLongitude();
+						// Getting longitude of the current location
+						longitude = tAddress.getLongitude();
+					} else {
+						// Getting latitude of the current location
+						latitude = mycurrentlocationobject.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = mycurrentlocationobject.getLongitude();
+					}
+
+					// Creating a LatLng object for the current location
+					LatLng currentlatLng = new LatLng(latitude, longitude);
+
+					// Showing the current location in Google Map
+					myMap.moveCamera(CameraUpdateFactory
+							.newLatLng(currentlatLng));
+
+					// Zoom in the Google Map
+					myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+					String address = MapUtilityMethods.getAddress(
+							HomeActivity.this, latitude, longitude);
+
+					fromlocation.setText(address);
+
+					fromrelative.setVisibility(View.VISIBLE);
+					contentrelativehomepage.setVisibility(View.GONE);
+
 				}
-
-				// Creating a LatLng object for the current location
-				LatLng currentlatLng = new LatLng(latitude, longitude);
-
-				// Showing the current location in Google Map
-				myMap.moveCamera(CameraUpdateFactory.newLatLng(currentlatLng));
-
-				// Zoom in the Google Map
-				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-				String address = MapUtilityMethods.getAddress(
-						HomeActivity.this, latitude, longitude);
-
-				fromlocation.setText(address);
-
-				fromrelative.setVisibility(View.VISIBLE);
-				contentrelativehomepage.setVisibility(View.GONE);
-
 			}
 		});
 	}
@@ -1490,7 +1509,11 @@ public class HomeActivity extends FragmentActivity implements
 		if (resultCode == RESULT_OK) {
 
 			mainbmp = null;
-			if (requestCode == 1) {
+
+			switch (requestCode) {
+			case 1:
+
+			{
 				File f = new File(Environment.getExternalStorageDirectory()
 						.toString());
 				for (File temp : f.listFiles()) {
@@ -1552,7 +1575,10 @@ public class HomeActivity extends FragmentActivity implements
 					 */} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} else if (requestCode == 2) {
+				break;
+			}
+
+			case 2: {
 
 				Uri selectedImage = data.getData();
 				String[] filePath = { MediaStore.Images.Media.DATA };
@@ -1584,10 +1610,12 @@ public class HomeActivity extends FragmentActivity implements
 						new ConnectionTaskForImageUpload().execute(picturePath);
 					}
 				}
+
 			}
+				break;
 			// Called when come back from FavoritePlaceFindActivity from
 			// from_place
-			else if (requestCode == 3) {
+			case 3: {
 
 				String value = (String) data.getExtras().getString("address");
 
@@ -1610,6 +1638,9 @@ public class HomeActivity extends FragmentActivity implements
 					} else {
 						addressModelFrom = new AddressModel();
 						addressModelFrom.setAddress(fAddress);
+						fromshortname = MapUtilityMethods.getAddressshort(
+								HomeActivity.this, fAddress.getLatitude(),
+								fAddress.getLongitude());
 						addressModelFrom.setShortname(fromshortname);
 						addressModelFrom.setLongname(from_places.getText()
 								.toString());
@@ -1621,12 +1652,13 @@ public class HomeActivity extends FragmentActivity implements
 						}
 					}
 				}
-
 			}
+				break;
+
 			// Called when come back from FavoritePlaceFindActivity from
 			// to_place
 
-			else if (requestCode == 4) {
+			case 4: {
 
 				String value = (String) data.getExtras().getString("address");
 				// Toast.makeText(mcontext, "call back to_place:"+value,
@@ -1649,6 +1681,9 @@ public class HomeActivity extends FragmentActivity implements
 					} else {
 						addressModelTo = new AddressModel();
 						addressModelTo.setAddress(tAddress);
+						toshortname = MapUtilityMethods.getAddressshort(
+								HomeActivity.this, tAddress.getLatitude(),
+								tAddress.getLongitude());
 						addressModelTo.setShortname(toshortname);
 						addressModelTo.setLongname(to_places.getText()
 								.toString());
@@ -1662,7 +1697,14 @@ public class HomeActivity extends FragmentActivity implements
 					}
 				}
 			}
-		} else {
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		else {
 			mainbmp = null;
 			Log.d("Result not ok", "Result not ok");
 		}
@@ -2390,11 +2432,12 @@ public class HomeActivity extends FragmentActivity implements
 		if (!isOnline()) {
 			return;
 		}
-		Location location = getLocation();
-
-		if (location != null) {
-			onLocationChanged(location);
-		}
+		// Shift this code in location map click
+		// Location location = getLocation();
+		//
+		// if (location != null) {
+		// onLocationChanged(location);
+		// }
 
 		super.onStart();
 	}
@@ -2403,9 +2446,6 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		Log.d("onStop", "onStop");
-
-		if (locationManager != null)
-			locationManager.removeUpdates(this);
 
 		super.onStop();
 	}

@@ -13,6 +13,7 @@
         android:maxLines="2"
         android:text="tagsss"
         android:textColor="#000"
+        android:textStyle="bold"
         android:textSize="15sp" />
 
     <TextView

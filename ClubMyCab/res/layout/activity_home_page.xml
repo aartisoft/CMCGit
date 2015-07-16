@@ -309,7 +309,7 @@
                         android:layout_toLeftOf="@+id/clearedittextimgfrom"
                         android:ellipsize="start"
                         
-                        android:hint="Start Typing Address"
+                        android:hint="@string/hint_select_address"
                         android:editable="false"
                       android:focusable="false"
                       
@@ -378,8 +378,8 @@
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@+id/clearedittextimgto"
                         android:ellipsize="start"
-                        android:hint="Start Typing Address"
-                        android:singleLine="true"
+ android:hint="@string/hint_select_address"
+                         android:singleLine="true"
                         android:focusable="false"
                         
                         android:textSize="15sp" 

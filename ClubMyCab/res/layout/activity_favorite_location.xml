@@ -26,28 +26,31 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <ScrollView
-        android:id="@+id/idFavoriteLocationScrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/textViewFavLoc"
-        android:layout_margin="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="#FFFFFF" >
+<!--     <ScrollView -->
+<!--         android:id="@+id/idFavoriteLocationScrollView" -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="fill_parent" -->
+<!--         android:layout_below="@id/textViewFavLoc" -->
+<!--         android:layout_margin="10dp" -->
+<!--         android:layout_marginBottom="10dp" -->
+<!--         android:background="#FFFFFF" > -->
 
-        <LinearLayout
-            android:id="@+id/idScrollViewLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
-    </ScrollView>
+<!--         <LinearLayout -->
+<!--             android:id="@+id/idScrollViewLinearLayout" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:orientation="vertical" > -->
+<!--         </LinearLayout> -->
+<!--     </ScrollView> -->
+
 
     <LinearLayout
+        android:id="@+id/llBottom"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
+          android:layout_marginBottom="10dp"
         android:background="#FFFFFF"
         android:orientation="vertical" >
 
@@ -98,6 +101,17 @@
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
+    
+    <ListView 
+        android:id="@+id/lvFavorateLocation"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_below="@id/textViewFavLoc"
+    android:dividerHeight="0dp"
+     android:layout_margin="10dp"
+       android:background="#FFFFFF"
+       android:layout_above="@id/llBottom"
+    ></ListView>
 
     <RelativeLayout
         android:id="@+id/fromrelative"

@@ -86,15 +86,17 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	TextView date;
 	TextView time;
 	TextView seats;
+	private String seatCount="3";
+	private String seatSuffix=" seat(s) to share";
 
 	AutoCompleteTextView from_places;
 	AutoCompleteTextView to_places;
-	EditText dateedittext;
-	EditText timeedittext;
-	EditText seatsedittext;
+private 	TextView datetextview;
+private	TextView timetextview;
+	Button seatsbutton;
 
 	Button invite;
-	Button datetoday, datechoose, timehalfhour, timechoose;
+private TextView  datechoose, timehalfhour,timeonehour;// timechoose,datetoday;
 
 	Calendar myCalendar = Calendar.getInstance();
 
@@ -210,6 +212,9 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	ListView topthreerideslist;
 
 	TopThreeRidesAdaptor topthreeadaptor;
+	
+	private int hour,minute;
+private TimePickerDialog timePickerDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -540,12 +545,12 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		from_places = (AutoCompleteTextView) findViewById(R.id.from_places);
 		to_places = (AutoCompleteTextView) findViewById(R.id.to_places);
-		dateedittext = (EditText) findViewById(R.id.dateedittext);
-		timeedittext = (EditText) findViewById(R.id.timeedittext);
-		seatsedittext = (EditText) findViewById(R.id.seatsedittext);
+		datetextview = (TextView) findViewById(R.id.dateetextview);
+		timetextview = (TextView) findViewById(R.id.timetextview);
+		seatsbutton = (Button) findViewById(R.id.seatsbutton);
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		dateedittext.setText(simpleDateFormat.format(new Date()));
+		datetextview.setText(simpleDateFormat.format(new Date()));
 
 		clearedittextimgfrom = (ImageView) findViewById(R.id.clearedittextimgfrom);
 		clearedittextimgfrom.setVisibility(View.GONE);
@@ -577,18 +582,18 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		date.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
-		dateedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+		datetextview.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		time.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
-		timeedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+		timetextview.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		seats.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
-		seatsedittext.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
+//	pawan	seatsedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+//				"NeutraText-Light.ttf"));
 
 		invite.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
@@ -623,11 +628,13 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
 
 		calendar.add(Calendar.MINUTE, 30);
-		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		final int minute = calendar.get(Calendar.MINUTE);
+		hour = calendar.get(Calendar.HOUR_OF_DAY);
+	 minute = calendar.get(Calendar.MINUTE);
 
-		final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(
+	 timePickerDialog = TimePickerDialog.newInstance(
 				InviteFragmentActivity.this, hour, minute, false, false);
+		TimePickerDialog tpd = (TimePickerDialog) getSupportFragmentManager()
+				.findFragmentByTag(TIMEPICKER_TAG);
 
 		if (savedInstanceState != null) {
 			DatePickerDialog dpd = (DatePickerDialog) getSupportFragmentManager()
@@ -636,32 +643,48 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				dpd.setOnDateSetListener(InviteFragmentActivity.this);
 			}
 
-			TimePickerDialog tpd = (TimePickerDialog) getSupportFragmentManager()
-					.findFragmentByTag(TIMEPICKER_TAG);
+//			TimePickerDialog tpd = (TimePickerDialog) getSupportFragmentManager()
+//					.findFragmentByTag(TIMEPICKER_TAG);
 			if (tpd != null) {
 				tpd.setOnTimeSetListener(InviteFragmentActivity.this);
 			}
 		}
 
-		datetoday = (Button) findViewById(R.id.datetoday);
-		datetoday.setOnClickListener(new View.OnClickListener() {
+		timeonehour = (TextView) findViewById(R.id.timeonehour);
+		timeonehour.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				datetoday.setBackgroundColor(getResources().getColor(
+				timeonehour.setBackgroundColor(getResources().getColor(
 						R.color.color_dark_blue));
+				timeonehour.setTextColor(getResources().getColor(
+						R.color.white));
+				
+				
 				datechoose.setBackgroundColor(getResources().getColor(
-						R.color.color_light_blue));
+						R.color.white));
+				timehalfhour.setBackgroundColor(getResources().getColor(
+						R.color.white));
+				timehalfhour.setTextColor(getResources().getColor(
+						R.color.black));
+				datechoose.setTextColor(getResources().getColor(
+								R.color.black));
+				
+				
 
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"dd/MM/yyyy");
-				dateedittext.setText(simpleDateFormat.format(new Date()));
+			Calendar calendar = Calendar.getInstance();
+
+				
+
+				calendar.add(Calendar.HOUR, 1);
+				hour = calendar.get(Calendar.HOUR_OF_DAY);
+			 minute = calendar.get(Calendar.MINUTE);
+			updateTime(hour, minute);
 			}
 		});
 
-		datechoose = (Button) findViewById(R.id.datechoose);
-		datechoose.setBackgroundColor(getResources().getColor(
-				R.color.color_light_blue));
+		datechoose = (TextView) findViewById(R.id.datechoose);
+		
 		datechoose.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -669,8 +692,18 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 				datechoose.setBackgroundColor(getResources().getColor(
 						R.color.color_dark_blue));
-				datetoday.setBackgroundColor(getResources().getColor(
-						R.color.color_light_blue));
+				datechoose.setTextColor(getResources().getColor(
+						R.color.white));
+				
+				timeonehour.setBackgroundColor(getResources().getColor(
+						R.color.white));
+				timehalfhour.setBackgroundColor(getResources().getColor(
+						R.color.white));
+				
+				timehalfhour.setTextColor(getResources().getColor(
+						R.color.black));
+				timeonehour.setTextColor(getResources().getColor(
+								R.color.black));
 
 				datePickerDialog.setVibrate(isVibrate());
 				datePickerDialog.setYearRange(1985, 2028);
@@ -680,8 +713,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 						DATEPICKER_TAG);
 			}
 		});
+		
+		//Added pawan
 
-		timehalfhour = (Button) findViewById(R.id.timehalfhour);
+		timehalfhour = (TextView) findViewById(R.id.timehalfhour);
 		updateTime(hour, minute);
 		timehalfhour.setOnClickListener(new View.OnClickListener() {
 
@@ -689,35 +724,75 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				timehalfhour.setBackgroundColor(getResources().getColor(
 						R.color.color_dark_blue));
-				timechoose.setBackgroundColor(getResources().getColor(
-						R.color.color_light_blue));
+				timehalfhour.setTextColor(getResources().getColor(
+						R.color.white));
+				timeonehour.setBackgroundColor(getResources().getColor(
+						R.color.white));
+				datechoose.setBackgroundColor(getResources().getColor(
+						R.color.white));
+				
+				
+				datechoose.setTextColor(getResources().getColor(
+						R.color.black));
+				timeonehour.setTextColor(getResources().getColor(
+								R.color.black));
+	Calendar calendar = Calendar.getInstance();
 
+				
+
+				calendar.add(Calendar.MINUTE, 30);
+				hour = calendar.get(Calendar.HOUR_OF_DAY);
+			 minute = calendar.get(Calendar.MINUTE);
+			updateTime(hour, minute);
 				updateTime(hour, minute);
 
 			}
 		});
+		
+//		timehalfhour = (Button) findViewById(R.id.timehalfhour);
+//		updateTime(hour, minute);
+//		timehalfhour.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				timehalfhour.setBackgroundColor(getResources().getColor(
+//						R.color.color_dark_blue));
+////		pawan		timechoose.setBackgroundColor(getResources().getColor(
+////						R.color.color_light_blue));
+//
+//				updateTime(hour, minute);
+//
+//			}
+//		});
+//		
+		
+		//Commented for time choose marge with  choose date  
+		//Pawan
 
-		timechoose = (Button) findViewById(R.id.timechoose);
-		timechoose.setBackgroundColor(getResources().getColor(
-				R.color.color_light_blue));
-		timechoose.setOnClickListener(new View.OnClickListener() {
+//		timechoose = (Button) findViewById(R.id.timechoose);
+//		timechoose.setBackgroundColor(getResources().getColor(
+//				R.color.color_light_blue));
+//		timechoose.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				timehalfhour.setBackgroundColor(getResources().getColor(
+//						R.color.color_light_blue));
+//				timechoose.setBackgroundColor(getResources().getColor(
+//						R.color.color_dark_blue));
+//
+//				timePickerDialog.setVibrate(isVibrate());
+//				timePickerDialog
+//						.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
+//				timePickerDialog.show(getSupportFragmentManager(),
+//						TIMEPICKER_TAG);
+//			}
+//		});
 
-			@Override
-			public void onClick(View v) {
-
-				timehalfhour.setBackgroundColor(getResources().getColor(
-						R.color.color_light_blue));
-				timechoose.setBackgroundColor(getResources().getColor(
-						R.color.color_dark_blue));
-
-				timePickerDialog.setVibrate(isVibrate());
-				timePickerDialog
-						.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
-				timePickerDialog.show(getSupportFragmentManager(),
-						TIMEPICKER_TAG);
-			}
-		});
-
+		//End Pawan
+		
+		
 		// dateedittext.setOnClickListener(new OnClickListener() {
 		//
 		// @SuppressWarnings("deprecation")
@@ -787,7 +862,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		//
 		// });
 
-		seatsedittext.setOnClickListener(new OnClickListener() {
+		seatsbutton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -805,7 +880,9 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					@Override
 					public void onClick(DialogInterface dialog, int position) {
 						// TODO Auto-generated method stub
-						seatsedittext.setText(str[position]);
+						seats.setText(str[position]+seatSuffix);
+						seatCount=""+str[position];
+						
 					}
 				});
 
@@ -815,42 +892,42 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		seatsedittext
-				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (hasFocus) {
-
-							// TODO Auto-generated method stub
-							AlertDialog dialog;
-							AlertDialog.Builder builder = new AlertDialog.Builder(
-									InviteFragmentActivity.this);
-							builder.setTitle("Select No of Seats");
-
-							final CharSequence str[] = { "1", "2", "3", "4",
-									"5", "6" };
-
-							builder.setItems(str,
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int position) {
-											// TODO Auto-generated method stub
-											seatsedittext
-													.setText(str[position]);
-										}
-									});
-
-							dialog = builder.create();
-							dialog.show();
-
-						}
-					}
-
-				});
+//	Pawan	seatsedittext
+//				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//					@Override
+//					public void onFocusChange(View v, boolean hasFocus) {
+//						if (hasFocus) {
+//
+//							// TODO Auto-generated method stub
+//							AlertDialog dialog;
+//							AlertDialog.Builder builder = new AlertDialog.Builder(
+//									InviteFragmentActivity.this);
+//							builder.setTitle("Select No of Seats");
+//
+//							final CharSequence str[] = { "1", "2", "3", "4",
+//									"5", "6" };
+//
+//							builder.setItems(str,
+//									new DialogInterface.OnClickListener() {
+//
+//										@Override
+//										public void onClick(
+//												DialogInterface dialog,
+//												int position) {
+//											// TODO Auto-generated method stub
+//											seatsedittext
+//													.setText(str[position]);
+//										}
+//									});
+//
+//							dialog = builder.create();
+//							dialog.show();
+//
+//						}
+//					}
+//
+//				});
 
 		invite.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -895,10 +972,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							messageText.setGravity(Gravity.CENTER);
 							dialog.show();
 
-						} else if (dateedittext.getText().toString().trim()
+						} else if (datetextview.getText().toString().trim()
 								.isEmpty()) {
 
-							dateedittext.requestFocus();
+							datetextview.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
 									InviteFragmentActivity.this);
@@ -913,10 +990,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 						}
 
-						else if (timeedittext.getText().toString().trim()
+						else if (timetextview.getText().toString().trim()
 								.isEmpty()) {
 
-							timeedittext.requestFocus();
+						//	timetextview.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
 									InviteFragmentActivity.this);
@@ -929,25 +1006,28 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							messageText.setGravity(Gravity.CENTER);
 							dialog.show();
 
-						} else if (seatsedittext.getText().toString().trim()
-								.isEmpty()) {
-
-							seatsedittext.requestFocus();
-
-							AlertDialog.Builder builder = new AlertDialog.Builder(
-									InviteFragmentActivity.this);
-
-							builder.setMessage("Please Enter Seats Available");
-							builder.setPositiveButton("OK", null);
-							AlertDialog dialog = builder.show();
-							TextView messageText = (TextView) dialog
-									.findViewById(android.R.id.message);
-							messageText.setGravity(Gravity.CENTER);
-							dialog.show();
-
-						} else if (!dateedittext.getText().toString().trim()
+					}
+						//Commit becuase seatsEdittext change with button
+							//else if (seatsedittext.getText().toString().trim()
+//								.isEmpty()) {
+//
+//							seatsedittext.requestFocus();
+//
+//							AlertDialog.Builder builder = new AlertDialog.Builder(
+//									InviteFragmentActivity.this);
+//
+//							builder.setMessage("Please Enter Seats Available");
+//							builder.setPositiveButton("OK", null);
+//							AlertDialog dialog = builder.show();
+//							TextView messageText = (TextView) dialog
+//									.findViewById(android.R.id.message);
+//							messageText.setGravity(Gravity.CENTER);
+//							dialog.show();
+//
+//						} 
+							else if (!datetextview.getText().toString().trim()
 								.isEmpty()
-								&& !timeedittext.getText().toString().trim()
+								&& !timetextview.getText().toString().trim()
 										.isEmpty()) {
 
 							SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -956,10 +1036,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							Date currentTime = new Date();
 							Date rideTime = new Date();
 							try {
-								rideTime = dateFormat.parse(dateedittext
+								rideTime = dateFormat.parse(datetextview
 										.getText().toString().trim()
 										+ " "
-										+ timeedittext.getText().toString()
+										+ timetextview.getText().toString()
 												.trim());
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -970,7 +1050,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 											+ " rideTime : " + rideTime);
 
 							if (rideTime.compareTo(currentTime) < 0) {
-								timeedittext.requestFocus();
+								timetextview.requestFocus();
 
 								AlertDialog.Builder builder = new AlertDialog.Builder(
 										InviteFragmentActivity.this);
@@ -1003,12 +1083,12 @@ public class InviteFragmentActivity extends FragmentActivity implements
 										.getText().toString().trim());
 								mainIntent.putExtra("ToLocation", to_places
 										.getText().toString().trim());
-								mainIntent.putExtra("TravelDate", dateedittext
+								mainIntent.putExtra("TravelDate", datetextview
 										.getText().toString().trim());
-								mainIntent.putExtra("TravelTime", timeedittext
+								mainIntent.putExtra("TravelTime", timetextview
 										.getText().toString().trim());
-								mainIntent.putExtra("Seats", seatsedittext
-										.getText().toString().trim());
+								mainIntent.putExtra("Seats", seatCount
+										);
 								mainIntent.putExtra("fromshortname",
 										fromshortname);
 								mainIntent.putExtra("toshortname", toshortname);
@@ -1401,13 +1481,20 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		int finalmnt = month + 1;
 		String selecteddate = day + "/" + finalmnt + "/" + year;
-		dateedittext.setText(selecteddate.toString().trim());
+		datetextview.setText(selecteddate.toString().trim());
+		timePickerDialog.setVibrate(isVibrate());
+		timePickerDialog
+				.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
+		timePickerDialog.show(getSupportFragmentManager(),
+				TIMEPICKER_TAG);
 	}
 
 	@Override
 	public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
 		// Toast.makeText(Invite.this, "new time:" + hourOfDay + "-" + minute,
 		// Toast.LENGTH_LONG).show();
+		hour=hourOfDay;
+		this.minute=minute;
 
 		updateTime(hourOfDay, minute);
 	}
@@ -1436,7 +1523,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		String aTime = new StringBuilder().append(hours).append(':')
 				.append(minutes).append(" ").append(timeSet).toString();
 
-		timeedittext.setText(aTime);
+		timetextview.setText(aTime);
 	}
 
 	// /////////////////////////////
@@ -1500,10 +1587,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 											.get(position).toString().trim());
 									to_places.setText(ToLocation.get(position)
 											.toString().trim());
-									dateedittext.setText("");
-									timeedittext.setText("");
-									seatsedittext.setText(Seats.get(position)
-											.toString().trim());
+									datetextview.setText("");
+									timetextview.setText("");
+									seats.setText(Seats.get(position)
+											.toString().trim()+seatSuffix);
 
 									fromshortname = FromShortName.get(position)
 											.toString().trim();
@@ -1596,11 +1683,11 @@ public class InviteFragmentActivity extends FragmentActivity implements
 										to_places.setText(ToLocationNew
 												.get(position).toString()
 												.trim());
-										dateedittext.setText("");
-										timeedittext.setText("");
-										seatsedittext.setText(SeatsNew
+										datetextview.setText("");
+										timetextview.setText("");
+										seats.setText(SeatsNew
 												.get(position).toString()
-												.trim());
+												.trim()+seatSuffix);
 
 										fromshortname = FromShortNameNew
 												.get(position).toString()
@@ -1666,11 +1753,11 @@ public class InviteFragmentActivity extends FragmentActivity implements
 										to_places.setText(ToLocationNew
 												.get(position).toString()
 												.trim());
-										dateedittext.setText("");
-										timeedittext.setText("");
-										seatsedittext.setText(SeatsNew
+										datetextview.setText("");
+										timetextview.setText("");
+										seats.setText(SeatsNew
 												.get(position).toString()
-												.trim());
+												.trim()+seatSuffix);
 
 										fromshortname = FromShortNameNew
 												.get(position).toString()

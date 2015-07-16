@@ -65,5 +65,14 @@
     <string name="button_flc_create_club_notmember">Create clubs</string>
     <string name="button_flc_continue_notmember">Maybe later</string>
     <string name="btn_done">Done</string>
-
+    <string name="hint_select_address">Select Address</string>
+    <string name="in_30min">In 30 min</string>
+    <string name="in_1_hour">In 1 Hour</string>
+    <string name="select_datetime"> Select Date/Time</string>
+    <string name="change">Change</string>
+    <string name="how_many_passenger">How many co-passengers?</string>
+        
+    
+    <string name="seatcount">3 seat(s) to share</string>
+    
 </resources>

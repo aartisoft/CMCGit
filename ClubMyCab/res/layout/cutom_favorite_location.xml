@@ -4,20 +4,42 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical" >
+    <LinearLayout 
+         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp"
+       android:weightSum="2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
 
     <TextView
         android:id="@+id/tvLocationTagTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="Where do you work?"
+        android:textSize="15sp"
+        android:text="@string/tag_where_work"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+     <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            
+            android:background="@drawable/removeclub"
+            />
+     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/maintoviewsll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:weightSum="3" >
 
@@ -25,30 +47,33 @@
             android:id="@+id/aTvLocationAutoComplete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2.2"
+            android:layout_weight="2.8"
             android:ellipsize="end"
+            android:layout_marginRight="5dp"
             android:hint="Type Address or Select here >"
+            android:inputType="textVisiblePassword"
             android:singleLine="true"
             android:textSize="15sp"
-            android:width="240dp" />
+             />
 
         <ImageView
             android:id="@+id/ivClearedittextimg"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:layout_weight=".3"
-            android:adjustViewBounds="true"
+            android:layout_margin="2dp"
+            android:layout_weight=".2"
             android:src="@drawable/edittext_clear_button" />
 
         <Button
             android:id="@+id/btnMap"
-            android:layout_width="0dp"
+            android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_weight=".5"
             android:background="@drawable/threedotsformap" />
+
+       
     </LinearLayout>
 
 </LinearLayout>

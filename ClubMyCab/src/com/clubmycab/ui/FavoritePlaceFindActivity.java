@@ -3,19 +3,11 @@ package com.clubmycab.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.clubmycab.FindFavoritesPlaceAdapter;
-import com.clubmycab.PlacesAutoCompleteAdapter;
-import com.clubmycab.R;
-import com.clubmycab.maps.MapUtilityMethods;
-import com.clubmycab.model.AddressModel;
-import com.clubmycab.utility.Log;
-import com.google.gson.Gson;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,14 +17,22 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.clubmycab.FindFavoritesPlaceAdapter;
+import com.clubmycab.R;
+import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
+import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
+import com.google.gson.Gson;
 
 public class FavoritePlaceFindActivity extends Activity implements
 		OnClickListener {
@@ -73,6 +73,13 @@ public class FavoritePlaceFindActivity extends Activity implements
 
 		adapter= new FindFavoritesPlaceAdapter(this,
 				R.layout.list_item_custom);
+		
+		if(resultTag.size()==0){
+		//InputMethodManager inputMethodManager=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		 //  inputMethodManager.toggleSoftInputFromWindow(from_places.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+		    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+		}
 		lvFavoritePlace.setAdapter(adapter);
 		from_places.setDropDownHeight(0);
 
@@ -223,20 +230,36 @@ public class FavoritePlaceFindActivity extends Activity implements
 			for (Iterator i = keys.iterator(); i.hasNext();) {
 				String key = (String) i.next();
 
-				if (key.equalsIgnoreCase("Where do you live?"))
+				if(hashMap.get(key).isEmpty()||hashMap.get(key).equalsIgnoreCase(""))
+					continue;
+				
+				if (key.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)){
 					resultTag.add("Home");
-				else if (key.equalsIgnoreCase("Where do you work?"))
+					
+					
+				}
+				else if (key.equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
 					resultTag.add("Office");
+				}
+					
 
-				else
+				else{
 					resultTag.add(key);
+				}
 
 				Log.d("Key value::", key);
 				// Get long address from location
+				
+				try{
 				addressModel = (AddressModel) gson.fromJson(hashMap.get(key),
 						AddressModel.class);
 				FindFavoritesPlaceAdapter.resultList.add(addressModel
 						.getLongname());
+				}
+				catch(Exception e){
+				FindFavoritesPlaceAdapter.resultList.add("");
+				}
+				
 				if(adapter!=null)
 					adapter.notifyDataSetChanged();
 			

@@ -14,7 +14,7 @@
     <ScrollView
         android:id="@+id/invitescroll"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_above="@+id/invitebtn"
         android:layout_below="@+id/header"
         android:layout_margin="10dp"
@@ -314,8 +314,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:gravity="center"
+                        android:layout_margin="3dp"
+                        android:gravity="left"
                         android:text="When do you want to leave?"
                         android:textColor="#000000"
                         android:textSize="20sp"
@@ -324,6 +324,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
                         android:layout_marginBottom="5dp" >
 
                         <TextView
@@ -370,9 +371,10 @@
                             android:id="@+id/dateetextview"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.4"
+                            android:layout_weight="1"
                             android:ems="10"
-                            android:gravity="center"
+                            android:gravity="left"
+                            android:layout_marginLeft="3dp"
                             android:focusableInTouchMode="false"
                             
                             android:textSize="15sp" />
@@ -383,7 +385,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:focusableInTouchMode="false"
-                                                        android:gravity="center"
+                                                        android:gravity="left"
                             
                             android:textSize="15sp" >
 
@@ -448,8 +450,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="40dp"
+                android:gravity="left"
                 android:text="@string/how_many_passenger"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -458,7 +461,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="35dp"
-                android:layout_margin="25dp"
+                android:layout_marginTop="10dp"
                  >
 
                 <TextView
@@ -468,8 +471,9 @@
                     android:layout_margin="3dp"
                     
                     android:layout_weight="1"
+                    android:textSize="15sp"
                     android:text="@string/seatcount"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:textColor="#000000" />
 
                 <Button

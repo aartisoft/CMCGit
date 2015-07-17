@@ -75,6 +75,8 @@
             android:orientation="horizontal" >
 
             <Button
+                android:id="@+id/btnSkip"
+                
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -108,6 +110,7 @@
     android:layout_width="fill_parent"
     android:layout_below="@id/textViewFavLoc"
     android:dividerHeight="0dp"
+    android:divider="@color/white"
      android:layout_margin="10dp"
        android:background="#FFFFFF"
        android:layout_above="@id/llBottom"

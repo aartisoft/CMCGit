@@ -38,6 +38,8 @@
         <item>What do you want?</item>
         <item>By your command</item>
     </string-array>
+<string name="tag_where_work">Where do you work/study?</string>
+<string name="tag_where_live">Where do you live?</string>
 
     <string name="btnCrash">Test Calc</string>
     <string name="btnBackgroundCrash">Test Background Crash</string>

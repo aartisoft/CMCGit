@@ -74,6 +74,7 @@ import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 import com.clubmycab.xmlhandler.FetchUnreadNotificationCountHandler;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -1416,9 +1417,9 @@ public class HomeActivity extends FragmentActivity implements
 			if (hashMap.size() > 0) {
 
 				homeAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get("Where do you live?"), AddressModel.class);
+						hashMap.get(StringTags.TAG_WHERE_LIVE), AddressModel.class);
 				workAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get("Where do you work?"), AddressModel.class);
+						hashMap.get(StringTags.TAG_WHERE_WORK), AddressModel.class);
 
 				Log.d("HomeActivity", "hashMap : " + hashMap);
 				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel

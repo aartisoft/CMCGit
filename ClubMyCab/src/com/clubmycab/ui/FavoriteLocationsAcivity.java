@@ -85,7 +85,7 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements Locati
 	//int currentIndex = 0;
 	//int currentSelectedIndex;
 	int remainigfavorites = 3;
-	HashMap<String, String> favLocationHashMap = new HashMap<String, String>();
+	private HashMap<String, String> favLocationHashMap = new HashMap<String, String>();
 
 
 	AddressModel addressModel;
@@ -107,8 +107,8 @@ int pos=0;
 		setContentView(R.layout.activity_favorite_location);
 		favoriteTag = new ArrayList<String>();
 		favoriteAddress = new ArrayList<String>();
-	//	favoriteAddress.clear();
-	//	favoriteTag.clear();
+		favoriteAddress.clear();
+		favoriteTag.clear();
 
 		notfromregistration = getIntent().getBooleanExtra(
 				"NotFromRegistration", false);
@@ -262,7 +262,7 @@ int pos=0;
 			SharedPreferences.Editor editor = sharedprefernce.edit();
 			editor.putString("favoritelocation", json);
 			editor.commit();
-			//adapter.notifyDataSetChanged();
+			adapter.notifyDataSetChanged();
 			
 			
 
@@ -380,7 +380,7 @@ int pos=0;
 							FavoriteLocationsAcivity.this,
 							"Please enter valid address for "+key,
 							Toast.LENGTH_LONG).show();
-					viewHolder.aTvLocationAutoComplete.setFocusable(true);
+				//	viewHolder.aTvLocationAutoComplete.setFocusable(true);
 					
 
 					return;	
@@ -793,13 +793,26 @@ public void addFavoriteLocation(String s){
 
  }
  viewHolder.btnMap.setTag(position);
-
+ viewHolder.btnDelete.setTag(position);
+ viewHolder.ivClearedittextimg.setTag(position);
 viewHolder.tvLocationTagTextView.setText(data.get(position));
  viewHolder.aTvLocationAutoComplete.setText(favoriteAddress.get(position));
  
- if(data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)||data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
+// if(data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)||data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
+//	 viewHolder.btnDelete.setVisibility(View.GONE);
+// }
+ if(position==1||position==0){
 	 viewHolder.btnDelete.setVisibility(View.GONE);
+	 viewHolder.ivClearedittextimg.setVisibility(View.GONE);
  }
+ else{
+	 viewHolder.btnDelete.setVisibility(View.VISIBLE);
+	 viewHolder.ivClearedittextimg.setVisibility(View.VISIBLE);
+
+	 
+ }
+
+
 
 
 	       // TextView txt=(TextView)convertView.findViewById(R.id.text);

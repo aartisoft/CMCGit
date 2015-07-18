@@ -1913,6 +1913,9 @@ public class ContactsToInviteActivity extends Activity {
 				mainIntent.putExtra("DriverName", "");
 				mainIntent.putExtra("DriverNumber", "");
 				mainIntent.putExtra("CarNumber", "");
+				
+//				mainIntent.putExtra("ExpTripDuration",
+//						ExpTripDuration.get(arg2));
 
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
@@ -1999,6 +2002,9 @@ public class ContactsToInviteActivity extends Activity {
 				mainIntent.putExtra("DriverName", "");
 				mainIntent.putExtra("DriverNumber", "");
 				mainIntent.putExtra("CarNumber", "");
+				
+//				mainIntent.putExtra("ExpTripDuration",
+//						ExpTripDuration.get(arg2));
 
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
@@ -2271,6 +2277,9 @@ public class ContactsToInviteActivity extends Activity {
 			mainIntent.putExtra("DriverName", "");
 			mainIntent.putExtra("DriverNumber", "");
 			mainIntent.putExtra("CarNumber", "");
+			
+//			mainIntent.putExtra("ExpTripDuration",
+//					ExpTripDuration.get(arg2));
 
 			startActivityForResult(mainIntent, 500);
 			overridePendingTransition(R.anim.slide_in_right,

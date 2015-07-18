@@ -130,6 +130,11 @@
             android:name=".LocationShareService"
             android:stopWithTask="true" >
         </service>
+        
+        <service
+            android:name=".LocationShareForRideService"
+            android:stopWithTask="true" >
+        </service>
 
         <activity
             android:name=".ui.MyRidesActivity"
@@ -276,6 +281,7 @@
         </receiver>
         
         <receiver  android:process=":remote" android:name="UpcomingStartTripAlarm"></receiver>
+        <receiver  android:process=":remote" android:name="StartTripPHPAlarm"></receiver>
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 

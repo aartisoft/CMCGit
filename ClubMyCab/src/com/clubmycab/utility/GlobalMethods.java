@@ -5,15 +5,15 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class GlobalMethods {
 
-	public static String calculateCheckSumString(String... checksumstring) {
-		StringBuilder stb = new StringBuilder();
-		for (String checkSumInput : checksumstring) {
-			if (checkSumInput != null && !checkSumInput.equals("")) {
-				stb.append("'" + checkSumInput + "'");
-			}
-		}
-		return stb.toString();
-	}
+	// public static String calculateCheckSumString(String... checksumstring) {
+	// StringBuilder stb = new StringBuilder();
+	// for (String checkSumInput : checksumstring) {
+	// if (checkSumInput != null && !checkSumInput.equals("")) {
+	// stb.append("'" + checkSumInput + "'");
+	// }
+	// }
+	// return stb.toString();
+	// }
 
 	public static String calculateCheckSumForService(String input,
 			String secretkey) {
@@ -27,7 +27,7 @@ public class GlobalMethods {
 					"HmacSHA256");
 			mac.init(secret);
 			byte[] digest = mac.doFinal(test.getBytes());
-			//String enc = new String(digest);
+			// String enc = new String(digest);
 			String ret = "";
 			for (byte b : digest) {
 				ret = ret + String.format("%02x", b);

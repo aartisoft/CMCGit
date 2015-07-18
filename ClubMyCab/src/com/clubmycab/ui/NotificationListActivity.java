@@ -111,7 +111,6 @@ public class NotificationListActivity extends Activity {
 	String latlongmap;
 
 	String readunreadnotiresp;
-	
 
 	RelativeLayout allnotificationrl;
 	Tracker tracker;
@@ -150,7 +149,8 @@ public class NotificationListActivity extends Activity {
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(NotificationListActivity.this);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("Notifications");
@@ -171,204 +171,203 @@ public class NotificationListActivity extends Activity {
 			}
 		});
 
-		
+		// mNav = new SimpleSideDrawer(this);
+		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
+		//
+		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v) {
+		//
+		// // mainhomepagerl.setAlpha((float) 0.3);
+		// mNav.toggleLeftDrawer();
+		//
+		// }
+		// });
+		//
+		// myprofile = (TextView) findViewById(R.id.myprofile);
+		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myrides = (TextView) findViewById(R.id.myrides);
+		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// bookacab = (TextView) findViewById(R.id.bookacab);
+		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
+		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myclubs = (TextView) findViewById(R.id.myclubs);
+		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
+		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// mypreferences = (TextView) findViewById(R.id.mypreferences);
+		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// about = (TextView) findViewById(R.id.about);
+		// about.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		//
+		// myprofile.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("MyProfile Click")
+		// .setAction("MyProfile Click")
+		// .setLabel("MyProfile Click").build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// MyProfileActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myrides.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("MyRides Click")
+		// .setAction("MyRides Click").setLabel("MyRides Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// MyRidesActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// bookacab.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("BookaCab Click")
+		// .setAction("BookaCab Click").setLabel("BookaCab Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// BookaCabFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// sharemylocation.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareLocation Click")
+		// .setAction("ShareLocation Click")
+		// .setLabel("ShareLocation Click").build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// ShareLocationFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myclubs.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("MyClubs Click")
+		// .setAction("MyClubs Click").setLabel("MyClubs Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// MyClubsActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// sharethisapp.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareApp Click")
+		// .setAction("ShareApp Click").setLabel("ShareApp Click")
+		// .build());
+		//
+		// Intent sendIntent = new Intent();
+		// sendIntent.setAction(Intent.ACTION_SEND);
+		// sendIntent
+		// .putExtra(
+		// Intent.EXTRA_TEXT,
+		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
+		// sendIntent.setType("text/plain");
+		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
+		//
+		// }
+		// });
+		//
+		// mypreferences.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("Settings Click")
+		// .setAction("Settings Click").setLabel("Settings Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// SettingActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// about.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("About Click").setAction("About Click")
+		// .setLabel("About Click").build());
+		//
+		// Intent mainIntent = new Intent(NotificationListActivity.this,
+		// AboutPagerFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
 
-//		mNav = new SimpleSideDrawer(this);
-//		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-//
-//		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//
-//				// mainhomepagerl.setAlpha((float) 0.3);
-//				mNav.toggleLeftDrawer();
-//
-//			}
-//		});
-//
-//		myprofile = (TextView) findViewById(R.id.myprofile);
-//		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		myrides = (TextView) findViewById(R.id.myrides);
-//		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		bookacab = (TextView) findViewById(R.id.bookacab);
-//		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-//		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		myclubs = (TextView) findViewById(R.id.myclubs);
-//		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-//		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		mypreferences = (TextView) findViewById(R.id.mypreferences);
-//		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		about = (TextView) findViewById(R.id.about);
-//		about.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//
-//		myprofile.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("MyProfile Click")
-//						.setAction("MyProfile Click")
-//						.setLabel("MyProfile Click").build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						MyProfileActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		myrides.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("MyRides Click")
-//						.setAction("MyRides Click").setLabel("MyRides Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						MyRidesActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		bookacab.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("BookaCab Click")
-//						.setAction("BookaCab Click").setLabel("BookaCab Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						BookaCabFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		sharemylocation.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("ShareLocation Click")
-//						.setAction("ShareLocation Click")
-//						.setLabel("ShareLocation Click").build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						ShareLocationFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		myclubs.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("MyClubs Click")
-//						.setAction("MyClubs Click").setLabel("MyClubs Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						MyClubsActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		sharethisapp.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("ShareApp Click")
-//						.setAction("ShareApp Click").setLabel("ShareApp Click")
-//						.build());
-//
-//				Intent sendIntent = new Intent();
-//				sendIntent.setAction(Intent.ACTION_SEND);
-//				sendIntent
-//						.putExtra(
-//								Intent.EXTRA_TEXT,
-//								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-//				sendIntent.setType("text/plain");
-//				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-//
-//			}
-//		});
-//
-//		mypreferences.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("Settings Click")
-//						.setAction("Settings Click").setLabel("Settings Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						SettingActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		about.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("About Click").setAction("About Click")
-//						.setLabel("About Click").build());
-//
-//				Intent mainIntent = new Intent(NotificationListActivity.this,
-//						AboutPagerFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-
-		UniversalDrawer drawer = new UniversalDrawer(this,tracker);
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
-		
+
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
 		allnotificationiconsll = (LinearLayout) findViewById(R.id.allnotificationiconsll);
@@ -433,7 +432,8 @@ public class NotificationListActivity extends Activity {
 									new clearallnotificationtask().execute();
 
 								} else {
-									Toast.makeText(NotificationListActivity.this,
+									Toast.makeText(
+											NotificationListActivity.this,
 											"No Notifications to clear!!",
 											Toast.LENGTH_LONG).show();
 								}
@@ -1422,6 +1422,8 @@ public class NotificationListActivity extends Activity {
 				String DriverName = null;
 				String DriverNumber = null;
 				String CarNumber = null;
+				String ExpTripDuration = null;
+				String status = null;
 
 				try {
 					JSONArray subArray = new JSONArray(gotopoolresp);
@@ -1471,6 +1473,11 @@ public class NotificationListActivity extends Activity {
 							CarNumber = subArray.getJSONObject(i)
 									.getString("CarNumber").toString();
 
+							ExpTripDuration = subArray.getJSONObject(i)
+									.getString("ExpTripDuration").toString();
+							status = subArray.getJSONObject(i)
+									.getString("status").toString();
+
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -1480,7 +1487,8 @@ public class NotificationListActivity extends Activity {
 					if (MobileNumber.equalsIgnoreCase(MobileNumberstr)) {
 
 						final Intent mainIntent = new Intent(
-								NotificationListActivity.this, CheckPoolFragmentActivity.class);
+								NotificationListActivity.this,
+								CheckPoolFragmentActivity.class);
 						mainIntent.putExtra("CabId", CabIdstr);
 						mainIntent.putExtra("MobileNumber", MobileNumber);
 						mainIntent.putExtra("OwnerName", OwnerName);
@@ -1505,12 +1513,16 @@ public class NotificationListActivity extends Activity {
 						mainIntent.putExtra("DriverName", DriverName);
 						mainIntent.putExtra("DriverNumber", DriverNumber);
 						mainIntent.putExtra("CarNumber", CarNumber);
+
+						mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
+						mainIntent.putExtra("status", status);
 
 						NotificationListActivity.this.startActivity(mainIntent);
 
 					} else {
 						final Intent mainIntent = new Intent(
-								NotificationListActivity.this, MemberRideFragmentActivity.class);
+								NotificationListActivity.this,
+								MemberRideFragmentActivity.class);
 						mainIntent.putExtra("CabId", CabIdstr);
 						mainIntent.putExtra("MobileNumber", MobileNumber);
 						mainIntent.putExtra("OwnerName", OwnerName);
@@ -1534,6 +1546,9 @@ public class NotificationListActivity extends Activity {
 						mainIntent.putExtra("DriverName", DriverName);
 						mainIntent.putExtra("DriverNumber", DriverNumber);
 						mainIntent.putExtra("CarNumber", CarNumber);
+
+						mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
+						mainIntent.putExtra("status", status);
 
 						NotificationListActivity.this.startActivity(mainIntent);
 					}

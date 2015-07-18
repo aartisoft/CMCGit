@@ -97,6 +97,8 @@ public class MyRidesActivity extends Activity {
 	ArrayList<String> DriverName = new ArrayList<String>();
 	ArrayList<String> DriverNumber = new ArrayList<String>();
 	ArrayList<String> CarNumber = new ArrayList<String>();
+	ArrayList<String> ExpTripDuration = new ArrayList<String>();
+	ArrayList<String> status = new ArrayList<String>();
 
 	ListViewAdapter adapter;
 	ShowHistoryRidesAdaptor showhisadaptor;
@@ -608,6 +610,9 @@ public class MyRidesActivity extends Activity {
 			DriverNumber.clear();
 			CarNumber.clear();
 
+			ExpTripDuration.clear();
+			status.clear();
+
 			try {
 				JSONArray subArray = new JSONArray(poolresponse);
 				String allcabids = "s";
@@ -661,6 +666,11 @@ public class MyRidesActivity extends Activity {
 								.getString("DriverNumber").toString());
 						CarNumber.add(subArray.getJSONObject(i)
 								.getString("CarNumber").toString());
+
+						ExpTripDuration.add(subArray.getJSONObject(i)
+								.getString("ExpTripDuration").toString());
+						status.add(subArray.getJSONObject(i)
+								.getString("status").toString());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -730,6 +740,10 @@ public class MyRidesActivity extends Activity {
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
 
+							mainIntent.putExtra("ExpTripDuration",
+									ExpTripDuration.get(arg2));
+							mainIntent.putExtra("status", status.get(arg2));
+
 							MyRidesActivity.this.startActivity(mainIntent);
 
 						} else {
@@ -777,6 +791,10 @@ public class MyRidesActivity extends Activity {
 									DriverNumber.get(arg2));
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
+
+							mainIntent.putExtra("ExpTripDuration",
+									ExpTripDuration.get(arg2));
+							mainIntent.putExtra("status", status.get(arg2));
 
 							MyRidesActivity.this.startActivity(mainIntent);
 						}
@@ -879,6 +897,10 @@ public class MyRidesActivity extends Activity {
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
 
+							mainIntent.putExtra("ExpTripDuration",
+									ExpTripDuration.get(arg2));
+							mainIntent.putExtra("status", status.get(arg2));
+
 							MyRidesActivity.this.startActivity(mainIntent);
 
 						} else {
@@ -926,6 +948,10 @@ public class MyRidesActivity extends Activity {
 									DriverNumber.get(arg2));
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
+
+							mainIntent.putExtra("ExpTripDuration",
+									ExpTripDuration.get(arg2));
+							mainIntent.putExtra("status", status.get(arg2));
 
 							MyRidesActivity.this.startActivity(mainIntent);
 						}

@@ -146,6 +146,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	String DriverNumber;
 	String CarNumber;
 
+	String ExpTripDuration;
+	String statusTrip;
+
 	String comefrom;
 
 	GoogleMap checkpoolmap;
@@ -325,9 +328,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		CarNumber = intent.getStringExtra("CarNumber");
 
 		comefrom = intent.getStringExtra("comefrom");
+
+		ExpTripDuration = intent.getStringExtra("ExpTripDuration");
+		statusTrip = intent.getStringExtra("status");
+
 		Log.d("comefrom", "" + comefrom);
 
 		Log.d("CabStatus", "" + CabStatus);
+
+		Log.d("status", "" + statusTrip);
 
 		checkpoolbottomtabsll = (LinearLayout) findViewById(R.id.checkpoolbottomtabsll);
 
@@ -793,7 +802,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		}
 
-		if (CabStatus.equals("A")) {
+		if (CabStatus.equals("A") && statusTrip.equals("0")) {
 			try {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 						"dd/MM/yyyy hh:mm aa");
@@ -828,6 +837,28 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								&& arrayList.indexOf(CabId) == -1) {
 							showCabBookingDialog(true);
 						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (CabStatus.equals("A")) {
+			try {
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"dd/MM/yyyy hh:mm aa");
+				Date date = simpleDateFormat.parse(TravelDate + " "
+						+ TravelTime);
+
+				long expDuration = Long.parseLong(ExpTripDuration);
+
+				if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+					Log.d("CheckPoolFragmentActivity",
+							"ExpTripDuration trip completed");
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForTripCompleted().executeOnExecutor(
+								AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+					} else {
+						new ConnectionTaskForTripCompleted().execute(CabId);
 					}
 				}
 			} catch (Exception e) {
@@ -943,6 +974,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	}
 
 	private void showTripStartDialog() {
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				CheckPoolFragmentActivity.this);
 		View builderView = (View) getLayoutInflater().inflate(
@@ -991,9 +1023,31 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	}
 
 	private void tripStarted(final int duration) {
+
+		switch (duration) {
+
+		case 0: {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForStartTrip().executeOnExecutor(
+						AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+			} else {
+				new ConnectionTaskForStartTrip().execute(CabId);
+			}
+			break;
+		}
+
+		default: {
+			StartTripPHPAlarm startTripPHPAlarm = new StartTripPHPAlarm();
+			startTripPHPAlarm.setAlarm(CheckPoolFragmentActivity.this, CabId,
+					duration);
+			break;
+		}
+
+		}
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				CheckPoolFragmentActivity.this);
-		builder.setMessage("Your trip member(s) will now receive your location updates, would you like to share your location with others?");
+		builder.setMessage("Member(s) of your trip will now receive your location updates, would you like to share your location with others?");
 		builder.setCancelable(false);
 
 		builder.setPositiveButton("Select receipients",
@@ -1008,39 +1062,53 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (MemberName.size() > 0) {
-					selectednames.clear();
-					selectednumbers.clear();
-
-					selectednames = MemberName;
-					selectednumbers = MemberNumber;
-
-					ShareLocationObject myObject = new ShareLocationObject();
-					myObject.recipientsnames = selectednames;
-					myObject.recipientsnumbers = selectednumbers;
-					myObject.sharetilltype = "Destination";
-					myObject.destinationlongname = ToLocation;
-					LatLng latLng = endaddlatlng.get(endaddlatlng.size() - 1);
-					myObject.destinationlatlong = latLng;
-					myObject.destinationtimevalue = System.currentTimeMillis()
-							+ (60000 * 240);
-
-					Gson gson = new Gson();
-					String json = gson.toJson(myObject);
-
-					SharedPreferences locationshapref = getSharedPreferences(
-							"ShareLocationShared", 0);
-					Editor prefsEditor = locationshapref.edit();
-					prefsEditor.putString("ShareLocationObject", json);
-					prefsEditor.commit();
-
-					startService(new Intent(CheckPoolFragmentActivity.this,
-							LocationShareService.class));
+					shareLocation(false);
 				}
 
 			}
 		});
 
 		builder.show();
+	}
+
+	private void shareLocation(boolean hasAdditionalReceipients) {
+
+		if (hasAdditionalReceipients) {
+			// for (int i = 0; i < MemberName.size(); i++) {
+			// selectednames.add(MemberName.get(i));
+			// }
+			// for (int i = 0; i < MemberNumber.size(); i++) {
+			// selectednumbers.add(MemberNumber.get(i));
+			// }
+		} else {
+			selectednames.clear();
+			selectednumbers.clear();
+
+			// selectednames = MemberName;
+			// selectednumbers = MemberNumber;
+		}
+		ShareLocationObject myObject = new ShareLocationObject();
+		myObject.recipientsnames = selectednames;
+		myObject.recipientsnumbers = selectednumbers;
+		myObject.sharetilltype = "Destination";
+		myObject.destinationlongname = ToLocation;
+		LatLng latLng = endaddlatlng.get(endaddlatlng.size() - 1);
+		myObject.destinationlatlong = latLng;
+		myObject.destinationtimevalue = System.currentTimeMillis()
+				+ (60000 * 240);
+		myObject.cabID = CabId;
+
+		Gson gson = new Gson();
+		String json = gson.toJson(myObject);
+
+		SharedPreferences locationshapref = getSharedPreferences(
+				"ShareLocationShared", 0);
+		Editor prefsEditor = locationshapref.edit();
+		prefsEditor.putString("ShareLocationObject", json);
+		prefsEditor.commit();
+
+		startService(new Intent(CheckPoolFragmentActivity.this,
+				LocationShareForRideService.class));
 	}
 
 	private void openBookCabPage() {
@@ -1100,6 +1168,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				upcomingStartTripAlarm
 						.cancelBothAlarms(CheckPoolFragmentActivity.this);
 
+				StartTripPHPAlarm startTripPHPAlarm = new StartTripPHPAlarm();
+				startTripPHPAlarm.cancelAlarm(CheckPoolFragmentActivity.this);
+
+				stopService(new Intent(CheckPoolFragmentActivity.this,
+						LocationShareForRideService.class));
+
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					new ConnectionTaskForownercancelpool()
 							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1134,6 +1208,174 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		return addressReturn;
+	}
+
+	private class ConnectionTaskForTripCompleted extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionTripCompleted mAuth1 = new AuthenticateConnectionTripCompleted();
+			try {
+				mAuth1.cid = args[0];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionTripCompleted {
+
+		public String cid;
+
+		public AuthenticateConnectionTripCompleted() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/updateCabStatus.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cid);
+
+			nameValuePairList.add(CabIdValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String startresp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				startresp = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("completedresp", "" + startresp);
+		}
+	}
+
+	private class ConnectionTaskForStartTrip extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionStartTrip mAuth1 = new AuthenticateConnectionStartTrip();
+			try {
+				mAuth1.cid = args[0];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionStartTrip {
+
+		public String cid;
+
+		public AuthenticateConnectionStartTrip() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/startTripNotification.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cid);
+
+			nameValuePairList.add(CabIdValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String startresp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				startresp = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("startresp", "" + startresp);
+		}
 	}
 
 	// ///////
@@ -3910,6 +4152,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 							// setnamesandnumbersintext(selectednames,
 							// selectednumbers);
+
+							shareLocation(true);
+
 							dialog.dismiss();
 
 						} else {

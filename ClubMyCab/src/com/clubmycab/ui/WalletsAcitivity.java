@@ -8,16 +8,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.clubmycab.R;
-import com.clubmycab.asynctasks.GlobalAsyncTask;
-import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
-import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
-import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
-public class WalletsAcitivity extends Activity implements
-		AsyncTaskResultListener {
+public class WalletsAcitivity extends Activity {
 
 	Tracker tracker;
 	TextView responseTextView;
@@ -27,27 +22,28 @@ public class WalletsAcitivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wallets);
 
-		responseTextView = (TextView) findViewById(R.id.textView1);
-
-		String email = "testingone@mail.com";
-		String mobilenumber = "8200012345";
-		String msgcode = "500";
-		String action = "existingusercheck";
-
-		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
-				+ action + "''" + mobilenumber + "''"
-				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
-				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
-		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
-				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
-				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
-				+ "&checksum=" + checksumstring;
-		Log.d("WalletsActivity", "endpoint : " + endpoint + " params : "
-				+ params);
-		new GlobalAsyncTask(this, endpoint, params, null, this, true,
-				"querywallet", true);
+		// responseTextView = (TextView) findViewById(R.id.textView1);
+		//
+		// String email = "testingone@mail.com";
+		// String mobilenumber = "8200012345";
+		// String msgcode = "500";
+		// String action = "existingusercheck";
+		//
+		// String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+		// + action + "''" + mobilenumber + "''"
+		// + GlobalVariables.Mobikwik_MerchantName + "''"
+		// + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
+		// GlobalVariables.Mobikwik_14SecretKey);
+		// String endpoint = GlobalVariables.Mobikwik_ServerURL +
+		// "/querywallet";
+		// String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
+		// + "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
+		// + "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
+		// + "&checksum=" + checksumstring;
+		// Log.d("WalletsActivity", "endpoint : " + endpoint + " params : "
+		// + params);
+		// new GlobalAsyncTask(this, endpoint, params, null, this, true,
+		// "querywallet", true);
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(WalletsAcitivity.this);
@@ -92,12 +88,12 @@ public class WalletsAcitivity extends Activity implements
 		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 
-	@Override
-	public void getResult(String response, String uniqueID) {
-		if (uniqueID.equals("querywallet")) {
-			responseTextView.setText(response);
-
-			Log.d("WalletsActivity", "getResult : " + response);
-		}
-	}
+	// @Override
+	// public void getResult(String response, String uniqueID) {
+	// if (uniqueID.equals("querywallet")) {
+	// responseTextView.setText(response);
+	//
+	// Log.d("WalletsActivity", "getResult : " + response);
+	// }
+	// }
 }

@@ -14,4 +14,6 @@ public class ShareLocationObject {
 	String destinationlongname;
 	LatLng destinationlatlong;
 	long destinationtimevalue;
+	
+	String cabID;
 }

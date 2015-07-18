@@ -33,6 +33,16 @@
             android:layout_toRightOf="@id/mydetailbtn"
             android:src="@drawable/tripcalculator_icon"
             android:visibility="gone" />
+        
+        <ImageView
+            android:id="@+id/refreshlocationbtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/mycalculatorbtn"
+            android:src="@drawable/owner_location"
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/locationmarker"

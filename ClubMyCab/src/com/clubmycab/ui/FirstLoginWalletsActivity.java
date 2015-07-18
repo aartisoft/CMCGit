@@ -1,5 +1,7 @@
 package com.clubmycab.ui;
 
+import java.util.Iterator;
+
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -119,7 +121,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 	private void generateOTP() {
 		String msgcode = "504";
-		String amount = "10";
+		String amount = "10000";
 		String tokenType = "1";
 
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
@@ -141,7 +143,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 	private void linkWallet() {
 		String msgcode = "507";
-		String amount = "10";
+		String amount = "10000";
 		String tokenType = "1";
 		String otp = otpEditText.getText().toString().trim();
 
@@ -187,6 +189,36 @@ public class FirstLoginWalletsActivity extends Activity implements
 				true);
 	}
 
+	private boolean checkResponseChecksum(String response) {
+
+		try {
+			JSONObject jsonObject = new JSONObject(response);
+
+			Iterator<String> iterator = jsonObject.keys();
+			String responseKeys = "";
+			while (iterator.hasNext()) {
+				String string = iterator.next();
+				responseKeys += (string + "''");
+//				if (!string.equalsIgnoreCase("checksum")) {
+//					
+//				}
+			}
+//			Log.d("checkResponseChecksum", "responseKeys 1 : " + responseKeys);
+			responseKeys = responseKeys.substring(0, responseKeys.length() - 2);
+//			Log.d("checkResponseChecksum", "responseKeys 2 : " + responseKeys);
+			String responseKeysFinal = "'" + responseKeys + "'";
+//			Log.d("checkResponseChecksum", "responseKeysFinal : "
+//					+ responseKeysFinal);
+			Log.d("checkResponseChecksum", GlobalMethods
+					.calculateCheckSumForService(responseKeysFinal,
+							GlobalVariables.Mobikwik_14SecretKey));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 	@Override
 	public void getResult(String response, String uniqueID) {
 
@@ -195,6 +227,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 				JSONObject jsonObject = new JSONObject(response);
 				Log.d("FirstLoginWalletActivity", "querywallet jsonObject : "
 						+ jsonObject);
+				checkResponseChecksum(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -289,25 +322,25 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("tokengenerate")) {
 			Log.d("FirstLoginWalletActivity", "tokengenerate response : "
 					+ response);
-			
+
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 					String token = jsonObject.getString("token");
-					
+
 					SharedPreferences sharedPreferences = getSharedPreferences(
 							"MobikwikToken", 0);
 					SharedPreferences.Editor editor = sharedPreferences.edit();
 					editor.putString("token", token);
 					editor.commit();
-					
+
 				} else {
 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		} else if (uniqueID.equals("createwalletuser")) {
 			Log.d("FirstLoginWalletActivity", "createwalletuser response : "
 					+ response);

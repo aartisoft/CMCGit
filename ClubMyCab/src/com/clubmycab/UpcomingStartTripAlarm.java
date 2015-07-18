@@ -27,6 +27,9 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 	public static final int UPCOMING_TRIP_NOTIFICATION_TIME = 15;
 	public static final int START_TRIP_NOTIFICATION_TIME = 5;
 
+	private static final int ALARM_UPCOMING_ID = 0;
+	private static final int ALARM_START_TRIP_ID = 1;
+
 	static int notificationID = 1;
 
 	@Override
@@ -76,7 +79,7 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 						+ ". Click here to book a cab");
 
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(
-						context, 0, intent, 0);
+						context, ALARM_UPCOMING_ID, intent, 0);
 				alarmManager
 						.set(AlarmManager.RTC_WAKEUP,
 								(date.getTime() - (UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)),
@@ -91,7 +94,7 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 						+ " to " + tShortName + " is about to start");
 
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(
-						context, 1, intent, 0);
+						context, ALARM_START_TRIP_ID, intent, 0);
 				alarmManager
 						.set(AlarmManager.RTC_WAKEUP,
 								(date.getTime() - (START_TRIP_NOTIFICATION_TIME * 60 * 1000)),
@@ -108,11 +111,12 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 
-		PendingIntent sender = PendingIntent
-				.getBroadcast(context, 0, intent, 0);
+		PendingIntent sender = PendingIntent.getBroadcast(context,
+				ALARM_UPCOMING_ID, intent, 0);
 		alarmManager.cancel(sender);
 
-		sender = PendingIntent.getBroadcast(context, 1, intent, 0);
+		sender = PendingIntent.getBroadcast(context, ALARM_START_TRIP_ID,
+				intent, 0);
 		alarmManager.cancel(sender);
 	}
 

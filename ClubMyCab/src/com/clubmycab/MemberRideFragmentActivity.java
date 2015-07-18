@@ -50,7 +50,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -204,6 +207,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	ImageView locationmarker;
 	ProgressDialog onedialog;
 
+	ImageView refreshlocationbtn;
+
 	Marker mylocationmarker;
 
 	ArrayList<String> namearray = new ArrayList<String>();
@@ -239,6 +244,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	RelativeLayout chatlayoutmainrl;
 
 	boolean exceptioncheck = false;
+
+	String ownerlocation;
+	Marker ownerMarker;
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -346,6 +354,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		// /////////// chat code
 
+		refreshlocationbtn = (ImageView) findViewById(R.id.refreshlocationbtn);
+		refreshlocationbtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForOwnerLocation().executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+				} else {
+					new ConnectionTaskForOwnerLocation().execute(CabId);
+				}
+			}
+		});
+
 		listViewMsg = (ListView) findViewById(R.id.listViewMsg);
 		editTextMsg = (EditText) findViewById(R.id.editTextMsg);
 		imageViewSendBtn = (ImageView) findViewById(R.id.imageViewSendBtn);
@@ -436,8 +458,31 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				} else {
 					Toast.makeText(
 							MemberRideFragmentActivity.this,
-							"Please select your location to join the ride, by clicking on map",
+							"We have set your pick-up to your current location, please move the map around to select a different location & press join ride again",
 							Toast.LENGTH_LONG).show();
+
+					// Location location = joinpoolmap.getMyLocation();
+					LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+					Criteria criteria = new Criteria();
+
+					Location location = locationManager
+							.getLastKnownLocation(locationManager
+									.getBestProvider(criteria, false));
+
+					Log.d("MemberRideFragmentActivity",
+							"joinpoolmap location : " + location);
+					if (location != null) {
+						Log.d("MemberRideFragmentActivity",
+								"joinpoolmap location : " + location);
+
+						LatLng point = new LatLng(location.getLatitude(),
+								location.getLongitude());
+						joinpoolmap.animateCamera(CameraUpdateFactory
+								.newLatLngZoom(point, 21));
+
+						setOnMapClick(point);
+
+					}
 				}
 			}
 		});
@@ -1229,47 +1274,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				@Override
 				public void onMapClick(LatLng point) {
 
-					joinpoolmap.animateCamera(CameraUpdateFactory
-							.newLatLng(point));
-					locationmarker.setVisibility(View.VISIBLE);
-
-					memberlocationlatlong = point;
-					memberlocationaddress = MapUtilityMethods.getAddress(
-							MemberRideFragmentActivity.this, point.latitude,
-							point.longitude);
-
-					Log.d("memberlocationlatlong", "" + memberlocationlatlong);
-					Log.d("memberlocationaddress", "" + memberlocationaddress);
-
-					joinpoolchangelocationtext.setVisibility(View.VISIBLE);
-					joinpoolchangelocationtext.setText(memberlocationaddress);
-
-					joinpoolmap
-							.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-								@Override
-								public void onCameraChange(
-										final CameraPosition cameraPosition) {
-
-									LatLng mapcenter = cameraPosition.target;
-
-									memberlocationlatlong = mapcenter;
-									memberlocationaddress = MapUtilityMethods
-											.getAddress(
-													MemberRideFragmentActivity.this,
-													mapcenter.latitude,
-													mapcenter.longitude);
-
-									Log.d("memberlocationlatlong", ""
-											+ memberlocationlatlong);
-									Log.d("memberlocationaddress", ""
-											+ memberlocationaddress);
-
-									joinpoolchangelocationtext
-											.setText(memberlocationaddress);
-
-								}
-							});
+					setOnMapClick(point);
 				}
 			});
 
@@ -1312,8 +1317,59 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				new ConnectionTaskForShowMembersOnMap().execute();
 			}
 
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForOwnerLocation().executeOnExecutor(
+						AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+			} else {
+				new ConnectionTaskForOwnerLocation().execute(CabId);
+			}
+
 		}
 
+	}
+	
+	private void setOnMapClick(LatLng point) {
+		joinpoolmap.animateCamera(CameraUpdateFactory
+				.newLatLng(point));
+		locationmarker.setVisibility(View.VISIBLE);
+
+		memberlocationlatlong = point;
+		memberlocationaddress = MapUtilityMethods.getAddress(
+				MemberRideFragmentActivity.this, point.latitude,
+				point.longitude);
+
+		Log.d("memberlocationlatlong", "" + memberlocationlatlong);
+		Log.d("memberlocationaddress", "" + memberlocationaddress);
+
+		joinpoolchangelocationtext.setVisibility(View.VISIBLE);
+		joinpoolchangelocationtext.setText(memberlocationaddress);
+
+		joinpoolmap
+				.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+					@Override
+					public void onCameraChange(
+							final CameraPosition cameraPosition) {
+
+						LatLng mapcenter = cameraPosition.target;
+
+						memberlocationlatlong = mapcenter;
+						memberlocationaddress = MapUtilityMethods
+								.getAddress(
+										MemberRideFragmentActivity.this,
+										mapcenter.latitude,
+										mapcenter.longitude);
+
+						Log.d("memberlocationlatlong", ""
+								+ memberlocationlatlong);
+						Log.d("memberlocationaddress", ""
+								+ memberlocationaddress);
+
+						joinpoolchangelocationtext
+								.setText(memberlocationaddress);
+
+					}
+				});
 	}
 
 	public class AuthenticateConnectionGetDirection {
@@ -3611,6 +3667,123 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				}
 			}
+		}
+	}
+
+	// /////
+	private class ConnectionTaskForOwnerLocation extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionOwnerLocationtask mAuth1 = new AuthenticateConnectionOwnerLocationtask();
+			try {
+				mAuth1.cabid = args[0];
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(ownerlocation);
+
+				if (jsonObject.get("msg").toString()
+						.equalsIgnoreCase("success")) {
+
+					if (!refreshlocationbtn.isShown()) {
+						refreshlocationbtn.setVisibility(View.VISIBLE);
+					}
+
+					LatLng latLng = new LatLng(Double.parseDouble(jsonObject
+							.get("ownerLat").toString()),
+							Double.parseDouble(jsonObject.get("ownerLng")
+									.toString()));
+
+					Log.d("MemberRideFragmentActivity", "Owner location : "
+							+ latLng);
+
+					if (ownerMarker != null) {
+						ownerMarker.remove();
+					}
+
+					MarkerOptions markerOptions = new MarkerOptions()
+							.position(latLng);
+					markerOptions.icon(BitmapDescriptorFactory
+							.fromResource(R.drawable.owner_location_pin));
+					ownerMarker = joinpoolmap.addMarker(markerOptions);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionOwnerLocationtask {
+
+		public String cabid;
+
+		public AuthenticateConnectionOwnerLocationtask() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/updateOwnerLocation.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cabid);
+			nameValuePairList.add(CabIdValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String result = null;
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("ownerlocation", "" + result);
+			ownerlocation = result;
 		}
 	}
 

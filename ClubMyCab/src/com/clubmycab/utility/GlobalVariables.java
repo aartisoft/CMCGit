@@ -19,6 +19,8 @@ public class GlobalVariables {
 	// // GoogleCloudUAT
 
 	public static final boolean LOGGING_ENABLED = true;
+	
+	public static final double GEOFENCING_RADIUS = 0.003;
 
 	public static String ActivityName = "";
 

@@ -25,8 +25,8 @@ import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import com.clubmycab.utility.Log;
 
+import com.clubmycab.utility.Log;
 import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.SplashActivity;
@@ -37,7 +37,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	static int notificationID = 1;
 	private static final String TAG = "GCMIntentService";
-	
+
 	String gotopoolresp;
 
 	public GCMIntentService() {
@@ -83,6 +83,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 		} else if (pushfrom != null
 				&& pushfrom.equalsIgnoreCase("genericnotification")) {
 			generateGenericnotification(context, message);
+		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("TripStart")) {
+			generateTripStartNotification(context, CabId, message);
 		} else {
 			generateNewMsgNotification(context, message);
 		}
@@ -218,7 +220,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				Notification notification = mBuilder
 						.setSmallIcon(icon)
 						.setTicker("ClubMyCab")
-						.setWhen(0)
+						.setWhen(System.currentTimeMillis())
 						.setAutoCancel(true)
 						.setContentTitle("ClubMyCab")
 						.setStyle(
@@ -251,6 +253,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 				String OpenTime = null;
 				String CabStatus = null;
 				String Seat_Status = null;
+				String ExpTripDuration = null;
+				String status = null;
 
 				JSONArray subArray = new JSONArray(gotopoolresp);
 				for (int i = 0; i < subArray.length(); i++) {
@@ -290,6 +294,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 					Seat_Status = subArray.getJSONObject(i)
 							.getString("Seat_Status").toString();
 
+					ExpTripDuration = subArray.getJSONObject(i)
+							.getString("ExpTripDuration").toString();
+					status = subArray.getJSONObject(i).getString("status")
+							.toString();
+
 				}
 
 				// ///////////////////////
@@ -303,7 +312,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, CheckPoolFragmentActivity.class);
+					Intent mainIntent = new Intent(this,
+							CheckPoolFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -322,6 +332,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 					mainIntent.putExtra("Distance", Distance);
 					mainIntent.putExtra("OpenTime", OpenTime);
 					mainIntent.putExtra("CabStatus", CabStatus);
+
+					mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
+					mainIntent.putExtra("status", status);
+
 					mainIntent.putExtra("comefrom", "fromupcomingtrip");
 					PendingIntent pIntent = PendingIntent.getActivity(this,
 							notificationID, mainIntent,
@@ -332,7 +346,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					Notification notification = mBuilder
 							.setSmallIcon(icon)
 							.setTicker("ClubMyCab")
-							.setWhen(0)
+							.setWhen(System.currentTimeMillis())
 							.setAutoCancel(true)
 							.setContentTitle("ClubMyCab")
 							.setStyle(
@@ -353,7 +367,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, MemberRideFragmentActivity.class);
+					Intent mainIntent = new Intent(this,
+							MemberRideFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -373,6 +388,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 					mainIntent.putExtra("Distance", Distance);
 					mainIntent.putExtra("OpenTime", OpenTime);
 					mainIntent.putExtra("CabStatus", CabStatus);
+
+					mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
+					mainIntent.putExtra("status", status);
+
 					mainIntent.putExtra("comefrom", "fromupcomingtrip");
 					PendingIntent pIntent = PendingIntent.getActivity(this,
 							notificationID, mainIntent,
@@ -383,7 +402,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					Notification notification = mBuilder
 							.setSmallIcon(icon)
 							.setTicker("ClubMyCab")
-							.setWhen(0)
+							.setWhen(System.currentTimeMillis())
 							.setAutoCancel(true)
 							.setContentTitle("ClubMyCab")
 							.setStyle(
@@ -444,7 +463,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				Notification notification = mBuilder
 						.setSmallIcon(icon)
 						.setTicker(mskd)
-						.setWhen(0)
+						.setWhen(System.currentTimeMillis())
 						.setAutoCancel(true)
 						.setContentTitle(mname)
 						.setStyle(
@@ -477,6 +496,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 				String OpenTime = null;
 				String CabStatus = null;
 				String Seat_Status = null;
+				String ExpTripDuration = null;
+				String status = null;
 
 				JSONArray subArray = new JSONArray(gotopoolresp);
 				for (int i = 0; i < subArray.length(); i++) {
@@ -516,6 +537,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 					Seat_Status = subArray.getJSONObject(i)
 							.getString("Seat_Status").toString();
 
+					ExpTripDuration = subArray.getJSONObject(i)
+							.getString("ExpTripDuration").toString();
+					status = subArray.getJSONObject(i).getString("status")
+							.toString();
+
 				}
 
 				// ///////////////////////
@@ -529,7 +555,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, CheckPoolFragmentActivity.class);
+					Intent mainIntent = new Intent(this,
+							CheckPoolFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -548,6 +575,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 					mainIntent.putExtra("Distance", Distance);
 					mainIntent.putExtra("OpenTime", OpenTime);
 					mainIntent.putExtra("CabStatus", CabStatus);
+
+					mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
+					mainIntent.putExtra("status", status);
+
 					mainIntent.putExtra("comefrom", "fromchatdirect");
 					PendingIntent pIntent = PendingIntent.getActivity(this,
 							notificationID, mainIntent,
@@ -560,7 +591,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					Notification notification = mBuilder
 							.setSmallIcon(icon)
 							.setTicker(mskd)
-							.setWhen(0)
+							.setWhen(System.currentTimeMillis())
 							.setAutoCancel(true)
 							.setContentTitle(mname)
 							.setStyle(
@@ -581,7 +612,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 					int icon = R.drawable.cabappicon;
 					notificationID++;
 
-					Intent mainIntent = new Intent(this, MemberRideFragmentActivity.class);
+					Intent mainIntent = new Intent(this,
+							MemberRideFragmentActivity.class);
 					mainIntent.putExtra("CabId", CabIdstr);
 					mainIntent.putExtra("MobileNumber", MobileNumber);
 					mainIntent.putExtra("OwnerName", OwnerName);
@@ -601,6 +633,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 					mainIntent.putExtra("Distance", Distance);
 					mainIntent.putExtra("OpenTime", OpenTime);
 					mainIntent.putExtra("CabStatus", CabStatus);
+
+					mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
+					mainIntent.putExtra("status", status);
+
 					mainIntent.putExtra("comefrom", "fromchatdirect");
 					PendingIntent pIntent = PendingIntent.getActivity(this,
 							notificationID, mainIntent,
@@ -613,7 +649,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 					Notification notification = mBuilder
 							.setSmallIcon(icon)
 							.setTicker(mskd)
-							.setWhen(0)
+							.setWhen(System.currentTimeMillis())
 							.setAutoCancel(true)
 							.setContentTitle(mname)
 							.setStyle(
@@ -772,5 +808,41 @@ public class GCMIntentService extends GCMBaseIntentService {
 		protected void onPostExecute(String result) {
 
 		}
+	}
+
+	private void generateTripStartNotification(Context context, String cabID,
+			String message) {
+
+		int icon = R.drawable.cabappicon;
+		notificationID++;
+
+		Intent intent = new Intent();
+		intent = new Intent(context, MyRidesActivity.class);
+		intent.putExtra("comefrom", "TripStart");
+		intent.putExtra("cabID", cabID);
+
+		PendingIntent pIntent = PendingIntent.getActivity(context,
+				notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				context);
+		Notification notification = mBuilder
+				.setSmallIcon(icon)
+				.setTicker("ClubMyCab")
+				.setWhen(System.currentTimeMillis())
+				.setAutoCancel(true)
+				.setContentTitle("ClubMyCab")
+				.setStyle(
+						new NotificationCompat.BigTextStyle().bigText(message))
+				.setContentIntent(pIntent)
+				.setSound(
+						RingtoneManager
+								.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+				.setContentText(message).build();
+
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(notificationID, notification);
+
 	}
 }

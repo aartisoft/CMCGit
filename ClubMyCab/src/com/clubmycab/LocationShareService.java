@@ -190,7 +190,7 @@ public class LocationShareService extends Service implements LocationListener {
 						Log.d("dist", "" + dist);
 
 						if ((System.currentTimeMillis() < destinationtimevalue)
-								&& (dist > 0.002)) {
+								&& (dist > GlobalVariables.GEOFENCING_RADIUS)) {
 
 							sendlocation(recpnames, recpnumbers);
 						} else {

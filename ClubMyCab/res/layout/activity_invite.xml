@@ -324,8 +324,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="5dp" >
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="15dp" >
 
                         <TextView
                             android:id="@+id/timehalfhour"
@@ -334,9 +334,8 @@
                             android:layout_margin="4dp"
                             android:layout_weight="1"
                             android:background="@color/color_dark_blue"
+                            android:gravity="center"
                             android:text="@string/in_30min"
-                                                        android:gravity="center"
-                            
                             android:textColor="@android:color/white" />
 
                         <TextView
@@ -345,8 +344,8 @@
                             android:layout_height="35dp"
                             android:layout_margin="3dp"
                             android:layout_weight="1"
+                            android:background="#fff"
                             android:gravity="center"
-                             android:background="#fff"
                             android:text="@string/in_1_hour"
                             android:textColor="@android:color/black" />
 
@@ -356,8 +355,8 @@
                             android:layout_height="35dp"
                             android:layout_margin="3dp"
                             android:layout_weight=".8"
-                                                        android:gravity="center"
                             android:background="#fff"
+                            android:gravity="center"
                             android:text="@string/select_datetime"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -365,19 +364,21 @@
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
                         android:orientation="horizontal" >
 
                         <TextView
                             android:id="@+id/dateetextview"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
                             android:layout_weight="1"
                             android:ems="10"
-                            android:gravity="left"
-                            android:layout_marginLeft="3dp"
                             android:focusableInTouchMode="false"
-                            
-                            android:textSize="15sp" />
+                            android:gravity="left"
+                            android:textColor="#000"
+                            android:text="12/07/15"
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/timetextview"
@@ -385,11 +386,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:focusableInTouchMode="false"
-                                                        android:gravity="left"
-                            
-                            android:textSize="15sp" >
-
-                           
+                            android:gravity="left"
+                            android:text="11:30Am"
+                             android:textColor="#000"
+                            android:textSize="18sp" >
                         </TextView>
                     </LinearLayout>
                 </LinearLayout>
@@ -451,7 +451,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="50dp"
                 android:gravity="left"
                 android:text="@string/how_many_passenger"
                 android:textColor="#000000"
@@ -461,20 +461,18 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="35dp"
-                android:layout_marginTop="10dp"
-                 >
+                android:layout_marginTop="15dp" >
 
                 <TextView
                     android:id="@+id/seats"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_margin="3dp"
-                    
                     android:layout_weight="1"
-                    android:textSize="15sp"
-                    android:text="@string/seatcount"
                     android:gravity="center_vertical"
-                    android:textColor="#000000" />
+                    android:text="@string/seatcount"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
 
                 <Button
                     android:id="@+id/seatsbutton"
@@ -569,8 +567,9 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/invitebtn"
+
+    <LinearLayout
+        android:id="@+id/inviteLl"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
@@ -578,9 +577,34 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/createnewclubbtn"
-        android:text="Next --->"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/tvNext1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="Next"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/right_arrow_white" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/fromrelative"

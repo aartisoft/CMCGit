@@ -95,7 +95,7 @@ private 	TextView datetextview;
 private	TextView timetextview;
 	Button seatsbutton;
 
-	Button invite;
+private	LinearLayout inviteLl;
 private TextView  datechoose, timehalfhour,timeonehour;// timechoose,datetoday;
 
 	Calendar myCalendar = Calendar.getInstance();
@@ -215,11 +215,13 @@ private TextView  datechoose, timehalfhour,timeonehour;// timechoose,datetoday;
 	
 	private int hour,minute;
 private TimePickerDialog timePickerDialog;
+private TextView tvNext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_invite);
+		
 
 		// Check if Internet present
 		if (!isOnline()) {
@@ -245,7 +247,7 @@ private TimePickerDialog timePickerDialog;
 			builder.show();
 			return;
 		}
-
+		tvNext=(TextView)findViewById(R.id.tvNext1);
 		inviteloadingll = (LinearLayout) findViewById(R.id.inviteloadingll);
 		inviteloadingll.setVisibility(View.GONE);
 
@@ -568,7 +570,7 @@ private TimePickerDialog timePickerDialog;
 		to_places.setAdapter(new PlacesAutoCompleteAdapter(this,
 				R.layout.list_item));
 
-		invite = (Button) findViewById(R.id.invitebtn);
+		inviteLl = (LinearLayout) findViewById(R.id.inviteLl);
 
 		textFrom.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
@@ -595,7 +597,7 @@ private TimePickerDialog timePickerDialog;
 //	pawan	seatsedittext.setTypeface(Typeface.createFromAsset(getAssets(),
 //				"NeutraText-Light.ttf"));
 
-		invite.setTypeface(Typeface.createFromAsset(getAssets(),
+		tvNext.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		threedotsfrom = (Button) findViewById(R.id.threedotsfrom);
@@ -929,13 +931,13 @@ private TimePickerDialog timePickerDialog;
 //
 //				});
 
-		invite.setOnClickListener(new View.OnClickListener() {
+		inviteLl.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
 						InviteFragmentActivity.this, R.anim.button_click_anim);
-				invite.startAnimation(animScale);
+				inviteLl.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
 				Runnable mRunnable2 = new Runnable() {

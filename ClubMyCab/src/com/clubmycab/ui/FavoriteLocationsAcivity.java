@@ -95,8 +95,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements Locati
 	//Pawan
 	private ListView lvFavorateLocation;
 	private Context context;
-	private  ArrayList<String> favoriteTag = new ArrayList<String>();
-	private  ArrayList<String> favoriteAddress = new ArrayList<String>();
+	private  ArrayList<String> favoriteTag ;
+	private  ArrayList<String> favoriteAddress;
 private FavoriteLocationAdapter adapter;
 private ViewHolder viewHolder;
 
@@ -105,9 +105,10 @@ int pos=0;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_favorite_location);
-		
-		favoriteAddress.clear();
-		favoriteTag.clear();
+		favoriteTag = new ArrayList<String>();
+		favoriteAddress = new ArrayList<String>();
+	//	favoriteAddress.clear();
+	//	favoriteTag.clear();
 
 		notfromregistration = getIntent().getBooleanExtra(
 				"NotFromRegistration", false);
@@ -116,6 +117,9 @@ int pos=0;
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		lvFavorateLocation=(ListView)findViewById(R.id.lvFavorateLocation);
+		adapter=new FavoriteLocationAdapter(favoriteTag, context);
+		lvFavorateLocation.setAdapter(adapter);
+		
 		btnSkip=(Button)findViewById(R.id.btnSkip);
 		if(notfromregistration){
 			btnSkip.setText("Cancel");
@@ -244,8 +248,12 @@ int pos=0;
 			
 		//}
 		if (favLocationHashMap.size()==0){
-			addFavoriteLocation(StringTags.TAG_WHERE_LIVE);
-			addFavoriteLocation(StringTags.TAG_WHERE_WORK);
+			//addFavoriteLocation(StringTags.TAG_WHERE_LIVE);
+			//addFavoriteLocation(StringTags.TAG_WHERE_WORK);
+			favLocationHashMap.put(StringTags.TAG_WHERE_LIVE,"");
+			favLocationHashMap.put(StringTags.TAG_WHERE_WORK,"");
+
+
 			SharedPreferences sharedprefernce = getSharedPreferences(
 					"FavoriteLocations", 0);
 
@@ -254,6 +262,7 @@ int pos=0;
 			SharedPreferences.Editor editor = sharedprefernce.edit();
 			editor.putString("favoritelocation", json);
 			editor.commit();
+			//adapter.notifyDataSetChanged();
 			
 			
 
@@ -308,14 +317,15 @@ int pos=0;
 				favoriteAddress.add("")	;
 			}
 			
-			
+
 		
 
 
 		}
+		adapter.notifyDataSetChanged();
+
 		}
-		adapter=new FavoriteLocationAdapter(favoriteTag, context);
-		lvFavorateLocation.setAdapter(adapter);
+		//lvFavorateLocation.setAdapter(adapter);
 		myMap = ((SupportMapFragment) getSupportFragmentManager()
 			.findFragmentById(R.id.frommap)).getMap();
 		
@@ -560,7 +570,7 @@ public void addFavoriteLocation(String s){
 	favoriteTag.add(s);
 	favoriteAddress.add("");
 	favLocationHashMap.put(s,"");
-	//adapter.notifyDataSetChanged();
+	adapter.notifyDataSetChanged();
 	
 	
 }
@@ -954,7 +964,7 @@ viewHolder.tvLocationTagTextView.setText(data.get(position));
 				public void onClick(View v) {
 				      pos=(Integer)v.getTag();
 				      
-					Toast.makeText(context, "pos="+pos,Toast.LENGTH_LONG).show();
+				//	Toast.makeText(context, "pos="+pos,Toast.LENGTH_LONG).show();
 
 					if (viewholder.aTvLocationAutoComplete.getText().toString().trim()
 							.isEmpty()

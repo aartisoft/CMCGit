@@ -3610,8 +3610,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 										.getString("PoolId").toString());
 								MyClubPoolName.add(subArray.getJSONObject(i)
 										.getString("PoolName").toString());
+								//Pawan cheks NoofMember value for null
+								if(subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()==null)
+									MyClubNoofMembers.add("1");
+								
+								else
 								MyClubNoofMembers.add(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString());
+								.getString("NoofMembers").toString());
+								
+								
 								MyClubOwnerName.add(subArray.getJSONObject(i)
 										.getString("OwnerName").toString());
 								MyClubMembers.add(subArray.getJSONObject(i)
@@ -3622,9 +3630,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								MemberClubPoolName.add(subArray
 										.getJSONObject(i).getString("PoolName")
 										.toString());
-								MemberClubNoofMembers.add(subArray
-										.getJSONObject(i)
-										.getString("NoofMembers").toString());
+								//Pawan cheks NoofMember value for null
+								if(subArray.getJSONObject(i)
+										.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+									MemberClubNoofMembers.add("1");
+								
+								else
+								MemberClubNoofMembers.add(subArray.getJSONObject(i)
+								.getString("NoofMembers").toString());
+								
 								MemberClubOwnerName.add(subArray
 										.getJSONObject(i)
 										.getString("OwnerName").toString());
@@ -3973,8 +3987,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.getString("PoolId").toString());
 							MyClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							MyClubNoofMembers.add(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString());
+							
+							if(subArray.getJSONObject(i)
+									.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+							MyClubNoofMembers.add("1");
+							else
+								MyClubNoofMembers.add(subArray.getJSONObject(i)
+										.getString("NoofMembers").toString());
+							
 							MyClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
 							MyClubMembers.add(subArray.getJSONObject(i)
@@ -3984,8 +4004,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.getString("PoolId").toString());
 							MemberClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							MemberClubNoofMembers.add(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString());
+
+							if(subArray.getJSONObject(i)
+									.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+							MemberClubNoofMembers.add("1");
+							else
+								MemberClubNoofMembers.add(subArray.getJSONObject(i)
+										.getString("NoofMembers").toString());
+							
 							MemberClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
 							MemberClubMembers.add(subArray.getJSONObject(i)

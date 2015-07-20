@@ -101,6 +101,7 @@
                 android:text="Save"
                 android:textColor="#ffffff"
                 android:textSize="13sp" />
+
         </LinearLayout>
     </LinearLayout>
     
@@ -113,6 +114,8 @@
     android:divider="@color/white"
      android:layout_margin="10dp"
        android:background="#FFFFFF"
+       android:focusable="false"
+         
        android:layout_above="@id/llBottom"
     ></ListView>
 

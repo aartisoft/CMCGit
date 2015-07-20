@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -60,74 +61,71 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
-public class FavoriteLocationsAcivity extends FragmentActivity implements LocationListener {
-	
+public class FavoriteLocationsAcivity extends FragmentActivity implements
+		LocationListener {
 
 	ArrayList<AddressModel> locationDetails = new ArrayList<AddressModel>();
 	View view;
 	LayoutInflater inflater;
-	
+
 	Address locationAddress;
 	Boolean flagchk;
 	String shortName;
 	private GoogleMap myMap;
-	//Button mapButton;
+	// Button mapButton;
 	LatLng invitemapcenter;
 	Location mycurrentlocationobject;
 	TextView fromlocation;
 	RelativeLayout fromrelative;
 	Button doneButtonMap;
 	Button cancelButtonMap;
-	Button addMoreButton,btnSkip;
+	Button addMoreButton, btnSkip;
 	LocationManager locationManager;
 	LatLng latlong;
 	String shortname;
-	//int currentIndex = 0;
-	//int currentSelectedIndex;
+	
 	int remainigfavorites = 3;
 	private HashMap<String, String> favLocationHashMap = new HashMap<String, String>();
 
-
-	AddressModel addressModel;
+	private ArrayList<AddressModel> addressModelList;
 
 	boolean notfromregistration = false;
-	
-	//Pawan
+
+	// Pawan
 	private ListView lvFavorateLocation;
 	private Context context;
-	private  ArrayList<String> favoriteTag ;
-	private  ArrayList<String> favoriteAddress;
-private FavoriteLocationAdapter adapter;
-private ViewHolder viewHolder;
+	private ArrayList<String> favoriteTag;
+	private ArrayList<String> favoriteAddress;
+	private FavoriteLocationAdapter adapter;
+	private ViewHolder viewHolder;
 
-int pos=0;
+	int pos = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_favorite_location);
 		favoriteTag = new ArrayList<String>();
 		favoriteAddress = new ArrayList<String>();
-		favoriteAddress.clear();
-		favoriteTag.clear();
+		addressModelList = new ArrayList<AddressModel>();
 
 		notfromregistration = getIntent().getBooleanExtra(
 				"NotFromRegistration", false);
-		context=this;
+		context = this;
 		flagchk = true;
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		lvFavorateLocation=(ListView)findViewById(R.id.lvFavorateLocation);
-		adapter=new FavoriteLocationAdapter(favoriteTag, context);
+
+		lvFavorateLocation = (ListView) findViewById(R.id.lvFavorateLocation);
+		adapter = new FavoriteLocationAdapter(favoriteTag, context);
 		lvFavorateLocation.setAdapter(adapter);
-		
-		btnSkip=(Button)findViewById(R.id.btnSkip);
-		if(notfromregistration){
+
+		btnSkip = (Button) findViewById(R.id.btnSkip);
+		if (notfromregistration) {
 			btnSkip.setText("Cancel");
-			
-		}
-		else{
+
+		} else {
 			btnSkip.setText("Skip");
-	
+
 		}
 
 		fromrelative = (RelativeLayout) findViewById(R.id.fromrelative);
@@ -147,14 +145,13 @@ int pos=0;
 		addMoreButton = (Button) findViewById(R.id.addMore);
 		addMoreButton.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
-		
 
 		doneButtonMap.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				//pos = (Integer) viewHolder.btnMap.getTag();
 				fromrelative.setVisibility(View.GONE);
 				String fromlocationname = fromlocation.getText().toString()
 						.trim();
@@ -167,24 +164,22 @@ int pos=0;
 
 				locationAddress = null; // reset previous
 
-
-
 				viewHolder.aTvLocationAutoComplete.setText(fromlocationname);
 
-				String jnd =viewHolder.aTvLocationAutoComplete.getText()
-						.toString().trim();
+				// String jnd =viewHolder.aTvLocationAutoComplete.getText()
+				// .toString().trim();
 
 				Geocoder fcoder = new Geocoder(FavoriteLocationsAcivity.this);
 				try {
 					ArrayList<Address> adresses = (ArrayList<Address>) fcoder
-							.getFromLocationName(jnd, 50);
+							.getFromLocationName(fromlocationname, 50);
 
 					for (Address add : adresses) {
 						locationAddress = add;
 					}
 
 					if (locationAddress != null) {
-						addressModel = new AddressModel();
+						AddressModel addressModel = new AddressModel();
 						addressModel.setAddress(locationAddress);
 						addressModel.setShortname(MapUtilityMethods
 								.getAddressshort(FavoriteLocationsAcivity.this,
@@ -192,16 +187,29 @@ int pos=0;
 										locationAddress.getLongitude()));
 						addressModel.setLongname(fromlocationname);
 
+						// Gson gson = new Gson();
+						// String json = gson.toJson(addressModel);
 
+						String tag = favoriteTag.get(pos);
 
-						Gson gson = new Gson();
-						String json = gson.toJson(addressModel);
+						// if(tag.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE))
+						//
+						// favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY,
+						// json);
+						//
+						// else
+						// if(tag.equalsIgnoreCase(StringTags.TAG_WHERE_WORK))
+						//
+						// favLocationHashMap.put(StringTags.TAG_WHERE_WORK_key,
+						// json);
+						// else
+						// favLocationHashMap.put(tag, json);
 
-						favLocationHashMap.put(viewHolder.tvLocationTagTextView.getText()
-								.toString(), json);
+					
 
+						favoriteAddress.set(pos, fromlocationname);
+						addressModelList.set(pos, addressModel);
 
-						favoriteAddress.set(pos,jnd);
 						adapter.notifyDataSetChanged();
 					} else {
 						Toast.makeText(
@@ -212,6 +220,8 @@ int pos=0;
 
 				} catch (Exception e) {
 					e.printStackTrace();
+					favoriteAddress.set(pos, "");
+					//addressModelList.set(pos, null);
 				}
 
 			}
@@ -227,32 +237,28 @@ int pos=0;
 			}
 		});
 
-	//	if (notfromregistration) {
-			SharedPreferences mPrefs11111 = getSharedPreferences(
-					"FavoriteLocations", 0);
-			final String favoritelocation = mPrefs11111.getString(
-					"favoritelocation", "");
-			Log.d("FavoriteLocationsAcivity", "favoritelocation : "
-					+ favoritelocation);
+		SharedPreferences mPrefs11111 = getSharedPreferences(
+				"FavoriteLocations", 0);
+		final String favoritelocation = mPrefs11111.getString(
+				"favoritelocation", "");
+		Log.d("FavoriteLocationsAcivity", "favoritelocation : "
+				+ favoritelocation);
 
-			if (!favoritelocation.isEmpty()) {
+		if (!favoritelocation.isEmpty()) {
 
-				Gson gson = new Gson();
-				HashMap<String, String> hashMap = gson.fromJson(
-						favoritelocation, HashMap.class);
+			Gson gson = new Gson();
+			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
+					HashMap.class);
 
-				if (hashMap.size() > 0) {
-					favLocationHashMap = hashMap;
-				}
+			if (hashMap.size() > 0) {
+				favLocationHashMap = hashMap;
 			}
-			
-		//}
-		if (favLocationHashMap.size()==0){
-			//addFavoriteLocation(StringTags.TAG_WHERE_LIVE);
-			//addFavoriteLocation(StringTags.TAG_WHERE_WORK);
-			favLocationHashMap.put(StringTags.TAG_WHERE_LIVE,"");
-			favLocationHashMap.put(StringTags.TAG_WHERE_WORK,"");
+		}
 
+		if (favLocationHashMap.size() == 0) {
+
+			favLocationHashMap.put("1", "");
+			favLocationHashMap.put("2", "");
 
 			SharedPreferences sharedprefernce = getSharedPreferences(
 					"FavoriteLocations", 0);
@@ -262,73 +268,61 @@ int pos=0;
 			SharedPreferences.Editor editor = sharedprefernce.edit();
 			editor.putString("favoritelocation", json);
 			editor.commit();
-			adapter.notifyDataSetChanged();
-			
-			
+			// adapter.notifyDataSetChanged();
 
 		}
-		
-//
-//		addFavoriteLocationView("Where do you live?");
-//		addFavoriteLocationView("Where do you work?");
-//
-//		if (favLocationHashMap.size() > 0) {
-//			for (String key : favLocationHashMap.keySet()) {
-//				if (!key.equals("Where do you live?")
-//						&& !key.equals("Where do you work?")) {
-//					addFavoriteLocationView(key);
-//				}
-//			}
-//		}
 
 		getAllFavoriteAddress();
 	}
-	
-	public void getAllFavoriteAddress(){
-		
-		remainigfavorites =5- favLocationHashMap.size() ;
+
+	public void getAllFavoriteAddress() {
+
+		remainigfavorites = 5 - favLocationHashMap.size();
 		if (remainigfavorites == 0)
 			addMoreButton.setVisibility(View.GONE);
 		else
-		addMoreButton.setText("Add More (" + remainigfavorites
-				+ " remaining )");
-		
+			addMoreButton.setText("Add More (" + remainigfavorites
+					+ " remaining )");
+
 		if (favLocationHashMap.size() > 0) {
-		SortedSet<String> keys = new TreeSet<String>(favLocationHashMap.keySet());
-		Gson gson = new Gson();
-		
+			SortedSet<String> keys = new TreeSet<String>(
+					favLocationHashMap.keySet());
+			// Set keys = favLocationHashMap.keySet();
 
-		for (Iterator i = keys.iterator(); i.hasNext();) {
-			String key = (String) i.next();
+			Gson gson = new Gson();
 
-			
-				favoriteTag.add(key);
+			for (Iterator i = keys.iterator(); i.hasNext();) {
+				String key = (String) i.next();
 
-			Log.d("Key value::", key);
-			// Get long address from location
-			
-			try{
-				addressModel = (AddressModel) gson.fromJson(favLocationHashMap.get(key),
-						AddressModel.class);
-				;
-				favoriteAddress.add(addressModel.getLongname());
-			}catch(Exception e){
-				
-				favoriteAddress.add("")	;
+				if (key.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE_KEY))
+					favoriteTag.add(StringTags.TAG_WHERE_LIVE);
+				else if (key.equalsIgnoreCase(StringTags.TAG_WHERE_WORK_KEY))
+					favoriteTag.add(StringTags.TAG_WHERE_WORK);
+				else
+					favoriteTag.add(key);
+
+				Log.d("Key value::", key);
+				// Get long address from location
+
+				try {
+					AddressModel addressModel = (AddressModel) gson.fromJson(
+							favLocationHashMap.get(key), AddressModel.class);
+					;
+					addressModelList.add(addressModel);
+					favoriteAddress.add(addressModel.getLongname());
+				} catch (Exception e) {
+
+					favoriteAddress.add("");
+					//addressModelList.add(null);
+				}
+
 			}
-			
-
-		
-
+			adapter.notifyDataSetChanged();
 
 		}
-		adapter.notifyDataSetChanged();
-
-		}
-		//lvFavorateLocation.setAdapter(adapter);
+		// lvFavorateLocation.setAdapter(adapter);
 		myMap = ((SupportMapFragment) getSupportFragmentManager()
-			.findFragmentById(R.id.frommap)).getMap();
-		
+				.findFragmentById(R.id.frommap)).getMap();
 
 		myMap.setMyLocationEnabled(true);
 
@@ -348,47 +342,75 @@ int pos=0;
 
 			}
 		});
-		
 
 	}
 
 	public void onDoneButtonClick(View v) {
+
+		// if(favoriteAddress.size()>=favLocationHashMap.size()){
+		favLocationHashMap.clear();
+
+		for (int i = 0; i < favoriteAddress.size(); i++) {
+			
+			
+
+			Gson gson = new Gson();
+			String json = "";
+			if (addressModelList.get(i) == null)
+				json = "";
+			else
+				json = gson.toJson(addressModelList.get(i));
+
+			if (favoriteTag.get(i).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE))
+				favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY, json);
+			else if (favoriteTag.get(i).equalsIgnoreCase(
+					StringTags.TAG_WHERE_WORK))
+				favLocationHashMap.put(StringTags.TAG_WHERE_WORK_KEY, json);
+			else
+				favLocationHashMap.put(favoriteTag.get(i), json);
+
+		}
+
+		// }
 
 		if (favLocationHashMap.size() == 0) {
 			Toast.makeText(getApplicationContext(),
 					"Fill atleast one location ..", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
-		SortedSet<String> keys = new TreeSet<String>(favLocationHashMap.keySet());
+
+//		SortedSet<String> keys = new TreeSet<String>(
+//				favLocationHashMap.keySet());
+		Set keys = favLocationHashMap.keySet();
 
 		for (Iterator i = keys.iterator(); i.hasNext();) {
 			String key = (String) i.next();
 			
-			if (key.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)||key.equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
-				
-				
+			Log.d(key+"::::",favLocationHashMap.get(key) );
+
+			if (key.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE_KEY)
+					|| key.equalsIgnoreCase(StringTags.TAG_WHERE_WORK_KEY)) {
+
+				continue;
 			}
-			
-				
 
-			else{
-				
-				if(favLocationHashMap.get(key).isEmpty()||favLocationHashMap.get(key).equalsIgnoreCase("")){
-					
-					Toast.makeText(
-							FavoriteLocationsAcivity.this,
-							"Please enter valid address for "+key,
+			else {
+
+				if (favLocationHashMap.get(key).isEmpty()
+						|| favLocationHashMap.get(key).equalsIgnoreCase("")) {
+
+					Toast.makeText(FavoriteLocationsAcivity.this,
+							"Please enter valid address for " + key,
 							Toast.LENGTH_LONG).show();
-				//	viewHolder.aTvLocationAutoComplete.setFocusable(true);
-					
+					// viewHolder.aTvLocationAutoComplete.setFocusable(true);
 
-					return;	
+					return;
 				}
 			}
 		}
 
-
+		
+		 
 		SharedPreferences sharedprefernce = getSharedPreferences(
 				"FavoriteLocations", 0);
 
@@ -418,8 +440,6 @@ int pos=0;
 			startActivity(mainIntent);
 		}
 	}
-
-
 
 	public Location getLocation() {
 		Location location = null;
@@ -565,15 +585,17 @@ int pos=0;
 			super.onBackPressed();
 		}
 	}
-public void addFavoriteLocation(String s){
-	
-	favoriteTag.add(s);
-	favoriteAddress.add("");
-	favLocationHashMap.put(s,"");
-	adapter.notifyDataSetChanged();
-	
-	
-}
+
+	public void addFavoriteLocation(String s) {
+
+		favoriteTag.add(s);
+		favoriteAddress.add("");
+		addressModelList.add(null);
+		// favLocationHashMap.put(s,"");
+		adapter.notifyDataSetChanged();
+
+	}
+
 	public void addMoreClick(View v) {
 
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -593,6 +615,18 @@ public void addFavoriteLocation(String s){
 					Toast.makeText(getApplicationContext(), "Enter tag name.",
 							Toast.LENGTH_SHORT).show();
 					return;
+				}
+
+				else if (value.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE_KEY)
+						|| value.equalsIgnoreCase("0")
+						|| value.equalsIgnoreCase(StringTags.TAG_WHERE_WORK_KEY)
+						|| value.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)
+						|| value.equalsIgnoreCase(StringTags.TAG_WHERE_WORK)) {
+
+					Toast.makeText(getApplicationContext(),
+							"This tag already exists", Toast.LENGTH_SHORT)
+							.show();
+
 				} else {
 					addFavoriteLocation(value);
 					// Do something with value!
@@ -663,233 +697,234 @@ public void addFavoriteLocation(String s){
 		// TODO Auto-generated method stub
 
 	}
-	public class FavoriteLocationAdapter extends BaseAdapter{
 
-	    ArrayList<String> data;
-	    Context context;
-	    LayoutInflater layoutInflater;
-	  
+	// Adapter for show favorite location in listview
+	public class FavoriteLocationAdapter extends BaseAdapter {
 
+		private ArrayList<String> data;
+		private Context context;
+		private LayoutInflater layoutInflater;
 
-	    public FavoriteLocationAdapter(ArrayList<String> data, Context context) {
-	        super();
-	        this.data = data;
-	        this.context = context;
-	        layoutInflater = LayoutInflater.from(context);
-	    }
+		public FavoriteLocationAdapter(ArrayList<String> data, Context context) {
+			super();
+			this.data = data;
+			this.context = context;
+			layoutInflater = LayoutInflater.from(context);
+		}
 
-	    @Override
-	    public int getCount() {
+		@Override
+		public int getCount() {
 
-	        return data.size();
-	    }
+			return data.size();
+		}
 
-	    @Override
+		@Override
+		public Object getItem(int position) {
 
-	    public Object getItem(int position) {
+			return data.get(position);
+		}
 
-	        return data.get(position);
-	    }
+		@Override
+		public long getItemId(int position) {
 
-	    @Override
-	    public long getItemId(int position) {
+			return position;
+		}
 
-	        return position;
-	    }
+		@Override
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			//pos = position;
 
-	    @Override
-	    public View getView(final int position, View convertView, ViewGroup parent) {
-	    	pos=position;
- 
- if(convertView==null){
-	    	convertView = layoutInflater.inflate(R.layout.cutom_favorite_location, null);
-	    	viewHolder=new ViewHolder();
-	    	viewHolder.aTvLocationAutoComplete=(AutoCompleteTextView)convertView.findViewById(R.id.aTvLocationAutoComplete);
-	    	viewHolder.ivClearedittextimg=(ImageView)convertView.findViewById(R.id.ivClearedittextimg);
-	    	
-	    	viewHolder.tvLocationTagTextView=(TextView)convertView.findViewById(R.id.tvLocationTagTextView);
-	    	viewHolder.aTvLocationAutoComplete.setId(position);;
-	    	viewHolder.btnMap=(Button)convertView.findViewById(R.id.btnMap);
-	    	viewHolder.btnDelete=(Button)convertView.findViewById(R.id.btnDelete);
+			if (convertView == null) {
+				convertView = layoutInflater.inflate(
+						R.layout.cutom_favorite_location, null);
+				viewHolder = new ViewHolder();
+				viewHolder.aTvLocationAutoComplete = (AutoCompleteTextView) convertView
+						.findViewById(R.id.aTvLocationAutoComplete);
+				viewHolder.ivClearedittextimg = (ImageView) convertView
+						.findViewById(R.id.ivClearedittextimg);
 
+				viewHolder.tvLocationTagTextView = (TextView) convertView
+						.findViewById(R.id.tvLocationTagTextView);
+				viewHolder.btnMap = (Button) convertView
+						.findViewById(R.id.btnMap);
+				viewHolder.btnDelete = (Button) convertView
+						.findViewById(R.id.btnDelete);
 
-	    	viewHolder.ivClearedittextimg.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					
-					//Toast.makeText(context, "pos="+position, Toast.LENGTH_SHORT).show();
-				//	if(position!=0&&position!=1){
-					viewHolder.aTvLocationAutoComplete.setText("");
-					
-					favoriteAddress.set(position, "");
-					//map.put(key, map.get(key) + 1);
+				// viewHolder.aTvLocationAutoComplete.setId(position);
 
-					favLocationHashMap.put(favoriteTag.get(position),"");
+				viewHolder.ivClearedittextimg
+						.setOnClickListener(new OnClickListener() {
 
-				//	favoriteTag.remove(position);
-					SharedPreferences sharedprefernce = getSharedPreferences(
-							"FavoriteLocations", 0);
+							@Override
+							public void onClick(View v) {
+								pos = (Integer) v.getTag();
 
-					Gson gson = new Gson();
-					String json = gson.toJson(favLocationHashMap);
-					SharedPreferences.Editor editor = sharedprefernce.edit();
-					editor.putString("favoritelocation", json);
-					editor.commit();
-					
-					notifyDataSetChanged();
-				
-						
-					
-					
-				}
-			});
-	    	viewHolder.btnDelete.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					
-					//Toast.makeText(context, "delete pos="+position, Toast.LENGTH_SHORT).show();
-					if(position!=0&&position!=1){
-						//viewHolder.aTvLocationAutoComplete.setText("");
-						favLocationHashMap.remove(favoriteTag.get(position));
-						favoriteAddress.remove(position);
+								// Toast.makeText(context, "pos="+pos,
+								// Toast.LENGTH_SHORT).show();
+								// if(position!=0&&position!=1){
+								viewHolder.aTvLocationAutoComplete.setText("");
 
-						favoriteTag.remove(position);
-						SharedPreferences sharedprefernce = getSharedPreferences(
-								"FavoriteLocations", 0);
+								favoriteAddress.set(pos, "");
+								addressModelList.set(pos,null);
 
-						Gson gson = new Gson();
-						String json = gson.toJson(favLocationHashMap);
-						SharedPreferences.Editor editor = sharedprefernce.edit();
-						editor.putString("favoritelocation", json);
-						editor.commit();
-						remainigfavorites = remainigfavorites +1;
-						if (remainigfavorites == 0)
-							addMoreButton.setVisibility(View.GONE);
-						addMoreButton.setText("Add More (" + remainigfavorites
-								+ " remaining )");
-				
-						
-						notifyDataSetChanged();
+								// map.put(key, map.get(key) + 1);
+								// if(favoriteTag.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)){
+								//
+								// }
+								// //favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY,"");
+								// else
+								// if(favoriteTag.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
+								//
+								// }
+								// //favLocationHashMap.put(StringTags.TAG_WHERE_WORK_key,"");
+								// else{
+								//
+								// }
+
+								notifyDataSetChanged();
+
+							}
+						});
+				viewHolder.btnDelete.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						pos = (Integer) v.getTag();
+
+						// Toast.makeText(context, "delete pos="+position,
+						// Toast.LENGTH_SHORT).show();
+						if (pos != 0 && pos != 1) {
+
+							// viewHolder.aTvLocationAutoComplete.setText("");
+
+							favLocationHashMap.remove(favoriteTag.get(pos));
+							favoriteAddress.remove(pos);
+							addressModelList.remove(pos);
+							favoriteTag.remove(pos);
+							SharedPreferences sharedprefernce = getSharedPreferences(
+									"FavoriteLocations", 0);
+
+							Gson gson = new Gson();
+							String json = gson.toJson(favLocationHashMap);
+							SharedPreferences.Editor editor = sharedprefernce
+									.edit();
+							editor.putString("favoritelocation", json);
+							editor.commit();
+							remainigfavorites = remainigfavorites + 1;
+							if (remainigfavorites == 0)
+								addMoreButton.setVisibility(View.GONE);
+							addMoreButton.setText("Add More ("
+									+ remainigfavorites + " remaining )");
+
+							notifyDataSetChanged();
+						} else {
+							Toast.makeText(context,
+									"You can't delete this entry",
+									Toast.LENGTH_SHORT).show();
+
 						}
-						else{
-							Toast.makeText(context, "You can't delete this entry", Toast.LENGTH_SHORT).show();
-		
+
+					}
+				});
+
+				openMap(viewHolder, position);
+				setAutoConpteletTextview(viewHolder);
+				convertView.setTag(viewHolder);
+
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+				// viewHolder.aTvLocationAutoComplete.setId(position);
+
+			}
+			viewHolder.aTvLocationAutoComplete.setTag(position);
+
+			viewHolder.btnMap.setTag(position);
+			viewHolder.btnDelete.setTag(position);
+			viewHolder.ivClearedittextimg.setTag(position);
+			viewHolder.tvLocationTagTextView.setText(data.get(position));
+			viewHolder.aTvLocationAutoComplete.setText(favoriteAddress
+					.get(position));
+
+			// if(data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)||data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
+			// viewHolder.btnDelete.setVisibility(View.GONE);
+			// }
+			if (position == 1 || position == 0) {
+				viewHolder.btnDelete.setVisibility(View.GONE);
+			} else {
+				viewHolder.btnDelete.setVisibility(View.VISIBLE);
+
+			}
+
+			return convertView;
+		}
+
+		public class ViewHolder {
+			public AutoCompleteTextView aTvLocationAutoComplete;
+			public ImageView ivClearedittextimg;
+			public Button btnMap, btnDelete;
+			public TextView tvLocationTagTextView;
+
+		}
+
+		public void setAutoConpteletTextview(final ViewHolder viewholder) {
+			viewholder.aTvLocationAutoComplete
+					.setAdapter(new PlacesAutoCompleteAdapter(context,
+							R.layout.list_item));
+			viewholder.aTvLocationAutoComplete
+					.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+						@Override
+						public void onFocusChange(final View v, boolean hasFocus) {
+							v.post(new Runnable() {
+								@Override
+								public void run() {
+									if (!v.hasFocus()) {
+										v.requestFocus();
+										v.requestFocusFromTouch();
+									}
+								}
+							});
 						}
-					
-				}
-			});
-	    	
-	    	
-			openMap(viewHolder,position);
-			setAutoConpteletTextview(viewHolder);
-	    	convertView.setTag(viewHolder);
-	    	
- }
- else{
- viewHolder=(ViewHolder)convertView.getTag();
-	viewHolder.aTvLocationAutoComplete.setId(position);;
+					});
 
- }
- viewHolder.btnMap.setTag(position);
- viewHolder.btnDelete.setTag(position);
- viewHolder.ivClearedittextimg.setTag(position);
-viewHolder.tvLocationTagTextView.setText(data.get(position));
- viewHolder.aTvLocationAutoComplete.setText(favoriteAddress.get(position));
- 
-// if(data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)||data.get(position).equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
-//	 viewHolder.btnDelete.setVisibility(View.GONE);
-// }
- if(position==1||position==0){
-	 viewHolder.btnDelete.setVisibility(View.GONE);
-	 viewHolder.ivClearedittextimg.setVisibility(View.GONE);
- }
- else{
-	 viewHolder.btnDelete.setVisibility(View.VISIBLE);
-	 viewHolder.ivClearedittextimg.setVisibility(View.VISIBLE);
-
-	 
- }
-
-
-
-
-	       // TextView txt=(TextView)convertView.findViewById(R.id.text);
-
-	     //   txt.setText(data);
-
-
-
-	        return convertView;
-	    }
-
-	    public class ViewHolder{
-	    	public AutoCompleteTextView aTvLocationAutoComplete;
-	    	public ImageView ivClearedittextimg;
-	    	public Button btnMap,btnDelete;
-	    	public TextView tvLocationTagTextView;
-	    	
-	    	
-	    	
-	    }
-	    
-	    public void setAutoConpteletTextview(final ViewHolder viewholder){
-	    	viewholder.aTvLocationAutoComplete.setAdapter(new PlacesAutoCompleteAdapter(
-	    			context, R.layout.list_item));
-	    	viewholder.aTvLocationAutoComplete.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-	            @Override
-	            public void onFocusChange(final View v, boolean hasFocus) 
-	            {
-	                v.post(new Runnable() 
-	                {
-	                    @Override
-	                    public void run() 
-	                    {
-	                        if (!v.hasFocus()) {
-	                            v.requestFocus();
-	                            v.requestFocusFromTouch();
-	                        }
-	                    }
-	                });
-	            }
-	        });
-//	    	viewholder.aTvLocationAutoComplete
-//					.setTag("customlocationAutoCompleteTextView" + pos);
-
-	    	viewholder.aTvLocationAutoComplete
+			viewholder.aTvLocationAutoComplete
 					.setOnTouchListener(new View.OnTouchListener() {
 
 						@Override
 						public boolean onTouch(View v, MotionEvent event) {
-							// TODO Auto-generated method stub
-						//	String tag = (String) v.getTag();
-					
+
+							// pos=(Integer)v.getTag();
+
 							return false;
 						}
 					});
 
-	    	viewholder.aTvLocationAutoComplete
+			viewholder.aTvLocationAutoComplete
 					.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 						@Override
-						public void onItemClick(AdapterView<?> parent, View view,
-								int position, long id) {
+						public void onItemClick(AdapterView<?> parent,
+								View view, int p, long id) {
+
+							pos = (Integer) viewholder.aTvLocationAutoComplete
+									.getTag();
+
 							locationAddress = null; // reset previous
 							InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-							in.hideSoftInputFromWindow(viewholder.aTvLocationAutoComplete
-									.getApplicationWindowToken(),
+							in.hideSoftInputFromWindow(
+									viewholder.aTvLocationAutoComplete
+											.getApplicationWindowToken(),
 									InputMethodManager.HIDE_NOT_ALWAYS);
 
 							String jnd = viewholder.aTvLocationAutoComplete
-								.getText().toString().trim();
+									.getText().toString().trim();
 
-							locationAddress = MapUtilityMethods.geocodeAddress(jnd,
-									FavoriteLocationsAcivity.this);
+							locationAddress = MapUtilityMethods.geocodeAddress(
+									jnd, FavoriteLocationsAcivity.this);
 
 							if (locationAddress != null) {
-								addressModel = new AddressModel();
+								AddressModel addressModel = new AddressModel();
 								addressModel.setAddress(locationAddress);
 								addressModel.setShortname(MapUtilityMethods
 										.getAddressshort(
@@ -898,21 +933,31 @@ viewHolder.tvLocationTagTextView.setText(data.get(position));
 												locationAddress.getLongitude()));
 								addressModel.setLongname(jnd);
 
-
 								Gson gson = new Gson();
 								String json = gson.toJson(addressModel);
 
-								favLocationHashMap.put(viewholder.tvLocationTagTextView
-										.getText().toString(),json);
-								
-								Log.d("position::::::",""+pos);
-								
-								favoriteAddress.set(viewholder.aTvLocationAutoComplete.getId(), jnd);
-								notifyDataSetChanged();
-										
+								// if(viewholder.tvLocationTagTextView
+								// .getText().toString().equalsIgnoreCase(StringTags.TAG_WHERE_LIVE))
+								// favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY,json);
+								// else if(viewholder.tvLocationTagTextView
+								// .getText().toString().equalsIgnoreCase(StringTags.TAG_WHERE_WORK))
+								// favLocationHashMap.put(StringTags.TAG_WHERE_WORK_key,json);
+								// else
+								// favLocationHashMap.put(viewholder.tvLocationTagTextView
+								// .getText().toString(),json);
+								//
 
-//								invalidAddressHashMap.put(
-//										Integer.valueOf(pos), "");
+								Log.d("position::::::", "" + pos);
+								addressModelList.set(pos, addressModel);
+
+//								Toast.makeText(context,
+//										"on saved index " + pos,
+//										Toast.LENGTH_LONG).show();
+								favoriteAddress.set(pos, jnd);
+								notifyDataSetChanged();
+
+								// invalidAddressHashMap.put(
+								// Integer.valueOf(pos), "");
 							} else {
 								Toast.makeText(
 										FavoriteLocationsAcivity.this,
@@ -922,79 +967,85 @@ viewHolder.tvLocationTagTextView.setText(data.get(position));
 
 						}
 					});
-	    	viewholder.aTvLocationAutoComplete.addTextChangedListener(new TextWatcher() {
+			viewholder.aTvLocationAutoComplete
+					.addTextChangedListener(new TextWatcher() {
 
-				@Override
-				public void onTextChanged(CharSequence cs, int arg1, int arg2,
-						int arg3) {
-					// When user changed the Text
+						@Override
+						public void onTextChanged(CharSequence cs, int arg1,
+								int arg2, int arg3) {
+							// When user changed the Text
 
-					String text = viewholder.aTvLocationAutoComplete.getText().toString()
-							.trim();
-					if (text.isEmpty() || text.equalsIgnoreCase("")) {
-					viewholder.ivClearedittextimg	.setVisibility(View.GONE);
-					} else {
-						viewholder.ivClearedittextimg	.setVisibility(View.VISIBLE);
-					}
+							String text = viewholder.aTvLocationAutoComplete
+									.getText().toString().trim();
+							if (text.isEmpty() || text.equalsIgnoreCase("")) {
+								viewholder.ivClearedittextimg
+										.setVisibility(View.GONE);
+							} else {
+								viewholder.ivClearedittextimg
+										.setVisibility(View.VISIBLE);
+							}
 
-					Log.d("from onTextChanged", "from onTextChanged");
+							Log.d("from onTextChanged", "from onTextChanged");
 
-					if (flagchk) {
-						flagchk = false;
-					} else {
-						shortName = MapUtilityMethods.getaddressfromautoplace(
-								FavoriteLocationsAcivity.this,
-								viewholder.aTvLocationAutoComplete.getText().toString()
-										.trim());
-					}
-				}
+							if (flagchk) {
+								flagchk = false;
+							} else {
+								shortName = MapUtilityMethods
+										.getaddressfromautoplace(
+												FavoriteLocationsAcivity.this,
+												viewholder.aTvLocationAutoComplete
+														.getText().toString()
+														.trim());
+							}
+						}
 
-				@Override
-				public void beforeTextChanged(CharSequence arg0, int arg1,
-						int arg2, int arg3) {
-					// TODO Auto-generated method stub
-				}
+						@Override
+						public void beforeTextChanged(CharSequence arg0,
+								int arg1, int arg2, int arg3) {
+							// TODO Auto-generated method stub
+						}
 
-				@Override
-				public void afterTextChanged(Editable editable) {
-					// Log.d("afterTextChanged", "editable : " +
-					// editable.toString());
-//					invalidAddressHashMap.put(
-//							Integer.valueOf(pos),
-//							editable.toString());
-				}
-			});
-	    	
-	    	
-	    }
-	    public void openMap(final ViewHolder viewholder,int positon){
-	    	pos=positon;
-	    	
-	    	
-	    	viewholder.btnMap.setOnClickListener(new OnClickListener() {
+						@Override
+						public void afterTextChanged(Editable editable) {
+							// Log.d("afterTextChanged", "editable : " +
+							// editable.toString());
+							// invalidAddressHashMap.put(
+							// Integer.valueOf(pos),
+							// editable.toString());
+						}
+					});
+
+		}
+
+		public void openMap(final ViewHolder viewholder, int w) {
+
+			viewholder.btnMap.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-				      pos=(Integer)v.getTag();
-				      
-				//	Toast.makeText(context, "pos="+pos,Toast.LENGTH_LONG).show();
+					pos = (Integer) v.getTag();
 
-					if (viewholder.aTvLocationAutoComplete.getText().toString().trim()
-							.isEmpty()
-							|| viewholder.aTvLocationAutoComplete.getText().toString()
-									.equalsIgnoreCase("")) {
+					// Toast.makeText(context,
+					// "pos="+pos,Toast.LENGTH_LONG).show();
+
+					if (viewholder.aTvLocationAutoComplete.getText().toString()
+							.trim().isEmpty()
+							|| viewholder.aTvLocationAutoComplete.getText()
+									.toString().equalsIgnoreCase("")) {
 
 						if (mycurrentlocationobject != null) {
 
 							// Getting latitude of the current location
-							double latitude = mycurrentlocationobject.getLatitude();
+							double latitude = mycurrentlocationobject
+									.getLatitude();
 
 							// Getting longitude of the current location
 							double longitude = mycurrentlocationobject
 									.getLongitude();
 
 							// Creating a LatLng object for the current location
-							LatLng currentlatLng = new LatLng(latitude, longitude);
+							LatLng currentlatLng = new LatLng(latitude,
+									longitude);
 
 							// Showing the current location in Google Map
 							myMap.moveCamera(CameraUpdateFactory
@@ -1052,10 +1103,11 @@ viewHolder.tvLocationTagTextView.setText(data.get(position));
 
 					} else {
 
-						String jnd = viewholder.aTvLocationAutoComplete.getText()
-								.toString().trim();
+						String jnd = viewholder.aTvLocationAutoComplete
+								.getText().toString().trim();
 
-						Geocoder coder = new Geocoder(FavoriteLocationsAcivity.this);
+						Geocoder coder = new Geocoder(
+								FavoriteLocationsAcivity.this);
 						try {
 							ArrayList<Address> adresses = (ArrayList<Address>) coder
 									.getFromLocationName(jnd, 50);
@@ -1067,7 +1119,8 @@ viewHolder.tvLocationTagTextView.setText(data.get(position));
 							}
 
 							// Creating a LatLng object for the current location
-							LatLng currentlatLng = new LatLng(latitude, longitude);
+							LatLng currentlatLng = new LatLng(latitude,
+									longitude);
 
 							// Showing the current location in Google Map
 							myMap.moveCamera(CameraUpdateFactory
@@ -1087,6 +1140,6 @@ viewHolder.tvLocationTagTextView.setText(data.get(position));
 					}
 				}
 			});
-	    }
+		}
 	}
 }

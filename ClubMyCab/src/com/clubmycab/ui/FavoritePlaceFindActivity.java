@@ -233,12 +233,12 @@ public class FavoritePlaceFindActivity extends Activity implements
 				if(hashMap.get(key).isEmpty()||hashMap.get(key).equalsIgnoreCase(""))
 					continue;
 				
-				if (key.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)){
+				if (key.equalsIgnoreCase(StringTags.TAG_WHERE_LIVE_KEY)){
 					resultTag.add("Home");
 					
 					
 				}
-				else if (key.equalsIgnoreCase(StringTags.TAG_WHERE_WORK)){
+				else if (key.equalsIgnoreCase(StringTags.TAG_WHERE_WORK_KEY)){
 					resultTag.add("Office");
 				}
 					

@@ -213,7 +213,7 @@ private TextView  datechoose, timehalfhour,timeonehour;// timechoose,datetoday;
 
 	TopThreeRidesAdaptor topthreeadaptor;
 	
-	private int hour,minute;
+private int hour,minute;
 private TimePickerDialog timePickerDialog;
 private TextView tvNext;
 

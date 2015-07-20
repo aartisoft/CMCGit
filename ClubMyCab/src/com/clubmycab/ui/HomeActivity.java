@@ -1417,9 +1417,9 @@ public class HomeActivity extends FragmentActivity implements
 			if (hashMap.size() > 0) {
 
 				homeAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get(StringTags.TAG_WHERE_LIVE), AddressModel.class);
+						hashMap.get(StringTags.TAG_WHERE_LIVE_KEY), AddressModel.class);
 				workAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get(StringTags.TAG_WHERE_WORK), AddressModel.class);
+						hashMap.get(StringTags.TAG_WHERE_WORK_KEY), AddressModel.class);
 
 				Log.d("HomeActivity", "hashMap : " + hashMap);
 				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel
@@ -1433,7 +1433,7 @@ public class HomeActivity extends FragmentActivity implements
 
 	private void showNoFavoritesDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-		builder.setMessage("You have not saved your home & office locations. Save them in favorites to activate these options, would you like to do that now?");
+		builder.setMessage("You have not saved your home and/or office locations. Save them in favorites to activate these options, would you like to do that now?");
 		builder.setCancelable(false);
 
 		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

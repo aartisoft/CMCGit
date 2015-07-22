@@ -26,6 +26,7 @@ import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.AndroidConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
@@ -145,6 +146,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	String DriverName;
 	String DriverNumber;
 	String CarNumber;
+	String CabName;
 
 	String ExpTripDuration;
 	String statusTrip;
@@ -191,7 +193,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	String sendcustommessagefrompopupresp;
 
 	ImageView mydetailbtn;
-	ImageView mycalculatorbtn;
+	// ImageView mycalculatorbtn;
 	ProgressDialog onedialog;
 
 	RelativeLayout contexthelpcheckpool;
@@ -261,6 +263,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	Boolean clubcreated;
 	Boolean appusersavailable;
 
+	String saveCalculatedFare;
+
 	// /////////////////
 
 	@SuppressLint("DefaultLocale")
@@ -326,6 +330,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		DriverName = intent.getStringExtra("DriverName");
 		DriverNumber = intent.getStringExtra("DriverNumber");
 		CarNumber = intent.getStringExtra("CarNumber");
+		CabName = intent.getStringExtra("CabName");
 
 		comefrom = intent.getStringExtra("comefrom");
 
@@ -367,137 +372,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		mycalculatorbtn = (ImageView) findViewById(R.id.mycalculatorbtn);
-		mycalculatorbtn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CheckPoolFragmentActivity.this);
-				builder.setTitle("Fare Split");
-				builder.setMessage("Please enter fare to split :");
-				builder.setCancelable(false);
-				final EditText input = new EditText(
-						CheckPoolFragmentActivity.this);
-				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.MATCH_PARENT,
-						LinearLayout.LayoutParams.MATCH_PARENT);
-				input.setLayoutParams(lp);
-				input.setInputType(InputType.TYPE_CLASS_NUMBER
-						| InputType.TYPE_NUMBER_FLAG_DECIMAL);
-				builder.setView(input);
-				builder.setPositiveButton("OK",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-
-								Double fare = 0.0;
-								if (input.getText().toString().isEmpty()) {
-									Toast.makeText(
-											CheckPoolFragmentActivity.this,
-											"Please enter a valid fare",
-											Toast.LENGTH_LONG).show();
-								} else if (!input.getText().toString()
-										.isEmpty()) {
-									fare = Double.parseDouble(input.getText()
-											.toString());
-									if (fare <= 0.0) {
-										Toast.makeText(
-												CheckPoolFragmentActivity.this,
-												"Please enter a valid fare",
-												Toast.LENGTH_LONG).show();
-									} else {
-										onedialog = new ProgressDialog(
-												CheckPoolFragmentActivity.this);
-										onedialog.setMessage("Please Wait...");
-										onedialog.setCancelable(false);
-										onedialog
-												.setCanceledOnTouchOutside(false);
-										onedialog.show();
-
-										InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-										im.hideSoftInputFromWindow(
-												input.getWindowToken(), 0);
-
-										if (showmembersresp
-												.equalsIgnoreCase("No Members joined yet")) {
-
-										} else {
-
-											try {
-
-												JSONObject ownerJsonObject = new JSONObject();
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
-																FromLocation);
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
-																ToLocation);
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_NAME,
-																OwnerName);
-
-												ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
-
-												for (int i = 0; i < ShowMemberName
-														.size(); i++) {
-													JSONObject memberJsonObject = new JSONObject();
-													memberJsonObject
-															.put
-
-															(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
-																	ShowMemberLocationAddress
-																			.get(i)
-																			.toString());
-
-													String[] latlong = ShowMemberLocationLatLong
-															.get(i).split(",");
-													LatLng lt = new LatLng(
-															Double.parseDouble(latlong[0]),
-															Double.parseDouble(latlong[1]));
-													memberJsonObject
-															.put
-
-															(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
-																	lt);
-
-													memberJsonObject
-															.put(FareCalculator.JSON_NAME_MEMBER_NAME,
-																	ShowMemberName
-																			.get(i)
-																			.toString());
-
-													memberArrayList
-															.add(memberJsonObject);
-												}
-
-												FareCalculator fareCalculator = new FareCalculator(
-														CheckPoolFragmentActivity.this,
-														ownerJsonObject,
-														memberArrayList);
-												fareCalculator
-														.calculateFareSplit(fare);
-
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
-
-										}
-									}
-								}
-							}
-						});
-				builder.setNegativeButton("Cancel", null);
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
-			}
-		});
+		// mycalculatorbtn = (ImageView) findViewById(R.id.mycalculatorbtn);
+		// mycalculatorbtn.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// showFareSplitDialog();
+		// }
+		// });
 
 		ownermessage.setOnClickListener(new View.OnClickListener() {
 
@@ -801,70 +683,278 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			}
 		}
+	}
 
-		if (CabStatus.equals("A") && statusTrip.equals("0")) {
-			try {
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"dd/MM/yyyy hh:mm aa");
-				Date date = simpleDateFormat.parse(TravelDate + " "
-						+ TravelTime);
+	private void showRideCompleteDialog() {
 
-				ArrayList<String> arrayList = readBookedOrCarPreference();
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_fare_ride_complete, null);
 
-				// Log.d("CheckPoolFragmentActivity", "startTime : " +
-				// date.getTime());
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
 
-				if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-					if (BookingRefNo.isEmpty()
-							|| BookingRefNo.equalsIgnoreCase("null")) {
-						if (arrayList == null) {
-							showCabBookingDialog(true);
-						} else if (arrayList != null
-								&& arrayList.indexOf(CabId) == -1) {
-							showCabBookingDialog(true);
-						} else {
-							showTripStartDialog();
-						}
-					} else {
-						showTripStartDialog();
-					}
-				} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-					if (BookingRefNo.isEmpty()
-							|| BookingRefNo.equalsIgnoreCase("null")) {
-						if (arrayList == null) {
-							showCabBookingDialog(true);
-						} else if (arrayList != null
-								&& arrayList.indexOf(CabId) == -1) {
-							showCabBookingDialog(true);
-						}
-					}
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletesettledll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+				} else {
+					new ConnectionTaskForMarkTripCompleted().execute(CabId);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-		} else if (CabStatus.equals("A")) {
-			try {
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"dd/MM/yyyy hh:mm aa");
-				Date date = simpleDateFormat.parse(TravelDate + " "
-						+ TravelTime);
+		});
 
-				long expDuration = Long.parseLong(ExpTripDuration);
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletepaidelsell);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
 
-				if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
-					Log.d("CheckPoolFragmentActivity",
-							"ExpTripDuration trip completed");
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						new ConnectionTaskForTripCompleted().executeOnExecutor(
-								AsyncTask.THREAD_POOL_EXECUTOR, CabId);
-					} else {
-						new ConnectionTaskForTripCompleted().execute(CabId);
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				Toast.makeText(
+						CheckPoolFragmentActivity.this,
+						"We will let you know when your friend shares the fare details & the amount you owe",
+						Toast.LENGTH_LONG).show();
+
+				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+						HomeActivity.class);
+				mainIntent.putExtra("from", "normal");
+				mainIntent.putExtra("message", "null");
+				mainIntent.putExtra("CabId", "null");
+				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				startActivity(mainIntent);
+
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletecalculatell);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				showFareSplitDialog();
+			}
+		});
+
+		dialog.show();
+
+	}
+
+	// private void showWhoPaidDialog() {
+	// AlertDialog.Builder builder = new AlertDialog.Builder(
+	// CheckPoolFragmentActivity.this);
+	// View builderView = (View) getLayoutInflater().inflate(
+	// R.layout.fare_split_dialog, null);
+	//
+	// TextView textView = (TextView) builderView
+	// .findViewById(R.id.textViewFareSplit);
+	// textView.setText("Please let us know who paid for the trip by selecting the member below:");
+	//
+	// ListView listView = (ListView) builderView
+	// .findViewById(R.id.listViewFareSplit);
+	//
+	// Button button = (Button) builderView.findViewById(R.id.buttonFareSplit);
+	// button.setVisibility(View.GONE);
+	//
+	// builder.setView(builderView);
+	// final AlertDialog dialog = builder.create();
+	//
+	// listView.setAdapter(new ListViewAdapterFareSplit(
+	// CheckPoolFragmentActivity.this, MemberName));
+	// listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	//
+	// @Override
+	// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+	// long arg3) {
+	//
+	// }
+	//
+	// });
+	//
+	// dialog.show();
+	// }
+
+	private void showFareSplitDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		builder.setTitle("Fare Split");
+		builder.setMessage("Please enter fare to split :");
+		builder.setCancelable(false);
+		final EditText input = new EditText(CheckPoolFragmentActivity.this);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT);
+		input.setLayoutParams(lp);
+		input.setInputType(InputType.TYPE_CLASS_NUMBER
+				| InputType.TYPE_NUMBER_FLAG_DECIMAL);
+		builder.setView(input);
+		builder.setPositiveButton("Calculate split",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+						Double fare = 0.0;
+						if (input.getText().toString().isEmpty()) {
+							Toast.makeText(CheckPoolFragmentActivity.this,
+									"Please enter a valid fare",
+									Toast.LENGTH_LONG).show();
+							showFareSplitDialog();
+						} else if (!input.getText().toString().isEmpty()) {
+							fare = Double.parseDouble(input.getText()
+									.toString());
+							if (fare <= 0.0) {
+								Toast.makeText(CheckPoolFragmentActivity.this,
+										"Please enter a valid fare",
+										Toast.LENGTH_LONG).show();
+								showFareSplitDialog();
+							} else {
+								onedialog = new ProgressDialog(
+										CheckPoolFragmentActivity.this);
+								onedialog.setMessage("Please Wait...");
+								onedialog.setCancelable(false);
+								onedialog.setCanceledOnTouchOutside(false);
+								onedialog.show();
+
+								InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+								im.hideSoftInputFromWindow(
+										input.getWindowToken(), 0);
+
+								if (showmembersresp
+										.equalsIgnoreCase("No Members joined yet")) {
+
+								} else {
+
+									try {
+
+										JSONObject ownerJsonObject = new JSONObject();
+										ownerJsonObject
+												.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
+														FromLocation);
+										ownerJsonObject
+												.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
+														ToLocation);
+										ownerJsonObject
+												.put(FareCalculator.JSON_NAME_OWNER_NAME,
+														OwnerName);
+
+										ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
+
+										for (int i = 0; i < ShowMemberName
+												.size(); i++) {
+											JSONObject memberJsonObject = new JSONObject();
+											memberJsonObject
+													.put
+
+													(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+															ShowMemberLocationAddress
+																	.get(i)
+																	.toString());
+
+											String[] latlong = ShowMemberLocationLatLong
+													.get(i).split(",");
+											LatLng lt = new LatLng(
+													Double.parseDouble(latlong[0]),
+													Double.parseDouble(latlong[1]));
+											memberJsonObject
+													.put
+
+													(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+															lt);
+
+											memberJsonObject
+													.put(FareCalculator.JSON_NAME_MEMBER_NAME,
+															ShowMemberName.get(
+																	i)
+																	.toString());
+
+											memberArrayList
+													.add(memberJsonObject);
+										}
+
+										FareCalculator fareCalculator = new FareCalculator(
+												CheckPoolFragmentActivity.this,
+												ownerJsonObject,
+												memberArrayList);
+										fareCalculator.calculateFareSplit(fare);
+
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+								}
+							}
+						}
 					}
+				});
+		// builder.setNegativeButton("Cancel", null);
+		AlertDialog dialog = builder.show();
+		TextView messageText = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageText.setGravity(Gravity.CENTER);
+		dialog.show();
+
+	}
+
+	private void showPaymentDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CheckPoolFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_fare_ride_complete_payment, null);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletefaresettledll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				// call update status for user
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, CabId,
+							OwnerMobileNumber, MemberNumberstr);
+				} else {
+					new ConnectionTaskForMarkTripCompleted().execute(CabId,
+							OwnerMobileNumber, MemberNumberstr);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-		}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletefarewalletll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				// Show coming soon
+			}
+		});
+
+		dialog.show();
+
 	}
 
 	private ArrayList<String> readBookedOrCarPreference() {
@@ -1722,7 +1812,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			} else {
 
-				mycalculatorbtn.setVisibility(View.VISIBLE);
+				// mycalculatorbtn.setVisibility(View.VISIBLE);
 
 				ShowMemberName.clear();
 				ShowMemberNumber.clear();
@@ -1816,6 +1906,78 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			if (onedialog.isShowing()) {
 				onedialog.dismiss();
 			}
+
+			// //////////////////////////
+			if (CabStatus.equals("A") && statusTrip.equals("0")) {
+				try {
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy hh:mm aa");
+					Date date = simpleDateFormat.parse(TravelDate + " "
+							+ TravelTime);
+
+					ArrayList<String> arrayList = readBookedOrCarPreference();
+
+					// Log.d("CheckPoolFragmentActivity", "startTime : " +
+					// date.getTime());
+
+					if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+						if (BookingRefNo.isEmpty()
+								|| BookingRefNo.equalsIgnoreCase("null")) {
+							if (arrayList == null) {
+								showCabBookingDialog(true);
+							} else if (arrayList != null
+									&& arrayList.indexOf(CabId) == -1) {
+								showCabBookingDialog(true);
+							} else {
+								showTripStartDialog();
+							}
+						} else {
+							showTripStartDialog();
+						}
+					} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+						if (BookingRefNo.isEmpty()
+								|| BookingRefNo.equalsIgnoreCase("null")) {
+							if (arrayList == null) {
+								showCabBookingDialog(false);
+							} else if (arrayList != null
+									&& arrayList.indexOf(CabId) == -1) {
+								showCabBookingDialog(false);
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (CabStatus.equals("A") && statusTrip.equals("2")) {
+				showRideCompleteDialog();
+			} else if (CabStatus.equals("A") && statusTrip.equals("3")) {
+				showPaymentDialog();
+			} else if (CabStatus.equals("A")) {
+				try {
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy hh:mm aa");
+					Date date = simpleDateFormat.parse(TravelDate + " "
+							+ TravelTime);
+
+					long expDuration = Long.parseLong(ExpTripDuration);
+
+					if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+						Log.d("CheckPoolFragmentActivity",
+								"ExpTripDuration trip completed");
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							new ConnectionTaskForTripCompleted()
+									.executeOnExecutor(
+											AsyncTask.THREAD_POOL_EXECUTOR,
+											CabId);
+						} else {
+							new ConnectionTaskForTripCompleted().execute(CabId);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			// //////////////////////////
 		}
 	}
 
@@ -2166,14 +2328,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
-			Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
-					HomeActivity.class);
-			mainIntent.putExtra("from", "normal");
-			mainIntent.putExtra("message", "null");
-			mainIntent.putExtra("CabId", "null");
-			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			startActivity(mainIntent);
+			// Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
+			// HomeActivity.class);
+			// mainIntent.putExtra("from", "normal");
+			// mainIntent.putExtra("message", "null");
+			// mainIntent.putExtra("CabId", "null");
+			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			// startActivity(mainIntent);
+
+			finish();
 
 		}
 
@@ -2750,6 +2914,21 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			textView = (TextView) dialog.findViewById(R.id.cabbookingrefno);
 			textView.setText("Booking reference : " + BookingRefNo);
+			
+			Button button = (Button)dialog.findViewById(R.id.cancelBooking);
+			button.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (CabName.equalsIgnoreCase("Uber")) {
+						
+					} else if (CabName.equalsIgnoreCase("Mega")) {
+						
+					} else if (CabName.equalsIgnoreCase("Taxi For Sure")) {
+						
+					}
+				}
+			});
 		}
 
 		dialog.show();
@@ -2953,23 +3132,29 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				@Override
 				public void run() {
 					try {
+						SASLAuthentication.supportSASLMechanism("PLAIN", 0);
+						
 						xmppConnection.connect();
 						// chatBubbleList = new ArrayList<ChatBubble>();
 					} catch (Exception e) {
 						e.printStackTrace();
 						return;
 					}
-
+					
 					try {
+//						xmppConnection.login("cmcadmin", "clubmycab");
+						
 						AccountManager am = new AccountManager(xmppConnection);
 						am.createAccount(uname, pwd, hashMap);
 						Log.d("Openfire", "Account Created");
 					} catch (Exception e) {
+						e.printStackTrace();
 						Log.e("Openfire", "Account already exist");
 					}
 
 					try {
 						xmppConnection.login(uname, pwd);
+//						xmppConnection.login("cmc@" + IPADDRESS, "clubmycab");
 						Presence presence = new Presence(
 								Presence.Type.available);
 						xmppConnection.sendPacket(presence);
@@ -2998,7 +3183,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			for (int i = 0; i < MemberNumber.size(); i++) {
 				String userid = MemberNumber.get(i).toString().trim() + "_"
-						+ CabId + GlobalVariables.ServerNameForChat;
+						+ CabId + "@" + IPADDRESS;
 				message = new Message(userid, Message.Type.chat);
 				message.setBody(text);
 				xmppConnection.sendPacket(message);
@@ -3591,6 +3776,58 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						@Override
 						public void onClick(View view) {
 							dialog.dismiss();
+
+							String numberfareString = "";
+							for (String key : hashMap.keySet()) {
+								if (!key.equalsIgnoreCase("tripTotalFare")) {
+									int index = MemberName.indexOf(key);
+									if (index != -1) {
+										numberfareString += (MemberNumber.get(
+												index).toString()
+												+ "~"
+												+ String.format(
+														"%d%n",
+														Math.round(Double
+																.parseDouble(hashMap
+																		.get(key)
+																		.toString()))) + ",");
+									}
+								}
+
+								if (key.equalsIgnoreCase(OwnerName)) {
+									numberfareString += (OwnerMobileNumber
+											+ "~"
+											+ String.format(
+													"%d%n",
+													Math.round(Double
+															.parseDouble(hashMap
+																	.get(key)
+																	.toString()))) + ",");
+								}
+							}
+
+							numberfareString = numberfareString.substring(0,
+									numberfareString.length() - 1);
+
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								new ConnectionTaskForSaveCalculatedFare()
+										.executeOnExecutor(
+												AsyncTask.THREAD_POOL_EXECUTOR,
+												CabId,
+												hashMap.get("tripTotalFare")
+														.toString(),
+												numberfareString,
+												OwnerMobileNumber,
+												OwnerMobileNumber);
+							} else {
+								new ConnectionTaskForSaveCalculatedFare()
+										.execute(CabId,
+												hashMap.get("tripTotalFare")
+														.toString(),
+												numberfareString,
+												OwnerMobileNumber,
+												OwnerMobileNumber);
+							}
 						}
 					});
 
@@ -3665,6 +3902,223 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					.trim());
 
 			return itemView;
+		}
+	}
+
+	private class ConnectionTaskForSaveCalculatedFare extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			Log.d("CheckPoolFragmentActivity",
+					"ConnectionTaskForSaveCalculatedFare cabid : " + args[0]
+							+ " totalfare : " + args[1] + " numberandfare : "
+							+ args[2] + " paidby : " + args[3] + " owner : "
+							+ args[4]);
+			AuthenticateConnectionSaveCalculatedFare mAuth1 = new AuthenticateConnectionSaveCalculatedFare();
+			try {
+				mAuth1.cabid = args[0];
+				mAuth1.totalfare = args[1];
+				mAuth1.numberandfare = args[2];
+				mAuth1.paidby = args[3];
+				mAuth1.owner = args[4];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionSaveCalculatedFare {
+
+		public String cabid;
+		public String totalfare;
+		public String numberandfare;
+		public String paidby;
+		public String owner;
+
+		public AuthenticateConnectionSaveCalculatedFare() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/saveCalculatedFare.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cabid);
+			BasicNameValuePair MemberNumberValuePair = new BasicNameValuePair(
+					"totalFare", totalfare);
+			BasicNameValuePair NumberFairValuePair = new BasicNameValuePair(
+					"numberAndFare", numberandfare);
+			BasicNameValuePair PaidByValuePair = new BasicNameValuePair(
+					"paidBy", paidby);
+			BasicNameValuePair OwnerValuePair = new BasicNameValuePair("owner",
+					owner);
+
+			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(MemberNumberValuePair);
+			nameValuePairList.add(NumberFairValuePair);
+			nameValuePairList.add(PaidByValuePair);
+			nameValuePairList.add(OwnerValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String result = null;
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			saveCalculatedFare = result;
+
+			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+		}
+	}
+
+	private class ConnectionTaskForMarkTripCompleted extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			Log.d("CheckPoolFragmentActivity",
+					"AuthenticateConnectionMarkTripCompleted cabid : "
+							+ args[0]);
+			AuthenticateConnectionMarkTripCompleted mAuth1 = new AuthenticateConnectionMarkTripCompleted();
+			try {
+				if (args.length > 1) {
+					mAuth1.cabid = args[0];
+					mAuth1.owner = args[1];
+					mAuth1.mobileNumber = args[2];
+				} else {
+					mAuth1.cabid = args[0];
+				}
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionMarkTripCompleted {
+
+		public String cabid;
+		public String owner;
+		public String mobileNumber;
+
+		public AuthenticateConnectionMarkTripCompleted() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/tripCompleted.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cabid);
+
+			nameValuePairList.add(CabIdValuePair);
+
+			if (owner != null && mobileNumber != null && !owner.isEmpty()
+					&& !mobileNumber.isEmpty()) {
+				BasicNameValuePair ownerNameValuePair = new BasicNameValuePair(
+						"owner", owner);
+				BasicNameValuePair mobileNumberNameValuePair = new BasicNameValuePair(
+						"mobileNumber", mobileNumber);
+
+				nameValuePairList.add(ownerNameValuePair);
+				nameValuePairList.add(mobileNumberNameValuePair);
+			}
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String result = null;
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("tripCompleted", "tripCompleted : " + result);
 		}
 	}
 
@@ -3852,16 +4306,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 										.getString("PoolId").toString());
 								MyClubPoolName.add(subArray.getJSONObject(i)
 										.getString("PoolName").toString());
-								//Pawan cheks NoofMember value for null
-								if(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString()==null)
+								// Pawan cheks NoofMember value for null
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString() == null)
 									MyClubNoofMembers.add("1");
-								
+
 								else
-								MyClubNoofMembers.add(subArray.getJSONObject(i)
-								.getString("NoofMembers").toString());
-								
-								
+									MyClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MyClubOwnerName.add(subArray.getJSONObject(i)
 										.getString("OwnerName").toString());
 								MyClubMembers.add(subArray.getJSONObject(i)
@@ -3872,15 +4327,18 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								MemberClubPoolName.add(subArray
 										.getJSONObject(i).getString("PoolName")
 										.toString());
-								//Pawan cheks NoofMember value for null
-								if(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+								// Pawan cheks NoofMember value for null
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
 									MemberClubNoofMembers.add("1");
-								
+
 								else
-								MemberClubNoofMembers.add(subArray.getJSONObject(i)
-								.getString("NoofMembers").toString());
-								
+									MemberClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MemberClubOwnerName.add(subArray
 										.getJSONObject(i)
 										.getString("OwnerName").toString());
@@ -4232,14 +4690,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.getString("PoolId").toString());
 							MyClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							
-							if(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString().equalsIgnoreCase("null"))
-							MyClubNoofMembers.add("1");
+
+							if (subArray.getJSONObject(i)
+									.getString("NoofMembers").toString()
+									.equalsIgnoreCase("null"))
+								MyClubNoofMembers.add("1");
 							else
 								MyClubNoofMembers.add(subArray.getJSONObject(i)
 										.getString("NoofMembers").toString());
-							
+
 							MyClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
 							MyClubMembers.add(subArray.getJSONObject(i)
@@ -4250,13 +4709,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 							MemberClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
 
-							if(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString().equalsIgnoreCase("null"))
-							MemberClubNoofMembers.add("1");
+							if (subArray.getJSONObject(i)
+									.getString("NoofMembers").toString()
+									.equalsIgnoreCase("null"))
+								MemberClubNoofMembers.add("1");
 							else
-								MemberClubNoofMembers.add(subArray.getJSONObject(i)
+								MemberClubNoofMembers.add(subArray
+										.getJSONObject(i)
 										.getString("NoofMembers").toString());
-							
+
 							MemberClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
 							MemberClubMembers.add(subArray.getJSONObject(i)
@@ -4493,4 +4954,5 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	// selectrecipientsvalue.setText(str);
 	//
 	// }
+
 }

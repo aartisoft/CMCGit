@@ -25,7 +25,7 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 	private static final String MESSAGE_KEY = "MessageKey";
 
 	public static final int UPCOMING_TRIP_NOTIFICATION_TIME = 15;
-	public static final int START_TRIP_NOTIFICATION_TIME = 5;
+	public static final int START_TRIP_NOTIFICATION_TIME = 0;
 
 	private static final int ALARM_UPCOMING_ID = 0;
 	private static final int ALARM_START_TRIP_ID = 1;

@@ -50,9 +50,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -62,6 +62,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.view.Gravity;
@@ -112,7 +113,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 public class MemberRideFragmentActivity extends FragmentActivity implements
-		FareCalculatorInterface {
+		FareCalculatorInterface, LocationListener {
 
 	String CabId;
 	String MobileNumber;
@@ -136,6 +137,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	String DriverName;
 	String DriverNumber;
 	String CarNumber;
+
+	String ExpTripDuration;
+	String statusTrip;
 
 	String comefrom;
 
@@ -184,7 +188,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	LinearLayout joinpoolbtn;
 	LinearLayout refermorefriends;
 	ImageView mydetailbtn;
-	ImageView mycalculatorbtn;
+	// ImageView mycalculatorbtn;
 
 	// //after pooljoin
 	LinearLayout updatelocation;
@@ -247,6 +251,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 	String ownerlocation;
 	Marker ownerMarker;
+
+	LocationManager locationManager;
+	Location mycurrentlocationobject;
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -312,9 +319,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		CarNumber = intent.getStringExtra("CarNumber");
 
 		comefrom = intent.getStringExtra("comefrom");
+
+		ExpTripDuration = intent.getStringExtra("ExpTripDuration");
+		statusTrip = intent.getStringExtra("status");
+
 		Log.d("comefrom", "" + comefrom);
 
-		Log.d("CabStatus", "" + CabStatus);
+		Log.d("CabStatus", "" + CabStatus + " statusTrip : " + statusTrip);
 
 		beforejoinpoolll = (LinearLayout) findViewById(R.id.beforejoinpoolll);
 		afterjoinpoolll = (LinearLayout) findViewById(R.id.afterjoinpoolll);
@@ -410,6 +421,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		// //////
 
+		mycurrentlocationobject = getLocation();
 		joinpoolbtn.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -456,24 +468,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 				} else {
-					Toast.makeText(
-							MemberRideFragmentActivity.this,
-							"We have set your pick-up to your current location, please move the map around to select a different location & press join ride again",
-							Toast.LENGTH_LONG).show();
 
 					// Location location = joinpoolmap.getMyLocation();
-					LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-					Criteria criteria = new Criteria();
+					// LocationManager locationManager = (LocationManager)
+					// getSystemService(Context.LOCATION_SERVICE);
+					// Criteria criteria = new Criteria();
+					//
+					// Location location = locationManager
+					// .getLastKnownLocation(locationManager
+					// .getBestProvider(criteria, false));
 
-					Location location = locationManager
-							.getLastKnownLocation(locationManager
-									.getBestProvider(criteria, false));
-
+					Location location = mycurrentlocationobject;
 					Log.d("MemberRideFragmentActivity",
 							"joinpoolmap location : " + location);
 					if (location != null) {
-						Log.d("MemberRideFragmentActivity",
-								"joinpoolmap location : " + location);
 
 						LatLng point = new LatLng(location.getLatitude(),
 								location.getLongitude());
@@ -482,6 +490,15 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 						setOnMapClick(point);
 
+						Toast.makeText(
+								MemberRideFragmentActivity.this,
+								"We have set your pick-up to your current location, please move the map around to select a different location & press join ride again",
+								Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(
+								MemberRideFragmentActivity.this,
+								"Please select your location to join the ride, by clicking on map",
+								Toast.LENGTH_LONG).show();
 					}
 				}
 			}
@@ -674,180 +691,181 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		mycalculatorbtn = (ImageView) findViewById(R.id.mycalculatorbtn);
-		mycalculatorbtn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						MemberRideFragmentActivity.this);
-				builder.setTitle("Fare Split");
-				builder.setMessage("Please enter fare to split :");
-				builder.setCancelable(false);
-				final EditText input = new EditText(
-						MemberRideFragmentActivity.this);
-				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.MATCH_PARENT,
-						LinearLayout.LayoutParams.MATCH_PARENT);
-				input.setLayoutParams(lp);
-				input.setInputType(InputType.TYPE_CLASS_NUMBER
-						| InputType.TYPE_NUMBER_FLAG_DECIMAL);
-				builder.setView(input);
-				builder.setPositiveButton("OK",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-
-								Double fare = 0.0;
-								if (input.getText().toString().isEmpty()) {
-									Toast.makeText(
-											MemberRideFragmentActivity.this,
-											"Please enter a valid fare",
-											Toast.LENGTH_LONG).show();
-								} else if (!input.getText().toString()
-										.isEmpty()) {
-									fare = Double.parseDouble(input.getText()
-											.toString());
-									if (fare <= 0.0) {
-										Toast.makeText(
-												MemberRideFragmentActivity.this,
-												"Please enter a valid fare",
-												Toast.LENGTH_LONG).show();
-									} else {
-										onedialog = new ProgressDialog(
-												MemberRideFragmentActivity.this);
-										onedialog.setMessage("Please Wait...");
-										onedialog.setCancelable(false);
-										onedialog
-												.setCanceledOnTouchOutside(false);
-										onedialog.show();
-
-										InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-										im.hideSoftInputFromWindow(
-												input.getWindowToken(), 0);
-
-										if (checkpoolalreadyjoinresp
-												.equalsIgnoreCase("fresh pool")) {
-
-										} else {
-
-											try {
-												JSONObject ownerJsonObject = new JSONObject();
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
-																FromLocation);
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
-																ToLocation);
-												ownerJsonObject
-														.put(FareCalculator.JSON_NAME_OWNER_NAME,
-																OwnerName);
-
-												ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
-
-												JSONObject memberJsonObject = new JSONObject();
-												memberJsonObject
-														.put(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
-																usermemlocadd);
-
-												String[] latlong = usermemloclatlong
-														.split(",");
-												LatLng lt = new LatLng(
-														Double.parseDouble(latlong[0]),
-														Double.parseDouble(latlong[1]));
-												memberJsonObject
-														.put(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
-																lt);
-
-												memberJsonObject
-														.put(FareCalculator.JSON_NAME_MEMBER_NAME,
-																usermemname);
-
-												memberArrayList
-														.add(memberJsonObject);
-
-												if (showmembersresp
-														.equalsIgnoreCase("No Members joined yet")) {
-
-												} else {
-
-													try {
-														for (int i = 0; i < ShowMemberName
-																.size(); i++) {
-															memberJsonObject = new JSONObject();
-															memberJsonObject
-																	.put
-
-																	(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
-
-																	ShowMemberLocationAddress
-
-																	.get(i)
-
-																	.toString());
-
-															latlong = ShowMemberLocationLatLong
-																	.get(i)
-																	.split(",");
-															lt = new LatLng(
-																	Double.parseDouble(latlong[0]),
-																	Double.parseDouble(latlong
-
-																	[1]));
-															memberJsonObject
-																	.put
-
-																	(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
-																			lt);
-
-															memberJsonObject
-																	.put
-
-																	(FareCalculator.JSON_NAME_MEMBER_NAME,
-																			ShowMemberName
-
-																					.get(i)
-
-																					.toString());
-
-															memberArrayList
-																	.add(memberJsonObject);
-														}
-
-													} catch (Exception e) {
-														e.printStackTrace();
-													}
-
-												}
-
-												FareCalculator fareCalculator = new FareCalculator(
-														MemberRideFragmentActivity.this,
-														ownerJsonObject,
-														memberArrayList);
-												fareCalculator
-														.calculateFareSplit(fare);
-
-											} catch (Exception e) {
-												// TODO Auto-generated catch
-												// block
-												e.printStackTrace();
-											}
-										}
-									}
-								}
-							}
-						});
-				builder.setNegativeButton("Cancel", null);
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
-			}
-		});
+		// mycalculatorbtn = (ImageView) findViewById(R.id.mycalculatorbtn);
+		// mycalculatorbtn.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		//
+		// AlertDialog.Builder builder = new AlertDialog.Builder(
+		// MemberRideFragmentActivity.this);
+		// builder.setTitle("Fare Split");
+		// builder.setMessage("Please enter fare to split :");
+		// builder.setCancelable(false);
+		// final EditText input = new EditText(
+		// MemberRideFragmentActivity.this);
+		// LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+		// LinearLayout.LayoutParams.MATCH_PARENT,
+		// LinearLayout.LayoutParams.MATCH_PARENT);
+		// input.setLayoutParams(lp);
+		// input.setInputType(InputType.TYPE_CLASS_NUMBER
+		// | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+		// builder.setView(input);
+		// builder.setPositiveButton("OK",
+		// new DialogInterface.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog,
+		// int which) {
+		//
+		// Double fare = 0.0;
+		// if (input.getText().toString().isEmpty()) {
+		// Toast.makeText(
+		// MemberRideFragmentActivity.this,
+		// "Please enter a valid fare",
+		// Toast.LENGTH_LONG).show();
+		// } else if (!input.getText().toString()
+		// .isEmpty()) {
+		// fare = Double.parseDouble(input.getText()
+		// .toString());
+		// if (fare <= 0.0) {
+		// Toast.makeText(
+		// MemberRideFragmentActivity.this,
+		// "Please enter a valid fare",
+		// Toast.LENGTH_LONG).show();
+		// } else {
+		// onedialog = new ProgressDialog(
+		// MemberRideFragmentActivity.this);
+		// onedialog.setMessage("Please Wait...");
+		// onedialog.setCancelable(false);
+		// onedialog
+		// .setCanceledOnTouchOutside(false);
+		// onedialog.show();
+		//
+		// InputMethodManager im = (InputMethodManager)
+		// getSystemService(Context.INPUT_METHOD_SERVICE);
+		// im.hideSoftInputFromWindow(
+		// input.getWindowToken(), 0);
+		//
+		// if (checkpoolalreadyjoinresp
+		// .equalsIgnoreCase("fresh pool")) {
+		//
+		// } else {
+		//
+		// try {
+		// JSONObject ownerJsonObject = new JSONObject();
+		// ownerJsonObject
+		// .put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
+		// FromLocation);
+		// ownerJsonObject
+		// .put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
+		// ToLocation);
+		// ownerJsonObject
+		// .put(FareCalculator.JSON_NAME_OWNER_NAME,
+		// OwnerName);
+		//
+		// ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
+		//
+		// JSONObject memberJsonObject = new JSONObject();
+		// memberJsonObject
+		// .put(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+		// usermemlocadd);
+		//
+		// String[] latlong = usermemloclatlong
+		// .split(",");
+		// LatLng lt = new LatLng(
+		// Double.parseDouble(latlong[0]),
+		// Double.parseDouble(latlong[1]));
+		// memberJsonObject
+		// .put(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+		// lt);
+		//
+		// memberJsonObject
+		// .put(FareCalculator.JSON_NAME_MEMBER_NAME,
+		// usermemname);
+		//
+		// memberArrayList
+		// .add(memberJsonObject);
+		//
+		// if (showmembersresp
+		// .equalsIgnoreCase("No Members joined yet")) {
+		//
+		// } else {
+		//
+		// try {
+		// for (int i = 0; i < ShowMemberName
+		// .size(); i++) {
+		// memberJsonObject = new JSONObject();
+		// memberJsonObject
+		// .put
+		//
+		// (FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+		//
+		// ShowMemberLocationAddress
+		//
+		// .get(i)
+		//
+		// .toString());
+		//
+		// latlong = ShowMemberLocationLatLong
+		// .get(i)
+		// .split(",");
+		// lt = new LatLng(
+		// Double.parseDouble(latlong[0]),
+		// Double.parseDouble(latlong
+		//
+		// [1]));
+		// memberJsonObject
+		// .put
+		//
+		// (FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+		// lt);
+		//
+		// memberJsonObject
+		// .put
+		//
+		// (FareCalculator.JSON_NAME_MEMBER_NAME,
+		// ShowMemberName
+		//
+		// .get(i)
+		//
+		// .toString());
+		//
+		// memberArrayList
+		// .add(memberJsonObject);
+		// }
+		//
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		//
+		// FareCalculator fareCalculator = new FareCalculator(
+		// MemberRideFragmentActivity.this,
+		// ownerJsonObject,
+		// memberArrayList);
+		// fareCalculator
+		// .calculateFareSplit(fare);
+		//
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch
+		// // block
+		// e.printStackTrace();
+		// }
+		// }
+		// }
+		// }
+		// }
+		// });
+		// builder.setNegativeButton("Cancel", null);
+		// AlertDialog dialog = builder.show();
+		// TextView messageText = (TextView) dialog
+		// .findViewById(android.R.id.message);
+		// messageText.setGravity(Gravity.CENTER);
+		// dialog.show();
+		// }
+		// });
 
 		droppool.setOnClickListener(new View.OnClickListener() {
 
@@ -1034,6 +1052,249 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			}
 		}
+	}
+
+	private void showRideCompleteDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				MemberRideFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_fare_ride_complete, null);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletesettledll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+				} else {
+					new ConnectionTaskForMarkTripCompleted().execute(CabId);
+				}
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletepaidelsell);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				Toast.makeText(
+						MemberRideFragmentActivity.this,
+						"We will let you know when your friend shares the fare details & the amount you owe",
+						Toast.LENGTH_LONG).show();
+
+				Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
+						HomeActivity.class);
+				mainIntent.putExtra("from", "normal");
+				mainIntent.putExtra("message", "null");
+				mainIntent.putExtra("CabId", "null");
+				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				startActivity(mainIntent);
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletecalculatell);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				// showFareSplitDialog();
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForShowMembersFareCalculation()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				} else {
+					new ConnectionTaskForShowMembersFareCalculation().execute();
+				}
+			}
+		});
+
+		dialog.show();
+
+	}
+
+	private void showFareSplitDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				MemberRideFragmentActivity.this);
+		builder.setTitle("Fare Split");
+		builder.setMessage("Please enter fare to split :");
+		builder.setCancelable(false);
+		final EditText input = new EditText(MemberRideFragmentActivity.this);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.MATCH_PARENT);
+		input.setLayoutParams(lp);
+		input.setInputType(InputType.TYPE_CLASS_NUMBER
+				| InputType.TYPE_NUMBER_FLAG_DECIMAL);
+		builder.setView(input);
+		builder.setPositiveButton("Calculate split",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+						Double fare = 0.0;
+						if (input.getText().toString().isEmpty()) {
+							Toast.makeText(MemberRideFragmentActivity.this,
+									"Please enter a valid fare",
+									Toast.LENGTH_LONG).show();
+							showFareSplitDialog();
+						} else if (!input.getText().toString().isEmpty()) {
+							fare = Double.parseDouble(input.getText()
+									.toString());
+							if (fare <= 0.0) {
+								Toast.makeText(MemberRideFragmentActivity.this,
+										"Please enter a valid fare",
+										Toast.LENGTH_LONG).show();
+								showFareSplitDialog();
+							} else {
+								onedialog = new ProgressDialog(
+										MemberRideFragmentActivity.this);
+								onedialog.setMessage("Please Wait...");
+								onedialog.setCancelable(false);
+								onedialog.setCanceledOnTouchOutside(false);
+								onedialog.show();
+
+								InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+								im.hideSoftInputFromWindow(
+										input.getWindowToken(), 0);
+
+								if (showmembersresp
+										.equalsIgnoreCase("No Members joined yet")) {
+
+								} else {
+
+									try {
+
+										JSONObject ownerJsonObject = new JSONObject();
+										ownerJsonObject
+												.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
+														FromLocation);
+										ownerJsonObject
+												.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
+														ToLocation);
+										ownerJsonObject
+												.put(FareCalculator.JSON_NAME_OWNER_NAME,
+														OwnerName);
+
+										ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
+
+										for (int i = 0; i < ShowMemberName
+												.size(); i++) {
+											JSONObject memberJsonObject = new JSONObject();
+											memberJsonObject
+													.put
+
+													(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+															ShowMemberLocationAddress
+																	.get(i)
+																	.toString());
+
+											String[] latlong = ShowMemberLocationLatLong
+													.get(i).split(",");
+											LatLng lt = new LatLng(
+													Double.parseDouble(latlong[0]),
+													Double.parseDouble(latlong[1]));
+											memberJsonObject
+													.put
+
+													(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+															lt);
+
+											memberJsonObject
+													.put(FareCalculator.JSON_NAME_MEMBER_NAME,
+															ShowMemberName.get(
+																	i)
+																	.toString());
+
+											memberArrayList
+													.add(memberJsonObject);
+										}
+
+										FareCalculator fareCalculator = new FareCalculator(
+												MemberRideFragmentActivity.this,
+												ownerJsonObject,
+												memberArrayList);
+										fareCalculator.calculateFareSplit(fare);
+
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+								}
+							}
+						}
+					}
+				});
+		// builder.setNegativeButton("Cancel", null);
+		AlertDialog dialog = builder.show();
+		TextView messageText = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageText.setGravity(Gravity.CENTER);
+		dialog.show();
+
+	}
+
+	private void showPaymentDialog() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				MemberRideFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.dialog_fare_ride_complete_payment, null);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		LinearLayout linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletefaresettledll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				// call update status for user
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, CabId,
+							OwnerMobileNumber, MemberNumberstr);
+				} else {
+					new ConnectionTaskForMarkTripCompleted().execute(CabId,
+							OwnerMobileNumber, MemberNumberstr);
+				}
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletefarewalletll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				// Show coming soon
+			}
+		});
+
+		dialog.show();
+
 	}
 
 	private Address geocodeAddress(String addressString) {
@@ -1327,10 +1588,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		}
 
 	}
-	
+
 	private void setOnMapClick(LatLng point) {
-		joinpoolmap.animateCamera(CameraUpdateFactory
-				.newLatLng(point));
+		joinpoolmap.animateCamera(CameraUpdateFactory.newLatLng(point));
 		locationmarker.setVisibility(View.VISIBLE);
 
 		memberlocationlatlong = point;
@@ -1344,32 +1604,25 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		joinpoolchangelocationtext.setVisibility(View.VISIBLE);
 		joinpoolchangelocationtext.setText(memberlocationaddress);
 
-		joinpoolmap
-				.setOnCameraChangeListener(new OnCameraChangeListener() {
+		joinpoolmap.setOnCameraChangeListener(new OnCameraChangeListener() {
 
-					@Override
-					public void onCameraChange(
-							final CameraPosition cameraPosition) {
+			@Override
+			public void onCameraChange(final CameraPosition cameraPosition) {
 
-						LatLng mapcenter = cameraPosition.target;
+				LatLng mapcenter = cameraPosition.target;
 
-						memberlocationlatlong = mapcenter;
-						memberlocationaddress = MapUtilityMethods
-								.getAddress(
-										MemberRideFragmentActivity.this,
-										mapcenter.latitude,
-										mapcenter.longitude);
+				memberlocationlatlong = mapcenter;
+				memberlocationaddress = MapUtilityMethods.getAddress(
+						MemberRideFragmentActivity.this, mapcenter.latitude,
+						mapcenter.longitude);
 
-						Log.d("memberlocationlatlong", ""
-								+ memberlocationlatlong);
-						Log.d("memberlocationaddress", ""
-								+ memberlocationaddress);
+				Log.d("memberlocationlatlong", "" + memberlocationlatlong);
+				Log.d("memberlocationaddress", "" + memberlocationaddress);
 
-						joinpoolchangelocationtext
-								.setText(memberlocationaddress);
+				joinpoolchangelocationtext.setText(memberlocationaddress);
 
-					}
-				});
+			}
+		});
 	}
 
 	public class AuthenticateConnectionGetDirection {
@@ -1534,7 +1787,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			} else {
 
-				mycalculatorbtn.setVisibility(View.VISIBLE);
+				// mycalculatorbtn.setVisibility(View.VISIBLE);
 
 				try {
 					JSONArray subArray = new JSONArray(checkpoolalreadyjoinresp);
@@ -1671,6 +1924,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									usermemimagename);
 						}
 
+					} else if (arg0.getTitle().equals("Last updated at")) {
+						// Log.d("MemberRideFragment",
+						// "setOnMarkerClickListener OwnerLocation : ");
+						arg0.showInfoWindow();
 					} else {
 
 						if (checkpoolalreadyjoinresp
@@ -1736,6 +1993,38 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			if (onedialog.isShowing()) {
 				onedialog.dismiss();
 			}
+
+			////////////////////////////
+			if (CabStatus.equals("A") && statusTrip.equals("2")) {
+				showRideCompleteDialog();
+			} else if (CabStatus.equals("A") && statusTrip.equals("3")) {
+				showPaymentDialog();
+			} else if (CabStatus.equals("A")) {
+				try {
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy hh:mm aa");
+					Date date = simpleDateFormat.parse(TravelDate + " "
+							+ TravelTime);
+
+					long expDuration = Long.parseLong(ExpTripDuration);
+
+					if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+						Log.d("MemberRideFragmentActivity",
+								"ExpTripDuration trip completed");
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							new ConnectionTaskForTripCompleted()
+									.executeOnExecutor(
+											AsyncTask.THREAD_POOL_EXECUTOR,
+											CabId);
+						} else {
+							new ConnectionTaskForTripCompleted().execute(CabId);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			////////////////////////////
 		}
 	}
 
@@ -3005,6 +3294,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					"offline");
 		}
 
+		if (locationManager != null)
+			locationManager.removeUpdates(MemberRideFragmentActivity.this);
+
 		super.onStop();
 	}
 
@@ -3129,7 +3421,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			for (int i = 0; i < MemberNumber.size(); i++) {
 				String userid = MemberNumber.get(i).toString().trim() + "_"
-						+ CabId + GlobalVariables.ServerNameForChat;
+						+ CabId + "@" + IPADDRESS;
 				message = new Message(userid, Message.Type.chat);
 				message.setBody(text);
 				xmppConnection.sendPacket(message);
@@ -3710,27 +4002,44 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				if (jsonObject.get("msg").toString()
 						.equalsIgnoreCase("success")) {
 
-					if (!refreshlocationbtn.isShown()) {
-						refreshlocationbtn.setVisibility(View.VISIBLE);
-					}
-
 					LatLng latLng = new LatLng(Double.parseDouble(jsonObject
 							.get("ownerLat").toString()),
 							Double.parseDouble(jsonObject.get("ownerLng")
 									.toString()));
 
+					String locationUpdatedAt = jsonObject.get(
+							"locationUpdatedAt").toString();
+
 					Log.d("MemberRideFragmentActivity", "Owner location : "
 							+ latLng);
+
+					if (!refreshlocationbtn.isShown()) {
+						refreshlocationbtn.setVisibility(View.VISIBLE);
+					}
 
 					if (ownerMarker != null) {
 						ownerMarker.remove();
 					}
 
-					MarkerOptions markerOptions = new MarkerOptions()
-							.position(latLng);
-					markerOptions.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.owner_location_pin));
-					ownerMarker = joinpoolmap.addMarker(markerOptions);
+					// MarkerOptions markerOptions = new MarkerOptions()
+					// .position(latLng);
+					// markerOptions.icon(BitmapDescriptorFactory
+					// .fromResource(R.drawable.owner_location_pin));
+					// ownerMarker = joinpoolmap.addMarker(markerOptions);
+					ownerMarker = joinpoolmap
+							.addMarker(new MarkerOptions()
+									.position(latLng)
+									.title("Last updated at")
+									.snippet(locationUpdatedAt)
+									.icon(BitmapDescriptorFactory
+											.fromResource(R.drawable.owner_location_pin)));
+
+					// checkpoolmap.addMarker(new MarkerOptions()
+					// .position(startaddlatlng.get(0))
+					// .title(startaddress.get(0))
+					// .snippet("start")
+					// .icon(BitmapDescriptorFactory
+					// .fromResource(R.drawable.start)));
 				}
 
 			} catch (Exception e) {
@@ -3841,6 +4150,58 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						@Override
 						public void onClick(View view) {
 							dialog.dismiss();
+
+							String numberfareString = "";
+							for (String key : hashMap.keySet()) {
+								if (!key.equalsIgnoreCase("tripTotalFare")) {
+									int index = ShowMemberName.indexOf(key);
+									if (index != -1) {
+										numberfareString += (ShowMemberNumber
+												.get(index).toString()
+												+ "~"
+												+ String.format(
+														"%d%n",
+														Math.round(Double
+																.parseDouble(hashMap
+																		.get(key)
+																		.toString()))) + ",");
+									}
+								}
+
+								if (key.equalsIgnoreCase(OwnerName)) {
+									numberfareString += (OwnerMobileNumber
+											+ "~"
+											+ String.format(
+													"%d%n",
+													Math.round(Double
+															.parseDouble(hashMap
+																	.get(key)
+																	.toString()))) + ",");
+								}
+							}
+
+							numberfareString = numberfareString.substring(0,
+									numberfareString.length() - 1);
+
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								new ConnectionTaskForSaveCalculatedFare()
+										.executeOnExecutor(
+												AsyncTask.THREAD_POOL_EXECUTOR,
+												CabId,
+												hashMap.get("tripTotalFare")
+														.toString(),
+												numberfareString,
+												MemberNumberstr,
+												OwnerMobileNumber);
+							} else {
+								new ConnectionTaskForSaveCalculatedFare()
+										.execute(CabId,
+												hashMap.get("tripTotalFare")
+														.toString(),
+												numberfareString,
+												MemberNumberstr,
+												OwnerMobileNumber);
+							}
 						}
 					});
 
@@ -3917,4 +4278,564 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			return itemView;
 		}
 	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		mycurrentlocationobject = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public Location getLocation() {
+		Location location = null;
+		try {
+			locationManager = (LocationManager) this
+					.getSystemService(LOCATION_SERVICE);
+
+			// getting GPS status
+			boolean isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			// getting network status
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				// no network provider is enabled
+				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				dialog.setMessage("Please check your location services");
+				dialog.setPositiveButton("Retry",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent intent = getIntent();
+								intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+								finish();
+
+								startActivity(intent);
+
+							}
+						});
+				dialog.setNegativeButton("Settings",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent myIntent = new Intent(
+										Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								startActivity(myIntent);
+								// get gps
+
+							}
+						});
+				dialog.show();
+				return null;
+			} else {
+
+				double lat = 0;
+				double lng = 0;
+				// get the location by gps
+				if (isGPSEnabled) {
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 20000, 1, this);
+						Log.d("GPS Enabled", "GPS Enabled");
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							if (location != null) {
+								lat = location.getLatitude();
+								lng = location.getLongitude();
+							}
+						}
+					}
+				}
+
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 20000, 1, this);
+					Log.d("Network", "Network");
+					if (locationManager != null) {
+						location = locationManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						if (location != null) {
+							lat = location.getLatitude();
+							lng = location.getLongitude();
+						}
+					}
+				}
+
+				Log.d("lat", "" + lat);
+				Log.d("lng", "" + lng);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return location;
+	}
+
+	private class ConnectionTaskForMarkTripCompleted extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			Log.d("MemberRideFragmentActivity",
+					"AuthenticateConnectionMarkTripCompleted cabid : "
+							+ args[0]);
+			AuthenticateConnectionMarkTripCompleted mAuth1 = new AuthenticateConnectionMarkTripCompleted();
+			try {
+				if (args.length > 1) {
+					mAuth1.cabid = args[0];
+					mAuth1.owner = args[1];
+					mAuth1.mobileNumber = args[2];
+				} else {
+					mAuth1.cabid = args[0];
+				}
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionMarkTripCompleted {
+
+		public String cabid;
+		public String owner;
+		public String mobileNumber;
+
+		public AuthenticateConnectionMarkTripCompleted() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/tripCompleted.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cabid);
+
+			nameValuePairList.add(CabIdValuePair);
+
+			if (owner != null && mobileNumber != null && !owner.isEmpty()
+					&& !mobileNumber.isEmpty()) {
+				BasicNameValuePair ownerNameValuePair = new BasicNameValuePair(
+						"owner", owner);
+				BasicNameValuePair mobileNumberNameValuePair = new BasicNameValuePair(
+						"mobileNumber", mobileNumber);
+
+				nameValuePairList.add(ownerNameValuePair);
+				nameValuePairList.add(mobileNumberNameValuePair);
+			}
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String result = null;
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("tripCompleted", "tripCompleted : " + result);
+		}
+	}
+
+	private class ConnectionTaskForTripCompleted extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionTripCompleted mAuth1 = new AuthenticateConnectionTripCompleted();
+			try {
+				mAuth1.cid = args[0];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionTripCompleted {
+
+		public String cid;
+
+		public AuthenticateConnectionTripCompleted() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/updateCabStatus.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cid);
+
+			nameValuePairList.add(CabIdValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String startresp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				startresp = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("completedresp", "" + startresp);
+		}
+	}
+
+	private class ConnectionTaskForSaveCalculatedFare extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			Log.d("CheckPoolFragmentActivity",
+					"ConnectionTaskForSaveCalculatedFare cabid : " + args[0]
+							+ " totalfare : " + args[1] + " numberandfare : "
+							+ args[2] + " paidby : " + args[3] + " owner : "
+							+ args[4]);
+			AuthenticateConnectionSaveCalculatedFare mAuth1 = new AuthenticateConnectionSaveCalculatedFare();
+			try {
+				mAuth1.cabid = args[0];
+				mAuth1.totalfare = args[1];
+				mAuth1.numberandfare = args[2];
+				mAuth1.paidby = args[3];
+				mAuth1.owner = args[4];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionSaveCalculatedFare {
+
+		public String cabid;
+		public String totalfare;
+		public String numberandfare;
+		public String paidby;
+		public String owner;
+
+		public AuthenticateConnectionSaveCalculatedFare() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/saveCalculatedFare.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cabid);
+			BasicNameValuePair MemberNumberValuePair = new BasicNameValuePair(
+					"totalFare", totalfare);
+			BasicNameValuePair NumberFairValuePair = new BasicNameValuePair(
+					"numberAndFare", numberandfare);
+			BasicNameValuePair PaidByValuePair = new BasicNameValuePair(
+					"paidBy", paidby);
+			BasicNameValuePair OwnerValuePair = new BasicNameValuePair("owner",
+					owner);
+
+			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(MemberNumberValuePair);
+			nameValuePairList.add(NumberFairValuePair);
+			nameValuePairList.add(PaidByValuePair);
+			nameValuePairList.add(OwnerValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String result = null;
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			// saveCalculatedFare = result;
+
+			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+		}
+	}
+
+	// ///////////////////////
+	// ///////
+
+	private class ConnectionTaskForShowMembersFareCalculation extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionShowMembersFareCalculation mAuth1 = new AuthenticateConnectionShowMembersFareCalculation();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+
+			} else {
+
+				// mycalculatorbtn.setVisibility(View.VISIBLE);
+
+				ShowMemberName.clear();
+				ShowMemberNumber.clear();
+				ShowMemberLocationAddress.clear();
+				ShowMemberLocationLatLong.clear();
+				ShowMemberImageName.clear();
+				ShowMemberStatus.clear();
+
+				try {
+					JSONArray subArray = new JSONArray(showmembersresp);
+					for (int i = 0; i < subArray.length(); i++) {
+						try {
+							ShowMemberName.add(subArray.getJSONObject(i)
+									.getString("MemberName").toString());
+							ShowMemberNumber.add(subArray.getJSONObject(i)
+									.getString("MemberNumber").toString());
+							ShowMemberLocationAddress.add(subArray
+									.getJSONObject(i)
+									.getString("MemberLocationAddress")
+									.toString());
+							ShowMemberLocationLatLong.add(subArray
+									.getJSONObject(i)
+									.getString("MemberLocationlatlong")
+									.toString());
+							ShowMemberImageName.add(subArray.getJSONObject(i)
+									.getString("MemberImageName").toString());
+							ShowMemberStatus.add(subArray.getJSONObject(i)
+									.getString("Status").toString());
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+					showFareSplitDialog();
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+			if (onedialog.isShowing()) {
+				onedialog.dismiss();
+			}
+
+		}
+	}
+
+	public class AuthenticateConnectionShowMembersFareCalculation {
+
+		public AuthenticateConnectionShowMembersFareCalculation() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/ShowMemberOnMap.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+					"CabId", CabId);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(CabIdBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				showmembersresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("showmembersresp FareCalculation",
+					"" + stringBuilder.toString());
+		}
+	}
+
+	// /////////////////////
+	// ///////
 }

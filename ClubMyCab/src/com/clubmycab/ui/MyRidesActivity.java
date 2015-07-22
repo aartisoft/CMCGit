@@ -97,6 +97,7 @@ public class MyRidesActivity extends Activity {
 	ArrayList<String> DriverName = new ArrayList<String>();
 	ArrayList<String> DriverNumber = new ArrayList<String>();
 	ArrayList<String> CarNumber = new ArrayList<String>();
+	ArrayList<String> CabName = new ArrayList<String>();
 	ArrayList<String> ExpTripDuration = new ArrayList<String>();
 	ArrayList<String> status = new ArrayList<String>();
 
@@ -135,6 +136,7 @@ public class MyRidesActivity extends Activity {
 	boolean cabchk;
 
 	boolean shouldGoBack = true;
+	boolean onCreateCalled;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -176,155 +178,6 @@ public class MyRidesActivity extends Activity {
 				Log.d("myridesrl", "myridesrl");
 			}
 		});
-
-		// mNav = new SimpleSideDrawer(this);
-		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-		//
-		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v) {
-		//
-		// // mainhomepagerl.setAlpha((float) 0.3);
-		// mNav.toggleLeftDrawer();
-		//
-		// }
-		// });
-		//
-		// myprofile = (TextView) findViewById(R.id.myprofile);
-		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myrides = (TextView) findViewById(R.id.myrides);
-		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// bookacab = (TextView) findViewById(R.id.bookacab);
-		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myclubs = (TextView) findViewById(R.id.myclubs);
-		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// mypreferences = (TextView) findViewById(R.id.mypreferences);
-		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// about = (TextView) findViewById(R.id.about);
-		// about.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		//
-		// myprofile.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent mainIntent = new Intent(MyRidesActivity.this,
-		// MyProfileActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myrides.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		// }
-		// });
-		//
-		// bookacab.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent mainIntent = new Intent(MyRidesActivity.this,
-		// BookaCabFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharemylocation.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent mainIntent = new Intent(MyRidesActivity.this,
-		// ShareLocationFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myclubs.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent mainIntent = new Intent(MyRidesActivity.this,
-		// MyClubsActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharethisapp.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent sendIntent = new Intent();
-		// sendIntent.setAction(Intent.ACTION_SEND);
-		// sendIntent
-		// .putExtra(
-		// Intent.EXTRA_TEXT,
-		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-		// sendIntent.setType("text/plain");
-		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
-		//
-		// }
-		// });
-		//
-		// mypreferences.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent mainIntent = new Intent(MyRidesActivity.this,
-		// SettingActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// about.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// Intent mainIntent = new Intent(MyRidesActivity.this,
-		// AboutPagerFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(MyRidesActivity.this);
@@ -409,6 +262,8 @@ public class MyRidesActivity extends Activity {
 
 		mypoollist = (ListView) findViewById(R.id.mypoollist);
 
+		onCreateCalled = true;
+
 		String comefrom = getIntent().getStringExtra("comefrom");
 
 		Log.d("MyRidesActivity", "comefrom : " + comefrom);
@@ -420,6 +275,8 @@ public class MyRidesActivity extends Activity {
 
 			Log.d("MyRidesActivity", "PoolResponseSplash : "
 					+ PoolResponseSplash);
+
+			onCreateCalled = false;
 
 			if (PoolResponseSplash == null || PoolResponseSplash.isEmpty()
 					|| PoolResponseSplash.equalsIgnoreCase("null")) {
@@ -456,6 +313,26 @@ public class MyRidesActivity extends Activity {
 				new ConnectionTaskForFetchPool().execute();
 			}
 
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		Log.d("MyRidesActivity", "onResume onCreateCalled : " + onCreateCalled);
+
+		if (onCreateCalled) {
+			// onCreateCalled = false;
+		} else {
+			mypoollist.setAdapter(null);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForFetchPool()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				new ConnectionTaskForFetchPool().execute();
+			}
 		}
 	}
 
@@ -507,8 +384,10 @@ public class MyRidesActivity extends Activity {
 
 			String comefrom = getIntent().getStringExtra("comefrom");
 
-			if (comefrom != null && !comefrom.isEmpty()
+			if (onCreateCalled && comefrom != null && !comefrom.isEmpty()
 					&& !comefrom.equalsIgnoreCase("null")) {
+
+				onCreateCalled = false;
 
 				String cabID = getIntent().getStringExtra("cabID");
 				int index = CabId.indexOf(cabID);
@@ -516,10 +395,11 @@ public class MyRidesActivity extends Activity {
 				Log.d("MyRidesActivity", "onPostExecute comefrom : " + comefrom
 						+ " cabID : " + cabID + " index : " + index);
 
-				mypoollist.performItemClick(
-						mypoollist.getAdapter().getView(index, null, null),
-						index, mypoollist.getAdapter().getItemId(index));
-
+				if (index != -1) {
+					mypoollist.performItemClick(mypoollist.getAdapter()
+							.getView(index, null, null), index, mypoollist
+							.getAdapter().getItemId(index));
+				}
 				// if
 				// (comefrom.equals(UpcomingStartTripAlarm.ALARM_TYPE_UPCOMING))
 				// {
@@ -609,6 +489,7 @@ public class MyRidesActivity extends Activity {
 			DriverName.clear();
 			DriverNumber.clear();
 			CarNumber.clear();
+			CabName.clear();
 
 			ExpTripDuration.clear();
 			status.clear();
@@ -666,6 +547,8 @@ public class MyRidesActivity extends Activity {
 								.getString("DriverNumber").toString());
 						CarNumber.add(subArray.getJSONObject(i)
 								.getString("CarNumber").toString());
+						CabName.add(subArray.getJSONObject(i)
+								.getString("CabName").toString());
 
 						ExpTripDuration.add(subArray.getJSONObject(i)
 								.getString("ExpTripDuration").toString());
@@ -739,6 +622,7 @@ public class MyRidesActivity extends Activity {
 									DriverNumber.get(arg2));
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
+							mainIntent.putExtra("CabName", CabName.get(arg2));
 
 							mainIntent.putExtra("ExpTripDuration",
 									ExpTripDuration.get(arg2));
@@ -791,6 +675,7 @@ public class MyRidesActivity extends Activity {
 									DriverNumber.get(arg2));
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
+							mainIntent.putExtra("CabName", CabName.get(arg2));
 
 							mainIntent.putExtra("ExpTripDuration",
 									ExpTripDuration.get(arg2));
@@ -896,6 +781,7 @@ public class MyRidesActivity extends Activity {
 									DriverNumber.get(arg2));
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
+							mainIntent.putExtra("CabName", CabName.get(arg2));
 
 							mainIntent.putExtra("ExpTripDuration",
 									ExpTripDuration.get(arg2));
@@ -948,6 +834,7 @@ public class MyRidesActivity extends Activity {
 									DriverNumber.get(arg2));
 							mainIntent.putExtra("CarNumber",
 									CarNumber.get(arg2));
+							mainIntent.putExtra("CabName", CabName.get(arg2));
 
 							mainIntent.putExtra("ExpTripDuration",
 									ExpTripDuration.get(arg2));

@@ -30,7 +30,7 @@
         android:layout_height="35dp"
         android:layout_margin="10dp"
         android:background="@drawable/bookacab_booknowbtn"
-        android:text="OK"
+        android:text="Send to members"
         android:textColor="#FFFFFF"
         android:textSize="15sp" />
 

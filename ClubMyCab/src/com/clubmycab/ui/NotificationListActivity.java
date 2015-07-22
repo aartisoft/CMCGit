@@ -1422,6 +1422,7 @@ public class NotificationListActivity extends Activity {
 				String DriverName = null;
 				String DriverNumber = null;
 				String CarNumber = null;
+				String CabName = null;
 				String ExpTripDuration = null;
 				String status = null;
 
@@ -1472,6 +1473,8 @@ public class NotificationListActivity extends Activity {
 									.getString("DriverNumber").toString();
 							CarNumber = subArray.getJSONObject(i)
 									.getString("CarNumber").toString();
+							CabName = subArray.getJSONObject(i)
+									.getString("CabName").toString();
 
 							ExpTripDuration = subArray.getJSONObject(i)
 									.getString("ExpTripDuration").toString();
@@ -1513,6 +1516,7 @@ public class NotificationListActivity extends Activity {
 						mainIntent.putExtra("DriverName", DriverName);
 						mainIntent.putExtra("DriverNumber", DriverNumber);
 						mainIntent.putExtra("CarNumber", CarNumber);
+						mainIntent.putExtra("CabName", CabName);
 
 						mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
 						mainIntent.putExtra("status", status);
@@ -1546,6 +1550,7 @@ public class NotificationListActivity extends Activity {
 						mainIntent.putExtra("DriverName", DriverName);
 						mainIntent.putExtra("DriverNumber", DriverNumber);
 						mainIntent.putExtra("CarNumber", CarNumber);
+						mainIntent.putExtra("CabName", CabName);
 
 						mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
 						mainIntent.putExtra("status", status);

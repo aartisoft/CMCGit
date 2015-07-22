@@ -5047,7 +5047,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 						}
 
 						try {
-							requestID = jsonObjectData.get("booking_id").toString();
+							requestID = jsonObjectData.get("booking_id")
+									.toString();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -5524,7 +5525,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				+ ((rideObject != null) ? rideObject.vehicle : "")
 				+ "&CarType=";
 
-		// Log.d("BookaCab", "updateCMCRecords param : " + param);
+		Log.d("BookaCab", "updateCMCRecords param : " + param);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			updateCMCRecordsAsync.executeOnExecutor(

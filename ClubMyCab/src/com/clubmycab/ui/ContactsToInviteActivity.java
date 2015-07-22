@@ -1913,6 +1913,7 @@ public class ContactsToInviteActivity extends Activity {
 				mainIntent.putExtra("DriverName", "");
 				mainIntent.putExtra("DriverNumber", "");
 				mainIntent.putExtra("CarNumber", "");
+				mainIntent.putExtra("CabName", "");
 				
 //				mainIntent.putExtra("ExpTripDuration",
 //						ExpTripDuration.get(arg2));
@@ -2002,6 +2003,7 @@ public class ContactsToInviteActivity extends Activity {
 				mainIntent.putExtra("DriverName", "");
 				mainIntent.putExtra("DriverNumber", "");
 				mainIntent.putExtra("CarNumber", "");
+				mainIntent.putExtra("CabName", "");
 				
 //				mainIntent.putExtra("ExpTripDuration",
 //						ExpTripDuration.get(arg2));
@@ -2277,6 +2279,7 @@ public class ContactsToInviteActivity extends Activity {
 			mainIntent.putExtra("DriverName", "");
 			mainIntent.putExtra("DriverNumber", "");
 			mainIntent.putExtra("CarNumber", "");
+			mainIntent.putExtra("CabName", "");
 			
 //			mainIntent.putExtra("ExpTripDuration",
 //					ExpTripDuration.get(arg2));

@@ -84,7 +84,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 				&& pushfrom.equalsIgnoreCase("genericnotification")) {
 			generateGenericnotification(context, message);
 		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("TripStart")) {
-			generateTripStartNotification(context, CabId, message);
+			generateTripNotification(context, CabId, message);
+		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("ownerTripCompleted")) {
+			generateTripNotification(context, CabId, message);
+		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("tripcompleted")) {
+			generateTripNotification(context, CabId, message);
 		} else {
 			generateNewMsgNotification(context, message);
 		}
@@ -253,6 +257,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 				String OpenTime = null;
 				String CabStatus = null;
 				String Seat_Status = null;
+				String BookingRefNo = null;
+				String DriverName = null;
+				String DriverNumber = null;
+				String CarNumber = null;
+				String CabName = null;
 				String ExpTripDuration = null;
 				String status = null;
 
@@ -293,6 +302,17 @@ public class GCMIntentService extends GCMBaseIntentService {
 							.getString("CabStatus").toString();
 					Seat_Status = subArray.getJSONObject(i)
 							.getString("Seat_Status").toString();
+					
+					BookingRefNo = subArray.getJSONObject(i)
+							.getString("BookingRefNo").toString();
+					DriverName = subArray.getJSONObject(i)
+							.getString("DriverName").toString();
+					DriverNumber = subArray.getJSONObject(i)
+							.getString("DriverNumber").toString();
+					CarNumber = subArray.getJSONObject(i)
+							.getString("CarNumber").toString();
+					CabName = subArray.getJSONObject(i)
+							.getString("CabName").toString();
 
 					ExpTripDuration = subArray.getJSONObject(i)
 							.getString("ExpTripDuration").toString();
@@ -332,6 +352,12 @@ public class GCMIntentService extends GCMBaseIntentService {
 					mainIntent.putExtra("Distance", Distance);
 					mainIntent.putExtra("OpenTime", OpenTime);
 					mainIntent.putExtra("CabStatus", CabStatus);
+					
+					mainIntent.putExtra("BookingRefNo", BookingRefNo);
+					mainIntent.putExtra("DriverName", DriverName);
+					mainIntent.putExtra("DriverNumber", DriverNumber);
+					mainIntent.putExtra("CarNumber", CarNumber);
+					mainIntent.putExtra("CabName", CabName);
 
 					mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
 					mainIntent.putExtra("status", status);
@@ -388,6 +414,12 @@ public class GCMIntentService extends GCMBaseIntentService {
 					mainIntent.putExtra("Distance", Distance);
 					mainIntent.putExtra("OpenTime", OpenTime);
 					mainIntent.putExtra("CabStatus", CabStatus);
+					
+					mainIntent.putExtra("BookingRefNo", BookingRefNo);
+					mainIntent.putExtra("DriverName", DriverName);
+					mainIntent.putExtra("DriverNumber", DriverNumber);
+					mainIntent.putExtra("CarNumber", CarNumber);
+					mainIntent.putExtra("CabName", CabName);
 
 					mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
 					mainIntent.putExtra("status", status);
@@ -810,7 +842,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		}
 	}
 
-	private void generateTripStartNotification(Context context, String cabID,
+	private void generateTripNotification(Context context, String cabID,
 			String message) {
 
 		int icon = R.drawable.cabappicon;

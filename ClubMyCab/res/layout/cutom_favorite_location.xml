@@ -28,6 +28,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:focusable="false"
             
             android:background="@drawable/removeclub"
             />
@@ -50,8 +51,11 @@
             android:layout_weight="2.8"
             android:ellipsize="end"
             android:layout_marginRight="5dp"
+            android:focusable="true"
+             android:nextFocusUp="@id/aTvLocationAutoComplete"
+              android:nextFocusLeft="@id/btnDelete"
             android:hint="Type Address or Select here >"
-            android:inputType="textVisiblePassword"
+            
             android:singleLine="true"
             android:textSize="15sp"
              />

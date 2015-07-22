@@ -38,9 +38,9 @@
         <item>What do you want?</item>
         <item>By your command</item>
     </string-array>
-<string name="tag_where_work">Where do you work/study?</string>
-<string name="tag_where_live">Where do you live?</string>
 
+    <string name="tag_where_work">Where do you work/study?</string>
+    <string name="tag_where_live">Where do you live?</string>
     <string name="btnCrash">Test Calc</string>
     <string name="btnBackgroundCrash">Test Background Crash</string>
     <string name="btnNext">Next Activity</string>
@@ -58,10 +58,8 @@
     <string name="exceptionstring">Something went wrong, please try again!</string>
     <string name="title_activity_wallets_acitivity">WalletsAcitivity</string>
     <string name="title_activity_favorite_locations_acivity">FavoriteLocationsAcivity</string>
-    
     <string name="text_firstloginclubs_member">Congratulations! You are already member of the following clubs and can start sharing rides immediately!</string>
     <string name="text_firstloginclubs_notmember">You are not yet a member of any club, create one and invite your friends!</string>
-    
     <string name="button_flc_create_club">Create more clubs</string>
     <string name="button_flc_continue">Continue</string>
     <string name="button_flc_create_club_notmember">Create clubs</string>
@@ -71,10 +69,19 @@
     <string name="in_30min">In 30 min</string>
     <string name="in_1_hour">In 1 Hour</string>
     <string name="select_datetime"> Select Date/Time</string>
-    <string name="change">Change</string>
+    <string name="change">(tap to change)</string>
     <string name="how_many_passenger">How many co-passengers?</string>
-        
+    <string name="faq">How To &amp; FAQs</string>
+    <string name="quesiton1">What is ClubMyCab?</string>
+    <string name="quesiton2">What should I do to make my clubs more effective?</string>
+    <string name="quesiton3">How can I share a ride?</string>
+    <string name="quesiton4">While sharing a ride</string>
     
-    <string name="seatcount">3 seat(s) to share</string>
+    <string name="quesiton5">Booking a cab in ClubMyCab</string>
+    <string name="quesiton6">What about privacy and safety?</string>
     
+    
+
+    <string name="seatcount">3</string>
+
 </resources>

@@ -35,7 +35,8 @@ public class UniversalDrawer {
 	TextView sharethisapp;
 	TextView wallets;
 	TextView mypreferences;
-	TextView about;
+	//TextView about;
+	private TextView faq;
 
 	LinearLayout myclubslayout;
 	LinearLayout myrideslayout;
@@ -43,7 +44,9 @@ public class UniversalDrawer {
 	LinearLayout mywalletslayout;
 	LinearLayout settingslayout;
 	LinearLayout shareapplayout;
-	LinearLayout aboutlayout;
+	//LinearLayout aboutlayout;
+	LinearLayout faqlayout;
+
 	LinearLayout sharelocationlayout;
 
 	Context context;
@@ -82,8 +85,10 @@ public class UniversalDrawer {
 				.findViewById(R.id.settingslayout);
 		shareapplayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.shareapplayout);
-		aboutlayout = (LinearLayout) ((Activity) context)
-				.findViewById(R.id.aboutlayout);
+//		aboutlayout = (LinearLayout) ((Activity) context)
+//				.findViewById(R.id.aboutlayout);
+		faqlayout = (LinearLayout) ((Activity) context)
+			.findViewById(R.id.faqlayout);
 		sharelocationlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.sharelocationlayout);
 
@@ -116,8 +121,12 @@ public class UniversalDrawer {
 				.findViewById(R.id.mypreferences);
 		mypreferences.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
-		about = (TextView) ((Activity) context).findViewById(R.id.about);
-		about.setTypeface(Typeface.createFromAsset(context.getAssets(),
+//		about = (TextView) ((Activity) context).findViewById(R.id.about);
+//		about.setTypeface(Typeface.createFromAsset(context.getAssets(),
+//				"NeutraText-Light.ttf"));
+		
+		faq = (TextView) ((Activity) context).findViewById(R.id.faq);
+		faq.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
 
 		myprofilelayout.setOnClickListener(new View.OnClickListener() {
@@ -284,7 +293,31 @@ public class UniversalDrawer {
 
 			}
 		});
-		aboutlayout.setOnClickListener(new View.OnClickListener() {
+//		aboutlayout.setOnClickListener(new View.OnClickListener() {
+//			@SuppressWarnings("deprecation")
+//			@Override
+//			public void onClick(View arg0) {
+//
+//				mNav.toggleDrawer();
+//
+//				if (!GlobalVariables.ActivityName
+//						.equals("AboutPagerFragmentActivity")) {
+//
+//					tracker.send(new HitBuilders.EventBuilder()
+//							.setCategory("About Click")
+//							.setAction("About Click").setLabel("About Click")
+//							.build());
+//
+//					Intent mainIntent = new Intent(context,
+//							AboutPagerFragmentActivity.class);
+//					context.startActivity(mainIntent);
+//					((Activity) context).overridePendingTransition(
+//							R.anim.slide_in_right, R.anim.slide_out_left);
+//					GlobalVariables.ActivityName = "AboutPagerFragmentActivity";
+//				}
+//			}
+//		});
+		faqlayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View arg0) {
@@ -292,22 +325,23 @@ public class UniversalDrawer {
 				mNav.toggleDrawer();
 
 				if (!GlobalVariables.ActivityName
-						.equals("AboutPagerFragmentActivity")) {
+						.equals("FAQActivity")) {
 
 					tracker.send(new HitBuilders.EventBuilder()
-							.setCategory("About Click")
-							.setAction("About Click").setLabel("About Click")
+							.setCategory("Faq Click")
+							.setAction("Faq Click").setLabel("Faq Click")
 							.build());
 
 					Intent mainIntent = new Intent(context,
-							AboutPagerFragmentActivity.class);
+							FAQActivity.class);
 					context.startActivity(mainIntent);
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);
-					GlobalVariables.ActivityName = "AboutPagerFragmentActivity";
+					GlobalVariables.ActivityName = "FAQActivity";
 				}
 			}
 		});
+
 
 	}
 

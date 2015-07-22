@@ -544,6 +544,7 @@ public class SettingActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				//Pawan change replace FavoriteLocationsActivity with FavoriteLocaitonActivityUpdate
 				Intent intent = new Intent(SettingActivity.this,
 						FavoriteLocationsAcivity.class);
 				intent.putExtra("NotFromRegistration", true);

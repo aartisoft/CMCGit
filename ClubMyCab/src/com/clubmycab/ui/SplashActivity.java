@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,6 +31,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,13 +51,67 @@ public class SplashActivity extends Activity {
 	String AppVersion;
 	String forceupdateversion;
 	String poolresponse;
+	private TextView tvRandom;
 
 	boolean exceptioncheck = false;
-
+	private ArrayList<String> ans1;
+	private long timeStart;
+	int delay=4;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
+		timeStart= System.currentTimeMillis();
+
+		
+		ans1 = new ArrayList<String>();
+		ans1.add("Sharing a cab with friends can reduce cost to as low as Rs. 2/km when 4 friends travel in a hatchback");
+		ans1.add("Sharing works best with people you trust - create a \"club\" of such people who usually travel same routes as you and start sharing rides");
+		ans1.add("Clubs are your closed groups where only known people are added	");
+		ans1.add("You can create clubs and add friends or refer friends to a club that you are a member of");
+		
+		ans1.add("Creating clubs makes it easier to share rides with people who travel similar routes");
+
+
+		
+		ans1.add("Bigger clubs increase chances of ride sharing. Add more friends to your clubs");
+		ans1.add("After adding friends to clubs, make sure to ask them to join ClubMyCab. Sharing begins only when they join");
+		ans1.add("When you add friends to a club, we send them a message on your behalf. But, nothing like telling them about ClubMyCab yourself");
+		ans1.add("Start rides even with a few friends - let the word spread");
+		ans1.add("Keep clubs focussed to friends who travel same route as you");
+		ans1.add("Name your clubs such to let your club members know what the purpose is. Or just choose a fun name");
+		ans1.add("Add a profile image - helps your friends identify you");
+		
+		
+		ans1.add("Add your home, office/college location and upto 3 more preferences in Settings to make ride creation easy");
+		ans1.add("When you want to share a ride, first check your notifications to see if any club member has invited you for one and seats are available");
+		ans1.add("If no existing rides are available, create your own and invite club members");
+
+		ans1.add("See suggested routes and location of other members to decide if the route suits you  ");
+		
+		
+		ans1.add("When the ride starts, we let you know.");
+		ans1.add("Track the location of the cab on ride page to see the progress of the journey");
+		ans1.add("You can communicate with ride members using inbuilt Instant Messenger");
+		ans1.add("Fare split calculation is done on basis of distance traveled assuming same destination");
+		
+		
+		ans1.add("We show you multiple choices of cabs to be booked with estimated time and cost");
+		ans1.add("You can sort the cabs on Book a Cab page by nearest and cheapest. Click the icons that appear on top");
+		ans1.add("Book the cab when you are ready to leave - ClubMyCab is about sharing on-the-go");
+		ans1.add("You can book a cab even if you are riding alone");
+		
+		ans1.add("We do not share phone numbers of club members till they join a ride with you to protect privacy");
+		ans1.add("Instant Messenger history is deleted on ride completion");
+		ans1.add("\"Here, I am\" can be used to let your loved ones know where you are through the journey. Activate this when you want");
+
+		
+		tvRandom=(TextView)findViewById(R.id.tvRandom);
+		
+		Random r = new Random();
+		int answer = r.nextInt(ans1.size()-1) + 0;
+		tvRandom.setText(ans1.get(answer));
+		
 
 		// Check if Internet present
 		if (!isOnline()) {
@@ -434,7 +491,15 @@ public class SplashActivity extends Activity {
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putBoolean("DisplayRides", true);
 			editor.commit();
-
+			
+			
+			long timeEnd=System.currentTimeMillis();
+			long diff=timeEnd-timeStart;
+			
+			long Sec = TimeUnit.MILLISECONDS.toSeconds(diff);
+			int diffSeconds = (int) Sec;
+			
+if(diffSeconds>=delay){
 			Intent mainIntent = new Intent(SplashActivity.this,
 					HomeActivity.class);
 			mainIntent.putExtra("PoolResponseSplash", poolresponse);
@@ -443,6 +508,28 @@ public class SplashActivity extends Activity {
 			startActivityForResult(mainIntent, 500);
 			overridePendingTransition(R.anim.slide_in_right,
 					R.anim.slide_out_left);
+}
+else{
+int milliseconds=delay-diffSeconds;	
+	new Handler().postDelayed(new Runnable(){
+         @Override
+         public void run() {
+        	 
+        		Intent mainIntent = new Intent(SplashActivity.this,
+    					HomeActivity.class);
+    			mainIntent.putExtra("PoolResponseSplash", poolresponse);
+    			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+    					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    			startActivityForResult(mainIntent, 500);
+    			overridePendingTransition(R.anim.slide_in_right,
+    					R.anim.slide_out_left);
+        	 
+        	 
+         }
+     },milliseconds*1000 );
+}
+			
+			
 
 		}
 	}

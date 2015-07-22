@@ -316,6 +316,14 @@
             android:windowSoftInputMode="adjustPan|adjustResize"
             >
         </activity>
+        <activity
+            android:name="com.clubmycab.ui.FAQActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            >
+        </activity>
+       
     </application>
 
 </manifest>

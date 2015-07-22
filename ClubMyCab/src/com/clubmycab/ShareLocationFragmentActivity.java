@@ -79,7 +79,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.ui.ContactsInviteForRideActivity;
 import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.InviteFragmentActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalVariables;
@@ -2008,22 +2010,22 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 		// //////////////////
 
-		contactsbtn = (Button) dialog.findViewById(R.id.contactsbtn);
-		appFrends = (Button) dialog.findViewById(R.id.appFrends);
-		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn);
+		contactsbtn = (Button) dialog.findViewById(R.id.contactsbtn1);
+		appFrends = (Button) dialog.findViewById(R.id.appFrends1);
+		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn1);
 		donebtn = (Button) dialog.findViewById(R.id.donebtn);
 
 		clubcontactslistll = (LinearLayout) dialog
-				.findViewById(R.id.clubcontactslistll);
-		contactslist = (ListView) dialog.findViewById(R.id.contactslist);
+				.findViewById(R.id.clubcontactslistll1);
+		contactslist = (ListView) dialog.findViewById(R.id.contactslist1);
 
 		mainclublistll = (LinearLayout) dialog
-				.findViewById(R.id.mainclublistll);
-		listMyclubs = (ListView) dialog.findViewById(R.id.listMyclubs);
+				.findViewById(R.id.mainclublistll1);
+		listMyclubs = (ListView) dialog.findViewById(R.id.listMyclubs1);
 		listMembersclubs = (ListView) dialog
-				.findViewById(R.id.listMembersclubs);
+				.findViewById(R.id.listMembersclubs1);
 
-		searchfromlist = (EditText) dialog.findViewById(R.id.searchfromlist);
+		searchfromlist = (EditText) dialog.findViewById(R.id.searchfromlist1);
 
 		contactsbtn.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
@@ -2248,84 +2250,199 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 								ClubListClass.ClubList.add(cp);
 							}
 
-							ClubsAdaptor adapter = new ClubsAdaptor(
+//							ClubsAdaptor adapter = new ClubsAdaptor(
+//									ShareLocationFragmentActivity.this,
+//									ClubListClass.ClubList);
+//							listMyclubs.setAdapter(adapter);
+//							listMyclubs
+//									.setOnItemClickListener(new OnItemClickListener() {
+//
+//										@Override
+//										public void onItemClick(
+//												AdapterView<?> parent, View v,
+//												int position, long id) {
+//											// TODO Auto-generated method stub
+//											CheckBox chk = (CheckBox) v
+//													.findViewById(R.id.myclubcheckBox);
+//											ClubObject bean = ClubListClass.ClubList
+//													.get(position);
+//
+//											if (bean.isSelected()) {
+//												bean.setSelected(false);
+//												chk.setChecked(false);
+//											} else {
+//												bean.setSelected(true);
+//												chk.setChecked(true);
+//											}
+//
+//										}
+//									});
+							
+							//Pawan 
+							ContactsInviteForRideActivity.	adapterClubMy = new ClubsAdaptor(
 									ShareLocationFragmentActivity.this,
 									ClubListClass.ClubList);
-							listMyclubs.setAdapter(adapter);
+							listMyclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
+							//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
 
 										@Override
-										public void onItemClick(
-												AdapterView<?> parent, View v,
-												int position, long id) {
+										public void onItemClick(AdapterView<?> parent,
+												View v, int position, long id) {
 											// TODO Auto-generated method stub
-											CheckBox chk = (CheckBox) v
-													.findViewById(R.id.myclubcheckBox);
+											
 											ClubObject bean = ClubListClass.ClubList
 													.get(position);
-
-											if (bean.isSelected()) {
+											bean.setSelected(true);
+											
+											for (int i=0;i<ClubListClass.ClubList.size();i++) {
+												
+												if(i==position)
+													continue;
+												
+												 bean = ClubListClass.ClubList
+														.get(i);
 												bean.setSelected(false);
-												chk.setChecked(false);
-											} else {
-												bean.setSelected(true);
-												chk.setChecked(true);
 											}
+										//Remove all memberclib list selection	
+					for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
+												
+												
+												
+												 bean = ClubListClass.MemberClubList
+														.get(i);
+												bean.setSelected(false);
+											}
+
+					ContactsInviteForRideActivity.	adapterClubMember .setSelectedIndex(-1);
+					ContactsInviteForRideActivity.	adapterClubMember .notifyDataSetChanged();
+
+//											if (bean.isSelected()) {
+//												bean.setSelected(false);
+//												chk.setChecked(false);
+//											} else {
+//												bean.setSelected(true);
+//												chk.setChecked(true);
+//											}
+					ContactsInviteForRideActivity.	adapterClubMy .setSelectedIndex(position);
+					ContactsInviteForRideActivity.	adapterClubMy .notifyDataSetChanged();
 
 										}
 									});
-						}
+							
+							if (MemberClubPoolName.size() > 0) {
 
-						if (MemberClubPoolName.size() > 0) {
+								for (int i = 0; i < MemberClubPoolName.size(); i++) {
 
-							for (int i = 0; i < MemberClubPoolName.size(); i++) {
+									ClubObject cp = new ClubObject();
 
-								ClubObject cp = new ClubObject();
+									cp.setName(MemberClubPoolName.get(i).toString()
+											.trim());
+									cp.setClubmembers(MemberClubMembers.get(i)
+											.toString().trim());
 
-								cp.setName(MemberClubPoolName.get(i).toString()
-										.trim());
-								cp.setClubmembers(MemberClubMembers.get(i)
-										.toString().trim());
+									cp.setNoofMembers(MemberClubNoofMembers.get(i)
+											.toString().trim());
 
-								cp.setNoofMembers(MemberClubNoofMembers.get(i)
-										.toString().trim());
+									cp.setClubOwnerName(MemberClubOwnerName.get(i)
+											.toString().trim());
 
-								cp.setClubOwnerName(MemberClubOwnerName.get(i)
-										.toString().trim());
+									ClubListClass.MemberClubList.add(cp);
+								}
 
-								ClubListClass.MemberClubList.add(cp);
+//								ClubsAdaptor adapter = new ClubsAdaptor(
+//										ShareLocationFragmentActivity.this,
+//										ClubListClass.MemberClubList);
+//
+//								listMembersclubs.setAdapter(adapter);
+//								listMembersclubs
+//										.setOnItemClickListener(new OnItemClickListener() {
+//
+//											@Override
+//											public void onItemClick(
+//													AdapterView<?> parent, View v,
+//													int position, long id) {
+//												// TODO Auto-generated method stub
+//												CheckBox chk = (CheckBox) v
+//														.findViewById(R.id.myclubcheckBox);
+//												ClubObject bean = ClubListClass.MemberClubList
+//														.get(position);
+//
+//												if (bean.isSelected()) {
+//													bean.setSelected(false);
+//													chk.setChecked(false);
+//												} else {
+//													bean.setSelected(true);
+//													chk.setChecked(true);
+//												}
+//
+//											}
+//										});
+								
+								ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
+										ShareLocationFragmentActivity.this,
+										ClubListClass.MemberClubList);
+
+								listMembersclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
+								listMembersclubs
+										.setOnItemClickListener(new OnItemClickListener() {
+
+											@Override
+											public void onItemClick(AdapterView<?> parent,
+													View v, int position, long id) {
+												// TODO Auto-generated method stub
+												
+												ClubObject bean = ClubListClass.MemberClubList
+														.get(position);
+												bean.setSelected(true);
+												
+							for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
+													
+													if(i==position)
+														continue;
+													
+													 bean = ClubListClass.MemberClubList
+															.get(i);
+													bean.setSelected(false);
+												}
+							
+							//Unselect all MyClub
+							for (int i=0;i<ClubListClass.ClubList.size();i++) {
+								
+								
+								
+								 bean = ClubListClass.ClubList
+										.get(i);
+								bean.setSelected(false);
+							
 							}
 
-							ClubsAdaptor adapter = new ClubsAdaptor(
-									ShareLocationFragmentActivity.this,
-									ClubListClass.MemberClubList);
+							ContactsInviteForRideActivity.adapterClubMy.setSelectedIndex(-1);
+							ContactsInviteForRideActivity.adapterClubMy.notifyDataSetChanged();
+//												if (bean.isSelected()) {
+//													bean.setSelected(false);
+//													chk.setChecked(false);
+//												} else {
+//													bean.setSelected(true);
+//													chk.setChecked(true);
+//												}
+												
+							ContactsInviteForRideActivity.adapterClubMember	.setSelectedIndex(position);
+							ContactsInviteForRideActivity.adapterClubMember.notifyDataSetChanged();
 
-							listMembersclubs.setAdapter(adapter);
-							listMembersclubs
-									.setOnItemClickListener(new OnItemClickListener() {
-
-										@Override
-										public void onItemClick(
-												AdapterView<?> parent, View v,
-												int position, long id) {
-											// TODO Auto-generated method stub
-											CheckBox chk = (CheckBox) v
-													.findViewById(R.id.myclubcheckBox);
-											ClubObject bean = ClubListClass.MemberClubList
-													.get(position);
-
-											if (bean.isSelected()) {
-												bean.setSelected(false);
-												chk.setChecked(false);
-											} else {
-												bean.setSelected(true);
-												chk.setChecked(true);
 											}
-
-										}
-									});
+										});
+								
+							}
+							
+						
+							
+							
+							
 						}
+
+						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2617,30 +2734,83 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 							ClubListClass.ClubList.add(cp);
 						}
 
-						ClubsAdaptor adapter = new ClubsAdaptor(
+//						ClubsAdaptor adapter = new ClubsAdaptor(
+//								ShareLocationFragmentActivity.this,
+//								ClubListClass.ClubList);
+//						listMyclubs.setAdapter(adapter);
+//						listMyclubs
+//								.setOnItemClickListener(new OnItemClickListener() {
+//
+//									@Override
+//									public void onItemClick(
+//											AdapterView<?> parent, View v,
+//											int position, long id) {
+//										// TODO Auto-generated method stub
+//										CheckBox chk = (CheckBox) v
+//												.findViewById(R.id.myclubcheckBox);
+//										ClubObject bean = ClubListClass.ClubList
+//												.get(position);
+//
+//										if (bean.isSelected()) {
+//											bean.setSelected(false);
+//											chk.setChecked(false);
+//										} else {
+//											bean.setSelected(true);
+//											chk.setChecked(true);
+//										}
+//
+//									}
+//								});
+						
+						//Pawan 
+						ContactsInviteForRideActivity.	adapterClubMy = new ClubsAdaptor(
 								ShareLocationFragmentActivity.this,
 								ClubListClass.ClubList);
-						listMyclubs.setAdapter(adapter);
+						listMyclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
+						//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 						listMyclubs
 								.setOnItemClickListener(new OnItemClickListener() {
 
 									@Override
-									public void onItemClick(
-											AdapterView<?> parent, View v,
-											int position, long id) {
+									public void onItemClick(AdapterView<?> parent,
+											View v, int position, long id) {
 										// TODO Auto-generated method stub
-										CheckBox chk = (CheckBox) v
-												.findViewById(R.id.myclubcheckBox);
+										
 										ClubObject bean = ClubListClass.ClubList
 												.get(position);
-
-										if (bean.isSelected()) {
+										bean.setSelected(true);
+										
+										for (int i=0;i<ClubListClass.ClubList.size();i++) {
+											
+											if(i==position)
+												continue;
+											
+											 bean = ClubListClass.ClubList
+													.get(i);
 											bean.setSelected(false);
-											chk.setChecked(false);
-										} else {
-											bean.setSelected(true);
-											chk.setChecked(true);
 										}
+									//Remove all memberclib list selection	
+				for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
+											
+											
+											
+											 bean = ClubListClass.MemberClubList
+													.get(i);
+											bean.setSelected(false);
+										}
+
+				ContactsInviteForRideActivity.	adapterClubMember .setSelectedIndex(-1);
+				ContactsInviteForRideActivity.	adapterClubMember .notifyDataSetChanged();
+
+//										if (bean.isSelected()) {
+//											bean.setSelected(false);
+//											chk.setChecked(false);
+//										} else {
+//											bean.setSelected(true);
+//											chk.setChecked(true);
+//										}
+				ContactsInviteForRideActivity.	adapterClubMy .setSelectedIndex(position);
+				ContactsInviteForRideActivity.	adapterClubMy .notifyDataSetChanged();
 
 									}
 								});
@@ -2666,34 +2836,89 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 							ClubListClass.MemberClubList.add(cp);
 						}
 
-						ClubsAdaptor adapter = new ClubsAdaptor(
+//						ClubsAdaptor adapter = new ClubsAdaptor(
+//								ShareLocationFragmentActivity.this,
+//								ClubListClass.MemberClubList);
+
+//						listMembersclubs.setAdapter(adapter);
+//						listMembersclubs
+//								.setOnItemClickListener(new OnItemClickListener() {
+//
+//									@Override
+//									public void onItemClick(
+//											AdapterView<?> parent, View v,
+//											int position, long id) {
+//										// TODO Auto-generated method stub
+//										CheckBox chk = (CheckBox) v
+//												.findViewById(R.id.myclubcheckBox);
+//										ClubObject bean = ClubListClass.MemberClubList
+//												.get(position);
+//
+//										if (bean.isSelected()) {
+//											bean.setSelected(false);
+//											chk.setChecked(false);
+//										} else {
+//											bean.setSelected(true);
+//											chk.setChecked(true);
+//										}
+//
+//									}
+//								});
+						
+						ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
 								ShareLocationFragmentActivity.this,
 								ClubListClass.MemberClubList);
 
-						listMembersclubs.setAdapter(adapter);
+						listMembersclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
 						listMembersclubs
 								.setOnItemClickListener(new OnItemClickListener() {
 
 									@Override
-									public void onItemClick(
-											AdapterView<?> parent, View v,
-											int position, long id) {
+									public void onItemClick(AdapterView<?> parent,
+											View v, int position, long id) {
 										// TODO Auto-generated method stub
-										CheckBox chk = (CheckBox) v
-												.findViewById(R.id.myclubcheckBox);
+										
 										ClubObject bean = ClubListClass.MemberClubList
 												.get(position);
-
-										if (bean.isSelected()) {
+										bean.setSelected(true);
+										
+					for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
+											
+											if(i==position)
+												continue;
+											
+											 bean = ClubListClass.MemberClubList
+													.get(i);
 											bean.setSelected(false);
-											chk.setChecked(false);
-										} else {
-											bean.setSelected(true);
-											chk.setChecked(true);
 										}
+					
+					//Unselect all MyClub
+					for (int i=0;i<ClubListClass.ClubList.size();i++) {
+						
+						
+						
+						 bean = ClubListClass.ClubList
+								.get(i);
+						bean.setSelected(false);
+					
+					}
+
+					ContactsInviteForRideActivity.adapterClubMy.setSelectedIndex(-1);
+					ContactsInviteForRideActivity.adapterClubMy.notifyDataSetChanged();
+//										if (bean.isSelected()) {
+//											bean.setSelected(false);
+//											chk.setChecked(false);
+//										} else {
+//											bean.setSelected(true);
+//											chk.setChecked(true);
+//										}
+										
+					ContactsInviteForRideActivity.adapterClubMember	.setSelectedIndex(position);
+					ContactsInviteForRideActivity.adapterClubMember.notifyDataSetChanged();
 
 									}
 								});
+						
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

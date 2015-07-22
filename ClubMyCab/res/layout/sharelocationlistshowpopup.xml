@@ -5,7 +5,7 @@
     android:background="#FFFFFF" >
 
     <LinearLayout
-        android:id="@+id/contactsmyclubll"
+        android:id="@+id/contactsmyclubll1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -13,7 +13,7 @@
         android:weightSum="2" >
 
         <Button
-            android:id="@+id/contactsbtn"
+            android:id="@+id/contactsbtn1"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -28,7 +28,7 @@
             android:background="#ffffff" />
 
         <Button
-            android:id="@+id/appFrends"
+            android:id="@+id/appFrends1"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -45,7 +45,7 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/myclubbtn"
+            android:id="@+id/myclubbtn1"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
@@ -56,19 +56,19 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/searchfromlist"
+        android:id="@+id/searchfromlist1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/contactsmyclubll"
+        android:layout_below="@+id/contactsmyclubll1"
         android:layout_margin="5dp"
         android:hint="Search"
         android:textSize="15sp" />
     
     <TextView
-        android:id="@+id/validmobiletxt"
+        android:id="@+id/validmobiletxt1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/searchfromlist"
+        android:layout_below="@+id/searchfromlist1"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="(Please select contacts with valid Indian mobile numbers)"
@@ -76,16 +76,16 @@
         android:textSize="11sp" />
 
     <LinearLayout
-        android:id="@+id/contactsearchll"
+        android:id="@+id/contactsearchll1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/newclubsendll"
-        android:layout_below="@+id/validmobiletxt"
+        android:layout_below="@+id/validmobiletxt1"
         android:background="#FFFFFF"
         android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/clubcontactslistll"
+            android:id="@+id/clubcontactslistll1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -93,14 +93,14 @@
             android:visibility="gone" >
 
             <ListView
-                android:id="@+id/contactslist"
+                android:id="@+id/contactslist1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" >
             </ListView>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/mainclublistll"
+            android:id="@+id/mainclublistll1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_margin="10dp"
@@ -127,7 +127,7 @@
                     android:textSize="15sp" />
 
                 <ListView
-                    android:id="@+id/listMyclubs"
+                    android:id="@+id/listMyclubs1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF" >
@@ -135,7 +135,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/memberclubsll"
+                android:id="@+id/memberclubsll1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginTop="10dp"
@@ -154,7 +154,7 @@
                     android:textSize="15sp" />
 
                 <ListView
-                    android:id="@+id/listMembersclubs"
+                    android:id="@+id/listMembersclubs1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF" >

@@ -6,6 +6,7 @@ public class StringTags {
 	public static String TAG_WHERE_WORK="Where do you work/study?";
 	public static String TAG_WHERE_LIVE_KEY="1";
 	public static String TAG_WHERE_WORK_KEY="2";
+	public static int TAT_ADD_TOTAL=1;
 
 
 

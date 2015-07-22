@@ -516,17 +516,22 @@ public class ContactsToInviteActivity extends Activity {
 		sendtocontacts.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-		if (fromcome.equalsIgnoreCase("invite")
-				|| fromcome.equalsIgnoreCase("checkpool")) {
-
-			contactsbtn.setVisibility(View.VISIBLE);
-			validmobiletxt.setVisibility(View.VISIBLE);
-			myclubbtn.setVisibility(View.VISIBLE);
-		} else {
-			contactsbtn.setVisibility(View.VISIBLE);
-			validmobiletxt.setVisibility(View.VISIBLE);
-			myclubbtn.setVisibility(View.GONE);
-		}
+//		if (fromcome.equalsIgnoreCase("invite")
+//				|| fromcome.equalsIgnoreCase("checkpool")) {
+//
+//			contactsbtn.setVisibility(View.VISIBLE);
+//			validmobiletxt.setVisibility(View.VISIBLE);
+//			myclubbtn.setVisibility(View.VISIBLE);
+//		} else {
+//			contactsbtn.setVisibility(View.VISIBLE);
+//			validmobiletxt.setVisibility(View.VISIBLE);
+//			myclubbtn.setVisibility(View.GONE);
+//		}
+//		
+		clubcontactslistll.setVisibility(View.VISIBLE);
+		searchfromlist.setVisibility(View.VISIBLE);
+		validmobiletxt.setVisibility(View.VISIBLE);
+		mainclublistll.setVisibility(View.GONE);
 
 		// /// For contacts list
 
@@ -604,8 +609,8 @@ public class ContactsToInviteActivity extends Activity {
 
 				flag = 1;
 
-				contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
-				contactsbtn.setTextColor(Color.BLACK);
+				//contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+				//contactsbtn.setTextColor(Color.BLACK);
 
 				appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
 				appFrends.setTextColor(Color.WHITE);
@@ -1222,6 +1227,8 @@ public class ContactsToInviteActivity extends Activity {
 			clubcreated = true;
 		}
 
+		//For avoidig open club only contacts will open in this activity
+		clubcreated=false;
 		if (fromcome.equalsIgnoreCase("invite")
 				|| fromcome.equalsIgnoreCase("checkpool")) {
 
@@ -1437,14 +1444,14 @@ public class ContactsToInviteActivity extends Activity {
 
 				flag = 1;
 
-				contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
-				contactsbtn.setTextColor(Color.BLACK);
+				//contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+				//contactsbtn.setTextColor(Color.BLACK);
 
 				appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
 				appFrends.setTextColor(Color.WHITE);
 
-				myclubbtn.setBackgroundColor(Color.parseColor("#4279bd"));
-				myclubbtn.setTextColor(Color.WHITE);
+				//myclubbtn.setBackgroundColor(Color.parseColor("#4279bd"));
+				//myclubbtn.setTextColor(Color.WHITE);
 
 				clubcontactslistll.setVisibility(View.VISIBLE);
 				searchfromlist.setVisibility(View.VISIBLE);
@@ -1527,8 +1534,8 @@ public class ContactsToInviteActivity extends Activity {
 
 			flag = 1;
 
-			contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
-			contactsbtn.setTextColor(Color.BLACK);
+			//contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+			//contactsbtn.setTextColor(Color.BLACK);
 
 			appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
 			appFrends.setTextColor(Color.WHITE);

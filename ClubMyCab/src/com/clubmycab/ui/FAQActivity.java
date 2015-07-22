@@ -35,7 +35,7 @@ public class FAQActivity extends FragmentActivity{
 		ans1 = new ArrayList<String>();
 		ans1.add("Sharing a cab with friends can reduce cost to as low as Rs. 2/km when 4 friends travel in a hatchback");
 		ans1.add("Sharing works best with people you trust - create a \"club\" of such people who usually travel same routes as you and start sharing rides");
-		ans1.add("Clubs are your closed groups where only known people are added	");
+		ans1.add("Clubs are your closed groups where only known people are added");
 		ans1.add("You can create clubs and add friends or refer friends to a club that you are a member of");
 		
 		ans1.add("Creating clubs makes it easier to share rides with people who travel similar routes");
@@ -57,11 +57,11 @@ public class FAQActivity extends FragmentActivity{
 		ans3.add("When you want to share a ride, first check your notifications to see if any club member has invited you for one and seats are available");
 		ans3.add("If no existing rides are available, create your own and invite club members");
 
-		ans3.add("See suggested routes and location of other members to decide if the route suits you  ");
+		ans3.add("See suggested routes and location of other members to decide if the route suits you");
 		
 		
 		ans4=new ArrayList<String>();
-		ans4.add("When the ride starts, we let you know.");
+		ans4.add("When the ride starts, we let you know");
 		ans4.add("Track the location of the cab on ride page to see the progress of the journey");
 		ans4.add("You can communicate with ride members using inbuilt Instant Messenger");
 		ans4.add("Fare split calculation is done on basis of distance traveled assuming same destination");

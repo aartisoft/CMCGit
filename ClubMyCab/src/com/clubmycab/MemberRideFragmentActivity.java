@@ -92,6 +92,7 @@ import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.UpdatePickupLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -2564,6 +2565,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		TextView datetext;
 		TextView timetext;
 		TextView seatstext;
+		TextView tvAvSeats;
 
 		LinearLayout joinedmembersll;
 		ListView joinedmemberslist;
@@ -2576,7 +2578,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				.findViewById(R.id.fromtolocationvalue);
 		datetext = (TextView) dialog.findViewById(R.id.datetext);
 		timetext = (TextView) dialog.findViewById(R.id.timetext);
-		seatstext = (TextView) dialog.findViewById(R.id.seatstext);
+		seatstext = (TextView) dialog.findViewById(R.id.seatstext1);
+		tvAvSeats=(TextView)dialog.findViewById(R.id.tvAvSeats1);
 
 		joinedmembersll = (LinearLayout) dialog
 				.findViewById(R.id.joinedmembersll);
@@ -2599,7 +2602,19 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				+ tol.toString().trim());
 		datetext.setText(td.toString().trim());
 		timetext.setText(tt.toString().trim());
-		seatstext.setText(st.toString().trim() + " Seats");
+		//seatstext.setText(st.toString().trim() + " Seats");
+		try{
+String []arr=st.toString().trim().split("/");
+		
+		int total=Integer.parseInt(arr[1]);
+		int filled=Integer.parseInt(arr[0]);
+		int ava=total-filled;
+		seatstext.setText("Total seats : "+(total+StringTags.TAT_ADD_TOTAL));
+		tvAvSeats.setText("Available : "+ava);
+		}catch(Exception e){
+			seatstext.setText("Total seats : ");
+			tvAvSeats.setText("Available : ");
+		}
 
 		if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
 
@@ -4441,6 +4456,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			
+			finish();
 		}
 
 	}

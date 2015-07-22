@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
 import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,32 +67,39 @@ public class ListViewAdapter extends BaseAdapter {
 	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
+ViewHolder viewholder;
 
-		CircularImageView myridesbannerimage;
-		TextView myridesbannerusername;
-		TextView fromtolocationvalue;
-		TextView datetext;
-		TextView timetext;
-		TextView seatstext;
+if(convertView==null){
+	inflater = (LayoutInflater) context
+			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	convertView = inflater.inflate(R.layout.myrides_list_row, parent,
+			false);
+	viewholder=new ViewHolder();
+	
+	viewholder.myridesbannerimage = (CircularImageView) convertView
+			.findViewById(R.id.myridesbannerimage);
+	viewholder.myridesbannerusername = (TextView) convertView
+			.findViewById(R.id.myridesbannerusername);
+	viewholder.fromtolocationvalue = (TextView) convertView
+			.findViewById(R.id.fromtolocationvalue);
+	viewholder.datetext = (TextView) convertView.findViewById(R.id.datetext);
+	viewholder.timetext = (TextView) convertView.findViewById(R.id.timetext);
+	viewholder.seatstext = (TextView) convertView.findViewById(R.id.seatstext);
+	viewholder.tvAvSeats=(TextView)convertView.findViewById(R.id.tvAvSeats);
+	
+	convertView.setTag(viewholder);
+	
+}
+else
+	viewholder=(ViewHolder)convertView.getTag();
+	
 
-		View itemView = inflater.inflate(R.layout.myrides_list_row, parent,
-				false);
+		
 
 		// Locate the TextViews in listview_item.xml
 
-		myridesbannerimage = (CircularImageView) itemView
-				.findViewById(R.id.myridesbannerimage);
-		myridesbannerusername = (TextView) itemView
-				.findViewById(R.id.myridesbannerusername);
-		fromtolocationvalue = (TextView) itemView
-				.findViewById(R.id.fromtolocationvalue);
-		datetext = (TextView) itemView.findViewById(R.id.datetext);
-		timetext = (TextView) itemView.findViewById(R.id.timetext);
-		seatstext = (TextView) itemView.findViewById(R.id.seatstext);
-
+		
 		if (ownerimagename.get(position).toString().trim().isEmpty()) {
 
 			Log.d("image nahi hai", ""
@@ -98,17 +108,38 @@ public class ListViewAdapter extends BaseAdapter {
 		} else {
 			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
 					+ ownerimagename.get(position).toString().trim();
-			aq.id(myridesbannerimage).image(url, true, true);
+			aq.id(viewholder.myridesbannerimage).image(url, true, true);
 		}
-		myridesbannerusername
+		viewholder.myridesbannerusername
 				.setText(ownername.get(position).toString().trim());
-		fromtolocationvalue.setText(fromlocation.get(position).toString()
+		viewholder.fromtolocationvalue.setText(fromlocation.get(position).toString()
 				.trim()
 				+ " > " + tolocation.get(position).toString().trim());
-		datetext.setText(traveldate.get(position).toString().trim());
-		timetext.setText(traveltime.get(position).toString().trim());
-		seatstext.setText(seats.get(position).toString().trim() + " Seats");
+		viewholder.datetext.setText(traveldate.get(position).toString().trim());
+		viewholder.timetext.setText(traveltime.get(position).toString().trim());
+		
+		try{
+		String []arr=seats.get(position).toString().trim().split("/");
+		
+		int total=Integer.parseInt(arr[1]);
+		int filled=Integer.parseInt(arr[0]);
+		int ava=total-filled;
+		viewholder.seatstext.setText("Total seats : "+(total+StringTags.TAT_ADD_TOTAL));
+		viewholder.tvAvSeats.setText("Available : "+ava);
+		}catch(Exception e){
+			viewholder.seatstext.setText("Total seats :");
+			viewholder.tvAvSeats.setText("Available :");
+		}
 
-		return itemView;
+		return convertView;
+	}
+	public class ViewHolder{
+		
+	public 	CircularImageView myridesbannerimage;
+	public	TextView myridesbannerusername;
+	public	TextView fromtolocationvalue;
+	public	TextView datetext;
+	public	TextView timetext;
+	public	TextView seatstext,tvAvSeats;
 	}
 }

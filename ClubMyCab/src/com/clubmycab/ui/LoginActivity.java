@@ -56,6 +56,7 @@ public class LoginActivity extends Activity {
 
 	String FullName;
 	String MobileNumber;
+	String regid = null;
 
 	
 	boolean exceptioncheck = false;
@@ -188,23 +189,23 @@ public class LoginActivity extends Activity {
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 
-				} else if (numberpasswordedittext.getText().toString().trim()
-						.isEmpty()) {
-
-					numberpasswordedittext.requestFocus();
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							LoginActivity.this);
-
-					builder.setMessage("Please enter password");
-					builder.setPositiveButton("OK", null);
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
-
-				}
+				}// else if (numberpasswordedittext.getText().toString().trim()
+//						.isEmpty()) {
+//
+//					numberpasswordedittext.requestFocus();
+//
+//					AlertDialog.Builder builder = new AlertDialog.Builder(
+//							LoginActivity.this);
+//
+//					builder.setMessage("Please enter password");
+//					builder.setPositiveButton("OK", null);
+//					AlertDialog dialog = builder.show();
+//					TextView messageText = (TextView) dialog
+//							.findViewById(android.R.id.message);
+//					messageText.setGravity(Gravity.CENTER);
+//					dialog.show();
+//
+//				}
 
 				else {
 					// successfull for all
@@ -297,7 +298,7 @@ public class LoginActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						LoginActivity.this);
 
-				builder.setMessage("Invalid Credentials");
+				builder.setMessage("You are not registered, please click on Register");
 				builder.setPositiveButton("OK", null);
 				AlertDialog dialog = builder.show();
 				TextView messageText = (TextView) dialog
@@ -309,6 +310,7 @@ public class LoginActivity extends Activity {
 
 				JSONArray subArray = null;
 				try {
+					
 					subArray = new JSONArray(result);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -330,19 +332,33 @@ public class LoginActivity extends Activity {
 
 				Log.d("FullName", "" + FullName);
 				Log.d("MobileNumber", "" + MobileNumber);
+//
+//				SharedPreferences sharedPreferences = getSharedPreferences(
+//						"FacebookData", 0);
+//				SharedPreferences.Editor editor = sharedPreferences.edit();
+//				editor.putString("FullName", FullName);
+//				editor.putString("MobileNumber", MobileNumber);
+//				editor.commit();
 
-				SharedPreferences sharedPreferences = getSharedPreferences(
-						"FacebookData", 0);
-				SharedPreferences.Editor editor = sharedPreferences.edit();
-				editor.putString("FullName", FullName);
-				editor.putString("MobileNumber", MobileNumber);
-				editor.commit();
-
+//				Intent mainIntent = new Intent(LoginActivity.this,
+//						HomeActivity.class);
+//				mainIntent.putExtra("from", "normal");
+//				mainIntent.putExtra("message", "null");
+//				startActivityForResult(mainIntent, 500);
+//				overridePendingTransition(R.anim.slide_in_right,
+//						R.anim.slide_out_left);
+//				finish();
+				
 				Intent mainIntent = new Intent(LoginActivity.this,
-						HomeActivity.class);
-				mainIntent.putExtra("from", "normal");
-				mainIntent.putExtra("message", "null");
-				startActivityForResult(mainIntent, 500);
+						OTPActivity.class);
+				mainIntent.putExtra("from", "login");
+				mainIntent.putExtra("fullname", FullName);
+				mainIntent.putExtra("mobnum", MobileNumber);
+				
+				mainIntent.putExtra("regid", regid);
+
+
+				startActivity(mainIntent);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
 				finish();
@@ -360,7 +376,6 @@ public class LoginActivity extends Activity {
 		public void connection() throws Exception {
 
 			GoogleCloudMessaging gcm = null;
-			String regid = null;
 			String PROJECT_NUMBER = "145246375713";
 
 			try {
@@ -382,9 +397,11 @@ public class LoginActivity extends Activity {
 					"MobileNumber", countrycodelogin.getText().toString()
 							.trim()
 							+ numberedittext.getText().toString().trim());
-			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
-					"Password", numberpasswordedittext.getText().toString()
-							.trim());
+			
+//			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
+//					"Password", "");
+//			numberpasswordedittext.getText().toString()
+//							.trim());
 
 			BasicNameValuePair DeviceTokenBasicNameValuePair = new BasicNameValuePair(
 					"DeviceToken", regid);
@@ -393,7 +410,7 @@ public class LoginActivity extends Activity {
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			nameValuePairList.add(PasswordBasicNameValuePair);
+		//	nameValuePairList.add(PasswordBasicNameValuePair);
 			nameValuePairList.add(DeviceTokenBasicNameValuePair);
 			nameValuePairList.add(platformBasicNameValuePair);
 

@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/header1"
         android:background="#FFFFFF" >
-        
+
         <LinearLayout
             android:id="@+id/whereheadedlinear"
             android:layout_width="match_parent"
@@ -262,9 +262,9 @@
         <RelativeLayout
             android:id="@+id/homerelative"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@id/whereheadedlinear"
-            android:layout_marginTop="5dp" >
+            android:layout_marginTop="15dp" >
 
             <TextView
                 android:id="@+id/textFrom"
@@ -283,7 +283,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_toLeftOf="@+id/threedotsfrom"
                 android:layout_toRightOf="@+id/textFrom"
                 android:orientation="vertical" >
@@ -295,14 +294,15 @@
                     <AutoCompleteTextView
                         android:id="@+id/from_places"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/clearedittextimgfrom"
                         android:editable="false"
-                        android:ellipsize="start"
+                        android:ellipsize="end"
                         android:focusable="false"
                         android:hint="@string/hint_select_address"
                         android:singleLine="true"
-                        android:textSize="15sp" />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/clearedittextimgfrom"
@@ -320,8 +320,8 @@
 
             <Button
                 android:id="@+id/threedotsfrom"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
@@ -330,9 +330,9 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@id/homerelative"
-            android:layout_marginTop="5dp" >
+            android:layout_marginTop="15dp" >
 
             <TextView
                 android:id="@+id/textTo"
@@ -345,14 +345,31 @@
                 android:textSize="15sp" />
 
             <LinearLayout
+                android:id="@+id/llthree"
+                android:layout_width="40dp"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/threedotsto"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/threedotsformap"
+                    android:layout_gravity="top"
+                    android:gravity="top" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/maintoviewsll"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toLeftOf="@+id/threedotsto"
+                android:layout_toLeftOf="@+id/llthree"
                 android:layout_toRightOf="@+id/textTo"
                 android:orientation="vertical" >
 
@@ -363,14 +380,15 @@
                     <AutoCompleteTextView
                         android:id="@+id/to_places"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/clearedittextimgto"
                         android:editable="false"
-                        android:ellipsize="start"
+                        android:ellipsize="end"
                         android:focusable="false"
                         android:hint="@string/hint_select_address"
                         android:singleLine="true"
-                        android:textSize="15sp" />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/clearedittextimgto"
@@ -381,19 +399,10 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/edittext_clear_button"
+                        android:background="@drawable/edittext_clear_button"
                         android:visibility="gone" />
                 </RelativeLayout>
             </LinearLayout>
-
-            <Button
-                android:id="@+id/threedotsto"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/threedotsformap" />
         </RelativeLayout>
 
         <!-- <LinearLayout -->

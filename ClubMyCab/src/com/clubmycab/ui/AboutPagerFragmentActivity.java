@@ -125,13 +125,13 @@ public class AboutPagerFragmentActivity extends FragmentActivity {
 					finish();
 				} else {
 
-					Intent mainIntent = new Intent(
-							AboutPagerFragmentActivity.this, HomeActivity.class);
-					mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					startActivityForResult(mainIntent, 500);
-					overridePendingTransition(R.anim.slide_in_right,
-							R.anim.slide_out_left);
+//					Intent mainIntent = new Intent(
+//							AboutPagerFragmentActivity.this, HomeActivity.class);
+//					mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//					startActivityForResult(mainIntent, 500);
+//					overridePendingTransition(R.anim.slide_in_right,
+//							R.anim.slide_out_left);
 
 					finish();
 				}
@@ -143,11 +143,11 @@ public class AboutPagerFragmentActivity extends FragmentActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(AboutPagerFragmentActivity.this,
-				HomeActivity.class);
-		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		startActivityForResult(mainIntent, 500);
-		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//		Intent mainIntent = new Intent(AboutPagerFragmentActivity.this,
+//				HomeActivity.class);
+//		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//		startActivityForResult(mainIntent, 500);
+//		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 }

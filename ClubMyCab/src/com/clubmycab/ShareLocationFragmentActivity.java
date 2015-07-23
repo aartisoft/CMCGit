@@ -79,7 +79,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
 import com.clubmycab.ui.ContactsInviteForRideActivity;
+import com.clubmycab.ui.FavoritePlaceFindActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.InviteFragmentActivity;
 import com.clubmycab.ui.NotificationListActivity;
@@ -563,7 +565,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 		selectrecipientsvalue = (TextView) findViewById(R.id.selectrecipientsvalue);
 		watchmeforvalue = (TextView) findViewById(R.id.watchmeforvalue);
-		from_places = (AutoCompleteTextView) findViewById(R.id.from_places);
+		from_places = (AutoCompleteTextView) findViewById(R.id.from_places1);
 		clearedittextimg = (ImageView) findViewById(R.id.clearedittextimg);
 		clearedittextimg.setVisibility(View.GONE);
 
@@ -572,54 +574,67 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				R.layout.list_item);
 		adapter.setNotifyOnChange(true);
-
-		from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
-				R.layout.list_item));
-
-		from_places
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (event != null
-								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-							InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-							in.hideSoftInputFromWindow(
-									from_places.getApplicationWindowToken(),
-									InputMethodManager.HIDE_NOT_ALWAYS);
-						}
-
-						return false;
-					}
-				});
-
-		from_places
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						fAddress = null; // reset previous
-						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						in.hideSoftInputFromWindow(
-								from_places.getApplicationWindowToken(),
-								InputMethodManager.HIDE_NOT_ALWAYS);
-
-						fAddress = geocodeAddress(from_places.getText()
-								.toString());
-					}
-				});
-
-		from_places.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-
+		
+		from_places.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//isCallresetIntentParams = true;
 				watchmeforvalue.setText("Select Time");
-				return false;
+				Intent intent = new Intent(ShareLocationFragmentActivity.this,
+						FavoritePlaceFindActivity.class);
 
+				startActivityForResult(intent, 5);				
 			}
 		});
-
+//
+//		from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+//				R.layout.list_item));
+//
+//		from_places
+//				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//
+//					@Override
+//					public boolean onEditorAction(TextView v, int actionId,
+//							KeyEvent event) {
+//						if (event != null
+//								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+//							InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//							in.hideSoftInputFromWindow(
+//									from_places.getApplicationWindowToken(),
+//									InputMethodManager.HIDE_NOT_ALWAYS);
+//						}
+//
+//						return false;
+//					}
+//				});
+//
+//		from_places
+//				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//					@Override
+//					public void onItemClick(AdapterView<?> parent, View view,
+//							int position, long id) {
+//						fAddress = null; // reset previous
+//						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//						in.hideSoftInputFromWindow(
+//								from_places.getApplicationWindowToken(),
+//								InputMethodManager.HIDE_NOT_ALWAYS);
+//
+//						fAddress = geocodeAddress(from_places.getText()
+//								.toString());
+//					}
+//				});
+//
+//		from_places.setOnTouchListener(new View.OnTouchListener() {
+//			public boolean onTouch(View view, MotionEvent motionEvent) {
+//
+//				watchmeforvalue.setText("Select Time");
+//				return false;
+//
+//			}
+//		});
+//
 		from_places.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -1471,6 +1486,50 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			} else {
 
 				clubcreated = true;
+			}
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (resultCode == RESULT_OK) {
+			
+			if(requestCode==5){
+
+
+				String value = (String) data.getExtras().getString("address");
+
+				Log.d("from_place:::", value);
+
+				// from_places.append(value);
+				from_places.setText(value);
+
+				if (value.equalsIgnoreCase("") || value.isEmpty()) {
+
+				} else {
+					fAddress = null; // reset previous
+
+					fAddress = geocodeAddress(from_places.getText().toString());
+					if (fAddress == null) {
+						Toast.makeText(
+								ShareLocationFragmentActivity.this,
+								"Could not locate the address, please try using the map or a different address",
+								Toast.LENGTH_LONG).show();
+					} else {
+						//fAddress = null; // reset previous
+						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						in.hideSoftInputFromWindow(
+								from_places.getApplicationWindowToken(),
+								InputMethodManager.HIDE_NOT_ALWAYS);
+
+//						fAddress = geocodeAddress(from_places.getText()
+//							.toString());
+					}
+				}
+			
 			}
 		}
 	}

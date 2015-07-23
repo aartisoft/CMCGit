@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.clubmycab.utility.StringTags;
 
 public class ShowHistoryRidesAdaptor extends PagingBaseAdapter<String> {
 
@@ -38,31 +39,36 @@ public class ShowHistoryRidesAdaptor extends PagingBaseAdapter<String> {
 	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
+		ViewHolder viewholder;
+		if(convertView==null){
+			
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		CircularImageView myridesbannerimage;
-		TextView myridesbannerusername;
-		TextView fromtolocationvalue;
-		TextView datetext;
-		TextView timetext;
-		TextView seatstext;
+		convertView = inflater.inflate(R.layout.myrides_list_row, parent,
+					false);
+		viewholder=new ViewHolder();
+			// Locate the TextViews in listview_item.xml
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		viewholder.myridesbannerimage = (CircularImageView) convertView
+					.findViewById(R.id.myridesbannerimage);
+		viewholder.myridesbannerusername = (TextView) convertView
+					.findViewById(R.id.myridesbannerusername);
+		viewholder.	fromtolocationvalue = (TextView) convertView
+					.findViewById(R.id.fromtolocationvalue);
+		viewholder.	datetext = (TextView) convertView.findViewById(R.id.datetext);
+		viewholder.	timetext = (TextView) convertView.findViewById(R.id.timetext);
+		viewholder.	seatstext = (TextView) convertView.findViewById(R.id.seatstext);
+		viewholder.	tvAvSeats=(TextView)convertView.findViewById(R.id.tvAvSeats);
+		
+		convertView.setTag(viewholder);
+		}
+		else
+			viewholder=(ViewHolder)convertView.getTag();
+			
+	
 
-		View itemView = inflater.inflate(R.layout.myrides_list_row, parent,
-				false);
-
-		// Locate the TextViews in listview_item.xml
-
-		myridesbannerimage = (CircularImageView) itemView
-				.findViewById(R.id.myridesbannerimage);
-		myridesbannerusername = (TextView) itemView
-				.findViewById(R.id.myridesbannerusername);
-		fromtolocationvalue = (TextView) itemView
-				.findViewById(R.id.fromtolocationvalue);
-		datetext = (TextView) itemView.findViewById(R.id.datetext);
-		timetext = (TextView) itemView.findViewById(R.id.timetext);
-		seatstext = (TextView) itemView.findViewById(R.id.seatstext);
+		
 
 		if (items.get(position).getImagename().toString().trim().isEmpty()) {
 
@@ -70,20 +76,44 @@ public class ShowHistoryRidesAdaptor extends PagingBaseAdapter<String> {
 			String url = "http://180.179.208.23/cmc/cmcservice"
 					+ "/ProfileImages/"
 					+ items.get(position).getImagename().toString().trim();
-			aq.id(myridesbannerimage).image(url, true, true);
+			aq.id(viewholder.myridesbannerimage).image(url, true, true);
 		}
-		myridesbannerusername.setText(items.get(position).getOwnerName()
+		viewholder.myridesbannerusername.setText(items.get(position).getOwnerName()
 				.toString().trim());
-		fromtolocationvalue.setText(items.get(position).getFromShortName()
+		viewholder.fromtolocationvalue.setText(items.get(position).getFromShortName()
 				.toString().trim()
 				+ " > "
 				+ items.get(position).getToShortName().toString().trim());
-		datetext.setText(items.get(position).getTravelDate().toString().trim());
-		timetext.setText(items.get(position).getTravelTime().toString().trim());
-		seatstext.setText(items.get(position).getSeat_Status().toString()
-				.trim()
-				+ " Seats");
+		viewholder.	datetext.setText(items.get(position).getTravelDate().toString().trim());
+		viewholder.timetext.setText(items.get(position).getTravelTime().toString().trim());
+//		viewholder.seatstext.setText(items.get(position).getSeat_Status().toString()
+//				.trim()
+//				+ " Seats");
+		
+		
+		try{
+			String []arr=items.get(position).getSeat_Status().toString().trim().split("/");
+			
+			int total=Integer.parseInt(arr[1]);
+			int filled=Integer.parseInt(arr[0]);
+			int ava=total-filled;
+			viewholder.seatstext.setText("Total seats : "+(total+StringTags.TAT_ADD_TOTAL));
+			viewholder.tvAvSeats.setText("Available : "+ava);
+			}catch(Exception e){
+				viewholder.seatstext.setText("Total seats :");
+				viewholder.tvAvSeats.setText("Available :");
+			}
 
-		return itemView;
+		return convertView;
+	}
+	
+	public class ViewHolder{
+	public 	CircularImageView myridesbannerimage;
+	public 	TextView myridesbannerusername;
+	public	TextView fromtolocationvalue;
+	public	TextView datetext;
+	public	TextView timetext;
+	public	TextView seatstext;
+	public	TextView tvAvSeats;
 	}
 }

@@ -12,12 +12,37 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         layout="@layout/header" />
+      <Button
+        android:id="@+id/butmakenewclubs"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/createnewclubbtn"
+        android:text="Create New Club"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+     <TextView 
+         android:id="@+id/tvMessage"
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        
+        android:layout_above="@id/butmakenewclubs"
+        android:text="@string/memberexcludingmsg"
+        android:gravity="center"
+        android:textColor="#000"
+        />
 
     <LinearLayout
         android:id="@+id/mainclublistll"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/butmakenewclubs"
+        android:layout_above="@id/tvMessage"
         android:layout_below="@+id/header1"
         android:layout_margin="10dp"
         android:orientation="vertical"
@@ -76,18 +101,9 @@
             </ListView>
         </LinearLayout>
     </LinearLayout>
+    
+   
 
-    <Button
-        android:id="@+id/butmakenewclubs"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/createnewclubbtn"
-        android:text="Create New Club"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+  
 
 </RelativeLayout>

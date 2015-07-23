@@ -98,7 +98,7 @@ private ArrayList<String> favoriteTag;
 private ArrayList<String> favoriteAddress;
 
 
-int pos = 0;
+//int pos = 0;
 //setting ll
 private LinearLayout ll1,ll2,ll3,ll4,ll5;
 public AutoCompleteTextView aTvLocationAutoComplete1,aTvLocationAutoComplete2,aTvLocationAutoComplete3,aTvLocationAutoComplete4,aTvLocationAutoComplete5;
@@ -435,6 +435,9 @@ public void onClick(View v) {
 		remainigfavorites = remainigfavorites + 1;
 		if (remainigfavorites == 0)
 			addMoreButton.setVisibility(View.GONE);
+		else
+			addMoreButton.setVisibility(View.VISIBLE);
+
 		addMoreButton.setText("Add More ("
 				+ remainigfavorites + " remaining )");
 		deleteFavoriteLocaiton();
@@ -492,6 +495,8 @@ index=3;
 	remainigfavorites = remainigfavorites + 1;
 	if (remainigfavorites == 0)
 		addMoreButton.setVisibility(View.GONE);
+	else
+		addMoreButton.setVisibility(View.VISIBLE);
 	addMoreButton.setText("Add More ("
 			+ remainigfavorites + " remaining )");
 
@@ -549,6 +554,8 @@ favoriteTag.remove(index);
 	remainigfavorites = remainigfavorites + 1;
 	if (remainigfavorites == 0)
 		addMoreButton.setVisibility(View.GONE);
+	else
+		addMoreButton.setVisibility(View.VISIBLE);
 	addMoreButton.setText("Add More ("
 			+ remainigfavorites + " remaining )");
 
@@ -625,7 +632,7 @@ aTvLocationAutoComplete1
 						String json = gson.toJson(addressModel);
 
 
-						Log.d("position::::::", "" + pos);
+					//	Log.d("position::::::", "" + pos);
 						addressModelList.set(index, addressModel);
 
 
@@ -1237,7 +1244,7 @@ alert.setView(input);
 
 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 	public void onClick(DialogInterface dialog, int whichButton) {
-		String value = input.getText().toString();
+		String value = input.getText().toString().trim();
 
 		if (input.getText().toString().equals("")) {
 			Toast.makeText(getApplicationContext(), "Enter tag name.",
@@ -1256,6 +1263,23 @@ alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 					.show();
 
 		} else {
+			
+			for(int i=0;i<favoriteTag.size();i++){
+				
+				if(value.equalsIgnoreCase(favoriteTag.get(i))){
+					Toast.makeText(getApplicationContext(),
+							"This tag already exists", Toast.LENGTH_SHORT)
+							.show();
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+					
+					return;
+				
+					
+				}
+			}
+			
+			
 			addFavoriteLocation(value);
 			// Do something with value!
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1376,7 +1400,7 @@ aTvLocationAutoComplete2
 						String json = gson.toJson(addressModel);
 
 
-						Log.d("position::::::", "" + pos);
+					//	Log.d("position::::::", "" + pos);
 						addressModelList.set(index, addressModel);
 
 
@@ -1492,7 +1516,7 @@ index=2;
 						String json = gson.toJson(addressModel);
 
 
-						Log.d("position::::::", "" + pos);
+					//	Log.d("position::::::", "" + pos);
 						addressModelList.set(index, addressModel);
 
 
@@ -1608,7 +1632,7 @@ aTvLocationAutoComplete4
 						String json = gson.toJson(addressModel);
 
 
-						Log.d("position::::::", "" + pos);
+					//	Log.d("position::::::", "" + pos);
 						addressModelList.set(index, addressModel);
 
 
@@ -1724,7 +1748,7 @@ index=4;
 						String json = gson.toJson(addressModel);
 
 
-						Log.d("position::::::", "" + pos);
+						//Log.d("position::::::", "" + pos);
 						addressModelList.set(index, addressModel);
 
 

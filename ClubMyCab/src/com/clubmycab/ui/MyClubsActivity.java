@@ -73,6 +73,7 @@ import com.clubmycab.MyClubsShowAdaptor;
 import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -834,8 +835,13 @@ public class MyClubsActivity extends Activity {
 						Log.d("shownumbers", "" + shownumbers);
 						Log.d("showimagenames", "" + showimagenames);
 						Log.d("showpoolid", "" + showpoolid);
-
-						ShowAlert(shownames, shownumbers,
+                   if(shownames.size()<1){
+                	   
+                	   Toast.makeText(MyClubsActivity.this,StringTags.TAG_DOSE_NOT_HAVE_MEMBER, Toast.LENGTH_SHORT).show();
+                   }
+						
+                   else
+                	   ShowAlert(shownames, shownumbers,
 								MyClubPoolName.get(position), showpoolid,
 								showimagenames);
 					} catch (JSONException e) {

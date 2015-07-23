@@ -47,10 +47,12 @@ public class RegistrationActivity extends Activity {
 	TextView registerheadertxt;
 	TextView fullnametxt;
 	TextView passwordtxt;
+	TextView emailtxt;
 	TextView confirmpasswordtxt;
 	TextView mobiletxt;
 
 	EditText fullnameedittext;
+	EditText emailedittext;
 	EditText passwordedittext;
 	EditText confirmpasswordedittext;
 	EditText mobileedittext;
@@ -64,7 +66,6 @@ public class RegistrationActivity extends Activity {
 
 	String result;
 
-	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -97,15 +98,15 @@ public class RegistrationActivity extends Activity {
 			return;
 		}
 
-		
-
 		registerheadertxt = (TextView) findViewById(R.id.registerheadertxt);
 		fullnametxt = (TextView) findViewById(R.id.fullnametxt);
+		emailtxt = (TextView) findViewById(R.id.emailtxt);
 		passwordtxt = (TextView) findViewById(R.id.passwordtxt);
 		confirmpasswordtxt = (TextView) findViewById(R.id.confirmpasswordtxt);
 		mobiletxt = (TextView) findViewById(R.id.mobiletxt);
 
 		fullnameedittext = (EditText) findViewById(R.id.fullnameedittext);
+		emailedittext = (EditText) findViewById(R.id.emailedittext);
 		passwordedittext = (EditText) findViewById(R.id.passwordedittext);
 		confirmpasswordedittext = (EditText) findViewById(R.id.confirmpasswordedittext);
 		mobileedittext = (EditText) findViewById(R.id.mobileedittext);
@@ -124,6 +125,11 @@ public class RegistrationActivity extends Activity {
 		passwordtxt.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
 		passwordedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		emailtxt.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Bold.ttf"));
+		emailedittext.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		confirmpasswordtxt.setTypeface(Typeface.createFromAsset(getAssets(),
@@ -206,9 +212,39 @@ public class RegistrationActivity extends Activity {
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 
-				}
+				} else if (emailedittext.getText().toString().trim().isEmpty()) {
 
-				else if (passwordedittext.getText().toString().trim().isEmpty()) {
+					emailedittext.requestFocus();
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							RegistrationActivity.this);
+					builder.setMessage("Please enter e-mail address");
+					builder.setPositiveButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+
+				} else if (!emailedittext.getText().toString().trim()
+						.contains("@")
+						|| !emailedittext.getText().toString().trim()
+								.contains(".")) {
+
+					emailedittext.requestFocus();
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							RegistrationActivity.this);
+					builder.setMessage("Please enter a valid e-mail address");
+					builder.setPositiveButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+
+				} else if (passwordedittext.getText().toString().trim()
+						.isEmpty()) {
 
 					passwordedittext.requestFocus();
 
@@ -305,7 +341,8 @@ public class RegistrationActivity extends Activity {
 
 	private class ConnectionTaskForRegister extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(RegistrationActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				RegistrationActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -368,7 +405,8 @@ public class RegistrationActivity extends Activity {
 				editor.putString("LastRegisteredAppVersion", version);
 				editor.commit();
 
-				Intent i = new Intent(RegistrationActivity.this, OTPActivity.class);
+				Intent i = new Intent(RegistrationActivity.this,
+						OTPActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(i);
@@ -415,7 +453,8 @@ public class RegistrationActivity extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl + "/userregister.php";
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/userregister.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair FullNameBasicNameValuePair = new BasicNameValuePair(
@@ -428,7 +467,7 @@ public class RegistrationActivity extends Activity {
 			BasicNameValuePair DeviceTokenBasicNameValuePair = new BasicNameValuePair(
 					"DeviceToken", regid);
 			BasicNameValuePair EmailBasicNameValuePair = new BasicNameValuePair(
-					"Email", "");
+					"Email", emailedittext.getText().toString().trim());
 			BasicNameValuePair GenderBasicNameValuePair = new BasicNameValuePair(
 					"Gender", "");
 			BasicNameValuePair DOBBasicNameValuePair = new BasicNameValuePair(

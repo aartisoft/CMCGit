@@ -137,6 +137,7 @@ public class MyRidesActivity extends Activity {
 
 	boolean shouldGoBack = true;
 	boolean onCreateCalled;
+	boolean showHistoryCalled;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -262,6 +263,7 @@ public class MyRidesActivity extends Activity {
 
 		mypoollist = (ListView) findViewById(R.id.mypoollist);
 
+		showHistoryCalled = false;
 		onCreateCalled = true;
 
 		String comefrom = getIntent().getStringExtra("comefrom");
@@ -321,7 +323,12 @@ public class MyRidesActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 
-		Log.d("MyRidesActivity", "onResume onCreateCalled : " + onCreateCalled);
+		Log.d("MyRidesActivity", "onResume onCreateCalled : " + onCreateCalled
+				+ " showHistoryCalled : " + showHistoryCalled);
+
+		if (showHistoryCalled) {
+			return;
+		}
 
 		if (onCreateCalled) {
 			// onCreateCalled = false;
@@ -699,6 +706,8 @@ public class MyRidesActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				
+				showHistoryCalled = true;
 
 				showhistory.setVisibility(View.GONE);
 				mypoollist.setVisibility(View.GONE);
@@ -980,6 +989,11 @@ public class MyRidesActivity extends Activity {
 								.trim());
 						ride.setCarNumber(CarNumber.get(i).toString().trim());
 
+						ride.setCabName(CabName.get(i).toString().trim());
+						ride.setStatus(status.get(i).toString().trim());
+						ride.setExpTripDuration(ExpTripDuration.get(i)
+								.toString().trim());
+
 						MyRidesListClass.listmyrides.add(ride);
 					}
 				}
@@ -1035,6 +1049,13 @@ public class MyRidesActivity extends Activity {
 						ride.setCarNumber(subArray.getJSONObject(i)
 								.getString("CarNumber").toString().trim());
 
+						ride.setCabName(subArray.getJSONObject(i)
+								.getString("CabName").toString().trim());
+						ride.setStatus(subArray.getJSONObject(i)
+								.getString("status").toString().trim());
+						ride.setExpTripDuration(subArray.getJSONObject(i)
+								.getString("ExpTripDuration").toString().trim());
+
 						MyRidesListClass.listmyrides.add(ride);
 
 						CabId.add(subArray.getJSONObject(i).getString("CabId")
@@ -1081,6 +1102,13 @@ public class MyRidesActivity extends Activity {
 								.getString("DriverNumber").toString());
 						CarNumber.add(subArray.getJSONObject(i)
 								.getString("CarNumber").toString());
+
+						CabName.add(subArray.getJSONObject(i)
+								.getString("CabName").toString());
+						status.add(subArray.getJSONObject(i)
+								.getString("status").toString());
+						ExpTripDuration.add(subArray.getJSONObject(i)
+								.getString("ExpTripDuration").toString());
 
 					}
 

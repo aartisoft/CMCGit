@@ -53,7 +53,6 @@ public class OTPActivity extends Activity {
 	String verifyotpresp;
 	String resendotpresp;
 
-	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -66,7 +65,8 @@ public class OTPActivity extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(OTPActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					OTPActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -86,8 +86,6 @@ public class OTPActivity extends Activity {
 			builder.show();
 			return;
 		}
-
-		
 
 		otphardtext = (TextView) findViewById(R.id.otphardtext);
 		enterotp = (TextView) findViewById(R.id.enterotp);
@@ -204,7 +202,11 @@ public class OTPActivity extends Activity {
 				editor.putString("verifyotp", "true");
 				editor.commit();
 
-				Intent mainIntent = new Intent(OTPActivity.this, HomeActivity.class);
+				// Intent mainIntent = new Intent(OTPActivity.this,
+				// HomeActivity.class);
+				Intent mainIntent = new Intent(OTPActivity.this,
+						FavoriteLocationsAcivity.class);
+				mainIntent.putExtra("NotFromRegistration", false);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);

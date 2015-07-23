@@ -4318,14 +4318,14 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 				} else {
 					response = "";
-					Log.d("PerformCabSearchTimeAsync",
+					Log.d("GetUberRequestIDAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
 				}
 
-				Log.d("PerformCabSearchTimeAsync",
-						"performCabSearchTime response : " + response);
+				Log.d("GetUberRequestIDAsync",
+						"GetUberRequestIDAsync response : " + response);
 				result = response;
 			} catch (Exception e) {
 				e.printStackTrace();

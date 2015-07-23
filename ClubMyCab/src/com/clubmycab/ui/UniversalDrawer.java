@@ -203,26 +203,26 @@ public class UniversalDrawer {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				Intent mainIntent = new Intent(context,
-						FavoriteLocationsAcivity.class);
-				context.startActivity(mainIntent);
-				((Activity) context).overridePendingTransition(
-						R.anim.slide_in_right, R.anim.slide_out_left);
+				// Intent mainIntent = new Intent(context,
+				// FavoriteLocationsAcivity.class);
+				// context.startActivity(mainIntent);
+				// ((Activity) context).overridePendingTransition(
+				// R.anim.slide_in_right, R.anim.slide_out_left);
 
-				// tracker.send(new HitBuilders.EventBuilder()
-				// .setCategory("ShareApp Click")
-				// .setAction("ShareApp Click").setLabel("ShareApp Click")
-				// .build());
-				//
-				// Intent sendIntent = new Intent();
-				// sendIntent.setAction(Intent.ACTION_SEND);
-				// sendIntent
-				// .putExtra(
-				// Intent.EXTRA_TEXT,
-				// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				// sendIntent.setType("text/plain");
-				// context.startActivity(Intent.createChooser(sendIntent,
-				// "Share Via"));
+				 tracker.send(new HitBuilders.EventBuilder()
+				 .setCategory("ShareApp Click")
+				 .setAction("ShareApp Click").setLabel("ShareApp Click")
+				 .build());
+				
+				 Intent sendIntent = new Intent();
+				 sendIntent.setAction(Intent.ACTION_SEND);
+				 sendIntent
+				 .putExtra(
+				 Intent.EXTRA_TEXT,
+				 "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
+				 sendIntent.setType("text/plain");
+				 context.startActivity(Intent.createChooser(sendIntent,
+				 "Share Via"));
 
 			}
 		});

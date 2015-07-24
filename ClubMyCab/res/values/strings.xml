@@ -80,7 +80,9 @@
     <string name="quesiton5">Booking a cab in ClubMyCab</string>
     <string name="quesiton6">What about privacy and safety?</string>
     
-    <string name="memberexcludingmsg">Number in brackets are registered members including the person who created the club</string>
+        <string name="selectclub">Select a club from above</string>
+    
+    <string name="memberexcludingmsg">(Number in brackets is registered members including the person who created the club)</string>
 
     <string name="seatcount">3</string>
 

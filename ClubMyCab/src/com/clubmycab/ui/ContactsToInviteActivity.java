@@ -826,7 +826,7 @@ public class ContactsToInviteActivity extends Activity {
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									ContactsToInviteActivity.this,
-									ClubListClass.ClubList);
+									ClubListClass.ClubList,true);
 							listMyclubs.setAdapter(adapter);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
@@ -875,7 +875,7 @@ public class ContactsToInviteActivity extends Activity {
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									ContactsToInviteActivity.this,
-									ClubListClass.MemberClubList);
+									ClubListClass.MemberClubList,true);
 
 							listMembersclubs.setAdapter(adapter);
 							listMembersclubs
@@ -1356,7 +1356,7 @@ public class ContactsToInviteActivity extends Activity {
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									ContactsToInviteActivity.this,
-									ClubListClass.ClubList);
+									ClubListClass.ClubList,true);
 							listMyclubs.setAdapter(adapter);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
@@ -1405,7 +1405,7 @@ public class ContactsToInviteActivity extends Activity {
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									ContactsToInviteActivity.this,
-									ClubListClass.MemberClubList);
+									ClubListClass.MemberClubList,true);
 
 							listMembersclubs.setAdapter(adapter);
 							listMembersclubs

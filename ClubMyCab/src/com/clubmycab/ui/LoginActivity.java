@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.R;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -136,7 +137,7 @@ public class LoginActivity extends Activity {
 
 				Intent mainIntent = new Intent(LoginActivity.this,
 						TermsAndConditionsActivity.class);
-				LoginActivity.this.startActivityForResult(mainIntent, 1);
+				LoginActivity.this.startActivity(mainIntent);
 
 			}
 		});

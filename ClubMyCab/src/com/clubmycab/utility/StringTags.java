@@ -9,6 +9,6 @@ public class StringTags {
 	public static int TAT_ADD_TOTAL=1;
 	public static String TAG_DOSE_NOT_HAVE_MEMBER="This club does not have any members, choose one with members";
 
-
+public static String TAG_LOW_MEMBER="Low club membership - add/refer more members to improve chances of sharing";
 
 }

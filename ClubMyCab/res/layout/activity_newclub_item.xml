@@ -5,14 +5,36 @@
     android:background="#FFFFFF"
     android:orientation="horizontal"
     android:padding="10dp" >
-
+    
+    <ImageView 
+        android:layout_height="25dp"
+        android:layout_width="25dp"
+        android:id="@+id/ivWarnning"
+        android:background="@drawable/warnning"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        
+        />
+       <RadioButton
+            android:id="@+id/myclubcheckBox"
+           android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+android:focusable="false"
+android:focusableInTouchMode="false"       
+        
+        android:layout_marginRight="10dp" 
+            />
+ 
     <LinearLayout
         android:id="@+id/llmemclub_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/ivWarnning"
         android:orientation="vertical" >
 
         <TextView
@@ -20,6 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mera Club"
+           android:singleLine="true"
+    android:maxEms="8"
+    android:ellipsize="end"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -31,13 +56,13 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-    <TextView
+   <TextView
         android:id="@+id/noofmembers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/llmemclub_row"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/llmemclub_row"
         android:text="(3)"
         android:textColor="#000000"
         android:textSize="18sp" />
@@ -50,17 +75,6 @@
 <!--         android:layout_centerVertical="true" -->
 <!--         android:layout_marginLeft="10dp" -->
 <!--         android:layout_marginRight="10dp" /> -->
-     <RadioButton
-            android:id="@+id/myclubcheckBox"
-           android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-android:focusable="false"
-android:focusableInTouchMode="false"       
-        
-        android:layout_marginRight="10dp" 
-            />
+  
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.clubmycab;
 import java.util.List;
 
 import com.clubmycab.ui.ContactsInviteForRideActivity;
+import com.clubmycab.utility.StringTags;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ClubsAdaptor extends BaseAdapter {
 
@@ -21,9 +24,10 @@ public class ClubsAdaptor extends BaseAdapter {
 	LayoutInflater inflater;
 	private List<ClubObject> mainDataList = null;
 	int selectedIndex=-1;
+	private boolean isWarnning;
 
-	public ClubsAdaptor(Context context, List<ClubObject> mainDataList) {
-
+	public ClubsAdaptor(Context context, List<ClubObject> mainDataList,boolean isWarnning) {
+this.isWarnning=isWarnning;
 		mContext = context;
 		this.mainDataList = mainDataList;
 		inflater = LayoutInflater.from(mContext);
@@ -34,6 +38,7 @@ public class ClubsAdaptor extends BaseAdapter {
 		protected TextView nofmem;
 		protected TextView clubownername;
 		protected RadioButton check;
+		public ImageView ivWarnning;
 	}
 
 	@Override
@@ -65,6 +70,8 @@ public class ClubsAdaptor extends BaseAdapter {
 			holder.clubownername = (TextView) view
 					.findViewById(R.id.clubownername);
 			holder.check = (RadioButton) view.findViewById(R.id.myclubcheckBox);
+			holder.ivWarnning=(ImageView)view.findViewById(R.id.ivWarnning);
+			
 
 			view.setTag(holder);
 			view.setTag(R.id.nameofclub, holder.name);
@@ -73,6 +80,16 @@ public class ClubsAdaptor extends BaseAdapter {
 			view.setTag(R.id.myclubcheckBox, holder.check);
 			
 			//holder.check.setonc
+			
+			holder.ivWarnning.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+					Toast.makeText(mContext,StringTags.TAG_LOW_MEMBER, Toast.LENGTH_LONG).show();
+					
+				}
+			});
 			
 			holder.check.setOnClickListener(new OnClickListener() {
 				
@@ -115,6 +132,30 @@ public class ClubsAdaptor extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
+		
+		if(isWarnning){
+			
+			try{
+				int count=Integer.parseInt(mainDataList.get(position).getNoofMembers());
+				if(count<=10)
+				holder.ivWarnning.setVisibility(View.VISIBLE);
+				else
+					holder.ivWarnning.setVisibility(View.GONE);
+
+			}
+			catch(Exception e){
+				holder.ivWarnning.setVisibility(View.GONE);
+
+				
+			}
+			
+		
+			
+			
+		}
+		else
+			holder.ivWarnning.setVisibility(View.GONE);
+
 		holder.check.setTag(position);
 
 		if(selectedIndex == position){

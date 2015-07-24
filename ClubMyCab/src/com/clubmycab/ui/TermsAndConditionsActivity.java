@@ -1,6 +1,7 @@
 package com.clubmycab.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -28,7 +29,10 @@ public class TermsAndConditionsActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				setResult(Activity.RESULT_OK);
+				Intent mainIntent = new Intent(TermsAndConditionsActivity.this,
+						RegistrationActivity.class);
+				mainIntent.putExtra("source", "phonenumber");
+				startActivity(mainIntent);
 				finish();
 			}
 		});

@@ -3,6 +3,7 @@ package com.clubmycab;
 import java.util.List;
 
 import com.clubmycab.ui.ContactsInviteForRideActivity;
+import com.clubmycab.utility.StringTags;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ClubMemberAdapter extends BaseAdapter {
@@ -20,12 +23,14 @@ public class ClubMemberAdapter extends BaseAdapter {
 	LayoutInflater inflater;
 	private List<ClubObject> mainDataList = null;
 	public int selectedIndex=-1;
+	private boolean isWarnning;
 
-	public ClubMemberAdapter(Context context, List<ClubObject> mainDataList) {
+	public ClubMemberAdapter(Context context, List<ClubObject> mainDataList,boolean isWarnning) {
 
 		mContext = context;
 		this.mainDataList = mainDataList;
 		inflater = LayoutInflater.from(mContext);
+		this.isWarnning=isWarnning;
 	}
 
 	static class ViewHolder {
@@ -33,6 +38,7 @@ public class ClubMemberAdapter extends BaseAdapter {
 		protected TextView nofmem;
 		protected TextView clubownername;
 		protected RadioButton check;
+		protected ImageView ivWarnning;
 	}
 
 	@Override
@@ -63,7 +69,7 @@ public class ClubMemberAdapter extends BaseAdapter {
 			holder.clubownername = (TextView) view
 					.findViewById(R.id.clubownername);
 			holder.check = (RadioButton) view.findViewById(R.id.myclubcheckBox);
-
+holder.ivWarnning=(ImageView)view.findViewById(R.id.ivWarnning);
 			view.setTag(holder);
 			view.setTag(R.id.nameofclub, holder.name);
 			view.setTag(R.id.noofmembers, holder.nofmem);
@@ -71,6 +77,16 @@ public class ClubMemberAdapter extends BaseAdapter {
 			view.setTag(R.id.myclubcheckBox, holder.check);
 			
 			//holder.check.setonc
+			
+holder.ivWarnning.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+					Toast.makeText(mContext,StringTags.TAG_LOW_MEMBER, Toast.LENGTH_LONG).show();
+					
+				}
+			});
 			
 			holder.check.setOnClickListener(new OnClickListener() {
 				
@@ -118,6 +134,29 @@ public class ClubMemberAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
+if(isWarnning){
+			
+			try{
+				int count=Integer.parseInt(mainDataList.get(position).getNoofMembers());
+				if(count<=10)
+				holder.ivWarnning.setVisibility(View.VISIBLE);
+				else
+					holder.ivWarnning.setVisibility(View.GONE);
+
+			}
+			catch(Exception e){
+				holder.ivWarnning.setVisibility(View.GONE);
+
+				
+			}
+			
+		
+			
+			
+		}
+		else
+			holder.ivWarnning.setVisibility(View.GONE);
+
 		holder.check.setTag(position);
 		
 

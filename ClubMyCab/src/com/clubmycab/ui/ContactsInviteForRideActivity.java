@@ -513,7 +513,7 @@ public class ContactsInviteForRideActivity extends Activity {
 		//Pawan 
 		adapterClubMy = new ClubsAdaptor(
 				ContactsInviteForRideActivity.this,
-				ClubListClass.ClubList);
+				ClubListClass.ClubList,true);
 		listMyclubs.setAdapter(adapterClubMy);
 		//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listMyclubs
@@ -566,7 +566,7 @@ adapterClubMember.notifyDataSetChanged();
 		
 		adapterClubMember = new ClubMemberAdapter(
 				ContactsInviteForRideActivity.this,
-				ClubListClass.MemberClubList);
+				ClubListClass.MemberClubList,true);
 
 		listMembersclubs.setAdapter(adapterClubMember);
 		listMembersclubs

@@ -96,7 +96,7 @@ public class SplashActivity extends Activity {
 		ans1.add("Fare split calculation is done on basis of distance traveled assuming same destination");
 		
 		
-		ans1.add("We show you multiple choices of cabs to be booked with estimated time and cost");
+		ans1.add("We show you choice of cabs with estimated costs and arrival time");
 		ans1.add("You can sort the cabs on Book a Cab page by nearest and cheapest. Click the icons that appear on top");
 		ans1.add("Book the cab when you are ready to leave - ClubMyCab is about sharing on-the-go");
 		ans1.add("You can book a cab even if you are riding alone");
@@ -109,7 +109,7 @@ public class SplashActivity extends Activity {
 		tvRandom=(TextView)findViewById(R.id.tvRandom);
 		
 		Random r = new Random();
-		int answer = r.nextInt(ans1.size()-1) + 0;
+		int answer = r.nextInt(ans1.size()-1) ;
 		tvRandom.setText(ans1.get(answer));
 		
 

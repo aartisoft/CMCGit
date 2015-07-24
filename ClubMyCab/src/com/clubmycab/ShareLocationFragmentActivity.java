@@ -56,8 +56,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -79,11 +77,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.maps.MapUtilityMethods;
-import com.clubmycab.model.AddressModel;
 import com.clubmycab.ui.ContactsInviteForRideActivity;
 import com.clubmycab.ui.FavoritePlaceFindActivity;
 import com.clubmycab.ui.HomeActivity;
-import com.clubmycab.ui.InviteFragmentActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalVariables;
@@ -181,7 +177,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 	int flag = 1;
 	Button donebtn;
-
+private TextView validmobiletxt1;
 	String appusers;
 
 	ArrayList<String> selectednames = new ArrayList<String>();
@@ -2073,6 +2069,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		appFrends = (Button) dialog.findViewById(R.id.appFrends1);
 		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn1);
 		donebtn = (Button) dialog.findViewById(R.id.donebtn);
+		 validmobiletxt1=(TextView)dialog.findViewById(R.id.validmobiletxt1);
 
 		clubcontactslistll = (LinearLayout) dialog
 				.findViewById(R.id.clubcontactslistll1);
@@ -2098,6 +2095,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		contactsbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				
+				validmobiletxt1.setText("(Please select contacts with valid Indian mobile numbers)");
 
 				flag = 1;
 
@@ -2194,7 +2193,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 
 				flag = 0;
-
+				validmobiletxt1.setText("(Select a club from below)");
 				contactsbtn.setBackgroundColor(Color.parseColor("#4279bd"));
 				contactsbtn.setTextColor(Color.WHITE);
 
@@ -2308,6 +2307,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 								ClubListClass.ClubList.add(cp);
 							}
+						}
 
 //							ClubsAdaptor adapter = new ClubsAdaptor(
 //									ShareLocationFragmentActivity.this,
@@ -2340,7 +2340,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 							//Pawan 
 							ContactsInviteForRideActivity.	adapterClubMy = new ClubsAdaptor(
 									ShareLocationFragmentActivity.this,
-									ClubListClass.ClubList);
+									ClubListClass.ClubList,false);
 							listMyclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
 							//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 							listMyclubs
@@ -2441,7 +2441,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 								
 								ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
 										ShareLocationFragmentActivity.this,
-										ClubListClass.MemberClubList);
+										ClubListClass.MemberClubList,false);
 
 								listMembersclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
 								listMembersclubs
@@ -2493,7 +2493,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 											}
 										});
 								
-							}
+							
 							
 						
 							
@@ -2824,7 +2824,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 						//Pawan 
 						ContactsInviteForRideActivity.	adapterClubMy = new ClubsAdaptor(
 								ShareLocationFragmentActivity.this,
-								ClubListClass.ClubList);
+								ClubListClass.ClubList,false);
 						listMyclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
 						//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 						listMyclubs
@@ -2926,7 +2926,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 						
 						ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
 								ShareLocationFragmentActivity.this,
-								ClubListClass.MemberClubList);
+								ClubListClass.MemberClubList,false);
 
 						listMembersclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
 						listMembersclubs

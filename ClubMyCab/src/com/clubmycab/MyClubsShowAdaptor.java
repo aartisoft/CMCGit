@@ -23,7 +23,10 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
+
 import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,6 +92,8 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 				false);
 
 		// Locate the TextViews in listview_item.xml
+		
+		ImageView ivWarnning1=(ImageView)itemView.findViewById(R.id.ivWarnning1);
 
 		TextView Mname = (TextView) itemView.findViewById(R.id.nameofclub);
 		TextView noofmembers = (TextView) itemView
@@ -99,6 +104,29 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 		Mname.setText(MyClubPoolName.get(position).toString().trim());
 		noofmembers.setText("("
 				+ MyClubNoofMembers.get(position).toString().trim() + ")");
+		
+		ivWarnning1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Toast.makeText(context,StringTags.TAG_LOW_MEMBER, Toast.LENGTH_LONG).show();
+				
+			}
+		});
+		try{
+			int count=Integer.parseInt(MyClubNoofMembers.get(position).toString().trim());
+			if(count<=10)
+			ivWarnning1.setVisibility(View.VISIBLE);
+			else
+				ivWarnning1.setVisibility(View.GONE);
+
+		}
+		catch(Exception e){
+			ivWarnning1.setVisibility(View.GONE);
+
+			
+		}
 
 		removeclub.setOnClickListener(new OnClickListener() {
 

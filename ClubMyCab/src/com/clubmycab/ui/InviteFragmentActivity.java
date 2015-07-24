@@ -86,18 +86,19 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	TextView date;
 	TextView time;
 	TextView seats;
-	private String seatCount="3";
-	private String seatSuffix="";//" seat(s) to share";
+	private String seatCount = "3";
+	private String seatSuffix = "";// " seat(s) to share";
 
-private	AutoCompleteTextView from_places;
-private	AutoCompleteTextView to_places;
-private 	TextView datetextview,datetextview2,datetextview3;
-private	TextView timetextview,timetextview2,timetextview3;
-//	Button seatsbutton;
+	private AutoCompleteTextView from_places;
+	private AutoCompleteTextView to_places;
+	private TextView datetextview, datetextview2, datetextview3;
+	private TextView timetextview, timetextview2, timetextview3;
+	// Button seatsbutton;
 
-private	LinearLayout inviteLl,llSeats;
-//private TextView  datechoose, timehalfhour,timeonehour;// timechoose,datetoday;
-private LinearLayout llHalfHour,llOneHour,llDateTime;
+	private LinearLayout inviteLl, llSeats;
+	// private TextView datechoose, timehalfhour,timeonehour;//
+	// timechoose,datetoday;
+	private LinearLayout llHalfHour, llOneHour, llDateTime;
 
 	Calendar myCalendar = Calendar.getInstance();
 
@@ -213,16 +214,16 @@ private LinearLayout llHalfHour,llOneHour,llDateTime;
 	ListView topthreerideslist;
 
 	TopThreeRidesAdaptor topthreeadaptor;
-	
-private int hour,minute;
-private TimePickerDialog timePickerDialog;
-private TextView tvNext;
+
+	private int hour, minute;
+	private TimePickerDialog timePickerDialog;
+	private TextView tvNext;
+	private ImageView ivHalfArrow, ivOneArrow, ivDateTimeArrow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_invite);
-		
 
 		// Check if Internet present
 		if (!isOnline()) {
@@ -248,7 +249,7 @@ private TextView tvNext;
 			builder.show();
 			return;
 		}
-		tvNext=(TextView)findViewById(R.id.tvNext1);
+		tvNext = (TextView) findViewById(R.id.tvNext1);
 		inviteloadingll = (LinearLayout) findViewById(R.id.inviteloadingll);
 		inviteloadingll.setVisibility(View.GONE);
 
@@ -256,6 +257,12 @@ private TextView tvNext;
 		topthreeridesll.setVisibility(View.GONE);
 
 		topthreerideslist = (ListView) findViewById(R.id.topthreerideslist);
+
+		ivDateTimeArrow = (ImageView) findViewById(R.id.ivDateTimeArrow);
+		ivDateTimeArrow.setVisibility(View.INVISIBLE);
+		ivOneArrow = (ImageView) findViewById(R.id.ivOneArrow);
+		ivOneArrow.setVisibility(View.INVISIBLE);
+		ivHalfArrow = (ImageView) findViewById(R.id.ivHalfArrow);
 
 		LinearLayout topthreeridesll = (LinearLayout) findViewById(R.id.topthreeridesll);
 		topthreeridesll.setOnClickListener(new OnClickListener() {
@@ -563,7 +570,6 @@ private TextView tvNext;
 		datetextview2.setText(simpleDateFormat.format(new Date()));
 		datetextview3.setText(simpleDateFormat.format(new Date()));
 
-
 		clearedittextimgfrom = (ImageView) findViewById(R.id.clearedittextimgfrom);
 		clearedittextimgfrom.setVisibility(View.GONE);
 
@@ -599,7 +605,7 @@ private TextView tvNext;
 		datetextview2.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 		datetextview3.setTypeface(Typeface.createFromAsset(getAssets(),
-						"NeutraText-Light.ttf"));
+				"NeutraText-Light.ttf"));
 
 		time.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
@@ -608,12 +614,12 @@ private TextView tvNext;
 		timetextview2.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 		timetextview3.setTypeface(Typeface.createFromAsset(getAssets(),
-						"NeutraText-Light.ttf"));
+				"NeutraText-Light.ttf"));
 
 		seats.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
-//	pawan	seatsedittext.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
+		// pawan seatsedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
 
 		tvNext.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
@@ -649,9 +655,9 @@ private TextView tvNext;
 
 		calendar.add(Calendar.MINUTE, 30);
 		hour = calendar.get(Calendar.HOUR_OF_DAY);
-	 minute = calendar.get(Calendar.MINUTE);
+		minute = calendar.get(Calendar.MINUTE);
 
-	 timePickerDialog = TimePickerDialog.newInstance(
+		timePickerDialog = TimePickerDialog.newInstance(
 				InviteFragmentActivity.this, hour, minute, false, false);
 		TimePickerDialog tpd = (TimePickerDialog) getSupportFragmentManager()
 				.findFragmentByTag(TIMEPICKER_TAG);
@@ -663,33 +669,31 @@ private TextView tvNext;
 				dpd.setOnDateSetListener(InviteFragmentActivity.this);
 			}
 
-//			TimePickerDialog tpd = (TimePickerDialog) getSupportFragmentManager()
-//					.findFragmentByTag(TIMEPICKER_TAG);
+			
 			if (tpd != null) {
 				tpd.setOnTimeSetListener(InviteFragmentActivity.this);
 			}
 		}
 
-		//timeonehour = (TextView) findViewById(R.id.timeonehour);
-		llOneHour=(LinearLayout)findViewById(R.id.llOneHour);
+		// timeonehour = (TextView) findViewById(R.id.timeonehour);
+		llOneHour = (LinearLayout) findViewById(R.id.llOneHour);
 		llOneHour.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-//				timeonehour.setBackgroundColor(getResources().getColor(
-//						R.color.color_dark_blue));
-//				timeonehour.setTextColor(getResources().getColor(
-//						R.color.white));
-				
-				
-//				datechoose.setBackgroundColor(getResources().getColor(
-//						R.color.white));
-//				timehalfhour.setBackgroundColor(getResources().getColor(
-//						R.color.white));
-//				timehalfhour.setTextColor(getResources().getColor(
-//						R.color.black));
-//				datechoose.setTextColor(getResources().getColor(
-//								R.color.black));
+				// timeonehour.setBackgroundColor(getResources().getColor(
+				// R.color.color_dark_blue));
+				// timeonehour.setTextColor(getResources().getColor(
+				// R.color.white));
+
+				// datechoose.setBackgroundColor(getResources().getColor(
+				// R.color.white));
+				// timehalfhour.setBackgroundColor(getResources().getColor(
+				// R.color.white));
+				// timehalfhour.setTextColor(getResources().getColor(
+				// R.color.black));
+				// datechoose.setTextColor(getResources().getColor(
+				// R.color.black));
 				datetextview.setVisibility(View.INVISIBLE);
 				timetextview.setVisibility(View.INVISIBLE);
 				datetextview2.setVisibility(View.VISIBLE);
@@ -697,42 +701,41 @@ private TextView tvNext;
 
 				datetextview3.setVisibility(View.INVISIBLE);
 				timetextview3.setVisibility(View.INVISIBLE);
+				ivOneArrow.setVisibility(View.VISIBLE);
+				ivHalfArrow.setVisibility(View.INVISIBLE);
+				ivDateTimeArrow.setVisibility(View.INVISIBLE);
 
-
-			Calendar calendar = Calendar.getInstance();
-
-				
+				Calendar calendar = Calendar.getInstance();
 
 				calendar.add(Calendar.HOUR, 1);
 				hour = calendar.get(Calendar.HOUR_OF_DAY);
-			 minute = calendar.get(Calendar.MINUTE);
-			updateTime(hour, minute);
+				minute = calendar.get(Calendar.MINUTE);
+				updateTime(hour, minute);
 			}
 		});
 
-		//datechoose = (TextView) findViewById(R.id.datechoose);
-		llDateTime=(LinearLayout)findViewById(R.id.llDateTime);
-		
+		llDateTime = (LinearLayout) findViewById(R.id.llDateTime);
+
 		llDateTime.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-//				datechoose.setBackgroundColor(getResources().getColor(
-//						R.color.color_dark_blue));
-//				datechoose.setTextColor(getResources().getColor(
-//						R.color.white));
-//				
-//				timeonehour.setBackgroundColor(getResources().getColor(
-//						R.color.white));
-//				timehalfhour.setBackgroundColor(getResources().getColor(
-//						R.color.white));
-//				
-//				timehalfhour.setTextColor(getResources().getColor(
-//						R.color.black));
-//				timeonehour.setTextColor(getResources().getColor(
-//								R.color.black));
-				
+				// datechoose.setBackgroundColor(getResources().getColor(
+				// R.color.color_dark_blue));
+				// datechoose.setTextColor(getResources().getColor(
+				// R.color.white));
+				//
+				// timeonehour.setBackgroundColor(getResources().getColor(
+				// R.color.white));
+				// timehalfhour.setBackgroundColor(getResources().getColor(
+				// R.color.white));
+				//
+				// timehalfhour.setTextColor(getResources().getColor(
+				// R.color.black));
+				// timeonehour.setTextColor(getResources().getColor(
+				// R.color.black));
+
 				datetextview.setVisibility(View.INVISIBLE);
 				timetextview.setVisibility(View.INVISIBLE);
 				datetextview2.setVisibility(View.INVISIBLE);
@@ -740,6 +743,9 @@ private TextView tvNext;
 
 				datetextview3.setVisibility(View.VISIBLE);
 				timetextview3.setVisibility(View.VISIBLE);
+				ivOneArrow.setVisibility(View.INVISIBLE);
+				ivHalfArrow.setVisibility(View.INVISIBLE);
+				ivDateTimeArrow.setVisibility(View.VISIBLE);
 
 				datePickerDialog.setVibrate(isVibrate());
 				datePickerDialog.setYearRange(1985, 2028);
@@ -749,31 +755,17 @@ private TextView tvNext;
 						DATEPICKER_TAG);
 			}
 		});
-		
-		//Added pawan
 
-		//timehalfhour = (TextView) findViewById(R.id.timehalfhour);
-		llHalfHour=(LinearLayout)findViewById(R.id.llHalfHour);
+		// Added pawan
+
+		llHalfHour = (LinearLayout) findViewById(R.id.llHalfHour);
 		updateTime(hour, minute);
 		llHalfHour.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-//				timehalfhour.setBackgroundColor(getResources().getColor(
-//						R.color.color_dark_blue));
-//				timehalfhour.setTextColor(getResources().getColor(
-//						R.color.white));
-//				timeonehour.setBackgroundColor(getResources().getColor(
-//						R.color.white));
-//				datechoose.setBackgroundColor(getResources().getColor(
-//						R.color.white));
-//				
-//				
-//				datechoose.setTextColor(getResources().getColor(
-//						R.color.black));
-//				timeonehour.setTextColor(getResources().getColor(
-//								R.color.black));
 				
+
 				datetextview.setVisibility(View.VISIBLE);
 				timetextview.setVisibility(View.VISIBLE);
 				datetextview2.setVisibility(View.INVISIBLE);
@@ -781,63 +773,64 @@ private TextView tvNext;
 
 				datetextview3.setVisibility(View.INVISIBLE);
 				timetextview3.setVisibility(View.INVISIBLE);
-	Calendar calendar = Calendar.getInstance();
 
-				
+				ivOneArrow.setVisibility(View.INVISIBLE);
+				ivHalfArrow.setVisibility(View.VISIBLE);
+				ivDateTimeArrow.setVisibility(View.INVISIBLE);
+				Calendar calendar = Calendar.getInstance();
 
 				calendar.add(Calendar.MINUTE, 30);
 				hour = calendar.get(Calendar.HOUR_OF_DAY);
-			 minute = calendar.get(Calendar.MINUTE);
-			updateTime(hour, minute);
+				minute = calendar.get(Calendar.MINUTE);
+				updateTime(hour, minute);
 				updateTime(hour, minute);
 
 			}
 		});
-		
-//		timehalfhour = (Button) findViewById(R.id.timehalfhour);
-//		updateTime(hour, minute);
-//		timehalfhour.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				timehalfhour.setBackgroundColor(getResources().getColor(
-//						R.color.color_dark_blue));
-////		pawan		timechoose.setBackgroundColor(getResources().getColor(
-////						R.color.color_light_blue));
-//
-//				updateTime(hour, minute);
-//
-//			}
-//		});
-//		
-		
-		//Commented for time choose marge with  choose date  
-		//Pawan
 
-//		timechoose = (Button) findViewById(R.id.timechoose);
-//		timechoose.setBackgroundColor(getResources().getColor(
-//				R.color.color_light_blue));
-//		timechoose.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				timehalfhour.setBackgroundColor(getResources().getColor(
-//						R.color.color_light_blue));
-//				timechoose.setBackgroundColor(getResources().getColor(
-//						R.color.color_dark_blue));
-//
-//				timePickerDialog.setVibrate(isVibrate());
-//				timePickerDialog
-//						.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
-//				timePickerDialog.show(getSupportFragmentManager(),
-//						TIMEPICKER_TAG);
-//			}
-//		});
+		// timehalfhour = (Button) findViewById(R.id.timehalfhour);
+		// updateTime(hour, minute);
+		// timehalfhour.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// timehalfhour.setBackgroundColor(getResources().getColor(
+		// R.color.color_dark_blue));
+		// // pawan timechoose.setBackgroundColor(getResources().getColor(
+		// // R.color.color_light_blue));
+		//
+		// updateTime(hour, minute);
+		//
+		// }
+		// });
+		//
 
-		//End Pawan
-		
-		
+		// Commented for time choose marge with choose date
+		// Pawan
+
+		// timechoose = (Button) findViewById(R.id.timechoose);
+		// timechoose.setBackgroundColor(getResources().getColor(
+		// R.color.color_light_blue));
+		// timechoose.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		//
+		// timehalfhour.setBackgroundColor(getResources().getColor(
+		// R.color.color_light_blue));
+		// timechoose.setBackgroundColor(getResources().getColor(
+		// R.color.color_dark_blue));
+		//
+		// timePickerDialog.setVibrate(isVibrate());
+		// timePickerDialog
+		// .setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
+		// timePickerDialog.show(getSupportFragmentManager(),
+		// TIMEPICKER_TAG);
+		// }
+		// });
+
+		// End Pawan
+
 		// dateedittext.setOnClickListener(new OnClickListener() {
 		//
 		// @SuppressWarnings("deprecation")
@@ -925,9 +918,9 @@ private TextView tvNext;
 					@Override
 					public void onClick(DialogInterface dialog, int position) {
 						// TODO Auto-generated method stub
-						seats.setText(str[position]+seatSuffix);
-						seatCount=""+str[position];
-						
+						seats.setText(str[position] + seatSuffix);
+						seatCount = "" + str[position];
+
 					}
 				});
 
@@ -937,42 +930,42 @@ private TextView tvNext;
 			}
 		});
 
-//	Pawan	seatsedittext
-//				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//
-//					@Override
-//					public void onFocusChange(View v, boolean hasFocus) {
-//						if (hasFocus) {
-//
-//							// TODO Auto-generated method stub
-//							AlertDialog dialog;
-//							AlertDialog.Builder builder = new AlertDialog.Builder(
-//									InviteFragmentActivity.this);
-//							builder.setTitle("Select No of Seats");
-//
-//							final CharSequence str[] = { "1", "2", "3", "4",
-//									"5", "6" };
-//
-//							builder.setItems(str,
-//									new DialogInterface.OnClickListener() {
-//
-//										@Override
-//										public void onClick(
-//												DialogInterface dialog,
-//												int position) {
-//											// TODO Auto-generated method stub
-//											seatsedittext
-//													.setText(str[position]);
-//										}
-//									});
-//
-//							dialog = builder.create();
-//							dialog.show();
-//
-//						}
-//					}
-//
-//				});
+		// Pawan seatsedittext
+		// .setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		//
+		// @Override
+		// public void onFocusChange(View v, boolean hasFocus) {
+		// if (hasFocus) {
+		//
+		// // TODO Auto-generated method stub
+		// AlertDialog dialog;
+		// AlertDialog.Builder builder = new AlertDialog.Builder(
+		// InviteFragmentActivity.this);
+		// builder.setTitle("Select No of Seats");
+		//
+		// final CharSequence str[] = { "1", "2", "3", "4",
+		// "5", "6" };
+		//
+		// builder.setItems(str,
+		// new DialogInterface.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(
+		// DialogInterface dialog,
+		// int position) {
+		// // TODO Auto-generated method stub
+		// seatsedittext
+		// .setText(str[position]);
+		// }
+		// });
+		//
+		// dialog = builder.create();
+		// dialog.show();
+		//
+		// }
+		// }
+		//
+		// });
 
 		inviteLl.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -1018,10 +1011,12 @@ private TextView tvNext;
 							dialog.show();
 
 						} else if (datetextview.getText().toString().trim()
-								.isEmpty()||datetextview2.getText().toString().trim()
-								.isEmpty()||datetextview3.getText().toString().trim()
-								.isEmpty()) {
-//Need to think
+								.isEmpty()
+								|| datetextview2.getText().toString().trim()
+										.isEmpty()
+								|| datetextview3.getText().toString().trim()
+										.isEmpty()) {
+							// Need to think
 							datetextview.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -1040,7 +1035,7 @@ private TextView tvNext;
 						else if (timetextview.getText().toString().trim()
 								.isEmpty()) {
 
-						//	timetextview.requestFocus();
+							// timetextview.requestFocus();
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
 									InviteFragmentActivity.this);
@@ -1053,35 +1048,38 @@ private TextView tvNext;
 							messageText.setGravity(Gravity.CENTER);
 							dialog.show();
 
-					}
-						//Commit becuase seatsEdittext change with button
-							//else if (seatsedittext.getText().toString().trim()
-//								.isEmpty()) {
-//
-//							seatsedittext.requestFocus();
-//
-//							AlertDialog.Builder builder = new AlertDialog.Builder(
-//									InviteFragmentActivity.this);
-//
-//							builder.setMessage("Please Enter Seats Available");
-//							builder.setPositiveButton("OK", null);
-//							AlertDialog dialog = builder.show();
-//							TextView messageText = (TextView) dialog
-//									.findViewById(android.R.id.message);
-//							messageText.setGravity(Gravity.CENTER);
-//							dialog.show();
-//
-//						} 
-							else if (!datetextview.getText().toString().trim()
+						}
+						// Commit becuase seatsEdittext change with button
+						// else if (seatsedittext.getText().toString().trim()
+						// .isEmpty()) {
+						//
+						// seatsedittext.requestFocus();
+						//
+						// AlertDialog.Builder builder = new
+						// AlertDialog.Builder(
+						// InviteFragmentActivity.this);
+						//
+						// builder.setMessage("Please Enter Seats Available");
+						// builder.setPositiveButton("OK", null);
+						// AlertDialog dialog = builder.show();
+						// TextView messageText = (TextView) dialog
+						// .findViewById(android.R.id.message);
+						// messageText.setGravity(Gravity.CENTER);
+						// dialog.show();
+						//
+						// }
+						else if (!datetextview.getText().toString().trim()
 								.isEmpty()
 								&& !timetextview.getText().toString().trim()
-										.isEmpty()||!datetextview2.getText().toString().trim()
 										.isEmpty()
-										&& !timetextview2.getText().toString().trim()
-												.isEmpty()||!datetextview3.getText().toString().trim()
-												.isEmpty()
-												&& !timetextview3.getText().toString().trim()
-														.isEmpty()) {
+								|| !datetextview2.getText().toString().trim()
+										.isEmpty()
+								&& !timetextview2.getText().toString().trim()
+										.isEmpty()
+								|| !datetextview3.getText().toString().trim()
+										.isEmpty()
+								&& !timetextview3.getText().toString().trim()
+										.isEmpty()) {
 
 							SimpleDateFormat dateFormat = new SimpleDateFormat(
 									"dd/MM/yyyy hh:mm aa");
@@ -1140,8 +1138,7 @@ private TextView tvNext;
 										.getText().toString().trim());
 								mainIntent.putExtra("TravelTime", timetextview
 										.getText().toString().trim());
-								mainIntent.putExtra("Seats", seatCount
-										);
+								mainIntent.putExtra("Seats", seatCount);
 								mainIntent.putExtra("fromshortname",
 										fromshortname);
 								mainIntent.putExtra("toshortname", toshortname);
@@ -1539,18 +1536,16 @@ private TextView tvNext;
 		datetextview3.setText(selecteddate.toString().trim());
 
 		timePickerDialog.setVibrate(isVibrate());
-		timePickerDialog
-				.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
-		timePickerDialog.show(getSupportFragmentManager(),
-				TIMEPICKER_TAG);
+		timePickerDialog.setCloseOnSingleTapMinute(isCloseOnSingleTapMinute());
+		timePickerDialog.show(getSupportFragmentManager(), TIMEPICKER_TAG);
 	}
 
 	@Override
 	public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
 		// Toast.makeText(Invite.this, "new time:" + hourOfDay + "-" + minute,
 		// Toast.LENGTH_LONG).show();
-		hour=hourOfDay;
-		this.minute=minute;
+		hour = hourOfDay;
+		this.minute = minute;
 
 		updateTime(hourOfDay, minute);
 	}
@@ -1583,7 +1578,6 @@ private TextView tvNext;
 		timetextview2.setText(aTime);
 		timetextview3.setText(aTime);
 
-		
 	}
 
 	// /////////////////////////////
@@ -1656,7 +1650,8 @@ private TextView tvNext;
 									timetextview3.setText("");
 
 									seats.setText(Seats.get(position)
-											.toString().trim()+seatSuffix);
+											.toString().trim()
+											+ seatSuffix);
 
 									fromshortname = FromShortName.get(position)
 											.toString().trim();
@@ -1757,9 +1752,9 @@ private TextView tvNext;
 										timetextview2.setText("");
 										timetextview3.setText("");
 
-										seats.setText(SeatsNew
-												.get(position).toString()
-												.trim()+seatSuffix);
+										seats.setText(SeatsNew.get(position)
+												.toString().trim()
+												+ seatSuffix);
 
 										fromshortname = FromShortNameNew
 												.get(position).toString()
@@ -1833,9 +1828,9 @@ private TextView tvNext;
 										timetextview2.setText("");
 										timetextview3.setText("");
 
-										seats.setText(SeatsNew
-												.get(position).toString()
-												.trim()+seatSuffix);
+										seats.setText(SeatsNew.get(position)
+												.toString().trim()
+												+ seatSuffix);
 
 										fromshortname = FromShortNameNew
 												.get(position).toString()

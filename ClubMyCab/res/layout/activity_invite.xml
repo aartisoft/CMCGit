@@ -421,9 +421,18 @@
                         android:id="@+id/llHalfHour"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:weightSum="3" >
+
+                        <ImageView
+                            android:id="@+id/ivHalfArrow"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/small_blue_arrow"
+                            android:contentDescription="@string/accept" />
 
                         <TextView
                             android:id="@+id/timehalfhour"
@@ -467,9 +476,19 @@
                         android:id="@+id/llOneHour"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:weightSum="3" >
+
+                        <ImageView
+                            android:id="@+id/ivOneArrow"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/small_blue_arrow"
+                            android:visibility="invisible"
+                            android:contentDescription="@string/accept" />
 
                         <TextView
                             android:id="@+id/timeonehour"
@@ -515,9 +534,20 @@
                         android:id="@+id/llDateTime"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginTop="15dp"
                         android:orientation="horizontal"
                         android:weightSum="3" >
+
+                        <ImageView
+                            android:id="@+id/ivDateTimeArrow"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/small_blue_arrow"
+                                                        android:visibility="invisible"
+                            
+                            android:contentDescription="@string/accept" />
 
                         <TextView
                             android:id="@+id/datechoose"

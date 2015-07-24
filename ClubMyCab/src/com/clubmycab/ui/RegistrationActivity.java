@@ -244,58 +244,58 @@ public class RegistrationActivity extends Activity {
 					dialog.show();
 				}
 
-//				} else if (passwordedittext.getText().toString().trim()
-//						.isEmpty()) {
-//
-//					passwordedittext.requestFocus();
-//
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							RegistrationActivity.this);
-//
-//					builder.setMessage("Please enter Password");
-//					builder.setPositiveButton("OK", null);
-//					AlertDialog dialog = builder.show();
-//					TextView messageText = (TextView) dialog
-//							.findViewById(android.R.id.message);
-//					messageText.setGravity(Gravity.CENTER);
-//					dialog.show();
-//
-//				}
-//
-//				else if (confirmpasswordedittext.getText().toString().trim()
-//						.isEmpty()) {
-//
-//					confirmpasswordedittext.requestFocus();
-//
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							RegistrationActivity.this);
-//
-//					builder.setMessage("Please re-type the Password");
-//					builder.setPositiveButton("OK", null);
-//					AlertDialog dialog = builder.show();
-//					TextView messageText = (TextView) dialog
-//							.findViewById(android.R.id.message);
-//					messageText.setGravity(Gravity.CENTER);
-//					dialog.show();
-//
-//				} else if (!(passwordedittext.getText().toString().trim()
-//						.equals(confirmpasswordedittext.getText().toString()))) {
-//
-//					confirmpasswordedittext.requestFocus();
-//
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							RegistrationActivity.this);
-//
-//					builder.setMessage("Password Mismatch");
-//					builder.setPositiveButton("OK", null);
-//					AlertDialog dialog = builder.show();
-//					TextView messageText = (TextView) dialog
-//							.findViewById(android.R.id.message);
-//					messageText.setGravity(Gravity.CENTER);
-//					dialog.show();
-//
-//				} 
-					else {
+				// } else if (passwordedittext.getText().toString().trim()
+				// .isEmpty()) {
+				//
+				// passwordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// RegistrationActivity.this);
+				//
+				// builder.setMessage("Please enter Password");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// }
+				//
+				// else if (confirmpasswordedittext.getText().toString().trim()
+				// .isEmpty()) {
+				//
+				// confirmpasswordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// RegistrationActivity.this);
+				//
+				// builder.setMessage("Please re-type the Password");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// } else if (!(passwordedittext.getText().toString().trim()
+				// .equals(confirmpasswordedittext.getText().toString()))) {
+				//
+				// confirmpasswordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// RegistrationActivity.this);
+				//
+				// builder.setMessage("Password Mismatch");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// }
+				else {
 					// successfull for all
 					if (!isOnline()) {
 
@@ -410,9 +410,13 @@ public class RegistrationActivity extends Activity {
 				Intent i = new Intent(RegistrationActivity.this,
 						OTPActivity.class);
 				i.putExtra("from", "reg");
-				i.putExtra("mobnum", countrycode.getText()
-						.toString().trim()
+				i.putExtra("mobnum", countrycode.getText().toString().trim()
 						+ mobileedittext.getText().toString().trim());
+
+				i.putExtra("fullname", fullnameedittext.getText().toString()
+						.trim());
+				i.putExtra("regid", "");
+
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(i);
@@ -465,11 +469,12 @@ public class RegistrationActivity extends Activity {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair FullNameBasicNameValuePair = new BasicNameValuePair(
 					"FullName", fullnameedittext.getText().toString().trim());
-//			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
-//					"Password", passwordedittext.getText().toString().trim());
+			// BasicNameValuePair PasswordBasicNameValuePair = new
+			// BasicNameValuePair(
+			// "Password", passwordedittext.getText().toString().trim());
 			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
-					"Password", "");	
-			
+					"Password", "");
+
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", countrycode.getText().toString().trim()
 							+ mobileedittext.getText().toString().trim());
@@ -483,12 +488,12 @@ public class RegistrationActivity extends Activity {
 					"DOB", "");
 			BasicNameValuePair platformBasicNameValuePair = new BasicNameValuePair(
 					"Platform", "A");
-			
+
 			Log.d("MobileNumber", countrycode.getText().toString().trim()
-							+ mobileedittext.getText().toString().trim());
-			
+					+ mobileedittext.getText().toString().trim());
+
 			Log.d("DeviceToken", regid);
-			
+
 			Log.d("Email", emailedittext.getText().toString().trim());
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();

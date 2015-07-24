@@ -1,8 +1,13 @@
 package com.clubmycab;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +16,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -138,6 +145,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	String DriverName;
 	String DriverNumber;
 	String CarNumber;
+	String CabName;
 
 	String ExpTripDuration;
 	String statusTrip;
@@ -318,6 +326,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		DriverName = intent.getStringExtra("DriverName");
 		DriverNumber = intent.getStringExtra("DriverNumber");
 		CarNumber = intent.getStringExtra("CarNumber");
+		CabName = intent.getStringExtra("CabName");
 
 		comefrom = intent.getStringExtra("comefrom");
 
@@ -1995,7 +2004,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				onedialog.dismiss();
 			}
 
-			////////////////////////////
+			// //////////////////////////
 			if (CabStatus.equals("A") && statusTrip.equals("2")) {
 				showRideCompleteDialog();
 			} else if (CabStatus.equals("A") && statusTrip.equals("3")) {
@@ -2025,7 +2034,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					e.printStackTrace();
 				}
 			}
-			////////////////////////////
+			// //////////////////////////
 		}
 	}
 
@@ -2579,7 +2588,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		datetext = (TextView) dialog.findViewById(R.id.datetext);
 		timetext = (TextView) dialog.findViewById(R.id.timetext);
 		seatstext = (TextView) dialog.findViewById(R.id.seatstext1);
-		tvAvSeats=(TextView)dialog.findViewById(R.id.tvAvSeats1);
+		tvAvSeats = (TextView) dialog.findViewById(R.id.tvAvSeats1);
 
 		joinedmembersll = (LinearLayout) dialog
 				.findViewById(R.id.joinedmembersll);
@@ -2602,16 +2611,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				+ tol.toString().trim());
 		datetext.setText(td.toString().trim());
 		timetext.setText(tt.toString().trim());
-		//seatstext.setText(st.toString().trim() + " Seats");
-		try{
-String []arr=st.toString().trim().split("/");
-		
-		int total=Integer.parseInt(arr[1]);
-		int filled=Integer.parseInt(arr[0]);
-		int ava=total-filled;
-		seatstext.setText("Total seats : "+(total+StringTags.TAT_ADD_TOTAL));
-		tvAvSeats.setText("Available : "+ava);
-		}catch(Exception e){
+		// seatstext.setText(st.toString().trim() + " Seats");
+		try {
+			String[] arr = st.toString().trim().split("/");
+
+			int total = Integer.parseInt(arr[1]);
+			int filled = Integer.parseInt(arr[0]);
+			int ava = total - filled;
+			seatstext.setText("Total seats : "
+					+ (total + StringTags.TAT_ADD_TOTAL));
+			tvAvSeats.setText("Available : " + ava);
+		} catch (Exception e) {
 			seatstext.setText("Total seats : ");
 			tvAvSeats.setText("Available : ");
 		}
@@ -2698,6 +2708,52 @@ String []arr=st.toString().trim().split("/");
 
 			textView = (TextView) dialog.findViewById(R.id.cabbookingrefno);
 			textView.setText("Booking reference : " + BookingRefNo);
+
+			Button button = (Button) dialog.findViewById(R.id.cancelBooking);
+			button.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("Are you sure you want to cancel the booking?");
+
+					builder.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+									if (CabName.equalsIgnoreCase("Uber")) {
+
+									} else if (CabName.equalsIgnoreCase("Mega")) {
+										cancelMegaCab();
+									} else if (CabName
+											.equalsIgnoreCase("Taxi For Sure")) {
+										cancelTFSCab();
+									}
+								}
+							});
+
+					builder.setNegativeButton("NO",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+								}
+							});
+
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+				}
+			});
 		}
 
 		dialog.show();
@@ -4456,7 +4512,7 @@ String []arr=st.toString().trim().split("/");
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			
+
 			finish();
 		}
 
@@ -4855,4 +4911,578 @@ String []arr=st.toString().trim().split("/");
 
 	// /////////////////////
 	// ///////
+
+	private void cancelMegaCab() {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MemberRideFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		CancelMegaCabAsync cancelMegaCabAsync = new CancelMegaCabAsync();
+		String param = "type=CancelBooking" + "&mobile=" + MemberNumberstr
+				+ "&bookingNo=" + BookingRefNo;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			cancelMegaCabAsync.executeOnExecutor(
+					AsyncTask.THREAD_POOL_EXECUTOR, param);
+		} else {
+			cancelMegaCabAsync.execute(param);
+		}
+	}
+
+	public class CancelMegaCabAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		private ProgressDialog dialog = new ProgressDialog(
+				MemberRideFragmentActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("CancelMegaCabAsync",
+					"CancelMegaCabAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl + "/MegaApi.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("CancelMegaCabAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("CancelMegaCabAsync", "CancelMegaCabAsync response : "
+						+ response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (!result.isEmpty()) {
+
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					String status = jsonObject.get("status").toString();
+					if (status.equalsIgnoreCase("SUCCESS")) {
+
+						// JSONObject jsonObjectData = new JSONObject(jsonObject
+						// .get("data").toString());
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setMessage("Booking cancelled!");
+								builder.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+											}
+										});
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+
+							}
+						});
+
+					} else {
+						final String reason = jsonObject.get("data").toString();
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setTitle("Cab could not be cancelled");
+								builder.setMessage(reason);
+								builder.setPositiveButton("OK", null);
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+		}
+	}
+
+	private void cancelUberCab() {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MemberRideFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		CancelMegaCabAsync cancelMegaCabAsync = new CancelMegaCabAsync();
+		String param = "type=CancelBooking" + "&mobile=" + MemberNumberstr
+				+ "&bookingNo=" + BookingRefNo;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			cancelMegaCabAsync.executeOnExecutor(
+					AsyncTask.THREAD_POOL_EXECUTOR, param);
+		} else {
+			cancelMegaCabAsync.execute(param);
+		}
+	}
+
+	public class CancelUberCabAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		private ProgressDialog dialog = new ProgressDialog(
+				MemberRideFragmentActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("CancelMegaCabAsync",
+					"CancelMegaCabAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl + "/MegaApi.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("CancelMegaCabAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("CancelMegaCabAsync", "CancelMegaCabAsync response : "
+						+ response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (!result.isEmpty()) {
+
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					String status = jsonObject.get("status").toString();
+					if (status.equalsIgnoreCase("SUCCESS")) {
+
+						// JSONObject jsonObjectData = new JSONObject(jsonObject
+						// .get("data").toString());
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setMessage("Booking cancelled!");
+								builder.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+											}
+										});
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+
+							}
+						});
+
+					} else {
+						final String reason = jsonObject.get("data").toString();
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setTitle("Cab could not be cancelled");
+								builder.setMessage(reason);
+								builder.setPositiveButton("OK", null);
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+		}
+	}
+
+	private void cancelTFSCab() {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MemberRideFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		CancelTFSCabAsync cancelTFSCabAsync = new CancelTFSCabAsync();
+		String param = "type=cancellation" + "&booking_id=" + BookingRefNo
+				+ "&cancellation_reason=";
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			cancelTFSCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					param);
+		} else {
+			cancelTFSCabAsync.execute(param);
+		}
+	}
+
+	public class CancelTFSCabAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		private ProgressDialog dialog = new ProgressDialog(
+				MemberRideFragmentActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("CancelTFSCabAsync",
+					"CancelTFSCabAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl + "/tfs.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("CancelTFSCabAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("CancelTFSCabAsync", "CancelTFSCabAsync response : "
+						+ response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (!result.isEmpty()) {
+
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					String status = jsonObject.get("status").toString();
+					if (status.equalsIgnoreCase("success")) {
+
+						// JSONObject jsonObjectData = new JSONObject(jsonObject
+						// .get("data").toString());
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setMessage("Booking cancelled!");
+								builder.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+											}
+										});
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+
+							}
+						});
+
+					} else {
+						final String reason = jsonObject.get("error_desc")
+								.toString();
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setTitle("Cab could not be cancelled");
+								builder.setMessage(reason);
+								builder.setPositiveButton("OK", null);
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+		}
+	}
 }

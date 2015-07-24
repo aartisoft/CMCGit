@@ -2,14 +2,16 @@ package com.clubmycab.utility;
 
 public class GlobalVariables {
 
-	// public static final String ServiceUrl =
-	// "http://180.179.207.159/cmc/cmcservice"; // Production
-	// public static final String IpAddress = "180.179.207.159"; // Production
-	// public static final String ServerNameForChat = "@p2p-vm1"; // Production
+	// chat IpAddress is same for both production & UAT
 
-	public static final String ServiceUrl = "http://180.179.208.23/cmc/cmcservice"; // UAT
-	public static final String IpAddress = "180.179.208.23"; // UAT
-	public static final String ServerNameForChat = "@p2p-vm2"; // UAT
+	public static final String ServiceUrl = "http://180.179.207.159/cmc/cmcservice"; // Production
+	public static final String IpAddress = "180.179.208.23"; // Production
+	public static final String ServerNameForChat = "@p2p-vm1"; // Production
+
+	// public static final String ServiceUrl =
+	// "http://180.179.208.23/cmc/cmcservice"; // UAT
+	// public static final String IpAddress = "180.179.208.23"; // UAT
+	// public static final String ServerNameForChat = "@p2p-vm2"; // UAT
 
 	// public static final String ServiceUrl = "http://104.155.216.171/cmc";
 	// // GoogleCloudUAT
@@ -19,7 +21,7 @@ public class GlobalVariables {
 	// // GoogleCloudUAT
 
 	public static final boolean LOGGING_ENABLED = true;
-	
+
 	public static final double GEOFENCING_RADIUS = 0.003;
 
 	public static String ActivityName = "";

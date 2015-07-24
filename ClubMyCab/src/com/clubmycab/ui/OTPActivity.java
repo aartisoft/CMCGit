@@ -47,7 +47,7 @@ public class OTPActivity extends Activity {
 	Button resendotp;
 	Button continuewithotp;
 
-	String FullName;
+//	String FullName;
 	// String MobileNumberstr;
 
 	String verifyotpresp;
@@ -228,11 +228,15 @@ public class OTPActivity extends Activity {
 			}
 
 			if (verifyotpresp.equalsIgnoreCase("SUCCESS")) {
-
+				
 				SharedPreferences sharedPreferences = getSharedPreferences(
 						"FacebookData", 0);
 				SharedPreferences.Editor editor = sharedPreferences.edit();
 				editor.putString("verifyotp", "true");
+				// editor.commit();
+
+				editor.putString("FullName", fullName);
+				editor.putString("MobileNumber", mobNum);
 				editor.commit();
 
 				// Intent mainIntent = new Intent(OTPActivity.this,
@@ -356,7 +360,7 @@ public class OTPActivity extends Activity {
 				editor.putString("verifyotp", "true");
 				// editor.commit();
 
-				editor.putString("FullName", FullName);
+				editor.putString("FullName", fullName);
 				editor.putString("MobileNumber", mobNum);
 				editor.commit();
 

@@ -159,7 +159,6 @@ public class MyClubsActivity extends Activity {
 	ArrayList<String> MemberClubOwnerName = new ArrayList<String>();
 	ArrayList<String> MemberClubMembers = new ArrayList<String>();
 
-	
 	RelativeLayout myclubsrl;
 
 	String comefrom;
@@ -180,7 +179,8 @@ public class MyClubsActivity extends Activity {
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(MyClubsActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MyClubsActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -201,9 +201,10 @@ public class MyClubsActivity extends Activity {
 			return;
 		}
 
-
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(MyClubsActivity.this);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(MyClubsActivity.this);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("MyClubs");
@@ -219,187 +220,190 @@ public class MyClubsActivity extends Activity {
 			}
 		});
 
-		
+		// mNav = new SimpleSideDrawer(this);
+		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
+		//
+		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v) {
+		//
+		// // mainhomepagerl.setAlpha((float) 0.3);
+		// mNav.toggleLeftDrawer();
+		//
+		// }
+		// });
+		//
+		// myprofile = (TextView) findViewById(R.id.myprofile);
+		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myrides = (TextView) findViewById(R.id.myrides);
+		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// bookacab = (TextView) findViewById(R.id.bookacab);
+		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
+		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// myclubs = (TextView) findViewById(R.id.myclubs);
+		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
+		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// mypreferences = (TextView) findViewById(R.id.mypreferences);
+		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// about = (TextView) findViewById(R.id.about);
+		// about.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		//
+		// myprofile.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("MyProfile Click")
+		// .setAction("MyProfile Click")
+		// .setLabel("MyProfile Click").build());
+		//
+		// Intent mainIntent = new Intent(MyClubsActivity.this,
+		// MyProfileActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myrides.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("MyRides Click")
+		// .setAction("MyRides Click").setLabel("MyRides Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(MyClubsActivity.this,
+		// MyRidesActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// bookacab.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("BookaCab Click")
+		// .setAction("BookaCab Click").setLabel("BookaCab Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(MyClubsActivity.this,
+		// BookaCabFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// sharemylocation.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareLocation Click")
+		// .setAction("ShareLocation Click")
+		// .setLabel("ShareLocation Click").build());
+		//
+		// Intent mainIntent = new Intent(MyClubsActivity.this,
+		// ShareLocationFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// myclubs.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		// }
+		// });
+		//
+		// sharethisapp.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareApp Click")
+		// .setAction("ShareApp Click").setLabel("ShareApp Click")
+		// .build());
+		//
+		// Intent sendIntent = new Intent();
+		// sendIntent.setAction(Intent.ACTION_SEND);
+		// sendIntent
+		// .putExtra(
+		// Intent.EXTRA_TEXT,
+		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
+		// sendIntent.setType("text/plain");
+		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
+		//
+		// }
+		// });
+		//
+		// mypreferences.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("Settings Click")
+		// .setAction("Settings Click").setLabel("Settings Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(MyClubsActivity.this,
+		// SettingActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
+		//
+		// about.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("About Click").setAction("About Click")
+		// .setLabel("About Click").build());
+		//
+		// Intent mainIntent = new Intent(MyClubsActivity.this,
+		// AboutPagerFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// }
+		// });
 
-//		mNav = new SimpleSideDrawer(this);
-//		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-//
-//		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//
-//				// mainhomepagerl.setAlpha((float) 0.3);
-//				mNav.toggleLeftDrawer();
-//
-//			}
-//		});
-//
-//		myprofile = (TextView) findViewById(R.id.myprofile);
-//		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		myrides = (TextView) findViewById(R.id.myrides);
-//		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		bookacab = (TextView) findViewById(R.id.bookacab);
-//		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-//		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		myclubs = (TextView) findViewById(R.id.myclubs);
-//		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-//		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		mypreferences = (TextView) findViewById(R.id.mypreferences);
-//		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//		about = (TextView) findViewById(R.id.about);
-//		about.setTypeface(Typeface.createFromAsset(getAssets(),
-//				"NeutraText-Light.ttf"));
-//
-//		myprofile.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("MyProfile Click")
-//						.setAction("MyProfile Click")
-//						.setLabel("MyProfile Click").build());
-//
-//				Intent mainIntent = new Intent(MyClubsActivity.this, MyProfileActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		myrides.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("MyRides Click")
-//						.setAction("MyRides Click").setLabel("MyRides Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(MyClubsActivity.this, MyRidesActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		bookacab.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("BookaCab Click")
-//						.setAction("BookaCab Click").setLabel("BookaCab Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(MyClubsActivity.this, BookaCabFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		sharemylocation.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("ShareLocation Click")
-//						.setAction("ShareLocation Click")
-//						.setLabel("ShareLocation Click").build());
-//
-//				Intent mainIntent = new Intent(MyClubsActivity.this,
-//						ShareLocationFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		myclubs.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//			}
-//		});
-//
-//		sharethisapp.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("ShareApp Click")
-//						.setAction("ShareApp Click").setLabel("ShareApp Click")
-//						.build());
-//
-//				Intent sendIntent = new Intent();
-//				sendIntent.setAction(Intent.ACTION_SEND);
-//				sendIntent
-//						.putExtra(
-//								Intent.EXTRA_TEXT,
-//								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-//				sendIntent.setType("text/plain");
-//				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-//
-//			}
-//		});
-//
-//		mypreferences.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("Settings Click")
-//						.setAction("Settings Click").setLabel("Settings Click")
-//						.build());
-//
-//				Intent mainIntent = new Intent(MyClubsActivity.this,
-//						SettingActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-//
-//		about.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//				mNav.toggleDrawer();
-//
-//				tracker.send(new HitBuilders.EventBuilder()
-//						.setCategory("About Click").setAction("About Click")
-//						.setLabel("About Click").build());
-//
-//				Intent mainIntent = new Intent(MyClubsActivity.this, AboutPagerFragmentActivity.class);
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//			}
-//		});
-		
-		UniversalDrawer drawer = new UniversalDrawer(this,tracker);
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
@@ -435,7 +439,7 @@ public class MyClubsActivity extends Activity {
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
-		
+
 		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
 
 			unreadnoticountrl.setVisibility(View.GONE);
@@ -457,8 +461,8 @@ public class MyClubsActivity extends Activity {
 
 		Cursor cursor = null;
 		try {
-			cursor = MyClubsActivity.this.getContentResolver().query(Phone.CONTENT_URI,
-					null, null, null, null);
+			cursor = MyClubsActivity.this.getContentResolver().query(
+					Phone.CONTENT_URI, null, null, null, null);
 			int nameIdx = cursor.getColumnIndex(Phone.DISPLAY_NAME);
 			int phoneNumberIdx = cursor.getColumnIndex(Phone.NUMBER);
 			int imageIdx = cursor.getColumnIndex(Phone.CONTACT_ID);
@@ -532,12 +536,12 @@ public class MyClubsActivity extends Activity {
 		});
 
 		// ///////////////
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			new ConnectionTaskForreadunreadnotification()
-//					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//		} else {
-//			new ConnectionTaskForreadunreadnotification().execute();
-//		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -565,11 +569,24 @@ public class MyClubsActivity extends Activity {
 			drawerprofilepic.setImageBitmap(yourSelectedImage);
 		}
 
-		try {
-			showclub();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// try {
+		// showclub();
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new ConnectionTaskForFetchClubs()
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			new ConnectionTaskForFetchClubs().execute();
 		}
 	}
 
@@ -664,8 +681,9 @@ public class MyClubsActivity extends Activity {
 				if (cname.isEmpty() || cname == null
 						|| cname.equalsIgnoreCase("")) {
 
-					Toast.makeText(MyClubsActivity.this, "Please enter the club name",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(MyClubsActivity.this,
+							"Please enter the club name", Toast.LENGTH_LONG)
+							.show();
 				} else {
 
 					// TODO Auto-generated method stub
@@ -752,16 +770,15 @@ public class MyClubsActivity extends Activity {
 							.getString("PoolId").toString());
 					MyClubPoolName.add(subArray.getJSONObject(i)
 							.getString("PoolName").toString());
-					//Pawan cheks NoofMember value for null
-					if(subArray.getJSONObject(i)
-							.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+					// Pawan cheks NoofMember value for null
+					if (subArray.getJSONObject(i).getString("NoofMembers")
+							.toString().equalsIgnoreCase("null"))
 						MyClubNoofMembers.add("1");
-					
+
 					else
-					MyClubNoofMembers.add(subArray.getJSONObject(i)
-					.getString("NoofMembers").toString());
-					
-					
+						MyClubNoofMembers.add(subArray.getJSONObject(i)
+								.getString("NoofMembers").toString());
+
 					MyClubOwnerName.add(subArray.getJSONObject(i)
 							.getString("OwnerName").toString());
 					MyClubMembers.add(subArray.getJSONObject(i)
@@ -771,17 +788,16 @@ public class MyClubsActivity extends Activity {
 							.getString("PoolId").toString());
 					MemberClubPoolName.add(subArray.getJSONObject(i)
 							.getString("PoolName").toString());
-					
-					//Pawan cheks NoofMember value for null
-					if(subArray.getJSONObject(i)
-							.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+
+					// Pawan cheks NoofMember value for null
+					if (subArray.getJSONObject(i).getString("NoofMembers")
+							.toString().equalsIgnoreCase("null"))
 						MemberClubNoofMembers.add("1");
-					
+
 					else
 						MemberClubNoofMembers.add(subArray.getJSONObject(i)
-					.getString("NoofMembers").toString());
-					
-					
+								.getString("NoofMembers").toString());
+
 					MemberClubOwnerName.add(subArray.getJSONObject(i)
 							.getString("OwnerName").toString());
 					MemberClubMembers.add(subArray.getJSONObject(i)
@@ -801,9 +817,9 @@ public class MyClubsActivity extends Activity {
 			Log.d("MemberClubOwnerName", "" + MemberClubOwnerName);
 			Log.d("MemberClubMembers", "" + MemberClubMembers);
 
-			MyClubsShowAdaptor adapter = new MyClubsShowAdaptor(MyClubsActivity.this,
-					MyClubPoolId, MyClubPoolName, MyClubNoofMembers,
-					MyClubOwnerName);
+			MyClubsShowAdaptor adapter = new MyClubsShowAdaptor(
+					MyClubsActivity.this, MyClubPoolId, MyClubPoolName,
+					MyClubNoofMembers, MyClubOwnerName);
 			lvmyclub.setAdapter(adapter);
 			lvmyclub.setOnItemClickListener(new OnItemClickListener() {
 
@@ -835,15 +851,17 @@ public class MyClubsActivity extends Activity {
 						Log.d("shownumbers", "" + shownumbers);
 						Log.d("showimagenames", "" + showimagenames);
 						Log.d("showpoolid", "" + showpoolid);
-                   if(shownames.size()<1){
-                	   
-                	   Toast.makeText(MyClubsActivity.this,StringTags.TAG_DOSE_NOT_HAVE_MEMBER, Toast.LENGTH_SHORT).show();
-                   }
-						
-                   else
-                	   ShowAlert(shownames, shownumbers,
-								MyClubPoolName.get(position), showpoolid,
-								showimagenames);
+						if (shownames.size() < 1) {
+
+							Toast.makeText(MyClubsActivity.this,
+									StringTags.TAG_DOSE_NOT_HAVE_MEMBER,
+									Toast.LENGTH_SHORT).show();
+						}
+
+						else
+							ShowAlert(shownames, shownumbers,
+									MyClubPoolName.get(position), showpoolid,
+									showimagenames);
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1887,7 +1905,8 @@ public class MyClubsActivity extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
+			String url_select11 = GlobalVariables.ServiceUrl
+					+ "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -2157,7 +2176,8 @@ public class MyClubsActivity extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
+			String url_select11 = GlobalVariables.ServiceUrl
+					+ "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -2213,7 +2233,8 @@ public class MyClubsActivity extends Activity {
 					R.anim.slide_out_left);
 			MyClubsActivity.this.finish();
 		} else {
-			Intent mainIntent = new Intent(MyClubsActivity.this, HomeActivity.class);
+			Intent mainIntent = new Intent(MyClubsActivity.this,
+					HomeActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);
@@ -2223,98 +2244,100 @@ public class MyClubsActivity extends Activity {
 	}
 
 	// ///////
-//	private class ConnectionTaskForreadunreadnotification extends
-//			AsyncTask<String, Void, Void> {
-//
-//		@Override
-//		protected void onPreExecute() {
-//
-//		}
-//
-//		@Override
-//		protected Void doInBackground(String... args) {
-//			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-//			try {
-//				mAuth1.connection();
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				exceptioncheck = true;
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(Void v) {
-//
-//			if (exceptioncheck) {
-//				exceptioncheck = false;
-//				Toast.makeText(MyClubsActivity.this,
-//						getResources().getString(R.string.exceptionstring),
-//						Toast.LENGTH_LONG).show();
-//				return;
-//			}
-//
-//			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-//
-//				unreadnoticountrl.setVisibility(View.GONE);
-//
-//			} else {
-//
-//				unreadnoticountrl.setVisibility(View.VISIBLE);
-//				unreadnoticount.setText(readunreadnotiresp);
-//			}
-//		}
-//
-//	}
-//
-//	public class AuthenticateConnectionreadunreadnotification {
-//
-//		public AuthenticateConnectionreadunreadnotification() {
-//
-//		}
-//
-//		public void connection() throws Exception {
-//
-//			// Connect to google.com
-//			HttpClient httpClient = new DefaultHttpClient();
-//			String url_select11 = GlobalVariables.ServiceUrl
-//					+ "/FetchUnreadNotificationCount.php";
-//
-//			HttpPost httpPost = new HttpPost(url_select11);
-//			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-//					"MobileNumber", OwnerNumber);
-//
-//			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-//			nameValuePairList.add(MobileNumberBasicNameValuePair);
-//
-//			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-//					nameValuePairList);
-//			httpPost.setEntity(urlEncodedFormEntity);
-//			HttpResponse httpResponse = httpClient.execute(httpPost);
-//
-//			Log.d("httpResponse", "" + httpResponse);
-//
-//			InputStream inputStream = httpResponse.getEntity().getContent();
-//			InputStreamReader inputStreamReader = new InputStreamReader(
-//					inputStream);
-//
-//			BufferedReader bufferedReader = new BufferedReader(
-//					inputStreamReader);
-//
-//			StringBuilder stringBuilder = new StringBuilder();
-//
-//			String bufferedStrChunk = null;
-//
-//			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-//				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-//						.toString();
-//			}
-//
-//			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-//
-//		}
-//	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(MyClubsActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select11 = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select11);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", OwnerNumber);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	// ////////////////////////
 	// ///////
@@ -2531,7 +2554,8 @@ public class MyClubsActivity extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl + "/Store_Club.php";
+			String url_select11 = GlobalVariables.ServiceUrl
+					+ "/Store_Club.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
@@ -2584,7 +2608,8 @@ public class MyClubsActivity extends Activity {
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
-			String url_select111 = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
+			String url_select111 = GlobalVariables.ServiceUrl
+					+ "/Fetch_Club.php";
 
 			HttpPost httpPost1 = new HttpPost(url_select111);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
@@ -2623,6 +2648,100 @@ public class MyClubsActivity extends Activity {
 					"MyClubs", 0);
 			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
 			editor1.putString("clubs", myclubsresp.toString().trim());
+			editor1.commit();
+
+			// ///////////////
+		}
+	}
+
+	private class ConnectionTaskForFetchClubs extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionFetchMyClubs mAuth1 = new AuthenticateConnectionFetchMyClubs();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MyClubsActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			try {
+				showclub();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public class AuthenticateConnectionFetchMyClubs {
+
+		public AuthenticateConnectionFetchMyClubs() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
+					"OwnerNumber", OwnerNumber);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(UserNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String myprofileresp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				myprofileresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("myclubsresp", "" + myprofileresp);
+
+			SharedPreferences sharedPreferences1 = getSharedPreferences(
+					"MyClubs", 0);
+			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+			editor1.putString("clubs", myprofileresp.toString().trim());
 			editor1.commit();
 
 			// ///////////////

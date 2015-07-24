@@ -73,6 +73,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String MemberName = intent.getExtras().getString("MemberName");
 		String oname = intent.getExtras().getString("oname");
 		String onumber = intent.getExtras().getString("onumber");
+		
+		Log.d(TAG, "pushfrom : " + (pushfrom == null ? "null" : pushfrom));
 
 		if (pushfrom != null && pushfrom.equalsIgnoreCase("groupchat")) {
 			generatechatnotification(context, message, pushfrom, CabId,

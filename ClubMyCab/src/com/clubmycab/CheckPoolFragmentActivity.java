@@ -2954,7 +2954,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 										int which) {
 
 									if (CabName.equalsIgnoreCase("Uber")) {
-
+										cancelUberCab();
 									} else if (CabName.equalsIgnoreCase("Mega")) {
 										cancelMegaCab();
 									} else if (CabName
@@ -4436,7 +4436,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									CheckPoolFragmentActivity.this,
-									ClubListClass.ClubList);
+									ClubListClass.ClubList, true);
 							listMyclubs.setAdapter(adapter);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
@@ -4485,7 +4485,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									CheckPoolFragmentActivity.this,
-									ClubListClass.MemberClubList);
+									ClubListClass.MemberClubList, true);
 
 							listMembersclubs.setAdapter(adapter);
 							listMembersclubs
@@ -4812,7 +4812,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 						ClubsAdaptor adapter = new ClubsAdaptor(
 								CheckPoolFragmentActivity.this,
-								ClubListClass.ClubList);
+								ClubListClass.ClubList, true);
 						listMyclubs.setAdapter(adapter);
 						listMyclubs
 								.setOnItemClickListener(new OnItemClickListener() {
@@ -4861,7 +4861,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 						ClubsAdaptor adapter = new ClubsAdaptor(
 								CheckPoolFragmentActivity.this,
-								ClubListClass.MemberClubList);
+								ClubListClass.MemberClubList, true);
 
 						listMembersclubs.setAdapter(adapter);
 						listMembersclubs
@@ -5197,15 +5197,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			return;
 		}
 
-		CancelMegaCabAsync cancelMegaCabAsync = new CancelMegaCabAsync();
-		String param = "type=CancelBooking" + "&mobile=" + MobileNumber
-				+ "&bookingNo=" + BookingRefNo;
+		CancelUberCabAsync cancelUberCabAsync = new CancelUberCabAsync();
+		String param = ("bookingRefNo=" + BookingRefNo);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			cancelMegaCabAsync.executeOnExecutor(
+			cancelUberCabAsync.executeOnExecutor(
 					AsyncTask.THREAD_POOL_EXECUTOR, param);
 		} else {
-			cancelMegaCabAsync.execute(param);
+			cancelUberCabAsync.execute(param);
 		}
 	}
 
@@ -5226,11 +5225,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		@Override
 		protected String doInBackground(String... args) {
-			Log.d("CancelMegaCabAsync",
-					"CancelMegaCabAsync : " + args[0].toString());
+			Log.d("CancelUberCabAsync",
+					"CancelUberCabAsync : " + args[0].toString());
 
 			try {
-				URL url = new URL(GlobalVariables.ServiceUrl + "/MegaApi.php");
+				URL url = new URL(GlobalVariables.ServiceUrl + "/cancelUberBooking.php");
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -5263,13 +5262,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 				} else {
 					response = "";
-					Log.d("CancelMegaCabAsync",
+					Log.d("CancelUberCabAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
 				}
 
-				Log.d("CancelMegaCabAsync", "CancelMegaCabAsync response : "
+				Log.d("CancelUberCabAsync", "CancelUberCabAsync response : "
 						+ response);
 				result = response;
 			} catch (Exception e) {
@@ -5323,7 +5322,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						});
 
 					} else {
-						final String reason = jsonObject.get("data").toString();
+						final String reason = jsonObject.get("message").toString();
 
 						runOnUiThread(new Runnable() {
 

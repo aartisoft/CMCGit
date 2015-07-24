@@ -2022,7 +2022,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			Log.d("PerformCabSearchTimeAsync", "onPreExecute");
 			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
-			dialog12.setMessage("Please Wait...");
+			dialog12.setMessage("Please wait while we fetch cabs");
 			dialog12.setCancelable(false);
 			dialog12.setCanceledOnTouchOutside(false);
 			dialog12.show();
@@ -2185,7 +2185,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		protected void onPreExecute() {
 			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
-			dialog12.setMessage("Please Wait...");
+			dialog12.setMessage("Please wait while we fetch cabs");
 			dialog12.setCancelable(false);
 			dialog12.setCanceledOnTouchOutside(false);
 			dialog12.show();
@@ -4509,7 +4509,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 						String paramString = "type=bookuber"
 								+ mUberBookingInputParams + "&accesstoken="
 								+ jsonObject.get("access_token").toString();
-						getUberBookingStatus(paramString);
+						getUberBookingStatus(paramString, args[0].toString());
 					}
 					// Log.d("GetUberAccessTokenAsync",
 					// "GetUberAccessTokenAsync access_token : " + jsonArray);
@@ -4551,7 +4551,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		}
 	}
 
-	private void getUberBookingStatus(String params) {
+	private void getUberBookingStatus(String params,
+			final String requestIDInTable) {
 
 		try {
 			URL url = new URL(GlobalVariables.ServiceUrl + "/uberConnect.php?"
@@ -4692,7 +4693,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 																		.getJSONObject(
 																				cabBookingPosition)
 																		.get("CabNameID")
-																		.toString(),
+																		.toString()
+																		+ "~"
+																		+ requestIDInTable,
 																mCabSearchArray
 																		.getJSONObject(
 																				cabBookingPosition)

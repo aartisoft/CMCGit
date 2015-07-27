@@ -46,12 +46,12 @@ import com.google.android.gms.analytics.Tracker;
 public class MembersClubsShowAdaptor extends BaseAdapter {
 
 	// Declare Variables
-	Context context;
-	ArrayList<String> MemberClubPoolId;
-	ArrayList<String> MemberClubPoolName;
-	ArrayList<String> MemberClubNoofMembers;
-	ArrayList<String> MemberClubOwnerName;
-	LayoutInflater inflater;
+	private Context context;
+	private ArrayList<String> MemberClubPoolId;
+	private ArrayList<String> MemberClubPoolName;
+	private ArrayList<String> MemberClubNoofMembers;
+	private ArrayList<String> MemberClubOwnerName;
+	private LayoutInflater inflater;
 
 	
 	Tracker tracker;
@@ -93,32 +93,45 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 	@SuppressLint("ViewHolder")
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View itemView, ViewGroup parent) {
+		
+		
+		ViewHolder viewholder;
+		if(itemView==null){
+			
+			viewholder=new ViewHolder();
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View itemView = inflater.inflate(R.layout.membersclubs_listrow, parent,
-				false);
+			 itemView = inflater.inflate(R.layout.membersclubs_listrow, parent,
+					false);
 
-		// Locate the TextViews in listview_item.xml
+			// Locate the TextViews in listview_item.xml
 
-		TextView Mname = (TextView) itemView.findViewById(R.id.nameofclub);
-		TextView noofmembers = (TextView) itemView
-				.findViewById(R.id.noofmembers);
-		TextView clubownername = (TextView) itemView
-				.findViewById(R.id.clubownername);
-		ImageView removeclub = (ImageView) itemView
-				.findViewById(R.id.removeclub);
-		ImageView ivWarnning1=(ImageView)itemView.findViewById(R.id.ivWarnning2);
+			viewholder. Mname = (TextView) itemView.findViewById(R.id.nameofclub);
+			viewholder. noofmembers = (TextView) itemView
+					.findViewById(R.id.noofmembers);
+			viewholder. clubownername = (TextView) itemView
+					.findViewById(R.id.clubownername);
+			viewholder. removeclub = (ImageView) itemView
+					.findViewById(R.id.removeclub);
+			viewholder. ivWarnning1=(ImageView)itemView.findViewById(R.id.ivWarnning2);
+			itemView.setTag(viewholder);
 
-		Mname.setText(MemberClubPoolName.get(position).toString().trim());
-		clubownername.setText("("
+			
+		}
+		else{
+			viewholder=(ViewHolder)itemView.getTag();
+		}
+
+		viewholder.Mname.setText(MemberClubPoolName.get(position).toString().trim());
+		viewholder.clubownername.setText("("
 				+ MemberClubOwnerName.get(position).toString().trim() + ")");
-		noofmembers.setText("("
+		viewholder.noofmembers.setText("("
 				+ MemberClubNoofMembers.get(position).toString().trim() + ")");
 		
-ivWarnning1.setOnClickListener(new OnClickListener() {
+		viewholder.ivWarnning1.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -130,18 +143,18 @@ ivWarnning1.setOnClickListener(new OnClickListener() {
 		try{
 			int count=Integer.parseInt(MemberClubNoofMembers.get(position).toString().trim());
 			if(count<=10)
-			ivWarnning1.setVisibility(View.VISIBLE);
+				viewholder.ivWarnning1.setVisibility(View.VISIBLE);
 			else
-				ivWarnning1.setVisibility(View.GONE);
+				viewholder.ivWarnning1.setVisibility(View.GONE);
 
 		}
 		catch(Exception e){
-			ivWarnning1.setVisibility(View.GONE);
+			viewholder.ivWarnning1.setVisibility(View.GONE);
 
 			
 		}
 
-		removeclub.setOnClickListener(new OnClickListener() {
+		viewholder.removeclub.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -183,6 +196,14 @@ ivWarnning1.setOnClickListener(new OnClickListener() {
 
 		return itemView;
 	}
+	
+	public class ViewHolder{
+		public ImageView ivWarnning1;
+		public TextView Mname,clubownername;
+		public TextView noofmembers;
+		public ImageView removeclub ;
+		
+	}
 
 	// ///////
 
@@ -206,7 +227,6 @@ ivWarnning1.setOnClickListener(new OnClickListener() {
 				mAuth1.poolid = args[0];
 				mAuth1.connection();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				exceptioncheck = true;
 				e.printStackTrace();
 			}
@@ -231,7 +251,6 @@ ivWarnning1.setOnClickListener(new OnClickListener() {
 			try {
 				((MyClubsActivity) context).showclub();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -338,7 +357,6 @@ ivWarnning1.setOnClickListener(new OnClickListener() {
 			editor1.putString("clubs", myclubsresp.toString().trim());
 			editor1.commit();
 
-			// ///////////////
 		}
 	}
 }

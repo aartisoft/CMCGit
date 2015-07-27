@@ -645,16 +645,27 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		cancel.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-		final Calendar calendar = Calendar.getInstance();
-
+	//	final Calendar calendar = Calendar.getInstance();
+		long time= System.currentTimeMillis();
+		   
+		long nextTime=time+(60000*30);			 
+		 Calendar calendar = Calendar.getInstance();
+		 calendar.setTimeInMillis(nextTime);
 		final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
 				InviteFragmentActivity.this, calendar.get(Calendar.YEAR),
 				calendar.get(Calendar.MONTH),
 				calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
+		
+	
+		 String selecteddate = calendar.get(Calendar.DAY_OF_MONTH) + "/" +( calendar.get(Calendar.MONTH) +1) + "/" + calendar.get(Calendar.YEAR);
+			datetextview.setText(selecteddate.toString().trim());
+			datetextview2.setText(selecteddate.toString().trim());
+			datetextview3.setText(selecteddate.toString().trim());
 
-		calendar.add(Calendar.MINUTE, 30);
-		hour = calendar.get(Calendar.HOUR_OF_DAY);
+	//	calendar.add(Calendar.HOUR, 1);
+		hour =  calendar.get(Calendar.HOUR_OF_DAY) ;
 		minute = calendar.get(Calendar.MINUTE);
+		updateTime(hour, minute);
 
 		timePickerDialog = TimePickerDialog.newInstance(
 				InviteFragmentActivity.this, hour, minute, false, false);
@@ -703,11 +714,23 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				ivHalfArrow.setVisibility(View.INVISIBLE);
 				ivDateTimeArrow.setVisibility(View.INVISIBLE);
 
-				Calendar calendar = Calendar.getInstance();
+			//	Calendar calendar = Calendar.getInstance();
+				long time= System.currentTimeMillis();
+				   
+				long nextTime=time+(60000*60);			 
+				 Calendar cl = Calendar.getInstance();
+				 cl.setTimeInMillis(nextTime);  //here your time in miliseconds
+				// String date = "" + cl.get(Calendar.DAY_OF_MONTH) + ":" + cl.get(Calendar.MONTH) + ":" + cl.get(Calendar.YEAR);
+				 String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND);
+				 Log.d("Time:::",time1);
+				 String selecteddate = cl.get(Calendar.DAY_OF_MONTH) + "/" +( cl.get(Calendar.MONTH) +1) + "/" + cl.get(Calendar.YEAR);
+					datetextview.setText(selecteddate.toString().trim());
+					datetextview2.setText(selecteddate.toString().trim());
+					datetextview3.setText(selecteddate.toString().trim());
 
-				calendar.add(Calendar.HOUR, 1);
-				hour = calendar.get(Calendar.HOUR_OF_DAY);
-				minute = calendar.get(Calendar.MINUTE);
+			//	calendar.add(Calendar.HOUR, 1);
+				hour =  cl.get(Calendar.HOUR_OF_DAY) ;
+				minute = cl.get(Calendar.MINUTE);
 				updateTime(hour, minute);
 			}
 		});
@@ -774,12 +797,21 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				ivOneArrow.setVisibility(View.INVISIBLE);
 				ivHalfArrow.setVisibility(View.VISIBLE);
 				ivDateTimeArrow.setVisibility(View.INVISIBLE);
-				Calendar calendar = Calendar.getInstance();
+				long time= System.currentTimeMillis();
+				   
+				long nextTime=time+(60000*30);			 
+				 Calendar cl = Calendar.getInstance();
+				 cl.setTimeInMillis(nextTime);  //here your time in miliseconds
+				 String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND);
+				 Log.d("Time:::",time1);
+				 String selecteddate = cl.get(Calendar.DAY_OF_MONTH) + "/" +( cl.get(Calendar.MONTH) +1) + "/" + cl.get(Calendar.YEAR);
+					datetextview.setText(selecteddate.toString().trim());
+					datetextview2.setText(selecteddate.toString().trim());
+					datetextview3.setText(selecteddate.toString().trim());
 
-				calendar.add(Calendar.MINUTE, 30);
-				hour = calendar.get(Calendar.HOUR_OF_DAY);
-				minute = calendar.get(Calendar.MINUTE);
-				updateTime(hour, minute);
+			//	calendar.add(Calendar.HOUR, 1);
+				hour =  cl.get(Calendar.HOUR_OF_DAY) ;
+				minute = cl.get(Calendar.MINUTE);
 				updateTime(hour, minute);
 
 			}

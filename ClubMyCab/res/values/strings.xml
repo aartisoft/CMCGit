@@ -84,6 +84,7 @@
     
     <string name="memberexcludingmsg">(Number in brackets is members including the person who created the club)</string>
 
+<string name="storeurl">https://play.google.com/store/apps/details?id=com.clubmycab&amp;hl=en</string>
     <string name="seatcount">3</string>
 
 </resources>

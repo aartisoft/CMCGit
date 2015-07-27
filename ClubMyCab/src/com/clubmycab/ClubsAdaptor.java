@@ -124,6 +124,8 @@ public class ClubsAdaptor extends BaseAdapter {
 								.setSelectedIndex(-1);
 						ContactsInviteForRideActivity.adapterClubMember
 								.notifyDataSetChanged();
+						notifyDataSetChanged();
+
 
 					}
 

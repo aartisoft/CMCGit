@@ -56,7 +56,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
+            <intent-filter>
+<data android:scheme="@string/app_name" />
+<action android:name="android.intent.action.VIEW" />
+<category android:name="android.intent.category.BROWSABLE" />
+<category android:name="android.intent.category.DEFAILT" />
+</intent-filter>
+            
+            
         </activity>
+        
+        <meta-data
+android:name="af-DebugMode"
+android:value="true" />
+          <meta-data
+android:name="af-TrackerURL"
+android:value="@string/storeurl" />
+        
         <activity
             android:name=".ui.OTPActivity"
             android:label="@string/title_activity_enter_otp"
@@ -67,6 +84,11 @@
         <receiver android:name=".SmsReciever" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+         <receiver android:name="com.clubmycab.AffleInstallReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 

@@ -601,9 +601,6 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						phonesub = phoneStr;
 					}
 
-					if (phonesub.equalsIgnoreCase("9920981334")) {
-						Log.d("phonesub", "" + phonesub);
-					}
 					phonenoarray.add(phonesub);
 
 					imagearray.add(cursor.getString(imageIdx));
@@ -1145,26 +1142,36 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				CheckPoolFragmentActivity.this);
-		builder.setMessage("Member(s) of your trip will now receive your location updates, would you like to share your location with others?");
+		// builder.setMessage("Member(s) of your trip will now receive your location updates, would you like to share your location with others?");
+		builder.setMessage("Member(s) of your trip will now receive your location updates.");
 		builder.setCancelable(false);
 
-		builder.setPositiveButton("Select receipients",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						showContactsDialog();
-					}
-				});
+		// builder.setPositiveButton("Select receipients",
+		// new DialogInterface.OnClickListener() {
+		// public void onClick(DialogInterface dialog, int which) {
+		// showContactsDialog();
+		// }
+		// });
 
-		builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-			@Override
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				if (MemberName.size() > 0) {
 					shareLocation(false);
 				}
-
 			}
 		});
+
+		// builder.setNegativeButton("NO", new DialogInterface.OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// if (MemberName.size() > 0) {
+		// shareLocation(false);
+		// }
+		//
+		// }
+		// });
 
 		builder.show();
 	}
@@ -3009,8 +3016,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		Log.d("checkpool onStart", "checkpool onStart");
-		if (xmppConnection != null) {
-			Log.d("12", "connection already connected");
+		if (xmppConnection != null && xmppConnection.isConnected()) {
+			Log.d("12",
+					"connection already connected : "
+							+ xmppConnection.isConnected());
 
 		} else {
 			establishXmppConnection();
@@ -3536,6 +3545,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair ownernumberValuePair = new BasicNameValuePair(
 					"ownernumber", ownermnum);
 
+			Log.d("CheckPoolFragmentActivity",
+					"AuthenticateConnectionsendchatnotification CabId : " + cid
+							+ " MemberNumber : " + mnumstr
+							+ " MemberNumberARR : " + memnum + " Message : "
+							+ txtmsg + " MemberName : " + name
+							+ " ownername : " + ownername + " ownernumber : "
+							+ ownermnum);
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MemberNumberValuePair);
 			nameValuePairList.add(MemberNumberARRValuePair);
@@ -3621,11 +3638,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		public void connection() throws Exception {
 
+			Log.d("CheckPoolFragmentActivity", "changeuserstatus status : "
+					+ status);
+
 			if (status.equalsIgnoreCase("offline")) {
 
 				try {
-					if (xmppConnection != null)
+					if (xmppConnection != null) {
+						Log.d("CheckPoolFragmentActivity",
+								"changeuserstatus xmppConnection.disconnect()");
 						xmppConnection.disconnect();
+					}
 				} catch (Exception e) {
 
 					e.printStackTrace();
@@ -5229,7 +5252,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					"CancelUberCabAsync : " + args[0].toString());
 
 			try {
-				URL url = new URL(GlobalVariables.ServiceUrl + "/cancelUberBooking.php");
+				URL url = new URL(GlobalVariables.ServiceUrl
+						+ "/cancelUberBooking.php");
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -5322,7 +5346,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						});
 
 					} else {
-						final String reason = jsonObject.get("message").toString();
+						final String reason = jsonObject.get("message")
+								.toString();
 
 						runOnUiThread(new Runnable() {
 
@@ -5392,8 +5417,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				+ "&cancellation_reason=";
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			cancelTFSCabAsync.executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, param);
+			cancelTFSCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					param);
 		} else {
 			cancelTFSCabAsync.execute(param);
 		}
@@ -5513,7 +5538,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						});
 
 					} else {
-						final String reason = jsonObject.get("error_desc").toString();
+						final String reason = jsonObject.get("error_desc")
+								.toString();
 
 						runOnUiThread(new Runnable() {
 

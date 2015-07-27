@@ -51,7 +51,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -669,7 +668,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				dpd.setOnDateSetListener(InviteFragmentActivity.this);
 			}
 
-			
 			if (tpd != null) {
 				tpd.setOnTimeSetListener(InviteFragmentActivity.this);
 			}
@@ -764,7 +762,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View v) {
-				
 
 				datetextview.setVisibility(View.VISIBLE);
 				timetextview.setVisibility(View.VISIBLE);

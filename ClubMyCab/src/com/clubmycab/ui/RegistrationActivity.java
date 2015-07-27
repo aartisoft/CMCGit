@@ -426,7 +426,7 @@ public class RegistrationActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						RegistrationActivity.this);
 
-				builder.setMessage("Mobile Number Already Exists. Please try with different Mobile Number");
+				builder.setMessage("Mobile number already exists. Please try to login or register with a different mobile number");
 				builder.setPositiveButton("OK", null);
 				AlertDialog dialog = builder.show();
 				TextView messageText = (TextView) dialog

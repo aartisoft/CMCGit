@@ -73,7 +73,6 @@ import com.clubmycab.MyClubsShowAdaptor;
 import com.clubmycab.R;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
-import com.clubmycab.utility.StringTags;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -836,32 +835,36 @@ public class MyClubsActivity extends Activity {
 					try {
 						subArray = new JSONArray(MyClubMembers.get(position)
 								.toString().trim());
-						for (int i = 0; i < subArray.length(); i++) {
-							shownames.add(subArray.getJSONObject(i)
-									.getString("FullName").toString());
-							shownumbers.add(subArray.getJSONObject(i)
-									.getString("MemberNumber").toString());
-							showimagenames.add(subArray.getJSONObject(i)
-									.getString("ImageName").toString());
-							showpoolid.add(MyClubPoolId.get(position)
-									.toString().trim());
+						if (subArray.length() > 0) {
+							for (int i = 0; i < subArray.length(); i++) {
+								shownames.add(subArray.getJSONObject(i)
+										.getString("FullName").toString());
+								shownumbers.add(subArray.getJSONObject(i)
+										.getString("MemberNumber").toString());
+								showimagenames.add(subArray.getJSONObject(i)
+										.getString("ImageName").toString());
+								showpoolid.add(MyClubPoolId.get(position)
+										.toString().trim());
+							}
+						} else {
+							showpoolid.add(MyClubPoolId.get(position).toString());
 						}
 
 						Log.d("shownames", "" + shownames);
 						Log.d("shownumbers", "" + shownumbers);
 						Log.d("showimagenames", "" + showimagenames);
 						Log.d("showpoolid", "" + showpoolid);
-						if (shownames.size() < 1) {
-
-							Toast.makeText(MyClubsActivity.this,
-									StringTags.TAG_DOSE_NOT_HAVE_MEMBER,
-									Toast.LENGTH_SHORT).show();
-						}
-
-						else
-							ShowAlert(shownames, shownumbers,
-									MyClubPoolName.get(position), showpoolid,
-									showimagenames);
+						// if (shownames.size() < 1) {
+						//
+						// Toast.makeText(MyClubsActivity.this,
+						// StringTags.TAG_DOSE_NOT_HAVE_MEMBER,
+						// Toast.LENGTH_SHORT).show();
+						// }
+						//
+						// else
+						ShowAlert(shownames, shownumbers,
+								MyClubPoolName.get(position), showpoolid,
+								showimagenames);
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -889,15 +892,20 @@ public class MyClubsActivity extends Activity {
 					try {
 						subArray = new JSONArray(MemberClubMembers
 								.get(position).toString().trim());
-						for (int i = 0; i < subArray.length(); i++) {
-							shownames.add(subArray.getJSONObject(i)
-									.getString("FullName").toString());
-							shownumbers.add(subArray.getJSONObject(i)
-									.getString("MemberNumber").toString());
-							showimagenames.add(subArray.getJSONObject(i)
-									.getString("ImageName").toString());
-							showpoolid.add(MemberClubPoolId.get(position)
-									.toString().trim());
+						
+						if (subArray.length() > 0) {
+							for (int i = 0; i < subArray.length(); i++) {
+								shownames.add(subArray.getJSONObject(i)
+										.getString("FullName").toString());
+								shownumbers.add(subArray.getJSONObject(i)
+										.getString("MemberNumber").toString());
+								showimagenames.add(subArray.getJSONObject(i)
+										.getString("ImageName").toString());
+								showpoolid.add(MemberClubPoolId.get(position)
+										.toString().trim());
+							}
+						} else {
+							showpoolid.add(MemberClubPoolId.get(position).toString());
 						}
 
 						Log.d("shownames", "" + shownames);
@@ -2684,7 +2692,7 @@ public class MyClubsActivity extends Activity {
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			
+
 			try {
 				showclub();
 			} catch (JSONException e) {

@@ -72,7 +72,6 @@ import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
-import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
@@ -1504,6 +1503,8 @@ public class HomeActivity extends FragmentActivity implements
 		builder.show();
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1651,6 +1652,17 @@ public class HomeActivity extends FragmentActivity implements
 							// homebtnsll.setVisibility(View.VISIBLE);
 							showButtonsDialog();
 							// isCallresetIntentParams=false;
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+								officetohomell.setBackground(getResources().getDrawable(
+										R.drawable.border));
+								hometoofficell.setBackground(getResources().getDrawable(
+										R.drawable.border));
+							} else {
+								officetohomell.setBackgroundDrawable(getResources().getDrawable(
+										R.drawable.border));
+								hometoofficell.setBackgroundDrawable(getResources().getDrawable(
+										R.drawable.border));
+							}
 						}
 					}
 				}
@@ -1694,7 +1706,18 @@ public class HomeActivity extends FragmentActivity implements
 							// homebtnsll.setVisibility(View.VISIBLE);
 							showButtonsDialog();
 							// isCallresetIntentParams=false;
-
+							
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+								officetohomell.setBackground(getResources().getDrawable(
+										R.drawable.border));
+								hometoofficell.setBackground(getResources().getDrawable(
+										R.drawable.border));
+							} else {
+								officetohomell.setBackgroundDrawable(getResources().getDrawable(
+										R.drawable.border));
+								hometoofficell.setBackgroundDrawable(getResources().getDrawable(
+										R.drawable.border));
+							}
 						}
 					}
 				}

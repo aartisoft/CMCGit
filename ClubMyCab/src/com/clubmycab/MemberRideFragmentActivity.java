@@ -3340,8 +3340,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		}
 
 		Log.d("joinpool onStart", "joinpool onStart");
-		if (xmppConnection != null) {
-			Log.d("12", "connection already connected");
+		if (xmppConnection != null && xmppConnection.isConnected()) {
+			Log.d("12",
+					"connection already connected : "
+							+ xmppConnection.isConnected());
 
 		} else {
 			establishXmppConnection();

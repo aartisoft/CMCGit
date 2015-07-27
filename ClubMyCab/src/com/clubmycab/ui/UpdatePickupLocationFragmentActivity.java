@@ -136,7 +136,6 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 	TextView joinpoollocationtext;
 
 	ProgressDialog onedialog;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -167,8 +166,6 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 			builder.show();
 			return;
 		}
-
-		
 
 		Intent intent = getIntent();
 		CabId = intent.getStringExtra("CabId");
@@ -265,7 +262,8 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 			}
 		});
 
-		onedialog = new ProgressDialog(UpdatePickupLocationFragmentActivity.this);
+		onedialog = new ProgressDialog(
+				UpdatePickupLocationFragmentActivity.this);
 		onedialog.setMessage("Please Wait...");
 		onedialog.setCancelable(false);
 		onedialog.setCanceledOnTouchOutside(false);
@@ -388,8 +386,8 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 					updatelocationmarker.setVisibility(View.VISIBLE);
 					memberlocationlatlong = point;
 					memberlocationaddress = MapUtilityMethods.getAddress(
-							UpdatePickupLocationFragmentActivity.this, point.latitude,
-							point.longitude);
+							UpdatePickupLocationFragmentActivity.this,
+							point.latitude, point.longitude);
 
 					Log.d("memberlocationlatlong", "" + memberlocationlatlong);
 					Log.d("memberlocationaddress", "" + memberlocationaddress);
@@ -406,9 +404,11 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 							LatLng mapcenter = cameraPosition.target;
 
 							memberlocationlatlong = mapcenter;
-							memberlocationaddress = MapUtilityMethods.getAddress(
-									UpdatePickupLocationFragmentActivity.this,
-									mapcenter.latitude, mapcenter.longitude);
+							memberlocationaddress = MapUtilityMethods
+									.getAddress(
+											UpdatePickupLocationFragmentActivity.this,
+											mapcenter.latitude,
+											mapcenter.longitude);
 
 							Log.d("memberlocationlatlong", ""
 									+ memberlocationlatlong);
@@ -567,7 +567,8 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 			Log.d("via_waypoint", "" + via_waypoint);
 
 			for (int i = 0; i < via_waypoint.size(); i++) {
-				String asd = MapUtilityMethods.getAddress(UpdatePickupLocationFragmentActivity.this,
+				String asd = MapUtilityMethods.getAddress(
+						UpdatePickupLocationFragmentActivity.this,
 						via_waypoint.get(i).latitude,
 						via_waypoint.get(i).longitude);
 				via_waypointstrarr.add(asd);
@@ -575,7 +576,6 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 			Log.d("via_waypointstrarr", "" + via_waypointstrarr);
 		}
 	}
-
 
 	private ArrayList<LatLng> decodePoly(String encoded) {
 		ArrayList<LatLng> poly = new ArrayList<LatLng>();
@@ -954,12 +954,25 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 				return;
 			}
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForcheckpoolalreadyjoinednew()
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				new ConnectionTaskForcheckpoolalreadyjoinednew().execute();
+			try {
+				JSONObject jsonObject = new JSONObject(updatelocationpoolresp);
+				if (jsonObject.get("success").toString().equals("1")) {
+					finish();
+				} else {
+					Toast.makeText(UpdatePickupLocationFragmentActivity.this,
+							"Something went wrong, please try again",
+							Toast.LENGTH_LONG).show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
+			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// new ConnectionTaskForcheckpoolalreadyjoinednew()
+			// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			// } else {
+			// new ConnectionTaskForcheckpoolalreadyjoinednew().execute();
+			// }
 
 		}
 

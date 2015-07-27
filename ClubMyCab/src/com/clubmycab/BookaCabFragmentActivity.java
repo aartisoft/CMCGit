@@ -3430,6 +3430,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				.findViewById(R.id.editTextBookCabUserName);
 		final EditText editTextPassword = (EditText) builderView
 				.findViewById(R.id.editTextBookCabPassword);
+		final TextView messageTextView = (TextView) builderView
+				.findViewById(R.id.messageUserCredentials);
 
 		String jsonString = "";
 		TextView textView = (TextView) builderView
@@ -3657,6 +3659,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					.toString().toLowerCase().contains("uber")) {
 				// editTextUserName.setVisibility(View.VISIBLE);
 				// editTextPassword.setVisibility(View.VISIBLE);
+				// messageTextView.setVisibility(View.VISIBLE);
 				//
 				// Log.d("BookaCab", "contains(uber) : " +
 				// cabUserCredentialsReadWrite.readArrayFromFile());
@@ -3689,6 +3692,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					.toString().toLowerCase().contains("mega")) {
 				// editTextUserName.setVisibility(View.VISIBLE);
 				// editTextPassword.setVisibility(View.VISIBLE);
+				// messageTextView.setVisibility(View.VISIBLE);
 				//
 				// // Log.d("BookaCab", "contains(mega) : " +
 				// //
@@ -3722,6 +3726,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					.toString().toLowerCase().contains("taxiforsure")) {
 				editTextUserName.setVisibility(View.VISIBLE);
 				editTextPassword.setVisibility(View.VISIBLE);
+				messageTextView.setVisibility(View.VISIBLE);
+
+				editTextUserName.setHint("Taxi For Sure username");
+				editTextPassword.setHint("Taxi For Sure password");
 
 				Log.d("BookaCab", "contains(taxiforsure) : "
 						+ cabUserCredentialsReadWrite.readArrayFromFile());

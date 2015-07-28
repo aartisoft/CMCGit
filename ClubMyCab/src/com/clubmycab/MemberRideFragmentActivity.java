@@ -388,6 +388,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				}
 			}
 		});
+		refreshlocationbtn.setVisibility(View.GONE);
 
 		listViewMsg = (ListView) findViewById(R.id.listViewMsg);
 		editTextMsg = (EditText) findViewById(R.id.editTextMsg);
@@ -1152,7 +1153,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		input.setInputType(InputType.TYPE_CLASS_NUMBER
 				| InputType.TYPE_NUMBER_FLAG_DECIMAL);
 		builder.setView(input);
-		builder.setPositiveButton("Calculate split",
+		builder.setPositiveButton("Split by distance",
 				new DialogInterface.OnClickListener() {
 
 					@Override
@@ -1251,13 +1252,101 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						}
 					}
 				});
-		// builder.setNegativeButton("Cancel", null);
+		builder.setNegativeButton("Split equally",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Double fare = 0.0;
+						if (input.getText().toString().isEmpty()) {
+							Toast.makeText(MemberRideFragmentActivity.this,
+									"Please enter a valid fare",
+									Toast.LENGTH_LONG).show();
+							showFareSplitDialog();
+						} else if (!input.getText().toString().isEmpty()) {
+							fare = Double.parseDouble(input.getText()
+									.toString());
+							if (fare <= 0.0) {
+								Toast.makeText(MemberRideFragmentActivity.this,
+										"Please enter a valid fare",
+										Toast.LENGTH_LONG).show();
+								showFareSplitDialog();
+							} else {
+								showEqualFareSplitDialog(fare);
+							}
+						}
+					}
+				});
 		AlertDialog dialog = builder.show();
 		TextView messageText = (TextView) dialog
 				.findViewById(android.R.id.message);
 		messageText.setGravity(Gravity.CENTER);
 		dialog.show();
 
+	}
+
+	private void showEqualFareSplitDialog(final double fare) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				MemberRideFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.fare_split_dialog, null);
+
+		ListView listView = (ListView) builderView
+				.findViewById(R.id.listViewFareSplit);
+
+		Button button = (Button) builderView.findViewById(R.id.buttonFareSplit);
+
+		builder.setView(builderView);
+		final AlertDialog dialog = builder.create();
+
+		ArrayList<String> arrayList = new ArrayList<String>();
+		final double fareSplit = fare / (ShowMemberName.size() + 1); // +1 for
+																		// owner
+
+		arrayList.add(OwnerName + " : \u20B9 "
+				+ String.format("%d%n", Math.round(fareSplit)));
+		for (int i = 0; i < ShowMemberName.size(); i++) {
+			arrayList.add(ShowMemberName.get(i) + " : \u20B9 "
+					+ String.format("%d%n", Math.round(fareSplit)));
+		}
+
+		arrayList.add(0, "Total Fare : \u20B9 " + Double.toString(fare));
+
+		listView.setAdapter(new ListViewAdapterFareSplit(
+				MemberRideFragmentActivity.this, arrayList));
+
+		button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+
+				String numberfareString = "";
+				for (int i = 0; i < MemberNumber.size(); i++) {
+					numberfareString += (MemberNumber.get(i).toString() + "~"
+							+ String.format("%d%n", Math.round(fareSplit)) + ",");
+				}
+				numberfareString += (OwnerMobileNumber + "~"
+						+ String.format("%d%n", Math.round(fareSplit)) + ",");
+
+				numberfareString = numberfareString.substring(0,
+						numberfareString.length() - 1);
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForSaveCalculatedFare()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+									CabId, Double.toString(fare),
+									numberfareString, OwnerMobileNumber,
+									OwnerMobileNumber);
+				} else {
+					new ConnectionTaskForSaveCalculatedFare().execute(CabId,
+							Double.toString(fare), numberfareString,
+							OwnerMobileNumber, OwnerMobileNumber);
+				}
+			}
+		});
+
+		dialog.show();
 	}
 
 	private void showPaymentDialog() {
@@ -1278,8 +1367,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			public void onClick(View view) {
 				dialog.dismiss();
 
-				// call update status for user
-
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
 							AsyncTask.THREAD_POOL_EXECUTOR, CabId,
@@ -1299,7 +1386,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			public void onClick(View view) {
 				dialog.dismiss();
 
-				// Show coming soon
 			}
 		});
 
@@ -4086,9 +4172,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					Log.d("MemberRideFragmentActivity", "Owner location : "
 							+ latLng);
 
-					if (!refreshlocationbtn.isShown()) {
-						refreshlocationbtn.setVisibility(View.VISIBLE);
-					}
+					// if (!refreshlocationbtn.isShown()) {
+					// refreshlocationbtn.setVisibility(View.VISIBLE);
+					// }
 
 					if (ownerMarker != null) {
 						ownerMarker.remove();

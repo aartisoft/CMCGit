@@ -1,6 +1,11 @@
 package com.clubmycab.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.json.JSONObject;
 
@@ -28,7 +33,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 	String FullName, MobileNumber;
 
-	LinearLayout otpLinearLayout;
+	LinearLayout otpLinearLayout, walletLinearLayout;
 
 	EditText otpEditText, mobileEditText, emailEditText;
 	Button continuewithotp, sendOTP;
@@ -45,6 +50,17 @@ public class FirstLoginWalletsActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_first_login_wallet);
+		
+		walletLinearLayout = (LinearLayout)findViewById(R.id.walletFLLinearLayout);
+		
+		LinearLayout linearLayout = (LinearLayout)findViewById(R.id.walletMobikwikLinearLayout);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				walletLinearLayout.setVisibility(View.VISIBLE);
+			}
+		});
 
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
@@ -100,23 +116,23 @@ public class FirstLoginWalletsActivity extends Activity implements
 			}
 		});
 
-		String msgcode = "500";
-		String action = "existingusercheck";
-
-		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
-				+ action + "''" + mobilenumber + "''"
-				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
-				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
-		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
-				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
-				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
-				+ "&checksum=" + checksumstring;
-		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
-				+ " params : " + params);
-		new GlobalAsyncTask(this, endpoint, params, null, this, true,
-				"querywallet", true);
+//		String msgcode = "500";
+//		String action = "existingusercheck";
+//
+//		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+//				+ action + "''" + mobilenumber + "''"
+//				+ GlobalVariables.Mobikwik_MerchantName + "''"
+//				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
+//				GlobalVariables.Mobikwik_14SecretKey);
+//		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
+//		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
+//				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
+//				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
+//				+ "&checksum=" + checksumstring;
+//		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
+//				+ " params : " + params);
+//		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+//				"querywallet", true);
 	}
 
 	private void generateOTP() {
@@ -195,28 +211,63 @@ public class FirstLoginWalletsActivity extends Activity implements
 			JSONObject jsonObject = new JSONObject(response);
 
 			Iterator<String> iterator = jsonObject.keys();
-			String responseKeys = "";
+			String responseValues = "";
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+
 			while (iterator.hasNext()) {
-				String string = iterator.next();
-				responseKeys += (string + "''");
-//				if (!string.equalsIgnoreCase("checksum")) {
-//					
-//				}
+				String key = iterator.next();
+				String value = jsonObject.get(key).toString();
+
+				if (!value.isEmpty() && value.length() > 0
+						&& !key.equalsIgnoreCase("checksum")) {
+					hashMap.put(key, value);
+				}
+
+				// if (!value.isEmpty() && value.length() > 0 &&
+				// !key.equalsIgnoreCase("checksum")) {
+				// responseValues += (value + "''");
+				// }
 			}
-//			Log.d("checkResponseChecksum", "responseKeys 1 : " + responseKeys);
-			responseKeys = responseKeys.substring(0, responseKeys.length() - 2);
-//			Log.d("checkResponseChecksum", "responseKeys 2 : " + responseKeys);
-			String responseKeysFinal = "'" + responseKeys + "'";
-//			Log.d("checkResponseChecksum", "responseKeysFinal : "
-//					+ responseKeysFinal);
-			Log.d("checkResponseChecksum", GlobalMethods
-					.calculateCheckSumForService(responseKeysFinal,
-							GlobalVariables.Mobikwik_14SecretKey));
+			// Log.d("checkResponseChecksum", "hashMap : " + hashMap);
+			Map<String, String> map = new TreeMap<String, String>(hashMap);
+			List<String> list = new ArrayList<String>(map.keySet());
+			Log.d("checkResponseChecksum",
+					"map : " + map + " keySet : " + map.keySet() + " list : "
+							+ list);
+
+			for (int i = 0; i < list.size(); i++) {
+				responseValues += (map.get(list.get(i)) + "''");
+			}
+
+			responseValues = responseValues.substring(0,
+					responseValues.length() - 2);
+			String responseValuesFinal = "'" + responseValues + "'";
+
+			// Log.d("checkResponseChecksum", "responseValuesFinal : "
+			// + responseValuesFinal);
+
+			String checkSumGenerated = GlobalMethods
+					.calculateCheckSumForService(responseValuesFinal,
+							GlobalVariables.Mobikwik_14SecretKey);
+			Log.d("checkResponseChecksum", checkSumGenerated);
+
+			if (checkSumGenerated.equals(jsonObject.get("checksum").toString())) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+	}
 
-		return false;
+	private void checksumInvalidToast() {
+		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
+		Toast.makeText(FirstLoginWalletsActivity.this,
+				"Something went wrong, please try again", Toast.LENGTH_LONG)
+				.show();
 	}
 
 	@Override
@@ -227,7 +278,11 @@ public class FirstLoginWalletsActivity extends Activity implements
 				JSONObject jsonObject = new JSONObject(response);
 				Log.d("FirstLoginWalletActivity", "querywallet jsonObject : "
 						+ jsonObject);
-				checkResponseChecksum(response);
+				if (!checkResponseChecksum(response)) {
+					checksumInvalidToast();
+					return;
+				}
+
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -309,6 +364,11 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("otpgenerate")) {
 			Log.d("FirstLoginWalletActivity", "otpgenerate response : "
 					+ response);
+			if (!checkResponseChecksum(response)) {
+				checksumInvalidToast();
+				return;
+			}
+
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
@@ -322,6 +382,10 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("tokengenerate")) {
 			Log.d("FirstLoginWalletActivity", "tokengenerate response : "
 					+ response);
+			if (!checkResponseChecksum(response)) {
+				checksumInvalidToast();
+				return;
+			}
 
 			try {
 				JSONObject jsonObject = new JSONObject(response);
@@ -344,6 +408,10 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("createwalletuser")) {
 			Log.d("FirstLoginWalletActivity", "createwalletuser response : "
 					+ response);
+			if (!checkResponseChecksum(response)) {
+				checksumInvalidToast();
+				return;
+			}
 
 			try {
 				JSONObject jsonObject = new JSONObject(response);

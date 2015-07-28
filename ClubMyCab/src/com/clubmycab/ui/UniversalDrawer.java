@@ -35,7 +35,7 @@ public class UniversalDrawer {
 	TextView sharethisapp;
 	TextView wallets;
 	TextView mypreferences;
-	//TextView about;
+	// TextView about;
 	private TextView faq;
 
 	LinearLayout myclubslayout;
@@ -44,7 +44,7 @@ public class UniversalDrawer {
 	LinearLayout mywalletslayout;
 	LinearLayout settingslayout;
 	LinearLayout shareapplayout;
-	//LinearLayout aboutlayout;
+	// LinearLayout aboutlayout;
 	LinearLayout faqlayout;
 
 	LinearLayout sharelocationlayout;
@@ -55,7 +55,8 @@ public class UniversalDrawer {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.tracker = tracker;
-		Log.d("UniversalDrawer", "ActivityName : " + GlobalVariables.ActivityName);
+		Log.d("UniversalDrawer", "ActivityName : "
+				+ GlobalVariables.ActivityName);
 	}
 
 	public void createDrawer() {
@@ -85,10 +86,10 @@ public class UniversalDrawer {
 				.findViewById(R.id.settingslayout);
 		shareapplayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.shareapplayout);
-//		aboutlayout = (LinearLayout) ((Activity) context)
-//				.findViewById(R.id.aboutlayout);
+		// aboutlayout = (LinearLayout) ((Activity) context)
+		// .findViewById(R.id.aboutlayout);
 		faqlayout = (LinearLayout) ((Activity) context)
-			.findViewById(R.id.faqlayout);
+				.findViewById(R.id.faqlayout);
 		sharelocationlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.sharelocationlayout);
 
@@ -121,10 +122,10 @@ public class UniversalDrawer {
 				.findViewById(R.id.mypreferences);
 		mypreferences.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
-//		about = (TextView) ((Activity) context).findViewById(R.id.about);
-//		about.setTypeface(Typeface.createFromAsset(context.getAssets(),
-//				"NeutraText-Light.ttf"));
-		
+		// about = (TextView) ((Activity) context).findViewById(R.id.about);
+		// about.setTypeface(Typeface.createFromAsset(context.getAssets(),
+		// "NeutraText-Light.ttf"));
+
 		faq = (TextView) ((Activity) context).findViewById(R.id.faq);
 		faq.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
@@ -155,7 +156,8 @@ public class UniversalDrawer {
 			@Override
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
-				Log.d("UniversalDrawer", "myrideslayout ActivityName : " + GlobalVariables.ActivityName);
+				Log.d("UniversalDrawer", "myrideslayout ActivityName : "
+						+ GlobalVariables.ActivityName);
 
 				if (!GlobalVariables.ActivityName.equals("MyRidesActivity")) {
 
@@ -203,26 +205,26 @@ public class UniversalDrawer {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				// Intent mainIntent = new Intent(context,
-				// FavoriteLocationsAcivity.class);
-				// context.startActivity(mainIntent);
-				// ((Activity) context).overridePendingTransition(
-				// R.anim.slide_in_right, R.anim.slide_out_left);
+				Intent mainIntent = new Intent(context,
+						FirstLoginWalletsActivity.class);
+				context.startActivity(mainIntent);
+				((Activity) context).overridePendingTransition(
+						R.anim.slide_in_right, R.anim.slide_out_left);
 
-				 tracker.send(new HitBuilders.EventBuilder()
-				 .setCategory("ShareApp Click")
-				 .setAction("ShareApp Click").setLabel("ShareApp Click")
-				 .build());
-				
-				 Intent sendIntent = new Intent();
-				 sendIntent.setAction(Intent.ACTION_SEND);
-				 sendIntent
-				 .putExtra(
-				 Intent.EXTRA_TEXT,
-				 "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
-				 sendIntent.setType("text/plain");
-				 context.startActivity(Intent.createChooser(sendIntent,
-				 "Share Via"));
+				// tracker.send(new HitBuilders.EventBuilder()
+				// .setCategory("ShareApp Click")
+				// .setAction("ShareApp Click").setLabel("ShareApp Click")
+				// .build());
+				//
+				// Intent sendIntent = new Intent();
+				// sendIntent.setAction(Intent.ACTION_SEND);
+				// sendIntent
+				// .putExtra(
+				// Intent.EXTRA_TEXT,
+				// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
+				// sendIntent.setType("text/plain");
+				// context.startActivity(Intent.createChooser(sendIntent,
+				// "Share Via"));
 
 			}
 		});
@@ -255,7 +257,8 @@ public class UniversalDrawer {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				if (!GlobalVariables.ActivityName.equals("ShareLocationFragmentActivity")) {
+				if (!GlobalVariables.ActivityName
+						.equals("ShareLocationFragmentActivity")) {
 					tracker.send(new HitBuilders.EventBuilder()
 							.setCategory("ShareLocation Click")
 							.setAction("ShareLocation Click")
@@ -293,30 +296,30 @@ public class UniversalDrawer {
 
 			}
 		});
-//		aboutlayout.setOnClickListener(new View.OnClickListener() {
-//			@SuppressWarnings("deprecation")
-//			@Override
-//			public void onClick(View arg0) {
-//
-//				mNav.toggleDrawer();
-//
-//				if (!GlobalVariables.ActivityName
-//						.equals("AboutPagerFragmentActivity")) {
-//
-//					tracker.send(new HitBuilders.EventBuilder()
-//							.setCategory("About Click")
-//							.setAction("About Click").setLabel("About Click")
-//							.build());
-//
-//					Intent mainIntent = new Intent(context,
-//							AboutPagerFragmentActivity.class);
-//					context.startActivity(mainIntent);
-//					((Activity) context).overridePendingTransition(
-//							R.anim.slide_in_right, R.anim.slide_out_left);
-//					GlobalVariables.ActivityName = "AboutPagerFragmentActivity";
-//				}
-//			}
-//		});
+		// aboutlayout.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// mNav.toggleDrawer();
+		//
+		// if (!GlobalVariables.ActivityName
+		// .equals("AboutPagerFragmentActivity")) {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("About Click")
+		// .setAction("About Click").setLabel("About Click")
+		// .build());
+		//
+		// Intent mainIntent = new Intent(context,
+		// AboutPagerFragmentActivity.class);
+		// context.startActivity(mainIntent);
+		// ((Activity) context).overridePendingTransition(
+		// R.anim.slide_in_right, R.anim.slide_out_left);
+		// GlobalVariables.ActivityName = "AboutPagerFragmentActivity";
+		// }
+		// }
+		// });
 		faqlayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			@Override
@@ -324,16 +327,13 @@ public class UniversalDrawer {
 
 				mNav.toggleDrawer();
 
-				if (!GlobalVariables.ActivityName
-						.equals("FAQActivity")) {
+				if (!GlobalVariables.ActivityName.equals("FAQActivity")) {
 
 					tracker.send(new HitBuilders.EventBuilder()
-							.setCategory("Faq Click")
-							.setAction("Faq Click").setLabel("Faq Click")
-							.build());
+							.setCategory("Faq Click").setAction("Faq Click")
+							.setLabel("Faq Click").build());
 
-					Intent mainIntent = new Intent(context,
-							FAQActivity.class);
+					Intent mainIntent = new Intent(context, FAQActivity.class);
 					context.startActivity(mainIntent);
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);
@@ -341,7 +341,6 @@ public class UniversalDrawer {
 				}
 			}
 		});
-
 
 	}
 

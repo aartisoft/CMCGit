@@ -2,10 +2,6 @@
  package com.clubmycab;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-
 import com.affle.affledowloadtracker.AffleAppDownloadTracker;
 
 

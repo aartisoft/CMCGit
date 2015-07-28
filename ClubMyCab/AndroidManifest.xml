@@ -56,13 +56,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
+                
+              
             <intent-filter>
-<data android:scheme="@string/app_name" />
+<data android:scheme="clubmycabandroid" />
 <action android:name="android.intent.action.VIEW" />
 <category android:name="android.intent.category.BROWSABLE" />
 <category android:name="android.intent.category.DEFAILT" />
-</intent-filter>      
+</intent-filter> 
         </activity>
           <meta-data
 android:name="af-DebugMode"
@@ -95,6 +96,7 @@ android:value="@string/Affle_TRACKER_URL" />
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
+            
         </activity>
 
         <meta-data
@@ -127,6 +129,7 @@ android:value="@string/Affle_TRACKER_URL" />
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
+           
         </activity>
 
         <receiver

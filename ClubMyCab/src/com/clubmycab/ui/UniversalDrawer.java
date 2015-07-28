@@ -207,6 +207,7 @@ public class UniversalDrawer {
 
 				Intent mainIntent = new Intent(context,
 						FirstLoginWalletsActivity.class);
+				mainIntent.putExtra("from", "reg");
 				context.startActivity(mainIntent);
 				((Activity) context).overridePendingTransition(
 						R.anim.slide_in_right, R.anim.slide_out_left);
@@ -241,8 +242,10 @@ public class UniversalDrawer {
 							.setLabel("Wallets Click").build());
 
 					Intent mainIntent = new Intent(context,
-							WalletsAcitivity.class);
+							FirstLoginWalletsActivity.class);
+					mainIntent.putExtra("from","wallete");
 					context.startActivity(mainIntent);
+					
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);
 					GlobalVariables.ActivityName = "WalletsAcitivity";

@@ -13,7 +13,7 @@
         android:orientation="vertical" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/ivWalletMobikwik"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/mobikwik_logo" />
@@ -28,7 +28,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical"
-        android:visibility="gone" >
+        >
 
         <TextView
             android:id="@+id/otphardtext"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="We have sent One Time Password (OTP) to your Mobile"
+            android:text="@string/mobikwik_nothave_account"
             android:textColor="#9e9e9e"
             android:textSize="15sp" />
 
@@ -46,6 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:editable="false"
+            android:focusable="false"
             android:ems="10"
             android:hint="Mobile" />
 
@@ -63,26 +65,32 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
+                            android:layout_marginLeft="10dp"
+            android:weightSum="2"
+            android:layout_gravity="center_vertical"
             android:orientation="horizontal" >
 
             <EditText
                 android:id="@+id/otpedittext"
-                android:layout_width="175dp"
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:hint="Enter OTP" />
 
             <Button
                 android:id="@+id/buttonSendOTP"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight=".8"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
+                android:gravity="center"
                 android:background="#4279bd"
                 android:text="Send OTP"
+                android:textSize="16sp"
                 android:textColor="#ffffff"
-                android:textSize="16sp" />
+                 />
 
         </LinearLayout>
 

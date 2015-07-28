@@ -76,15 +76,13 @@
     <string name="quesiton2">What should I do to make my clubs more effective?</string>
     <string name="quesiton3">How can I share a ride?</string>
     <string name="quesiton4">While sharing a ride</string>
-    
     <string name="quesiton5">Booking a cab in ClubMyCab</string>
     <string name="quesiton6">What about privacy and safety?</string>
-    
-        <string name="selectclub">Select a club from above</string>
-    
+    <string name="selectclub">Select a club from above</string>
     <string name="memberexcludingmsg">(Number in brackets is members including the person who created the club)</string>
-
-<string name="Affle_TRACKER_URL">https://affle.co/global/install.php?af_cid=1438003779</string>
+    <string name="Affle_TRACKER_URL">https://affle.co/global/install.php?af_cid=1438003779</string>
     <string name="seatcount">3</string>
+    <string name="otpsent">We have sent One Time Password (OTP) to your Mobile</string>
+    <string name="mobikwik_nothave_account">You do not have a Mobikwik wallet registered with your number, would you like to create one?</string>
 
 </resources>

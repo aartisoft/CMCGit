@@ -62,18 +62,15 @@
 <action android:name="android.intent.action.VIEW" />
 <category android:name="android.intent.category.BROWSABLE" />
 <category android:name="android.intent.category.DEFAILT" />
-</intent-filter>
-            
-            
+</intent-filter>      
         </activity>
-        
-        <meta-data
+          <meta-data
 android:name="af-DebugMode"
 android:value="true" />
-          <meta-data
+<meta-data
 android:name="af-TrackerURL"
-android:value="@string/storeurl" />
-        
+android:value="@string/Affle_TRACKER_URL" />
+ <meta-data android:name="ClubMyCab" android:value="" />
         <activity
             android:name=".ui.OTPActivity"
             android:label="@string/title_activity_enter_otp"

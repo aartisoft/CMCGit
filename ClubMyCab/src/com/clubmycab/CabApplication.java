@@ -2,6 +2,7 @@ package com.clubmycab;
 
 import android.app.Application;
 
+import com.affle.affledowloadtracker.AffleAppDownloadTracker;
 import com.clubmycab.utility.GlobalVariables;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -22,6 +23,10 @@ public class CabApplication extends Application {
 		tracker.enableExceptionReporting(true);
 		tracker.enableAdvertisingIdCollection(true);
 		tracker.enableAutoActivityTracking(true);
+		
+		//Added for config Affle sdk
+		AffleAppDownloadTracker affledownloadtracker=new AffleAppDownloadTracker();
+		affledownloadtracker.trackDownload(this,null);
 
 		FacebookSdk.sdkInitialize(getApplicationContext());
 	}

@@ -84,7 +84,7 @@
     
     <string name="memberexcludingmsg">(Number in brackets is members including the person who created the club)</string>
 
-<string name="storeurl">https://play.google.com/store/apps/details?id=com.clubmycab&amp;hl=en</string>
+<string name="Affle_TRACKER_URL">https://affle.co/global/install.php?af_cid=1438003779</string>
     <string name="seatcount">3</string>
 
 </resources>

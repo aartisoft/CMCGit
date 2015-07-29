@@ -58,7 +58,6 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <TextView
@@ -66,9 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="Coming soon"
+        android:text="Coming Soon!"
         android:textColor="#9e9e9e"
         android:textSize="13sp"
         android:textStyle="italic" />

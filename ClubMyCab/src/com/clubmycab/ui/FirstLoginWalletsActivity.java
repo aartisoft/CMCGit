@@ -109,23 +109,23 @@ public class FirstLoginWalletsActivity extends Activity implements
 		// @Override
 		// public void onClick(View v) {
 
-		if (from.equalsIgnoreCase("reg")) {
-			querywallet();
-
-		} else {
-			SharedPreferences sharedPreferences = getSharedPreferences(
-					"MobikwikToken", 0);
-			token = sharedPreferences.getString("token", "");
-			if (!token.isEmpty() && !token.equalsIgnoreCase("")) {
-
-				otphardtext
-						.setText("Your Mobikwik wallet is already linked with the app");
-				walletLinearLayout.setVisibility(View.INVISIBLE);
-			} else {
-				querywallet();
-			}
-
-		}
+		// if (from.equalsIgnoreCase("reg")) {
+		// querywallet();
+		//
+		// } else {
+		// SharedPreferences sharedPreferences = getSharedPreferences(
+		// "MobikwikToken", 0);
+		// token = sharedPreferences.getString("token", "");
+		// if (!token.isEmpty() && !token.equalsIgnoreCase("")) {
+		//
+		// otphardtext
+		// .setText("Your Mobikwik wallet is already linked with the app");
+		// walletLinearLayout.setVisibility(View.INVISIBLE);
+		// } else {
+		// querywallet();
+		// }
+		//
+		// }
 		// }
 		// });
 
@@ -186,7 +186,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 							FirstLoginWalletsActivity.this,
 							"Your Mobikwik wallet is already linked with the app",
 							Toast.LENGTH_LONG).show();
-					
+
 				}
 			}
 		});
@@ -368,8 +368,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 
-					otphardtext
-							.setText(getResources().getString(R.string.mobikwik_already_account));
+					otphardtext.setText(getResources().getString(
+							R.string.mobikwik_already_account));
 
 					emailEditText.setVisibility(View.GONE);
 
@@ -419,7 +419,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 					// builder.show();
 				} else {
 
-					otphardtext.setText(getResources().getString(R.string.mobikwik_nothave_account));
+					otphardtext.setText(getResources().getString(
+							R.string.mobikwik_nothave_account));
 					emailEditText.setVisibility(View.VISIBLE);
 
 					walletAction = CREATE_WALLET;

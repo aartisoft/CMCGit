@@ -264,6 +264,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	LocationManager locationManager;
 	Location mycurrentlocationobject;
 
+	String amountToPay;
+	String payToPerson;
+	String totalFare;
+
 	@SuppressLint("DefaultLocale")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -605,6 +609,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 				} else {
+
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("Book a cab ride")
+							.setAction("Book a cab ride")
+							.setLabel("Book a cab ride").build());
 
 					String addressString = MapUtilityMethods.getAddress(
 							MemberRideFragmentActivity.this,
@@ -1063,6 +1072,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			}
 		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new ConnectionTaskForGetMyFare().executeOnExecutor(
+					AsyncTask.THREAD_POOL_EXECUTOR, CabId, MemberNumberstr);
+		} else {
+			new ConnectionTaskForGetMyFare().execute(CabId, MemberNumberstr);
+		}
 	}
 
 	private void showRideCompleteDialog() {
@@ -1081,6 +1097,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare already settled")
+						.setAction("Fare already settled")
+						.setLabel("Fare already settled").build());
+
 				dialog.dismiss();
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1098,6 +1120,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare paid by other")
+						.setAction("Fare paid by other")
+						.setLabel("Fare paid by other").build());
+
 				dialog.dismiss();
 
 				Toast.makeText(
@@ -1122,6 +1149,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare calculate")
+						.setAction("Fare calculate").setLabel("Fare calculate")
+						.build());
+
 				dialog.dismiss();
 
 				// showFareSplitDialog();
@@ -1174,6 +1207,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 										Toast.LENGTH_LONG).show();
 								showFareSplitDialog();
 							} else {
+
+								tracker.send(new HitBuilders.EventBuilder()
+										.setCategory("Fare Split by distance")
+										.setAction("Fare Split by distance")
+										.setLabel("Fare Split by distance")
+										.build());
+
 								onedialog = new ProgressDialog(
 										MemberRideFragmentActivity.this);
 								onedialog.setMessage("Please Wait...");
@@ -1272,6 +1312,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 										Toast.LENGTH_LONG).show();
 								showFareSplitDialog();
 							} else {
+
+								tracker.send(new HitBuilders.EventBuilder()
+										.setCategory("Fare Split equal")
+										.setAction("Fare Split equal")
+										.setLabel("Fare Split equal").build());
+
 								showEqualFareSplitDialog(fare);
 							}
 						}
@@ -1336,12 +1382,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					new ConnectionTaskForSaveCalculatedFare()
 							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 									CabId, Double.toString(fare),
-									numberfareString, OwnerMobileNumber,
+									numberfareString, MemberNumberstr,
 									OwnerMobileNumber);
 				} else {
 					new ConnectionTaskForSaveCalculatedFare().execute(CabId,
 							Double.toString(fare), numberfareString,
-							OwnerMobileNumber, OwnerMobileNumber);
+							MemberNumberstr, OwnerMobileNumber);
 				}
 			}
 		});
@@ -1365,6 +1411,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare settled in cash")
+						.setAction("Fare settled in cash")
+						.setLabel("Fare settled in cash").build());
+
 				dialog.dismiss();
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1384,6 +1436,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				// tracker.send(new HitBuilders.EventBuilder()
+				// .setCategory("Fare settled by wallet")
+				// .setAction("Fare settled by wallet")
+				// .setLabel("Fare settled by wallet").build());
+
 				dialog.dismiss();
 
 			}
@@ -2840,6 +2898,19 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					dialog.show();
 				}
 			});
+		}
+
+		if (totalFare != null && !totalFare.isEmpty() && amountToPay != null
+				&& !amountToPay.isEmpty()) {
+			LinearLayout linearLayout = (LinearLayout) dialog
+					.findViewById(R.id.faredetailsll);
+			linearLayout.setVisibility(View.VISIBLE);
+
+			TextView textView = (TextView) dialog
+					.findViewById(R.id.faredetailstotal);
+			textView.setText("Total fare: \u20B9" + totalFare);
+			textView = (TextView) dialog.findViewById(R.id.faredetailsshare);
+			textView.setText("Your share: \u20B9" + amountToPay);
 		}
 
 		dialog.show();
@@ -4858,6 +4929,109 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			// saveCalculatedFare = result;
 
 			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+		}
+	}
+
+	private class ConnectionTaskForGetMyFare extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionGetMyFare mAuth1 = new AuthenticateConnectionGetMyFare();
+			try {
+				mAuth1.cid = args[0];
+				mAuth1.mnum = args[1];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionGetMyFare {
+
+		public String cid, mnum;
+
+		public AuthenticateConnectionGetMyFare() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl + "/getMyFare.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cid);
+			BasicNameValuePair MobileValuePair = new BasicNameValuePair(
+					"mobileNumber", mnum);
+
+			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(MobileValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String resp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				resp = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("AuthenticateConnectionGetMyFare resp", "" + resp);
+			try {
+				JSONObject jsonObject = new JSONObject(resp);
+				amountToPay = jsonObject.get("fareToPay").toString();
+				payToPerson = jsonObject.get("paidBy").toString();
+				totalFare = jsonObject.get("totalFare").toString();
+
+				// runOnUiThread(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				// checkWalletExists(payToPerson.substring(4));
+				// }
+				// });
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

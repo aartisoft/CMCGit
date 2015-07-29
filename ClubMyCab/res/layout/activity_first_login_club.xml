@@ -19,7 +19,7 @@
             android:layout_margin="5dp"
             android:layout_weight="20"
             android:paddingBottom="5dp"
-            android:text="@string/text_firstloginclubs_member"
+            android:text=""
             android:textColor="#000000"
             android:textSize="15sp" />
 

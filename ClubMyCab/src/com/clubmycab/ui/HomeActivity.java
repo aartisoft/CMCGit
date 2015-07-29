@@ -716,6 +716,12 @@ public class HomeActivity extends FragmentActivity implements
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 			@Override
 			public void onClick(View v) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Home to office homepage")
+						.setAction("Home to office homepage")
+						.setLabel("Home to office homepage").build());
+
 				// Flag set for refresh address field
 				isCallresetIntentParams = false;
 				Log.d("HomeActivity", "home : " + home + " work : " + work);
@@ -751,6 +757,12 @@ public class HomeActivity extends FragmentActivity implements
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 			@Override
 			public void onClick(View v) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Office to home homepage")
+						.setAction("Office to home homepage")
+						.setLabel("Office to home homepage").build());
+
 				// Flag set for refresh address field
 				isCallresetIntentParams = false;
 				if (home != null && work != null) {
@@ -1417,9 +1429,11 @@ public class HomeActivity extends FragmentActivity implements
 			if (hashMap.size() > 0) {
 
 				homeAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get(StringTags.TAG_WHERE_LIVE_KEY), AddressModel.class);
+						hashMap.get(StringTags.TAG_WHERE_LIVE_KEY),
+						AddressModel.class);
 				workAddressModel = (AddressModel) gson.fromJson(
-						hashMap.get(StringTags.TAG_WHERE_WORK_KEY), AddressModel.class);
+						hashMap.get(StringTags.TAG_WHERE_WORK_KEY),
+						AddressModel.class);
 
 				Log.d("HomeActivity", "hashMap : " + hashMap);
 				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel
@@ -1653,15 +1667,17 @@ public class HomeActivity extends FragmentActivity implements
 							showButtonsDialog();
 							// isCallresetIntentParams=false;
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-								officetohomell.setBackground(getResources().getDrawable(
-										R.drawable.border));
-								hometoofficell.setBackground(getResources().getDrawable(
-										R.drawable.border));
+								officetohomell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
+								hometoofficell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
 							} else {
-								officetohomell.setBackgroundDrawable(getResources().getDrawable(
-										R.drawable.border));
-								hometoofficell.setBackgroundDrawable(getResources().getDrawable(
-										R.drawable.border));
+								officetohomell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
+								hometoofficell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
 							}
 						}
 					}
@@ -1706,17 +1722,19 @@ public class HomeActivity extends FragmentActivity implements
 							// homebtnsll.setVisibility(View.VISIBLE);
 							showButtonsDialog();
 							// isCallresetIntentParams=false;
-							
+
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-								officetohomell.setBackground(getResources().getDrawable(
-										R.drawable.border));
-								hometoofficell.setBackground(getResources().getDrawable(
-										R.drawable.border));
+								officetohomell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
+								hometoofficell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
 							} else {
-								officetohomell.setBackgroundDrawable(getResources().getDrawable(
-										R.drawable.border));
-								hometoofficell.setBackgroundDrawable(getResources().getDrawable(
-										R.drawable.border));
+								officetohomell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
+								hometoofficell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
 							}
 						}
 					}

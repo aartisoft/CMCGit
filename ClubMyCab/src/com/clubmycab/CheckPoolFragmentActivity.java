@@ -16,9 +16,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -55,6 +58,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -101,10 +105,15 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.MobileSiteActivity;
+import com.clubmycab.ui.MobileSiteFragment;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
@@ -126,7 +135,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 public class CheckPoolFragmentActivity extends FragmentActivity implements
-		FareCalculatorInterface {
+		FareCalculatorInterface, AsyncTaskResultListener {
 
 	String CompletePageResponse;
 
@@ -272,6 +281,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	Boolean appusersavailable;
 
 	String saveCalculatedFare;
+	String amountToPay;
+	String payToPerson;
+	String totalFare;
 
 	// /////////////////
 
@@ -688,6 +700,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			}
 		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new ConnectionTaskForGetMyFare().executeOnExecutor(
+					AsyncTask.THREAD_POOL_EXECUTOR, CabId, OwnerMobileNumber);
+		} else {
+			new ConnectionTaskForGetMyFare().execute(CabId, OwnerMobileNumber);
+		}
 	}
 
 	private void showRideCompleteDialog() {
@@ -706,6 +725,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare already settled")
+						.setAction("Fare already settled")
+						.setLabel("Fare already settled").build());
+
 				dialog.dismiss();
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -723,6 +748,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare paid by other")
+						.setAction("Fare paid by other")
+						.setLabel("Fare paid by other").build());
+
 				dialog.dismiss();
 
 				Toast.makeText(
@@ -748,6 +779,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare calculate")
+						.setAction("Fare calculate").setLabel("Fare calculate")
+						.build());
+
 				dialog.dismiss();
 
 				showFareSplitDialog();
@@ -828,6 +865,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 										Toast.LENGTH_LONG).show();
 								showFareSplitDialog();
 							} else {
+
+								tracker.send(new HitBuilders.EventBuilder()
+										.setCategory("Fare Split by distance")
+										.setAction("Fare Split by distance")
+										.setLabel("Fare Split by distance")
+										.build());
+
 								onedialog = new ProgressDialog(
 										CheckPoolFragmentActivity.this);
 								onedialog.setMessage("Please Wait...");
@@ -926,6 +970,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 										Toast.LENGTH_LONG).show();
 								showFareSplitDialog();
 							} else {
+								tracker.send(new HitBuilders.EventBuilder()
+										.setCategory("Fare Split equal")
+										.setAction("Fare Split equal")
+										.setLabel("Fare Split equal").build());
+
 								showEqualFareSplitDialog(fare);
 							}
 						}
@@ -1019,6 +1068,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare settled in cash")
+						.setAction("Fare settled in cash")
+						.setLabel("Fare settled in cash").build());
+
 				dialog.dismiss();
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1038,13 +1093,441 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
-				dialog.dismiss();
 
+				// tracker.send(new HitBuilders.EventBuilder()
+				// .setCategory("Fare settled by wallet")
+				// .setAction("Fare settled by wallet")
+				// .setLabel("Fare settled by wallet").build());
+				//
+				// dialog.dismiss();
+				//
+				// SharedPreferences sharedPreferences = getSharedPreferences(
+				// "MobikwikToken", 0);
+				// String token = sharedPreferences.getString("token", "");
+				//
+				// if (token != null && !token.isEmpty()) {
+				// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				// new ConnectionTaskForGetMyFare().executeOnExecutor(
+				// AsyncTask.THREAD_POOL_EXECUTOR, CabId,
+				// OwnerMobileNumber);
+				// } else {
+				// new ConnectionTaskForGetMyFare().execute(CabId,
+				// OwnerMobileNumber);
+				// }
+				// } else {
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// CheckPoolFragmentActivity.this);
+				// builder.setMessage("You cannot make a transfer as you do not have a wallet integrated yet, would you like to add a wallet now?");
+				// builder.setCancelable(false);
+				//
+				// builder.setPositiveButton("Yes",
+				// new DialogInterface.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(DialogInterface dialog,
+				// int which) {
+				// Intent mainIntent = new Intent(
+				// CheckPoolFragmentActivity.this,
+				// WalletsAcitivity.class);
+				// mainIntent.putExtra("from", "wallet");
+				// startActivity(mainIntent);
+				// }
+				// });
+				//
+				// builder.setNegativeButton("NO",
+				// new DialogInterface.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(DialogInterface dialog,
+				// int which) {
+				//
+				// }
+				// });
+				//
+				// builder.show();
+				// }
 			}
 		});
 
 		dialog.show();
 
+	}
+
+	private void checkWalletExists(String mobilenumber) {
+		String msgcode = "500";
+		String action = "existingusercheck";
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ action + "''" + mobilenumber + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
+		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
+				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
+				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
+				+ "&checksum=" + checksumstring;
+		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"querywallet", true);
+	}
+
+	private void checkTransactionLimit(String mobilenumber, String amount) {
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ amount + "''" + mobilenumber + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/checkTransactionLimit";
+		String params = "cell=" + mobilenumber + "&amount=" + amount + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("CheckPoolFragmentActivity", "checkTransactionLimit endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"checkTransactionLimit", true);
+	}
+
+	private void transactionHistory(String amount, String fee,
+			String merchantname, String mid, String orderid, String token,
+			String sendercell, String receivercell) {
+
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/transactionHistory.php";
+		String params = "amount=" + amount + "&fee=" + fee + "&merchantname="
+				+ merchantname + "&mid=" + mid + "&orderid=" + orderid
+				+ "&token=" + token + "&sendercell=" + sendercell
+				+ "&receivercell=" + receivercell;
+		Log.d("CheckPoolFragmentActivity", "transactionHistory endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"transactionHistory", false);
+	}
+
+	private void initiatePeerTransfer(String sendercell, String receivercell,
+			String amount, String fee, String orderid, String token) {
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ amount + "''" + fee + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + orderid + "''" + token
+				+ "''" + sendercell + "''" + receivercell + "'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/initiatePeerTransfer";
+		String params = "sendercell=" + sendercell + "&receivercell="
+				+ receivercell + "&amount=" + amount + "&fee=" + fee
+				+ "&orderid=" + orderid + "&token=" + token + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("CheckPoolFragmentActivity", "initiatePeerTransfer endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"initiatePeerTransfer", true);
+	}
+
+	private void tokenRegenerate(String mobilenumber, String token) {
+		String msgcode = "507";
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
+				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
+				+ token + "'", GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/tokenregenerate";
+		String params = "cell=" + mobilenumber + "&token=" + token
+				+ "&msgcode=" + msgcode + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("CheckPoolFragmentActivity", "tokenRegenerate endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"tokenregenerate", true);
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		if (uniqueID.equals("querywallet")) {
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				Log.d("CheckPoolFragmentActivity", "querywallet jsonObject : "
+						+ jsonObject);
+				if (!checkResponseChecksum(response)) {
+					checksumInvalidToast();
+					return;
+				}
+
+				if (jsonObject.getString("status").equals("SUCCESS")) {
+					checkTransactionLimit(OwnerMobileNumber.substring(4),
+							amountToPay);
+				} else {
+					Toast.makeText(
+							CheckPoolFragmentActivity.this,
+							"The transfer cannot be made as the person you wish to transfer to does not have an active wallet",
+							Toast.LENGTH_LONG).show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("checkTransactionLimit")) {
+			Log.d("CheckPoolFragmentActivity",
+					"checkTransactionLimit response : " + response);
+			if (!checkResponseChecksum(response)) {
+				checksumInvalidToast();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("SUCCESS")) {
+
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							CheckPoolFragmentActivity.this);
+					builder.setMessage("You do not have sufficient balance in your wallet to make this transfer, would you like to top-up your wallet?");
+					builder.setCancelable(false);
+
+					builder.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									openAppOrMSite();
+								}
+							});
+
+					builder.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+								}
+							});
+
+					builder.show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("transactionHistory")) {
+			Log.d("CheckPoolFragmentActivity", "transactionHistory response : "
+					+ response);
+		} else if (uniqueID.equals("initiatePeerTransfer")) {
+			Log.d("CheckPoolFragmentActivity",
+					"initiatePeerTransfer response : " + response);
+		} else if (uniqueID.equals("tokenregenerate")) {
+			Log.d("CheckPoolFragmentActivity", "tokenregenerate response : "
+					+ response);
+		}
+	}
+
+	private boolean checkResponseChecksum(String response) {
+
+		try {
+			JSONObject jsonObject = new JSONObject(response);
+
+			Iterator<String> iterator = jsonObject.keys();
+			String responseValues = "";
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String value = jsonObject.get(key).toString();
+
+				if (!value.isEmpty() && value.length() > 0
+						&& !key.equalsIgnoreCase("checksum")) {
+					hashMap.put(key, value);
+				}
+
+				// if (!value.isEmpty() && value.length() > 0 &&
+				// !key.equalsIgnoreCase("checksum")) {
+				// responseValues += (value + "''");
+				// }
+			}
+			// Log.d("checkResponseChecksum", "hashMap : " + hashMap);
+			Map<String, String> map = new TreeMap<String, String>(hashMap);
+			List<String> list = new ArrayList<String>(map.keySet());
+			Log.d("checkResponseChecksum",
+					"map : " + map + " keySet : " + map.keySet() + " list : "
+							+ list);
+
+			for (int i = 0; i < list.size(); i++) {
+				responseValues += (map.get(list.get(i)) + "''");
+			}
+
+			responseValues = responseValues.substring(0,
+					responseValues.length() - 2);
+			String responseValuesFinal = "'" + responseValues + "'";
+
+			// Log.d("checkResponseChecksum", "responseValuesFinal : "
+			// + responseValuesFinal);
+
+			String checkSumGenerated = GlobalMethods
+					.calculateCheckSumForService(responseValuesFinal,
+							GlobalVariables.Mobikwik_14SecretKey);
+			Log.d("checkResponseChecksum", checkSumGenerated);
+
+			if (checkSumGenerated.equals(jsonObject.get("checksum").toString())) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private void checksumInvalidToast() {
+		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
+		Toast.makeText(CheckPoolFragmentActivity.this,
+				"Something went wrong, please try again", Toast.LENGTH_LONG)
+				.show();
+	}
+
+	private void openAppOrMSite() {
+
+		String packageName = "com.mobikwik_new";
+		String mSite = "https://m.mobikwik.com";
+
+		if (checkIfAppInstalled(packageName)) {
+
+			Intent launchIntent = getPackageManager()
+					.getLaunchIntentForPackage(packageName);
+			startActivity(launchIntent);
+
+		} else {
+
+			Intent intent = new Intent(this, MobileSiteActivity.class);
+			intent.putExtra(MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL, mSite);
+			startActivity(intent);
+		}
+	}
+
+	private boolean checkIfAppInstalled(String packageName) {
+
+		PackageManager packageManager = getPackageManager();
+
+		try {
+			packageManager.getPackageInfo(packageName,
+					PackageManager.GET_ACTIVITIES);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private class ConnectionTaskForGetMyFare extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionGetMyFare mAuth1 = new AuthenticateConnectionGetMyFare();
+			try {
+				mAuth1.cid = args[0];
+				mAuth1.mnum = args[1];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionGetMyFare {
+
+		public String cid, mnum;
+
+		public AuthenticateConnectionGetMyFare() {
+
+		}
+
+		public void connection() throws Exception {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl + "/getMyFare.php";
+			HttpPost httpPost = new HttpPost(url_select);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+
+			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
+					cid);
+			BasicNameValuePair MobileValuePair = new BasicNameValuePair(
+					"mobileNumber", mnum);
+
+			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(MobileValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			String resp = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				resp = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("AuthenticateConnectionGetMyFare resp", "" + resp);
+			try {
+				JSONObject jsonObject = new JSONObject(resp);
+				amountToPay = jsonObject.get("fareToPay").toString();
+				payToPerson = jsonObject.get("paidBy").toString();
+				totalFare = jsonObject.get("totalFare").toString();
+
+				// runOnUiThread(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				// checkWalletExists(payToPerson.substring(4));
+				// }
+				// });
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private ArrayList<String> readBookedOrCarPreference() {
@@ -1112,6 +1595,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Cab already booked ride")
+						.setAction("Cab already booked ride")
+						.setLabel("Cab already booked ride").build());
+
 				dialog.dismiss();
 
 				writeBookedOrCarPreference(CabId);
@@ -1128,6 +1617,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(View view) {
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Driving car ride")
+						.setAction("Driving car ride")
+						.setLabel("Driving car ride").build());
+
 				dialog.dismiss();
 
 				writeBookedOrCarPreference(CabId);
@@ -1203,6 +1697,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	}
 
 	private void tripStarted(final int duration) {
+
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Trip start " + duration)
+				.setAction("Trip start " + duration)
+				.setLabel("Trip start " + duration).build());
 
 		switch (duration) {
 
@@ -1302,6 +1801,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	}
 
 	private void openBookCabPage() {
+
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Book a cab ride").setAction("Book a cab ride")
+				.setLabel("Book a cab ride").build());
+
 		String addressString = MapUtilityMethods.getAddress(
 				CheckPoolFragmentActivity.this, startaddlatlng.get(0).latitude,
 				startaddlatlng.get(0).longitude);
@@ -2001,83 +2505,85 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 						});
 
+				// //////////////////////////
+				if (CabStatus.equals("A") && statusTrip.equals("0")) {
+					try {
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+								"dd/MM/yyyy hh:mm aa");
+						Date date = simpleDateFormat.parse(TravelDate + " "
+								+ TravelTime);
+
+						ArrayList<String> arrayList = readBookedOrCarPreference();
+
+						// Log.d("CheckPoolFragmentActivity", "startTime : " +
+						// date.getTime());
+
+						if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+							if (BookingRefNo.isEmpty()
+									|| BookingRefNo.equalsIgnoreCase("null")) {
+								if (arrayList == null) {
+									showCabBookingDialog(true);
+								} else if (arrayList != null
+										&& arrayList.indexOf(CabId) == -1) {
+									showCabBookingDialog(true);
+								} else {
+									showTripStartDialog();
+								}
+							} else {
+								showTripStartDialog();
+							}
+						} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+							if (BookingRefNo.isEmpty()
+									|| BookingRefNo.equalsIgnoreCase("null")) {
+								if (arrayList == null) {
+									showCabBookingDialog(false);
+								} else if (arrayList != null
+										&& arrayList.indexOf(CabId) == -1) {
+									showCabBookingDialog(false);
+								}
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (CabStatus.equals("A") && statusTrip.equals("2")) {
+					showRideCompleteDialog();
+				} else if (CabStatus.equals("A") && statusTrip.equals("3")) {
+					showPaymentDialog();
+				} else if (CabStatus.equals("A")) {
+					try {
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+								"dd/MM/yyyy hh:mm aa");
+						Date date = simpleDateFormat.parse(TravelDate + " "
+								+ TravelTime);
+
+						long expDuration = Long.parseLong(ExpTripDuration);
+
+						if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+							Log.d("CheckPoolFragmentActivity",
+									"ExpTripDuration trip completed");
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								new ConnectionTaskForTripCompleted()
+										.executeOnExecutor(
+												AsyncTask.THREAD_POOL_EXECUTOR,
+												CabId);
+							} else {
+								new ConnectionTaskForTripCompleted()
+										.execute(CabId);
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				// //////////////////////////
+
 			}
 
 			if (onedialog.isShowing()) {
 				onedialog.dismiss();
 			}
 
-			// //////////////////////////
-			if (CabStatus.equals("A") && statusTrip.equals("0")) {
-				try {
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy hh:mm aa");
-					Date date = simpleDateFormat.parse(TravelDate + " "
-							+ TravelTime);
-
-					ArrayList<String> arrayList = readBookedOrCarPreference();
-
-					// Log.d("CheckPoolFragmentActivity", "startTime : " +
-					// date.getTime());
-
-					if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-						if (BookingRefNo.isEmpty()
-								|| BookingRefNo.equalsIgnoreCase("null")) {
-							if (arrayList == null) {
-								showCabBookingDialog(true);
-							} else if (arrayList != null
-									&& arrayList.indexOf(CabId) == -1) {
-								showCabBookingDialog(true);
-							} else {
-								showTripStartDialog();
-							}
-						} else {
-							showTripStartDialog();
-						}
-					} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-						if (BookingRefNo.isEmpty()
-								|| BookingRefNo.equalsIgnoreCase("null")) {
-							if (arrayList == null) {
-								showCabBookingDialog(false);
-							} else if (arrayList != null
-									&& arrayList.indexOf(CabId) == -1) {
-								showCabBookingDialog(false);
-							}
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else if (CabStatus.equals("A") && statusTrip.equals("2")) {
-				showRideCompleteDialog();
-			} else if (CabStatus.equals("A") && statusTrip.equals("3")) {
-				showPaymentDialog();
-			} else if (CabStatus.equals("A")) {
-				try {
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy hh:mm aa");
-					Date date = simpleDateFormat.parse(TravelDate + " "
-							+ TravelTime);
-
-					long expDuration = Long.parseLong(ExpTripDuration);
-
-					if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
-						Log.d("CheckPoolFragmentActivity",
-								"ExpTripDuration trip completed");
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-							new ConnectionTaskForTripCompleted()
-									.executeOnExecutor(
-											AsyncTask.THREAD_POOL_EXECUTOR,
-											CabId);
-						} else {
-							new ConnectionTaskForTripCompleted().execute(CabId);
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			// //////////////////////////
 		}
 	}
 
@@ -3073,6 +3579,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					dialog.show();
 				}
 			});
+		}
+
+		if (totalFare != null && !totalFare.isEmpty() && amountToPay != null
+				&& !amountToPay.isEmpty()) {
+			LinearLayout linearLayout = (LinearLayout)dialog.findViewById(R.id.faredetailsll);
+			linearLayout.setVisibility(View.VISIBLE);
+			
+			TextView textView = (TextView)dialog.findViewById(R.id.faredetailstotal);
+			textView.setText("Total fare: \u20B9" + totalFare);
+			textView = (TextView)dialog.findViewById(R.id.faredetailsshare);
+			textView.setText("Your share: \u20B9" + amountToPay);
 		}
 
 		dialog.show();

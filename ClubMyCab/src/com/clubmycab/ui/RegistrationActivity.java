@@ -30,6 +30,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -49,7 +50,7 @@ public class RegistrationActivity extends Activity {
 	TextView passwordtxt;
 	TextView emailtxt;
 	TextView confirmpasswordtxt;
-	TextView mobiletxt;
+	TextView mobiletxt,textViewTNCLink;
 
 	EditText fullnameedittext;
 	EditText emailedittext;
@@ -65,7 +66,7 @@ public class RegistrationActivity extends Activity {
 	String FullName;
 
 	String result;
-
+private String mobNo="";
 	boolean exceptioncheck = false;
 
 	@Override
@@ -97,6 +98,15 @@ public class RegistrationActivity extends Activity {
 			builder.show();
 			return;
 		}
+		
+		try{
+			
+			mobNo=getIntent().getExtras().getString("mob");
+			
+		}catch(Exception e){
+			mobNo="";
+			
+		}
 
 		registerheadertxt = (TextView) findViewById(R.id.registerheadertxt);
 		fullnametxt = (TextView) findViewById(R.id.fullnametxt);
@@ -110,9 +120,12 @@ public class RegistrationActivity extends Activity {
 		passwordedittext = (EditText) findViewById(R.id.passwordedittext);
 		confirmpasswordedittext = (EditText) findViewById(R.id.confirmpasswordedittext);
 		mobileedittext = (EditText) findViewById(R.id.mobileedittext);
+		mobileedittext.setText(mobNo);
 		countrycode = (EditText) findViewById(R.id.countrycode);
 
 		registerbtn = (Button) findViewById(R.id.registerbtn);
+		 textViewTNCLink = (TextView)findViewById(R.id.textViewTNCLink);
+		 textViewTNCLink.setMovementMethod(LinkMovementMethod.getInstance());
 
 		registerheadertxt.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));

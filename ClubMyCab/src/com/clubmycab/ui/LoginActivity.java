@@ -135,8 +135,9 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				Intent mainIntent = new Intent(LoginActivity.this,
-						TermsAndConditionsActivity.class);
+				Intent mainIntent = new Intent(LoginActivity.this,RegistrationActivity.class);
+						//TermsAndConditionsActivity.class);
+				mainIntent.putExtra("mob",numberedittext.getText().toString().trim());
 				LoginActivity.this.startActivity(mainIntent);
 
 			}

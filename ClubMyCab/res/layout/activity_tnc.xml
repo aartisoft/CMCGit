@@ -5,51 +5,42 @@
     android:orientation="vertical"
     android:background="#FFFFFF" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="100dp"
-        android:text="I have read and accept the terms and conditions available at : "
-        android:textColor="@android:color/black"
-        android:textSize="15sp" />
+<!--     <TextView -->
+<!--         android:id="@+id/textView1" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_marginLeft="10dp" -->
+<!--         android:layout_marginRight="10dp" -->
+<!--         android:layout_marginTop="100dp" -->
+<!--         android:text="I have read and accept the terms and conditions available at : " -->
+<!--         android:textColor="@android:color/black" -->
+<!--         android:textSize="15sp" /> -->
 
-    <TextView
-        android:id="@+id/textViewTNCLink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="@string/text_label_tnc_website"
-        android:textSize="15sp" />
+<!--     <TextView -->
+<!--         android:id="@+id/textViewTNCLink" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_marginTop="20dp" -->
+<!--         android:gravity="center_horizontal" -->
+<!--         android:text="@string/text_label_tnc_website" -->
+<!--         android:textSize="15sp" /> -->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" >
-
-        <Button
-            android:id="@+id/buttonTNCAccept"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:background="@drawable/createnewclubbtn"
-            android:text="Accept"
-            android:textColor="@android:color/white" />
+<!--     <LinearLayout -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_marginTop="20dp" > -->
 
 <!--         <Button -->
-<!--             android:id="@+id/buttonTNCReject" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
+<!--             android:id="@+id/buttonTNCAccept" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="40dp" -->
+<!--             android:layout_gravity="center_horizontal" -->
 <!--             android:layout_margin="5dp" -->
-<!--             android:layout_weight="1" -->
 <!--             android:background="@drawable/createnewclubbtn" -->
-<!--             android:text="Reject" -->
+<!--             android:text="Accept" -->
 <!--             android:textColor="@android:color/white" /> -->
 
-    </LinearLayout>
+
+<!--     </LinearLayout> -->
 
 </LinearLayout>

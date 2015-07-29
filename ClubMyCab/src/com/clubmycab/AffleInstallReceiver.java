@@ -2,24 +2,29 @@
  package com.clubmycab;
 
 
-import com.affle.affledowloadtracker.AffleAppDownloadTracker;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
 
 /**
  *  @Method       AffleInstallReceiver
  *  @Description  This Class extends the SDK's (AffleAppDownloadTracker) class file
  */
-public class AffleInstallReceiver extends AffleAppDownloadTracker {
+public class AffleInstallReceiver extends BroadcastReceiver {
 	
 	
-//	@Override
-//	public void onReceive(Context arg0, Intent arg1) {
-//		// TODO Auto-generated method stub
-//		
-//		super.onReceive(arg0, arg1);
-//		Log.i("success rum","Success fulluy run");
-//	}
-//	
+	 @Override
+	    public void onReceive(Context context, Intent intent) {
+	        // call Analytics tracker
+		 com.google.android.gms.analytics.CampaignTrackingReceiver ir = new com.google.android.gms.analytics.CampaignTrackingReceiver();
+	        ir.onReceive(context, intent);
+
+	        // call Affle tracker
+	        
+	        com.affle.affledowloadtracker.AffleAppDownloadTracker ar = new com.affle.affledowloadtracker.AffleAppDownloadTracker();
+	        ar.onReceive(context, intent);
+	    }
 	
 }
 

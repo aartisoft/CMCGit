@@ -44,8 +44,8 @@
         android:allowBackup="true"
         android:icon="@drawable/cabappicon"
         android:label="@string/app_name"
-        android:windowSoftInputMode="adjustResize"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustResize" >
         <activity
             android:name=".ui.SplashActivity"
             android:label="@string/app_name"
@@ -56,22 +56,26 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-                
-              
             <intent-filter>
-<data android:scheme="clubmycabandroid" />
-<action android:name="android.intent.action.VIEW" />
-<category android:name="android.intent.category.BROWSABLE" />
-<category android:name="android.intent.category.DEFAULT" />
-</intent-filter> 
+                <data android:scheme="clubmycabandroid" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-          <meta-data
-android:name="af-DebugMode"
-android:value="true" />
-<meta-data
-android:name="af-TrackerURL"
-android:value="@string/Affle_TRACKER_URL" />
- <meta-data android:name="ClubMyCab" android:value="" />
+
+        <meta-data
+            android:name="af_DebugMode"
+            android:value="false" />
+        <meta-data
+            android:name="af_TrackerURL"
+            android:value="@string/Affle_TRACKER_URL" />
+        <meta-data
+            android:name="ClubMyCab"
+            android:value="" />
+
         <activity
             android:name=".ui.OTPActivity"
             android:label="@string/title_activity_enter_otp"
@@ -84,11 +88,11 @@ android:value="@string/Affle_TRACKER_URL" />
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-         <receiver android:name="com.clubmycab.AffleInstallReceiver"  android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
+        <!-- <receiver android:name="com.clubmycab.AffleInstallReceiver"  android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.android.vending.INSTALL_REFERRER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
         <activity
             android:name=".ui.HomeActivity"
@@ -96,7 +100,6 @@ android:value="@string/Affle_TRACKER_URL" />
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
-            
         </activity>
 
         <meta-data
@@ -129,7 +132,6 @@ android:value="@string/Affle_TRACKER_URL" />
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
-           
         </activity>
 
         <receiver
@@ -152,7 +154,6 @@ android:value="@string/Affle_TRACKER_URL" />
             android:name=".LocationShareService"
             android:stopWithTask="true" >
         </service>
-        
         <service
             android:name=".LocationShareForRideService"
             android:stopWithTask="true" >
@@ -295,15 +296,20 @@ android:value="@string/Affle_TRACKER_URL" />
             android:exported="false" />
 
         <receiver
-            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:name="com.clubmycab.AffleInstallReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        
-        <receiver  android:process=":remote" android:name="UpcomingStartTripAlarm"></receiver>
-        <receiver  android:process=":remote" android:name="StartTripPHPAlarm"></receiver>
+        <receiver
+            android:name="UpcomingStartTripAlarm"
+            android:process=":remote" >
+        </receiver>
+        <receiver
+            android:name="StartTripPHPAlarm"
+            android:process=":remote" >
+        </receiver>
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 
@@ -331,21 +337,18 @@ android:value="@string/Affle_TRACKER_URL" />
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-         <activity
+        <activity
             android:name="com.clubmycab.ui.FavoritePlaceFindActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            >
+            android:windowSoftInputMode="adjustPan|adjustResize" >
         </activity>
         <activity
             android:name="com.clubmycab.ui.FAQActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            >
+            android:windowSoftInputMode="adjustPan|adjustResize" >
         </activity>
-       
     </application>
 
 </manifest>

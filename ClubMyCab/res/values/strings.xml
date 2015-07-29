@@ -84,5 +84,5 @@
     <string name="seatcount">3</string>
     <string name="otpsent">We have sent One Time Password (OTP) to your Mobile</string>
     <string name="mobikwik_nothave_account">You do not have a Mobikwik wallet registered with your number, would you like to create one?</string>
-
+    <string name="mobikwik_already_account">You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides</string>
 </resources>

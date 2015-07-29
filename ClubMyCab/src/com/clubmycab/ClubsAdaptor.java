@@ -104,7 +104,7 @@ public class ClubsAdaptor extends BaseAdapter {
 					if (count <= 1) {
 
 						Toast.makeText(mContext,
-								StringTags.TAG_DOSE_NOT_HAVE_MEMBER,
+								StringTags.TAG_DOES_NOT_HAVE_MEMBER,
 								Toast.LENGTH_SHORT).show();
 						holder.check.setSelected(false);
 						notifyDataSetChanged();

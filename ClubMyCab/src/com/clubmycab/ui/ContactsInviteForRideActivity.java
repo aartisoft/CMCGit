@@ -530,7 +530,7 @@ public class ContactsInviteForRideActivity extends Activity {
 				if (count <= 1) {
 
 					Toast.makeText(ContactsInviteForRideActivity.this,
-							StringTags.TAG_DOSE_NOT_HAVE_MEMBER,
+							StringTags.TAG_DOES_NOT_HAVE_MEMBER,
 							Toast.LENGTH_SHORT).show();
 				} else {
 
@@ -586,7 +586,7 @@ public class ContactsInviteForRideActivity extends Activity {
 				if (count <= 1) {
 
 					Toast.makeText(ContactsInviteForRideActivity.this,
-							StringTags.TAG_DOSE_NOT_HAVE_MEMBER,
+							StringTags.TAG_DOES_NOT_HAVE_MEMBER,
 							Toast.LENGTH_SHORT).show();
 				} else {
 

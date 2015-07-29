@@ -35,19 +35,19 @@ import com.clubmycab.utility.Log;
 public class FirstLoginWalletsActivity extends Activity implements
 		AsyncTaskResultListener {
 
-	String FullName, MobileNumber;
+	private String FullName, MobileNumber;
 
-	LinearLayout  walletLinearLayout;
+	private LinearLayout walletLinearLayout;
 
-	EditText otpEditText, mobileEditText, emailEditText;
-	Button continuewithotp, sendOTP;
+	private EditText otpEditText, mobileEditText, emailEditText;
+	private Button continuewithotp, sendOTP;
 	private TextView otphardtext;
 
 	private final String LINK_WALLET = "LinkWallet";
 	private final String CREATE_WALLET = "CreateWallet";
-	String walletAction = "";
+	private String walletAction = "";
 
-	String mobilenumber;
+	private String mobilenumber;
 	private String from = "";
 	private String token = "";
 
@@ -98,40 +98,39 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 		// editor.putString("token", token);
 		otphardtext = (TextView) findViewById(R.id.otphardtext);
-		//otphardtext.setVisibility(View.INVISIBLE);
+		// otphardtext.setVisibility(View.INVISIBLE);
 
 		walletLinearLayout = (LinearLayout) findViewById(R.id.walletFLLinearLayout);
 
-//		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.walletMobikwikLinearLayout);
-//		linearLayout.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
+		// LinearLayout linearLayout = (LinearLayout)
+		// findViewById(R.id.walletMobikwikLinearLayout);
+		// linearLayout.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
 
-				if (from.equalsIgnoreCase("reg")) {
-					querywallet();
+		if (from.equalsIgnoreCase("reg")) {
+			querywallet();
 
-				} else {
-					SharedPreferences sharedPreferences = getSharedPreferences(
-							"MobikwikToken", 0);
-					token = sharedPreferences.getString("token", "");
-					if (!token.isEmpty() && !token.equalsIgnoreCase("")) {
-//						Toast.makeText(
-//								FirstLoginWalletsActivity.this,
-//								"Your Mobikwik wallet is already linked with the app",
-//								Toast.LENGTH_LONG).show();
-						otphardtext.setText("Your Mobikwik wallet is already linked with the app");
-					} else {
-						querywallet();
-					}
+		} else {
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"MobikwikToken", 0);
+			token = sharedPreferences.getString("token", "");
+			if (!token.isEmpty() && !token.equalsIgnoreCase("")) {
 
-				}
-//			}
-//		});
+				otphardtext
+						.setText("Your Mobikwik wallet is already linked with the app");
+				walletLinearLayout.setVisibility(View.INVISIBLE);
+			} else {
+				querywallet();
+			}
 
-		
+		}
+		// }
+		// });
 
-		//otpLinearLayout = (LinearLayout) findViewById(R.id.walletFLLinearLayout);
+		// otpLinearLayout = (LinearLayout)
+		// findViewById(R.id.walletFLLinearLayout);
 
 		mobileEditText = (EditText) findViewById(R.id.editTextWalletMobile);
 		mobileEditText.setText(MobileNumber.substring(4));
@@ -182,6 +181,12 @@ public class FirstLoginWalletsActivity extends Activity implements
 						return;
 					}
 					createWallet();
+				} else {
+					Toast.makeText(
+							FirstLoginWalletsActivity.this,
+							"Your Mobikwik wallet is already linked with the app",
+							Toast.LENGTH_LONG).show();
+					
 				}
 			}
 		});
@@ -232,7 +237,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 				null, FirstLoginWalletsActivity.this, true, "otpgenerate", true);
 		Toast.makeText(FirstLoginWalletsActivity.this,
 				getResources().getString(R.string.otpsent), Toast.LENGTH_LONG)
-				.show();	}
+				.show();
+	}
 
 	private void linkWallet() {
 		String msgcode = "507";
@@ -361,108 +367,107 @@ public class FirstLoginWalletsActivity extends Activity implements
 				}
 
 				if (jsonObject.getString("status").equals("SUCCESS")) {
-					
-					otphardtext.setText("You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides");
-				
-			emailEditText.setVisibility(View.GONE);
 
-			walletAction = LINK_WALLET;
-			continuewithotp.setText("Link Wallet");
-			Toast.makeText(
-					FirstLoginWalletsActivity.this,
-					"Press the 'Send OTP' button to proceed",
-					Toast.LENGTH_LONG).show();
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							FirstLoginWalletsActivity.this);
-//					builder.setMessage("You already have a Mobikwik wallet registered with your number, would you like to link it with the app?");
-//					builder.setCancelable(false);
-//
-//					builder.setPositiveButton("Yes",
-//							new DialogInterface.OnClickListener() {
-//
-//								@Override
-//								public void onClick(DialogInterface dialog,
-//										int which) {
-//									walletLinearLayout
-//											.setVisibility(View.VISIBLE);
-//									emailEditText.setVisibility(View.GONE);
-//
-//									walletAction = LINK_WALLET;
-//									continuewithotp.setText("Link Wallet");
-//									Toast.makeText(
-//											FirstLoginWalletsActivity.this,
-//											"Press the 'Send OTP' button to proceed",
-//											Toast.LENGTH_LONG).show();
-//								}
-//							});
-//
-//					builder.setNegativeButton("Maybe later",
-//							new DialogInterface.OnClickListener() {
-//
-//								@Override
-//								public void onClick(DialogInterface dialog,
-//										int which) {
-//									Intent mainIntent = new Intent(
-//											FirstLoginWalletsActivity.this,
-//											FirstLoginClubsActivity.class);
-//									startActivity(mainIntent);
-//									finish();
-//								}
-//							});
-//
-//					builder.show();
+					otphardtext
+							.setText(getResources().getString(R.string.mobikwik_already_account));
+
+					emailEditText.setVisibility(View.GONE);
+
+					walletAction = LINK_WALLET;
+					continuewithotp.setText("Link Wallet");
+					Toast.makeText(FirstLoginWalletsActivity.this,
+							"Press the 'Send OTP' button to proceed",
+							Toast.LENGTH_LONG).show();
+					// AlertDialog.Builder builder = new AlertDialog.Builder(
+					// FirstLoginWalletsActivity.this);
+					// builder.setMessage("You already have a Mobikwik wallet registered with your number, would you like to link it with the app?");
+					// builder.setCancelable(false);
+					//
+					// builder.setPositiveButton("Yes",
+					// new DialogInterface.OnClickListener() {
+					//
+					// @Override
+					// public void onClick(DialogInterface dialog,
+					// int which) {
+					// walletLinearLayout
+					// .setVisibility(View.VISIBLE);
+					// emailEditText.setVisibility(View.GONE);
+					//
+					// walletAction = LINK_WALLET;
+					// continuewithotp.setText("Link Wallet");
+					// Toast.makeText(
+					// FirstLoginWalletsActivity.this,
+					// "Press the 'Send OTP' button to proceed",
+					// Toast.LENGTH_LONG).show();
+					// }
+					// });
+					//
+					// builder.setNegativeButton("Maybe later",
+					// new DialogInterface.OnClickListener() {
+					//
+					// @Override
+					// public void onClick(DialogInterface dialog,
+					// int which) {
+					// Intent mainIntent = new Intent(
+					// FirstLoginWalletsActivity.this,
+					// FirstLoginClubsActivity.class);
+					// startActivity(mainIntent);
+					// finish();
+					// }
+					// });
+					//
+					// builder.show();
 				} else {
-					
-					otphardtext.setText("You do not have a Mobikwik wallet registered with your number, would you like to create one?");
+
+					otphardtext.setText(getResources().getString(R.string.mobikwik_nothave_account));
 					emailEditText.setVisibility(View.VISIBLE);
 
 					walletAction = CREATE_WALLET;
 
 					continuewithotp.setText("Create Wallet");
-					Toast.makeText(
-							FirstLoginWalletsActivity.this,
+					Toast.makeText(FirstLoginWalletsActivity.this,
 							"Press the 'Send OTP' button to proceed",
 							Toast.LENGTH_LONG).show();
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							FirstLoginWalletsActivity.this);
-//					builder.setMessage("You do not have a Mobikwik wallet registered with your number, would you like to create one?");
-//					builder.setCancelable(false);
-//
-//					builder.setPositiveButton("Yes",
-//							new DialogInterface.OnClickListener() {
-//
-//								@Override
-//								public void onClick(DialogInterface dialog,
-//										int which) {
-//									walletLinearLayout
-//											.setVisibility(View.VISIBLE);
-//									emailEditText.setVisibility(View.VISIBLE);
-//
-//									walletAction = CREATE_WALLET;
-//
-//									continuewithotp.setText("Create Wallet");
-//									Toast.makeText(
-//											FirstLoginWalletsActivity.this,
-//											"Press the 'Send OTP' button to proceed",
-//											Toast.LENGTH_LONG).show();
-//								}
-//							});
-//
-//					builder.setNegativeButton("Maybe later",
-//							new DialogInterface.OnClickListener() {
-//
-//								@Override
-//								public void onClick(DialogInterface dialog,
-//										int which) {
-//									Intent mainIntent = new Intent(
-//											FirstLoginWalletsActivity.this,
-//											FirstLoginClubsActivity.class);
-//									startActivity(mainIntent);
-//									finish();
-//								}
-//							});
-//
-//					builder.show();
+					// AlertDialog.Builder builder = new AlertDialog.Builder(
+					// FirstLoginWalletsActivity.this);
+					// builder.setMessage("You do not have a Mobikwik wallet registered with your number, would you like to create one?");
+					// builder.setCancelable(false);
+					//
+					// builder.setPositiveButton("Yes",
+					// new DialogInterface.OnClickListener() {
+					//
+					// @Override
+					// public void onClick(DialogInterface dialog,
+					// int which) {
+					// walletLinearLayout
+					// .setVisibility(View.VISIBLE);
+					// emailEditText.setVisibility(View.VISIBLE);
+					//
+					// walletAction = CREATE_WALLET;
+					//
+					// continuewithotp.setText("Create Wallet");
+					// Toast.makeText(
+					// FirstLoginWalletsActivity.this,
+					// "Press the 'Send OTP' button to proceed",
+					// Toast.LENGTH_LONG).show();
+					// }
+					// });
+					//
+					// builder.setNegativeButton("Maybe later",
+					// new DialogInterface.OnClickListener() {
+					//
+					// @Override
+					// public void onClick(DialogInterface dialog,
+					// int which) {
+					// Intent mainIntent = new Intent(
+					// FirstLoginWalletsActivity.this,
+					// FirstLoginClubsActivity.class);
+					// startActivity(mainIntent);
+					// finish();
+					// }
+					// });
+					//
+					// builder.show();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -478,7 +483,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
-					
+
 					walletLinearLayout.setVisibility(View.VISIBLE);
 				} else {
 
@@ -511,11 +516,14 @@ public class FirstLoginWalletsActivity extends Activity implements
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"Link account succesfully!", Toast.LENGTH_LONG)
 							.show();
-					Intent mainIntent = new Intent(
-							FirstLoginWalletsActivity.this,
-							FirstLoginClubsActivity.class);
-					startActivity(mainIntent);
-					finish();
+
+					if (from.equalsIgnoreCase("reg")) {
+						Intent mainIntent = new Intent(
+								FirstLoginWalletsActivity.this,
+								FirstLoginClubsActivity.class);
+						startActivity(mainIntent);
+						finish();
+					}
 
 				} else {
 					Toast.makeText(FirstLoginWalletsActivity.this,
@@ -564,6 +572,19 @@ public class FirstLoginWalletsActivity extends Activity implements
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void onBackPressed() {
+
+		super.onBackPressed();
+
+		Intent mainIntent = new Intent(FirstLoginWalletsActivity.this,
+				HomeActivity.class);
+		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivityForResult(mainIntent, 500);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 
 }

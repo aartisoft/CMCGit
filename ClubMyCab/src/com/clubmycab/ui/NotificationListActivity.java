@@ -50,11 +50,14 @@ import com.clubmycab.CheckPoolFragmentActivity;
 import com.clubmycab.CircularImageView;
 import com.clubmycab.MemberRideFragmentActivity;
 import com.clubmycab.R;
+import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.navdrawer.SimpleSideDrawer;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
@@ -1401,125 +1404,142 @@ public class NotificationListActivity extends Activity {
 						.show();
 			} else {
 
-				String CabIdstr = null;
-				String MobileNumber = null;
-				String OwnerName = null;
-				String OwnerImage = null;
-				String FromLocation = null;
-				String ToLocation = null;
-				String FromShortName = null;
-				String ToShortName = null;
-				String TravelDate = null;
-				String TravelTime = null;
-				String Seats = null;
-				String RemainingSeats = null;
-				String Distance = null;
-				String OpenTime = null;
-				String CabStatus = null;
-				String Seat_Status = null;
-
-				String BookingRefNo = null;
-				String DriverName = null;
-				String DriverNumber = null;
-				String CarNumber = null;
-				String CabName = null;
-				String ExpTripDuration = null;
-				String status = null;
+				// String CabIdstr = null;
+				// String MobileNumber = null;
+				// String OwnerName = null;
+				// String OwnerImage = null;
+				// String FromLocation = null;
+				// String ToLocation = null;
+				// String FromShortName = null;
+				// String ToShortName = null;
+				// String TravelDate = null;
+				// String TravelTime = null;
+				// String Seats = null;
+				// String RemainingSeats = null;
+				// String Distance = null;
+				// String OpenTime = null;
+				// String CabStatus = null;
+				// String Seat_Status = null;
+				//
+				// String BookingRefNo = null;
+				// String DriverName = null;
+				// String DriverNumber = null;
+				// String CarNumber = null;
+				// String CabName = null;
+				// String ExpTripDuration = null;
+				// String status = null;
 
 				try {
-					JSONArray subArray = new JSONArray(gotopoolresp);
-					for (int i = 0; i < subArray.length(); i++) {
-						try {
-							CabIdstr = subArray.getJSONObject(i)
-									.getString("CabId").toString();
-							MobileNumber = subArray.getJSONObject(i)
-									.getString("MobileNumber").toString();
-							OwnerName = subArray.getJSONObject(i)
-									.getString("OwnerName").toString();
-							OwnerImage = subArray.getJSONObject(i)
-									.getString("imagename").toString();
-							FromLocation = subArray.getJSONObject(i)
-									.getString("FromLocation").toString();
-							ToLocation = subArray.getJSONObject(i)
-									.getString("ToLocation").toString();
 
-							FromShortName = subArray.getJSONObject(i)
-									.getString("FromShortName").toString();
-							ToShortName = subArray.getJSONObject(i)
-									.getString("ToShortName").toString();
+					Gson gson = new Gson();
+					ArrayList<RideDetailsModel> arrayRideDetailsModels = gson
+							.fromJson(
+									gotopoolresp,
+									new TypeToken<ArrayList<RideDetailsModel>>() {
+									}.getType());
+					RideDetailsModel rideDetailsModel = arrayRideDetailsModels
+							.get(0);
 
-							TravelDate = subArray.getJSONObject(i)
-									.getString("TravelDate").toString();
-							TravelTime = subArray.getJSONObject(i)
-									.getString("TravelTime").toString();
-							Seats = subArray.getJSONObject(i)
-									.getString("Seats").toString();
-							RemainingSeats = subArray.getJSONObject(i)
-									.getString("RemainingSeats").toString();
-							Distance = subArray.getJSONObject(i)
-									.getString("Distance").toString();
-							OpenTime = subArray.getJSONObject(i)
-									.getString("OpenTime").toString();
-							CabStatus = subArray.getJSONObject(i)
-									.getString("CabStatus").toString();
-							Seat_Status = subArray.getJSONObject(i)
-									.getString("Seat_Status").toString();
+					// JSONArray subArray = new JSONArray(gotopoolresp);
+					// for (int i = 0; i < subArray.length(); i++) {
+					// try {
+					// CabIdstr = subArray.getJSONObject(i)
+					// .getString("CabId").toString();
+					// MobileNumber = subArray.getJSONObject(i)
+					// .getString("MobileNumber").toString();
+					// OwnerName = subArray.getJSONObject(i)
+					// .getString("OwnerName").toString();
+					// OwnerImage = subArray.getJSONObject(i)
+					// .getString("imagename").toString();
+					// FromLocation = subArray.getJSONObject(i)
+					// .getString("FromLocation").toString();
+					// ToLocation = subArray.getJSONObject(i)
+					// .getString("ToLocation").toString();
+					//
+					// FromShortName = subArray.getJSONObject(i)
+					// .getString("FromShortName").toString();
+					// ToShortName = subArray.getJSONObject(i)
+					// .getString("ToShortName").toString();
+					//
+					// TravelDate = subArray.getJSONObject(i)
+					// .getString("TravelDate").toString();
+					// TravelTime = subArray.getJSONObject(i)
+					// .getString("TravelTime").toString();
+					// Seats = subArray.getJSONObject(i)
+					// .getString("Seats").toString();
+					// RemainingSeats = subArray.getJSONObject(i)
+					// .getString("RemainingSeats").toString();
+					// Distance = subArray.getJSONObject(i)
+					// .getString("Distance").toString();
+					// OpenTime = subArray.getJSONObject(i)
+					// .getString("OpenTime").toString();
+					// CabStatus = subArray.getJSONObject(i)
+					// .getString("CabStatus").toString();
+					// Seat_Status = subArray.getJSONObject(i)
+					// .getString("Seat_Status").toString();
+					//
+					// BookingRefNo = subArray.getJSONObject(i)
+					// .getString("BookingRefNo").toString();
+					// DriverName = subArray.getJSONObject(i)
+					// .getString("DriverName").toString();
+					// DriverNumber = subArray.getJSONObject(i)
+					// .getString("DriverNumber").toString();
+					// CarNumber = subArray.getJSONObject(i)
+					// .getString("CarNumber").toString();
+					// CabName = subArray.getJSONObject(i)
+					// .getString("CabName").toString();
+					//
+					// ExpTripDuration = subArray.getJSONObject(i)
+					// .getString("ExpTripDuration").toString();
+					// status = subArray.getJSONObject(i)
+					// .getString("status").toString();
+					//
+					// } catch (JSONException e) {
+					// // TODO Auto-generated catch block
+					// e.printStackTrace();
+					// }
+					// }
 
-							BookingRefNo = subArray.getJSONObject(i)
-									.getString("BookingRefNo").toString();
-							DriverName = subArray.getJSONObject(i)
-									.getString("DriverName").toString();
-							DriverNumber = subArray.getJSONObject(i)
-									.getString("DriverNumber").toString();
-							CarNumber = subArray.getJSONObject(i)
-									.getString("CarNumber").toString();
-							CabName = subArray.getJSONObject(i)
-									.getString("CabName").toString();
-
-							ExpTripDuration = subArray.getJSONObject(i)
-									.getString("ExpTripDuration").toString();
-							status = subArray.getJSONObject(i)
-									.getString("status").toString();
-
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-
-					if (MobileNumber.equalsIgnoreCase(MobileNumberstr)) {
+					if (rideDetailsModel.getMobileNumber().equalsIgnoreCase(
+							MobileNumberstr)) {
 
 						final Intent mainIntent = new Intent(
 								NotificationListActivity.this,
 								CheckPoolFragmentActivity.class);
-						mainIntent.putExtra("CabId", CabIdstr);
-						mainIntent.putExtra("MobileNumber", MobileNumber);
-						mainIntent.putExtra("OwnerName", OwnerName);
-						mainIntent.putExtra("OwnerImage", OwnerImage);
-						mainIntent.putExtra("FromLocation", FromLocation);
-						mainIntent.putExtra("ToLocation", ToLocation);
 
-						mainIntent.putExtra("FromShortName", FromShortName);
-						mainIntent.putExtra("ToShortName", ToShortName);
+						mainIntent.putExtra("RideDetailsModel",
+								gson.toJson(rideDetailsModel));
 
-						mainIntent.putExtra("TravelDate", TravelDate);
-						mainIntent.putExtra("TravelTime", TravelTime);
-						mainIntent.putExtra("Seats", Seats);
-						mainIntent.putExtra("RemainingSeats", RemainingSeats);
-						mainIntent.putExtra("Seat_Status", Seat_Status);
-						mainIntent.putExtra("Distance", Distance);
-						mainIntent.putExtra("OpenTime", OpenTime);
-
-						mainIntent.putExtra("CabStatus", CabStatus);
-
-						mainIntent.putExtra("BookingRefNo", BookingRefNo);
-						mainIntent.putExtra("DriverName", DriverName);
-						mainIntent.putExtra("DriverNumber", DriverNumber);
-						mainIntent.putExtra("CarNumber", CarNumber);
-						mainIntent.putExtra("CabName", CabName);
-
-						mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
-						mainIntent.putExtra("status", status);
+						// mainIntent.putExtra("CabId", CabIdstr);
+						// mainIntent.putExtra("MobileNumber", MobileNumber);
+						// mainIntent.putExtra("OwnerName", OwnerName);
+						// mainIntent.putExtra("OwnerImage", OwnerImage);
+						// mainIntent.putExtra("FromLocation", FromLocation);
+						// mainIntent.putExtra("ToLocation", ToLocation);
+						//
+						// mainIntent.putExtra("FromShortName", FromShortName);
+						// mainIntent.putExtra("ToShortName", ToShortName);
+						//
+						// mainIntent.putExtra("TravelDate", TravelDate);
+						// mainIntent.putExtra("TravelTime", TravelTime);
+						// mainIntent.putExtra("Seats", Seats);
+						// mainIntent.putExtra("RemainingSeats",
+						// RemainingSeats);
+						// mainIntent.putExtra("Seat_Status", Seat_Status);
+						// mainIntent.putExtra("Distance", Distance);
+						// mainIntent.putExtra("OpenTime", OpenTime);
+						//
+						// mainIntent.putExtra("CabStatus", CabStatus);
+						//
+						// mainIntent.putExtra("BookingRefNo", BookingRefNo);
+						// mainIntent.putExtra("DriverName", DriverName);
+						// mainIntent.putExtra("DriverNumber", DriverNumber);
+						// mainIntent.putExtra("CarNumber", CarNumber);
+						// mainIntent.putExtra("CabName", CabName);
+						//
+						// mainIntent.putExtra("ExpTripDuration",
+						// ExpTripDuration);
+						// mainIntent.putExtra("status", status);
 
 						NotificationListActivity.this.startActivity(mainIntent);
 
@@ -1527,38 +1547,44 @@ public class NotificationListActivity extends Activity {
 						final Intent mainIntent = new Intent(
 								NotificationListActivity.this,
 								MemberRideFragmentActivity.class);
-						mainIntent.putExtra("CabId", CabIdstr);
-						mainIntent.putExtra("MobileNumber", MobileNumber);
-						mainIntent.putExtra("OwnerName", OwnerName);
-						mainIntent.putExtra("OwnerImage", OwnerImage);
 
-						mainIntent.putExtra("FromLocation", FromLocation);
-						mainIntent.putExtra("ToLocation", ToLocation);
+						mainIntent.putExtra("RideDetailsModel",
+								gson.toJson(rideDetailsModel));
 
-						mainIntent.putExtra("FromShortName", FromShortName);
-						mainIntent.putExtra("ToShortName", ToShortName);
-
-						mainIntent.putExtra("TravelDate", TravelDate);
-						mainIntent.putExtra("TravelTime", TravelTime);
-						mainIntent.putExtra("Seats", Seats);
-						mainIntent.putExtra("RemainingSeats", RemainingSeats);
-						mainIntent.putExtra("Seat_Status", Seat_Status);
-						mainIntent.putExtra("Distance", Distance);
-						mainIntent.putExtra("OpenTime", OpenTime);
-						mainIntent.putExtra("CabStatus", CabStatus);
-						mainIntent.putExtra("BookingRefNo", BookingRefNo);
-						mainIntent.putExtra("DriverName", DriverName);
-						mainIntent.putExtra("DriverNumber", DriverNumber);
-						mainIntent.putExtra("CarNumber", CarNumber);
-						mainIntent.putExtra("CabName", CabName);
-
-						mainIntent.putExtra("ExpTripDuration", ExpTripDuration);
-						mainIntent.putExtra("status", status);
+						// mainIntent.putExtra("CabId", CabIdstr);
+						// mainIntent.putExtra("MobileNumber", MobileNumber);
+						// mainIntent.putExtra("OwnerName", OwnerName);
+						// mainIntent.putExtra("OwnerImage", OwnerImage);
+						//
+						// mainIntent.putExtra("FromLocation", FromLocation);
+						// mainIntent.putExtra("ToLocation", ToLocation);
+						//
+						// mainIntent.putExtra("FromShortName", FromShortName);
+						// mainIntent.putExtra("ToShortName", ToShortName);
+						//
+						// mainIntent.putExtra("TravelDate", TravelDate);
+						// mainIntent.putExtra("TravelTime", TravelTime);
+						// mainIntent.putExtra("Seats", Seats);
+						// mainIntent.putExtra("RemainingSeats",
+						// RemainingSeats);
+						// mainIntent.putExtra("Seat_Status", Seat_Status);
+						// mainIntent.putExtra("Distance", Distance);
+						// mainIntent.putExtra("OpenTime", OpenTime);
+						// mainIntent.putExtra("CabStatus", CabStatus);
+						// mainIntent.putExtra("BookingRefNo", BookingRefNo);
+						// mainIntent.putExtra("DriverName", DriverName);
+						// mainIntent.putExtra("DriverNumber", DriverNumber);
+						// mainIntent.putExtra("CarNumber", CarNumber);
+						// mainIntent.putExtra("CabName", CabName);
+						//
+						// mainIntent.putExtra("ExpTripDuration",
+						// ExpTripDuration);
+						// mainIntent.putExtra("status", status);
 
 						NotificationListActivity.this.startActivity(mainIntent);
 					}
 
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

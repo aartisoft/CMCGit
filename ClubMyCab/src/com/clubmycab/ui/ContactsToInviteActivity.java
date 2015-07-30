@@ -75,11 +75,13 @@ import com.clubmycab.ContactObject;
 import com.clubmycab.ContactsAdapter;
 import com.clubmycab.ContactsListClass;
 import com.clubmycab.R;
+import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
 public class ContactsToInviteActivity extends Activity {
@@ -1893,34 +1895,64 @@ public class ContactsToInviteActivity extends Activity {
 
 				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
 						CheckPoolFragmentActivity.class);
-				mainIntent.putExtra("CabId", CabId);
-				mainIntent.putExtra("MobileNumber", MobileNumberstr);
-				mainIntent.putExtra("OwnerName", OwnerName);
+				
+				RideDetailsModel rideDetailsModel = new RideDetailsModel();
+				rideDetailsModel.setCabId(CabId);
+				rideDetailsModel.setMobileNumber(MobileNumberstr);
+				rideDetailsModel.setOwnerName(OwnerName);
 				SharedPreferences mPrefs111 = getSharedPreferences("userimage",
 						0);
 				String imgname = mPrefs111.getString("imgname", "");
-				mainIntent.putExtra("OwnerImage", imgname);
-				mainIntent.putExtra("FromLocation", FromLocation);
-				mainIntent.putExtra("ToLocation", ToLocation);
-
-				mainIntent.putExtra("FromShortName", fromshortname);
-				mainIntent.putExtra("ToShortName", toshortname);
-
-				mainIntent.putExtra("TravelDate", TravelDate);
-				mainIntent.putExtra("TravelTime", TravelTime);
-				mainIntent.putExtra("Seats", Seats);
-				mainIntent.putExtra("RemainingSeats", Seats);
-				mainIntent.putExtra("Seat_Status", "0/" + Seats);
-				mainIntent.putExtra("Distance", distancetext);
-				mainIntent.putExtra("OpenTime", "");
-				mainIntent.putExtra("CabStatus", "A");
+				rideDetailsModel.setImagename(imgname);
+				rideDetailsModel.setFromLocation(FromLocation);
+				rideDetailsModel.setToLocation(ToLocation);
+				rideDetailsModel.setFromShortName(fromshortname);
+				rideDetailsModel.setToShortName(toshortname);
+				rideDetailsModel.setTravelDate(TravelDate);
+				rideDetailsModel.setTravelTime(TravelTime);
+				rideDetailsModel.setSeats(Seats);
+				rideDetailsModel.setRemainingSeats(Seats);
+				rideDetailsModel.setSeat_Status("0/" + Seats);
+				rideDetailsModel.setDistance(distancetext);
+				rideDetailsModel.setOpenTime("");
+				rideDetailsModel.setCabStatus("A");
 				mainIntent.putExtra("comefrom", "fromcontactsmyclub");
-
-				mainIntent.putExtra("BookingRefNo", "");
-				mainIntent.putExtra("DriverName", "");
-				mainIntent.putExtra("DriverNumber", "");
-				mainIntent.putExtra("CarNumber", "");
-				mainIntent.putExtra("CabName", "");
+				rideDetailsModel.setBookingRefNo("");
+				rideDetailsModel.setDriverName("");
+				rideDetailsModel.setDriverNumber("");
+				rideDetailsModel.setCarNumber("");
+				rideDetailsModel.setCabName("");
+				
+				mainIntent.putExtra("RideDetailsModel", (new Gson()).toJson(rideDetailsModel));
+				
+//				mainIntent.putExtra("CabId", CabId);
+//				mainIntent.putExtra("MobileNumber", MobileNumberstr);
+//				mainIntent.putExtra("OwnerName", OwnerName);
+//				SharedPreferences mPrefs111 = getSharedPreferences("userimage",
+//						0);
+//				String imgname = mPrefs111.getString("imgname", "");
+//				mainIntent.putExtra("OwnerImage", imgname);
+//				mainIntent.putExtra("FromLocation", FromLocation);
+//				mainIntent.putExtra("ToLocation", ToLocation);
+//
+//				mainIntent.putExtra("FromShortName", fromshortname);
+//				mainIntent.putExtra("ToShortName", toshortname);
+//
+//				mainIntent.putExtra("TravelDate", TravelDate);
+//				mainIntent.putExtra("TravelTime", TravelTime);
+//				mainIntent.putExtra("Seats", Seats);
+//				mainIntent.putExtra("RemainingSeats", Seats);
+//				mainIntent.putExtra("Seat_Status", "0/" + Seats);
+//				mainIntent.putExtra("Distance", distancetext);
+//				mainIntent.putExtra("OpenTime", "");
+//				mainIntent.putExtra("CabStatus", "A");
+//				mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+//
+//				mainIntent.putExtra("BookingRefNo", "");
+//				mainIntent.putExtra("DriverName", "");
+//				mainIntent.putExtra("DriverNumber", "");
+//				mainIntent.putExtra("CarNumber", "");
+//				mainIntent.putExtra("CabName", "");
 				
 //				mainIntent.putExtra("ExpTripDuration",
 //						ExpTripDuration.get(arg2));
@@ -1983,34 +2015,65 @@ public class ContactsToInviteActivity extends Activity {
 
 				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
 						CheckPoolFragmentActivity.class);
-				mainIntent.putExtra("CabId", CabId);
-				mainIntent.putExtra("MobileNumber", MobileNumberstr);
-				mainIntent.putExtra("OwnerName", OwnerName);
+				
+				RideDetailsModel rideDetailsModel = new RideDetailsModel();
+				rideDetailsModel.setCabId(CabId);
+				rideDetailsModel.setMobileNumber(MobileNumberstr);
+				rideDetailsModel.setOwnerName(OwnerName);
 				SharedPreferences mPrefs111 = getSharedPreferences("userimage",
 						0);
 				String imgname = mPrefs111.getString("imgname", "");
-				mainIntent.putExtra("OwnerImage", imgname);
-				mainIntent.putExtra("FromLocation", FromLocation);
-				mainIntent.putExtra("ToLocation", ToLocation);
-
-				mainIntent.putExtra("FromShortName", fromshortname);
-				mainIntent.putExtra("ToShortName", toshortname);
-
-				mainIntent.putExtra("TravelDate", TravelDate);
-				mainIntent.putExtra("TravelTime", TravelTime);
-				mainIntent.putExtra("Seats", Seats);
-				mainIntent.putExtra("RemainingSeats", Seats);
-				mainIntent.putExtra("Seat_Status", "0/" + Seats);
-				mainIntent.putExtra("Distance", distancetext);
-				mainIntent.putExtra("OpenTime", "");
-				mainIntent.putExtra("CabStatus", "A");
+				rideDetailsModel.setImagename(imgname);
+				rideDetailsModel.setFromLocation(FromLocation);
+				rideDetailsModel.setToLocation(ToLocation);
+				rideDetailsModel.setFromShortName(fromshortname);
+				rideDetailsModel.setToShortName(toshortname);
+				rideDetailsModel.setTravelDate(TravelDate);
+				rideDetailsModel.setTravelTime(TravelTime);
+				rideDetailsModel.setSeats(Seats);
+				rideDetailsModel.setRemainingSeats(Seats);
+				rideDetailsModel.setSeat_Status("0/" + Seats);
+				rideDetailsModel.setDistance(distancetext);
+				rideDetailsModel.setOpenTime("");
+				rideDetailsModel.setCabStatus("A");
 				mainIntent.putExtra("comefrom", "fromcontactsmyclub");
-
-				mainIntent.putExtra("BookingRefNo", "");
-				mainIntent.putExtra("DriverName", "");
-				mainIntent.putExtra("DriverNumber", "");
-				mainIntent.putExtra("CarNumber", "");
-				mainIntent.putExtra("CabName", "");
+				rideDetailsModel.setBookingRefNo("");
+				rideDetailsModel.setDriverName("");
+				rideDetailsModel.setDriverNumber("");
+				rideDetailsModel.setCarNumber("");
+				rideDetailsModel.setCabName("");
+				
+				mainIntent.putExtra("RideDetailsModel", (new Gson()).toJson(rideDetailsModel));
+				
+				
+//				mainIntent.putExtra("CabId", CabId);
+//				mainIntent.putExtra("MobileNumber", MobileNumberstr);
+//				mainIntent.putExtra("OwnerName", OwnerName);
+//				SharedPreferences mPrefs111 = getSharedPreferences("userimage",
+//						0);
+//				String imgname = mPrefs111.getString("imgname", "");
+//				mainIntent.putExtra("OwnerImage", imgname);
+//				mainIntent.putExtra("FromLocation", FromLocation);
+//				mainIntent.putExtra("ToLocation", ToLocation);
+//
+//				mainIntent.putExtra("FromShortName", fromshortname);
+//				mainIntent.putExtra("ToShortName", toshortname);
+//
+//				mainIntent.putExtra("TravelDate", TravelDate);
+//				mainIntent.putExtra("TravelTime", TravelTime);
+//				mainIntent.putExtra("Seats", Seats);
+//				mainIntent.putExtra("RemainingSeats", Seats);
+//				mainIntent.putExtra("Seat_Status", "0/" + Seats);
+//				mainIntent.putExtra("Distance", distancetext);
+//				mainIntent.putExtra("OpenTime", "");
+//				mainIntent.putExtra("CabStatus", "A");
+//				mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+//
+//				mainIntent.putExtra("BookingRefNo", "");
+//				mainIntent.putExtra("DriverName", "");
+//				mainIntent.putExtra("DriverNumber", "");
+//				mainIntent.putExtra("CarNumber", "");
+//				mainIntent.putExtra("CabName", "");
 				
 //				mainIntent.putExtra("ExpTripDuration",
 //						ExpTripDuration.get(arg2));
@@ -2259,34 +2322,63 @@ public class ContactsToInviteActivity extends Activity {
 
 			Intent mainIntent = new Intent(ContactsToInviteActivity.this,
 					CheckPoolFragmentActivity.class);
-
-			mainIntent.putExtra("CabId", CabId);
-			mainIntent.putExtra("MobileNumber", MobileNumberstr);
-			mainIntent.putExtra("OwnerName", OwnerName);
-			SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
+			
+			RideDetailsModel rideDetailsModel = new RideDetailsModel();
+			rideDetailsModel.setCabId(CabId);
+			rideDetailsModel.setMobileNumber(MobileNumberstr);
+			rideDetailsModel.setOwnerName(OwnerName);
+			SharedPreferences mPrefs111 = getSharedPreferences("userimage",
+					0);
 			String imgname = mPrefs111.getString("imgname", "");
-			mainIntent.putExtra("OwnerImage", imgname);
-			mainIntent.putExtra("FromLocation", FromLocation);
-			mainIntent.putExtra("ToLocation", ToLocation);
-
-			mainIntent.putExtra("FromShortName", fromshortname);
-			mainIntent.putExtra("ToShortName", toshortname);
-
-			mainIntent.putExtra("TravelDate", TravelDate);
-			mainIntent.putExtra("TravelTime", TravelTime);
-			mainIntent.putExtra("Seats", Seats);
-			mainIntent.putExtra("RemainingSeats", Seats);
-			mainIntent.putExtra("Seat_Status", "0/" + Seats);
-			mainIntent.putExtra("Distance", distancetext);
-			mainIntent.putExtra("OpenTime", "");
-			mainIntent.putExtra("CabStatus", "A");
+			rideDetailsModel.setImagename(imgname);
+			rideDetailsModel.setFromLocation(FromLocation);
+			rideDetailsModel.setToLocation(ToLocation);
+			rideDetailsModel.setFromShortName(fromshortname);
+			rideDetailsModel.setToShortName(toshortname);
+			rideDetailsModel.setTravelDate(TravelDate);
+			rideDetailsModel.setTravelTime(TravelTime);
+			rideDetailsModel.setSeats(Seats);
+			rideDetailsModel.setRemainingSeats(Seats);
+			rideDetailsModel.setSeat_Status("0/" + Seats);
+			rideDetailsModel.setDistance(distancetext);
+			rideDetailsModel.setOpenTime("");
+			rideDetailsModel.setCabStatus("A");
 			mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+			rideDetailsModel.setBookingRefNo("");
+			rideDetailsModel.setDriverName("");
+			rideDetailsModel.setDriverNumber("");
+			rideDetailsModel.setCarNumber("");
+			rideDetailsModel.setCabName("");
+			
+			mainIntent.putExtra("RideDetailsModel", (new Gson()).toJson(rideDetailsModel));
 
-			mainIntent.putExtra("BookingRefNo", "");
-			mainIntent.putExtra("DriverName", "");
-			mainIntent.putExtra("DriverNumber", "");
-			mainIntent.putExtra("CarNumber", "");
-			mainIntent.putExtra("CabName", "");
+//			mainIntent.putExtra("CabId", CabId);
+//			mainIntent.putExtra("MobileNumber", MobileNumberstr);
+//			mainIntent.putExtra("OwnerName", OwnerName);
+//			SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
+//			String imgname = mPrefs111.getString("imgname", "");
+//			mainIntent.putExtra("OwnerImage", imgname);
+//			mainIntent.putExtra("FromLocation", FromLocation);
+//			mainIntent.putExtra("ToLocation", ToLocation);
+//
+//			mainIntent.putExtra("FromShortName", fromshortname);
+//			mainIntent.putExtra("ToShortName", toshortname);
+//
+//			mainIntent.putExtra("TravelDate", TravelDate);
+//			mainIntent.putExtra("TravelTime", TravelTime);
+//			mainIntent.putExtra("Seats", Seats);
+//			mainIntent.putExtra("RemainingSeats", Seats);
+//			mainIntent.putExtra("Seat_Status", "0/" + Seats);
+//			mainIntent.putExtra("Distance", distancetext);
+//			mainIntent.putExtra("OpenTime", "");
+//			mainIntent.putExtra("CabStatus", "A");
+//			mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+//
+//			mainIntent.putExtra("BookingRefNo", "");
+//			mainIntent.putExtra("DriverName", "");
+//			mainIntent.putExtra("DriverNumber", "");
+//			mainIntent.putExtra("CarNumber", "");
+//			mainIntent.putExtra("CabName", "");
 			
 //			mainIntent.putExtra("ExpTripDuration",
 //					ExpTripDuration.get(arg2));

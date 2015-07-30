@@ -4,10 +4,9 @@ public class GlobalVariables {
 
 	// chat IpAddress is same for both production & UAT
 
-	// public static final String ServiceUrl =
-	// "http://180.179.207.159/cmc/cmcservice"; // Production
-	// public static final String IpAddress = "180.179.208.23"; // Production
-	// public static final String ServerNameForChat = "@p2p-vm1"; // Production
+//	public static final String ServiceUrl = "http://180.179.207.159/cmc/cmcservice"; // Production
+//	public static final String IpAddress = "180.179.208.23"; // Production
+//	public static final String ServerNameForChat = "@p2p-vm1"; // Production
 
 	public static final String ServiceUrl = "http://180.179.208.23/cmc/cmcservice"; // UAT
 	public static final String IpAddress = "180.179.208.23"; // UAT

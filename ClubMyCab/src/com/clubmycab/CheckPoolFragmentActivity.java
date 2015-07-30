@@ -109,6 +109,7 @@ import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
+import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.MobileSiteActivity;
@@ -139,34 +140,36 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	String CompletePageResponse;
 
-	String CabId;
-	String MobileNumber;
-	String OwnerName;
-	String OwnerImage;
-	String FromLocation;
-	String ToLocation;
+	RideDetailsModel rideDetailsModel;
 
-	String FromShortName;
-	String ToShortName;
-
-	String TravelDate;
-	String TravelTime;
-	String Seats;
-	String RemainingSeats;
-	String Seat_Status;
-	String Distance;
-	String OpenTime;
-
-	String CabStatus;
-
-	String BookingRefNo;
-	String DriverName;
-	String DriverNumber;
-	String CarNumber;
-	String CabName;
-
-	String ExpTripDuration;
-	String statusTrip;
+	// String CabId;
+	// String MobileNumber;
+	// String OwnerName;
+	// String OwnerImage;
+	// String FromLocation;
+	// String ToLocation;
+	//
+	// String FromShortName;
+	// String ToShortName;
+	//
+	// String TravelDate;
+	// String TravelTime;
+	// String Seats;
+	// String RemainingSeats;
+	// String Seat_Status;
+	// String Distance;
+	// String OpenTime;
+	//
+	// String CabStatus;
+	//
+	// String BookingRefNo;
+	// String DriverName;
+	// String DriverNumber;
+	// String CarNumber;
+	// String CabName;
+	//
+	// String ExpTripDuration;
+	// String statusTrip;
 
 	String comefrom;
 
@@ -327,45 +330,51 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		tracker.setScreenName("Owner Created Pool");
 
 		Intent intent = getIntent();
-		CabId = intent.getStringExtra("CabId");
-		MobileNumber = intent.getStringExtra("MobileNumber");
-		OwnerName = intent.getStringExtra("OwnerName");
-		OwnerImage = intent.getStringExtra("OwnerImage");
-		FromLocation = intent.getStringExtra("FromLocation");
-		ToLocation = intent.getStringExtra("ToLocation");
+		Gson gson = new Gson();
+		rideDetailsModel = gson.fromJson(
+				intent.getStringExtra("RideDetailsModel"),
+				RideDetailsModel.class);
 
-		FromShortName = intent.getStringExtra("FromShortName");
-		ToShortName = intent.getStringExtra("ToShortName");
-
-		TravelDate = intent.getStringExtra("TravelDate");
-		TravelTime = intent.getStringExtra("TravelTime");
-		Seats = intent.getStringExtra("Seats");
-		RemainingSeats = intent.getStringExtra("RemainingSeats");
-		Seat_Status = intent.getStringExtra("Seat_Status");
-		Distance = intent.getStringExtra("Distance");
-		OpenTime = intent.getStringExtra("OpenTime");
-		CabStatus = intent.getStringExtra("CabStatus");
-
-		BookingRefNo = intent.getStringExtra("BookingRefNo");
-		DriverName = intent.getStringExtra("DriverName");
-		DriverNumber = intent.getStringExtra("DriverNumber");
-		CarNumber = intent.getStringExtra("CarNumber");
-		CabName = intent.getStringExtra("CabName");
+		// CabId = intent.getStringExtra("CabId");
+		// MobileNumber = intent.getStringExtra("MobileNumber");
+		// OwnerName = intent.getStringExtra("OwnerName");
+		// OwnerImage = intent.getStringExtra("OwnerImage");
+		// FromLocation = intent.getStringExtra("FromLocation");
+		// ToLocation = intent.getStringExtra("ToLocation");
+		//
+		// FromShortName = intent.getStringExtra("FromShortName");
+		// ToShortName = intent.getStringExtra("ToShortName");
+		//
+		// TravelDate = intent.getStringExtra("TravelDate");
+		// TravelTime = intent.getStringExtra("TravelTime");
+		// Seats = intent.getStringExtra("Seats");
+		// RemainingSeats = intent.getStringExtra("RemainingSeats");
+		// Seat_Status = intent.getStringExtra("Seat_Status");
+		// Distance = intent.getStringExtra("Distance");
+		// OpenTime = intent.getStringExtra("OpenTime");
+		// CabStatus = intent.getStringExtra("CabStatus");
+		//
+		// BookingRefNo = intent.getStringExtra("BookingRefNo");
+		// DriverName = intent.getStringExtra("DriverName");
+		// DriverNumber = intent.getStringExtra("DriverNumber");
+		// CarNumber = intent.getStringExtra("CarNumber");
+		// CabName = intent.getStringExtra("CabName");
+		//
+		// ExpTripDuration = intent.getStringExtra("ExpTripDuration");
+		// statusTrip = intent.getStringExtra("status");
 
 		comefrom = intent.getStringExtra("comefrom");
 
-		ExpTripDuration = intent.getStringExtra("ExpTripDuration");
-		statusTrip = intent.getStringExtra("status");
-
 		Log.d("comefrom", "" + comefrom);
 
-		Log.d("CabStatus", "" + CabStatus);
+		Log.d("CabStatus", "" + rideDetailsModel.getCabStatus());
 
-		Log.d("status", "" + statusTrip);
+		Log.d("status", "" + rideDetailsModel.getStatus());
 
 		checkpoolbottomtabsll = (LinearLayout) findViewById(R.id.checkpoolbottomtabsll);
 
-		if (CabStatus.toString().trim().equalsIgnoreCase("A")) {
+		if (rideDetailsModel.getCabStatus().toString().trim()
+				.equalsIgnoreCase("A")) {
 			checkpoolbottomtabsll.setVisibility(View.VISIBLE);
 		} else {
 			checkpoolbottomtabsll.setVisibility(View.GONE);
@@ -386,8 +395,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				joinPoolPopUp(FromShortName, ToShortName, TravelDate,
-						TravelTime, Seat_Status, OwnerName, OwnerImage);
+				joinPoolPopUp(rideDetailsModel.getFromShortName(),
+						rideDetailsModel.getToShortName(),
+						rideDetailsModel.getTravelDate(),
+						rideDetailsModel.getTravelTime(),
+						rideDetailsModel.getSeat_Status(),
+						rideDetailsModel.getOwnerName(),
+						rideDetailsModel.getImagename());
 
 			}
 		});
@@ -439,7 +453,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				if (RemainingSeats.equalsIgnoreCase("0")) {
+				if (rideDetailsModel.getRemainingSeats().equalsIgnoreCase("0")) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							CheckPoolFragmentActivity.this);
 					builder.setMessage("The ride is already full");
@@ -455,16 +469,24 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 							CheckPoolFragmentActivity.this,
 							ContactsToInviteActivity.class);
 					mainIntent.putExtra("fromcome", "checkpool");
-					mainIntent.putExtra("CabId", CabId);
-					mainIntent.putExtra("MobileNumber", MobileNumber);
-					mainIntent.putExtra("OwnerName", OwnerName);
-					mainIntent.putExtra("FromLocation", FromLocation);
-					mainIntent.putExtra("ToLocation", ToLocation);
-					mainIntent.putExtra("TravelDate", TravelDate);
-					mainIntent.putExtra("TravelTime", TravelTime);
-					mainIntent.putExtra("Seats", Seats);
-					mainIntent.putExtra("fromshortname", FromShortName);
-					mainIntent.putExtra("toshortname", ToShortName);
+					mainIntent.putExtra("CabId", rideDetailsModel.getCabId());
+					mainIntent.putExtra("MobileNumber",
+							rideDetailsModel.getMobileNumber());
+					mainIntent.putExtra("OwnerName",
+							rideDetailsModel.getOwnerName());
+					mainIntent.putExtra("FromLocation",
+							rideDetailsModel.getFromLocation());
+					mainIntent.putExtra("ToLocation",
+							rideDetailsModel.getToLocation());
+					mainIntent.putExtra("TravelDate",
+							rideDetailsModel.getTravelDate());
+					mainIntent.putExtra("TravelTime",
+							rideDetailsModel.getTravelTime());
+					mainIntent.putExtra("Seats", rideDetailsModel.getSeats());
+					mainIntent.putExtra("fromshortname",
+							rideDetailsModel.getFromShortName());
+					mainIntent.putExtra("toshortname",
+							rideDetailsModel.getToShortName());
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);
@@ -477,8 +499,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				if (!BookingRefNo.isEmpty()
-						&& !BookingRefNo.equalsIgnoreCase("null")) {
+				if (!rideDetailsModel.getBookingRefNo().isEmpty()
+						&& !rideDetailsModel.getBookingRefNo()
+								.equalsIgnoreCase("null")) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							CheckPoolFragmentActivity.this);
 					builder.setMessage("A cab has already been booked for the ride");
@@ -509,7 +532,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		FullName = mPrefs.getString("FullName", "");
 		MemberNumberstr = mPrefs.getString("MobileNumber", "");
 
-		OwnerMobileNumber = MobileNumber;
+		OwnerMobileNumber = rideDetailsModel.getMobileNumber();
 
 		db = new DatabaseHandler(this);
 
@@ -535,7 +558,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		List<ChatObject> contacts = db.getAllCabIdChats(CabId);
+		List<ChatObject> contacts = db.getAllCabIdChats(rideDetailsModel
+				.getCabId());
 		chatBubbleList = new ArrayList<ChatBubble>();
 		for (ChatObject cn : contacts) {
 
@@ -703,9 +727,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForGetMyFare().executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, CabId, OwnerMobileNumber);
+					AsyncTask.THREAD_POOL_EXECUTOR,
+					rideDetailsModel.getCabId(), OwnerMobileNumber);
 		} else {
-			new ConnectionTaskForGetMyFare().execute(CabId, OwnerMobileNumber);
+			new ConnectionTaskForGetMyFare().execute(
+					rideDetailsModel.getCabId(), OwnerMobileNumber);
 		}
 	}
 
@@ -735,9 +761,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
-							AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+							AsyncTask.THREAD_POOL_EXECUTOR,
+							rideDetailsModel.getCabId());
 				} else {
-					new ConnectionTaskForMarkTripCompleted().execute(CabId);
+					new ConnectionTaskForMarkTripCompleted()
+							.execute(rideDetailsModel.getCabId());
 				}
 			}
 		});
@@ -893,13 +921,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 										JSONObject ownerJsonObject = new JSONObject();
 										ownerJsonObject
 												.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
-														FromLocation);
+														rideDetailsModel
+																.getFromLocation());
 										ownerJsonObject
 												.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
-														ToLocation);
+														rideDetailsModel
+																.getToLocation());
 										ownerJsonObject
 												.put(FareCalculator.JSON_NAME_OWNER_NAME,
-														OwnerName);
+														rideDetailsModel
+																.getOwnerName());
 
 										ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
 
@@ -1006,7 +1037,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		final double fareSplit = fare / (ShowMemberName.size() + 1); // +1 for
 																		// owner
 
-		arrayList.add(OwnerName + " : \u20B9 "
+		arrayList.add(rideDetailsModel.getOwnerName() + " : \u20B9 "
 				+ String.format("%d%n", Math.round(fareSplit)));
 		for (int i = 0; i < ShowMemberName.size(); i++) {
 			arrayList.add(ShowMemberName.get(i) + " : \u20B9 "
@@ -1038,13 +1069,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					new ConnectionTaskForSaveCalculatedFare()
 							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-									CabId, Double.toString(fare),
-									numberfareString, OwnerMobileNumber,
-									OwnerMobileNumber);
+									rideDetailsModel.getCabId(),
+									Double.toString(fare), numberfareString,
+									OwnerMobileNumber, OwnerMobileNumber);
 				} else {
-					new ConnectionTaskForSaveCalculatedFare().execute(CabId,
-							Double.toString(fare), numberfareString,
-							OwnerMobileNumber, OwnerMobileNumber);
+					new ConnectionTaskForSaveCalculatedFare().execute(
+							rideDetailsModel.getCabId(), Double.toString(fare),
+							numberfareString, OwnerMobileNumber,
+							OwnerMobileNumber);
 				}
 			}
 		});
@@ -1078,11 +1110,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
-							AsyncTask.THREAD_POOL_EXECUTOR, CabId,
-							OwnerMobileNumber, MemberNumberstr);
+							AsyncTask.THREAD_POOL_EXECUTOR,
+							rideDetailsModel.getCabId(), OwnerMobileNumber,
+							MemberNumberstr);
 				} else {
-					new ConnectionTaskForMarkTripCompleted().execute(CabId,
-							OwnerMobileNumber, MemberNumberstr);
+					new ConnectionTaskForMarkTripCompleted().execute(
+							rideDetailsModel.getCabId(), OwnerMobileNumber,
+							MemberNumberstr);
 				}
 			}
 		});
@@ -1603,7 +1637,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 				dialog.dismiss();
 
-				writeBookedOrCarPreference(CabId);
+				writeBookedOrCarPreference(rideDetailsModel.getCabId());
 
 				if (shouldShowTripStartDialog) {
 					showTripStartDialog();
@@ -1624,7 +1658,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 				dialog.dismiss();
 
-				writeBookedOrCarPreference(CabId);
+				writeBookedOrCarPreference(rideDetailsModel.getCabId());
 
 				if (shouldShowTripStartDialog) {
 					showTripStartDialog();
@@ -1708,17 +1742,19 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		case 0: {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForStartTrip().executeOnExecutor(
-						AsyncTask.THREAD_POOL_EXECUTOR, CabId);
+						AsyncTask.THREAD_POOL_EXECUTOR,
+						rideDetailsModel.getCabId());
 			} else {
-				new ConnectionTaskForStartTrip().execute(CabId);
+				new ConnectionTaskForStartTrip().execute(rideDetailsModel
+						.getCabId());
 			}
 			break;
 		}
 
 		default: {
 			StartTripPHPAlarm startTripPHPAlarm = new StartTripPHPAlarm();
-			startTripPHPAlarm.setAlarm(CheckPoolFragmentActivity.this, CabId,
-					duration);
+			startTripPHPAlarm.setAlarm(CheckPoolFragmentActivity.this,
+					rideDetailsModel.getCabId(), duration);
 			break;
 		}
 
@@ -1780,12 +1816,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		myObject.recipientsnames = selectednames;
 		myObject.recipientsnumbers = selectednumbers;
 		myObject.sharetilltype = "Destination";
-		myObject.destinationlongname = ToLocation;
+		myObject.destinationlongname = rideDetailsModel.getToLocation();
 		LatLng latLng = endaddlatlng.get(endaddlatlng.size() - 1);
 		myObject.destinationlatlong = latLng;
 		myObject.destinationtimevalue = System.currentTimeMillis()
 				+ (60000 * 240);
-		myObject.cabID = CabId;
+		myObject.cabID = rideDetailsModel.getCabId();
 
 		Gson gson = new Gson();
 		String json = gson.toJson(myObject);
@@ -1813,7 +1849,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		AddressModel startAddressModel = new AddressModel();
 		startAddressModel.setAddress(address);
-		startAddressModel.setShortname(FromShortName);
+		startAddressModel.setShortname(rideDetailsModel.getFromShortName());
 		startAddressModel.setLongname(addressString);
 
 		addressString = MapUtilityMethods.getAddress(
@@ -1823,7 +1859,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		AddressModel endAddressModel = new AddressModel();
 		endAddressModel.setAddress(address);
-		endAddressModel.setShortname(ToShortName);
+		endAddressModel.setShortname(rideDetailsModel.getToShortName());
 		endAddressModel.setLongname(addressString);
 
 		// String StartAddLatLng = startaddlatlng.get(0).latitude
@@ -1838,11 +1874,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				.toString());
 		mainIntent.putExtra("EndAddressModel", gson.toJson(endAddressModel)
 				.toString());
-		mainIntent.putExtra("CabId", CabId);
+		mainIntent.putExtra("CabId", rideDetailsModel.getCabId());
 		// mainIntent.putExtra("FromShortName", FromShortName);
 		// mainIntent.putExtra("ToShortName", ToShortName);
-		mainIntent.putExtra("TravelDate", TravelDate);
-		mainIntent.putExtra("TravelTime", TravelTime);
+		mainIntent.putExtra("TravelDate", rideDetailsModel.getTravelDate());
+		mainIntent.putExtra("TravelTime", rideDetailsModel.getTravelTime());
 		CheckPoolFragmentActivity.this.startActivity(mainIntent);
 	}
 
@@ -2233,8 +2269,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			via_waypointstrarr.clear();
 			rectlinesarr.clear();
 
-			String source = FromLocation.replaceAll(" ", "%20");
-			String dest = ToLocation.replaceAll(" ", "%20");
+			String source = rideDetailsModel.getFromLocation().replaceAll(" ",
+					"%20");
+			String dest = rideDetailsModel.getToLocation().replaceAll(" ",
+					"%20");
 
 			String url = "https://maps.googleapis.com/maps/api/directions/json?"
 					+ "origin="
@@ -2482,7 +2520,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 								} else {
 
-									if (CabStatus.toString().trim()
+									if (rideDetailsModel.getCabStatus()
+											.toString().trim()
 											.equalsIgnoreCase("A")) {
 
 										final Integer index = Integer
@@ -2506,12 +2545,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						});
 
 				// //////////////////////////
-				if (CabStatus.equals("A") && statusTrip.equals("0")) {
+				if (rideDetailsModel.getCabStatus().equals("A")
+						&& rideDetailsModel.getStatus().equals("0")) {
 					try {
 						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 								"dd/MM/yyyy hh:mm aa");
-						Date date = simpleDateFormat.parse(TravelDate + " "
-								+ TravelTime);
+						Date date = simpleDateFormat.parse(rideDetailsModel
+								.getTravelDate()
+								+ " "
+								+ rideDetailsModel.getTravelTime());
 
 						ArrayList<String> arrayList = readBookedOrCarPreference();
 
@@ -2519,12 +2561,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						// date.getTime());
 
 						if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-							if (BookingRefNo.isEmpty()
-									|| BookingRefNo.equalsIgnoreCase("null")) {
+							if (rideDetailsModel.getBookingRefNo().isEmpty()
+									|| rideDetailsModel.getBookingRefNo()
+											.equalsIgnoreCase("null")) {
 								if (arrayList == null) {
 									showCabBookingDialog(true);
 								} else if (arrayList != null
-										&& arrayList.indexOf(CabId) == -1) {
+										&& arrayList.indexOf(rideDetailsModel
+												.getCabId()) == -1) {
 									showCabBookingDialog(true);
 								} else {
 									showTripStartDialog();
@@ -2533,12 +2577,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								showTripStartDialog();
 							}
 						} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-							if (BookingRefNo.isEmpty()
-									|| BookingRefNo.equalsIgnoreCase("null")) {
+							if (rideDetailsModel.getBookingRefNo().isEmpty()
+									|| rideDetailsModel.getBookingRefNo()
+											.equalsIgnoreCase("null")) {
 								if (arrayList == null) {
 									showCabBookingDialog(false);
 								} else if (arrayList != null
-										&& arrayList.indexOf(CabId) == -1) {
+										&& arrayList.indexOf(rideDetailsModel
+												.getCabId()) == -1) {
 									showCabBookingDialog(false);
 								}
 							}
@@ -2546,18 +2592,23 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else if (CabStatus.equals("A") && statusTrip.equals("2")) {
+				} else if (rideDetailsModel.getCabStatus().equals("A")
+						&& rideDetailsModel.getStatus().equals("2")) {
 					showRideCompleteDialog();
-				} else if (CabStatus.equals("A") && statusTrip.equals("3")) {
+				} else if (rideDetailsModel.getCabStatus().equals("A")
+						&& rideDetailsModel.getStatus().equals("3")) {
 					showPaymentDialog();
-				} else if (CabStatus.equals("A")) {
+				} else if (rideDetailsModel.getCabStatus().equals("A")) {
 					try {
 						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 								"dd/MM/yyyy hh:mm aa");
-						Date date = simpleDateFormat.parse(TravelDate + " "
-								+ TravelTime);
+						Date date = simpleDateFormat.parse(rideDetailsModel
+								.getTravelDate()
+								+ " "
+								+ rideDetailsModel.getTravelTime());
 
-						long expDuration = Long.parseLong(ExpTripDuration);
+						long expDuration = Long.parseLong(rideDetailsModel
+								.getExpTripDuration());
 
 						if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
 							Log.d("CheckPoolFragmentActivity",
@@ -2566,10 +2617,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								new ConnectionTaskForTripCompleted()
 										.executeOnExecutor(
 												AsyncTask.THREAD_POOL_EXECUTOR,
-												CabId);
+												rideDetailsModel.getCabId());
 							} else {
 								new ConnectionTaskForTripCompleted()
-										.execute(CabId);
+										.execute(rideDetailsModel.getCabId());
 							}
 						}
 					} catch (Exception e) {
@@ -2601,7 +2652,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					+ "/ShowMemberOnMap.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"CabId", CabId);
+					"CabId", rideDetailsModel.getCabId());
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
@@ -2964,14 +3015,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			HttpPost httpPost = new HttpPost(url_select);
 
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"CabId", CabId);
+					"CabId", rideDetailsModel.getCabId());
 			BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair(
-					"OwnerName", OwnerName);
+					"OwnerName", rideDetailsModel.getOwnerName());
 			BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber);
+					"OwnerNumber", rideDetailsModel.getMobileNumber());
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
-					"Message", OwnerName + " cancelled the ride from "
-							+ FromShortName + " to " + ToShortName);
+					"Message", rideDetailsModel.getOwnerName()
+							+ " cancelled the ride from "
+							+ rideDetailsModel.getFromShortName() + " to "
+							+ rideDetailsModel.getToShortName());
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
@@ -3224,19 +3277,20 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			HttpPost httpPost = new HttpPost(url_select);
 
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"CabId", CabId);
+					"CabId", rideDetailsModel.getCabId());
 			BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair(
-					"OwnerName", OwnerName);
+					"OwnerName", rideDetailsModel.getOwnerName());
 			BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber);
+					"OwnerNumber", rideDetailsModel.getOwnerName());
 			BasicNameValuePair MemberNameBasicNameValuePair = new BasicNameValuePair(
 					"MemberName", memname);
 			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", memnum);
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
-					"Message", OwnerName
+					"Message", rideDetailsModel.getOwnerName()
 							+ " has removed you from the ride from "
-							+ FromShortName + " to " + ToShortName);
+							+ rideDetailsModel.getFromShortName() + " to "
+							+ rideDetailsModel.getToShortName());
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
@@ -3507,14 +3561,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		}
 
-		if (BookingRefNo.isEmpty() || BookingRefNo.equalsIgnoreCase("null")) {
+		if (rideDetailsModel.getBookingRefNo() == null || rideDetailsModel.getBookingRefNo().isEmpty()
+				|| rideDetailsModel.getBookingRefNo().equalsIgnoreCase("null")) {
 			LinearLayout linearLayout = (LinearLayout) dialog
 					.findViewById(R.id.cabbookingll);
 			linearLayout.setVisibility(View.GONE);
 		} else {
 			TextView textView = (TextView) dialog
 					.findViewById(R.id.cabbookingdriver);
-			textView.setText("Driver : " + DriverName);
+			textView.setText("Driver : " + rideDetailsModel.getDriverName());
 
 			textView = (TextView) dialog
 					.findViewById(R.id.cabbookingdriverphone);
@@ -3523,16 +3578,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(Intent.ACTION_CALL, Uri
-							.parse("tel:" + DriverNumber));
+							.parse("tel:" + rideDetailsModel.getDriverNumber()));
 					startActivity(intent);
 				}
 			});
 
 			textView = (TextView) dialog.findViewById(R.id.cabbookingvehicle);
-			textView.setText("Vehicle : " + CarNumber);
+			textView.setText("Vehicle : " + rideDetailsModel.getCarNumber());
 
 			textView = (TextView) dialog.findViewById(R.id.cabbookingrefno);
-			textView.setText("Booking reference : " + BookingRefNo);
+			textView.setText("Booking reference : "
+					+ rideDetailsModel.getBookingRefNo());
 
 			Button button = (Button) dialog.findViewById(R.id.cancelBooking);
 			button.setOnClickListener(new View.OnClickListener() {
@@ -3551,11 +3607,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								public void onClick(DialogInterface dialog,
 										int which) {
 
-									if (CabName.equalsIgnoreCase("Uber")) {
+									if (rideDetailsModel.getCabName()
+											.equalsIgnoreCase("Uber")) {
 										cancelUberCab();
-									} else if (CabName.equalsIgnoreCase("Mega")) {
+									} else if (rideDetailsModel.getCabName()
+											.equalsIgnoreCase("Mega")) {
 										cancelMegaCab();
-									} else if (CabName
+									} else if (rideDetailsModel.getCabName()
 											.equalsIgnoreCase("Taxi For Sure")) {
 										cancelTFSCab();
 									}
@@ -3583,12 +3641,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		if (totalFare != null && !totalFare.isEmpty() && amountToPay != null
 				&& !amountToPay.isEmpty()) {
-			LinearLayout linearLayout = (LinearLayout)dialog.findViewById(R.id.faredetailsll);
+			LinearLayout linearLayout = (LinearLayout) dialog
+					.findViewById(R.id.faredetailsll);
 			linearLayout.setVisibility(View.VISIBLE);
-			
-			TextView textView = (TextView)dialog.findViewById(R.id.faredetailstotal);
+
+			TextView textView = (TextView) dialog
+					.findViewById(R.id.faredetailstotal);
 			textView.setText("Total fare: \u20B9" + totalFare);
-			textView = (TextView)dialog.findViewById(R.id.faredetailsshare);
+			textView = (TextView) dialog.findViewById(R.id.faredetailsshare);
 			textView.setText("Your share: \u20B9" + amountToPay);
 		}
 
@@ -3602,19 +3662,20 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForupdatestatus().executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, CabId, MemberNumberstr,
-					"online");
+					AsyncTask.THREAD_POOL_EXECUTOR,
+					rideDetailsModel.getCabId(), MemberNumberstr, "online");
 		} else {
-			new ConnectionTaskForupdatestatus().execute(CabId, MemberNumberstr,
-					"online");
+			new ConnectionTaskForupdatestatus().execute(
+					rideDetailsModel.getCabId(), MemberNumberstr, "online");
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForTripCompletedtask().executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, CabId, MemberNumberstr);
+					AsyncTask.THREAD_POOL_EXECUTOR,
+					rideDetailsModel.getCabId(), MemberNumberstr);
 		} else {
-			new ConnectionTaskForTripCompletedtask().execute(CabId,
-					MemberNumberstr);
+			new ConnectionTaskForTripCompletedtask().execute(
+					rideDetailsModel.getCabId(), MemberNumberstr);
 		}
 
 		Log.d("checkpool onStart", "checkpool onStart");
@@ -3638,11 +3699,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForupdatestatus().executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, CabId, MemberNumberstr,
-					"offline");
+					AsyncTask.THREAD_POOL_EXECUTOR,
+					rideDetailsModel.getCabId(), MemberNumberstr, "offline");
 		} else {
-			new ConnectionTaskForupdatestatus().execute(CabId, MemberNumberstr,
-					"offline");
+			new ConnectionTaskForupdatestatus().execute(
+					rideDetailsModel.getCabId(), MemberNumberstr, "offline");
 		}
 
 		super.onStop();
@@ -3771,8 +3832,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			connConfig.setRosterLoadedAtLogin(true);
 			xmppConnection = new XMPPConnection(connConfig);
 			if (xmppConnection != null) {
-				String uname = MemberNumberstr.toString().trim() + "_" + CabId, pwd = MemberNumberstr
-						.toString().trim() + "_" + CabId, name = FullName, email = "";
+				String uname = MemberNumberstr.toString().trim() + "_"
+						+ rideDetailsModel.getCabId(), pwd = MemberNumberstr
+						.toString().trim() + "_" + rideDetailsModel.getCabId(), name = FullName, email = "";
 				HashMap<String, String> hashMap = new HashMap<String, String>();
 				hashMap.put("username", uname);
 				hashMap.put("password", pwd);
@@ -3847,14 +3909,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			for (int i = 0; i < MemberNumber.size(); i++) {
 				String userid = MemberNumber.get(i).toString().trim() + "_"
-						+ CabId + "@" + IPADDRESS;
+						+ rideDetailsModel.getCabId() + "@" + IPADDRESS;
 				message = new Message(userid, Message.Type.chat);
 				message.setBody(text);
 				xmppConnection.sendPacket(message);
 			}
 
 			String datetime = String.valueOf(System.currentTimeMillis());
-			db.addChattodb(new ChatObject(CabId, FullName, text, datetime));
+			db.addChattodb(new ChatObject(rideDetailsModel.getCabId(),
+					FullName, text, datetime));
 
 			chatBubbleList.add(new ChatBubble(false, text, System
 					.currentTimeMillis(), FullName));
@@ -3862,13 +3925,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForsendchatnotification().executeOnExecutor(
-						AsyncTask.THREAD_POOL_EXECUTOR, CabId, MemberNumberstr,
+						AsyncTask.THREAD_POOL_EXECUTOR,
+						rideDetailsModel.getCabId(), MemberNumberstr,
 						MemberNumber.toString().trim(), text, FullName,
-						OwnerName, OwnerMobileNumber);
+						rideDetailsModel.getOwnerName(), OwnerMobileNumber);
 			} else {
-				new ConnectionTaskForsendchatnotification().execute(CabId,
-						MemberNumberstr, MemberNumber.toString().trim(), text,
-						FullName, OwnerName, OwnerMobileNumber);
+				new ConnectionTaskForsendchatnotification().execute(
+						rideDetailsModel.getCabId(), MemberNumberstr,
+						MemberNumber.toString().trim(), text, FullName,
+						rideDetailsModel.getOwnerName(), OwnerMobileNumber);
 			}
 
 		} catch (Exception e) {
@@ -3911,8 +3976,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 						String datetime = String.valueOf(System
 								.currentTimeMillis());
-						db.addChattodb(new ChatObject(CabId, username, text,
-								datetime));
+						db.addChattodb(new ChatObject(rideDetailsModel
+								.getCabId(), username, text, datetime));
 
 						chatBubbleList.add(new ChatBubble(true, text, System
 								.currentTimeMillis(), username));
@@ -4329,7 +4394,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			if (MemberNumberstr.equalsIgnoreCase(OwnerMobileNumber)) {
 
 			} else {
-				MemberName.add(OwnerName);
+				MemberName.add(rideDetailsModel.getOwnerName());
 				MemberNumber.add(OwnerMobileNumber);
 			}
 		}
@@ -4472,7 +4537,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									}
 								}
 
-								if (key.equalsIgnoreCase(OwnerName)) {
+								if (key.equalsIgnoreCase(rideDetailsModel
+										.getOwnerName())) {
 									numberfareString += (OwnerMobileNumber
 											+ "~"
 											+ String.format(
@@ -4491,7 +4557,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								new ConnectionTaskForSaveCalculatedFare()
 										.executeOnExecutor(
 												AsyncTask.THREAD_POOL_EXECUTOR,
-												CabId,
+												rideDetailsModel.getCabId(),
 												hashMap.get("tripTotalFare")
 														.toString(),
 												numberfareString,
@@ -4499,7 +4565,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 												OwnerMobileNumber);
 							} else {
 								new ConnectionTaskForSaveCalculatedFare()
-										.execute(CabId,
+										.execute(rideDetailsModel.getCabId(),
 												hashMap.get("tripTotalFare")
 														.toString(),
 												numberfareString,
@@ -5277,11 +5343,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								}
 							}
 
-							if (selectednumbers.indexOf(MobileNumber) != -1) {
+							if (selectednumbers.indexOf(rideDetailsModel
+									.getMobileNumber()) != -1) {
 								selectednames.remove(selectednumbers
-										.indexOf(MobileNumber));
+										.indexOf(rideDetailsModel
+												.getMobileNumber()));
 								selectednumbers.remove(selectednumbers
-										.indexOf(MobileNumber));
+										.indexOf(rideDetailsModel
+												.getMobileNumber()));
 							}
 
 						}
@@ -5632,8 +5701,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelMegaCabAsync cancelMegaCabAsync = new CancelMegaCabAsync();
-		String param = "type=CancelBooking" + "&mobile=" + MobileNumber
-				+ "&bookingNo=" + BookingRefNo;
+		String param = "type=CancelBooking" + "&mobile="
+				+ rideDetailsModel.getMobileNumber() + "&bookingNo="
+				+ rideDetailsModel.getBookingRefNo();
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelMegaCabAsync.executeOnExecutor(
@@ -5823,7 +5893,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelUberCabAsync cancelUberCabAsync = new CancelUberCabAsync();
-		String param = ("bookingRefNo=" + BookingRefNo);
+		String param = ("bookingRefNo=" + rideDetailsModel.getBookingRefNo());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelUberCabAsync.executeOnExecutor(
@@ -6015,8 +6085,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelTFSCabAsync cancelTFSCabAsync = new CancelTFSCabAsync();
-		String param = "type=cancellation" + "&booking_id=" + BookingRefNo
-				+ "&cancellation_reason=";
+		String param = "type=cancellation" + "&booking_id="
+				+ rideDetailsModel.getBookingRefNo() + "&cancellation_reason=";
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelTFSCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,

@@ -8,6 +8,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/llCircularHeader"
         android:layout_width="fill_parent"
         android:layout_height="80dp"
         android:background="@drawable/myrides_rowbanner"

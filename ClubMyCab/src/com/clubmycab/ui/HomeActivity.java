@@ -19,6 +19,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -33,6 +36,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -50,13 +54,19 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -64,14 +74,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.clubmycab.BookaCabFragmentActivity;
+import com.clubmycab.CheckPoolFragmentActivity;
 import com.clubmycab.CircularImageView;
+import com.clubmycab.DatabaseHandler;
+import com.clubmycab.ListViewAdapter;
+import com.clubmycab.MemberRideFragmentActivity;
+import com.clubmycab.MyRidesListClass;
+import com.clubmycab.MyRidesObject;
+import com.clubmycab.PagingListView;
 import com.clubmycab.R;
+import com.clubmycab.ShowHistoryRidesAdaptor;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
+import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.ui.MyRidesActivity.AuthenticateConnectionFetchPool;
+import com.clubmycab.ui.MyRidesActivity.AuthenticateConnectionShowRidesHistory;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
@@ -89,7 +111,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.navdrawer.SimpleSideDrawer;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class HomeActivity extends FragmentActivity implements
 		AsyncTaskResultListener, LocationListener, OnClickListener {
@@ -137,7 +162,7 @@ public class HomeActivity extends FragmentActivity implements
 	Address fAddress, tAddress;
 
 	String FullName;
-	String MobileNumber;
+	public static String MobileNumber;
 
 	Bitmap mainbmp = null;
 
@@ -165,6 +190,8 @@ public class HomeActivity extends FragmentActivity implements
 
 	// flag for refresh page in onresume
 	boolean isCallresetIntentParams = false;
+	boolean isRunning = false;
+	boolean playAnimation = true;
 
 	// String StartAddLatLngIntent;
 	// String EndAddLatLngIntent;
@@ -178,6 +205,37 @@ public class HomeActivity extends FragmentActivity implements
 	String toshortname;
 	LatLng invitemapcenter;
 	private Context mcontext;
+	private String poolresponse, rideInvitationsResponse = "";
+//	public static ArrayList<String> CabId = new ArrayList<String>();
+//	public static ArrayList<String> MobileNumberList = new ArrayList<String>();
+//	public static ArrayList<String> OwnerName = new ArrayList<String>();
+//	public static ArrayList<String> FromLocation = new ArrayList<String>();
+//	public static ArrayList<String> ToLocation = new ArrayList<String>();
+//	public static ArrayList<String> FromShortName = new ArrayList<String>();
+//	public static ArrayList<String> ToShortName = new ArrayList<String>();
+//	public static ArrayList<String> TravelDate = new ArrayList<String>();
+//	public static ArrayList<String> TravelTime = new ArrayList<String>();
+//	public static ArrayList<String> Seats = new ArrayList<String>();
+//	public static ArrayList<String> RemainingSeats = new ArrayList<String>();
+//	public static ArrayList<String> Seat_Status = new ArrayList<String>();
+//	public static ArrayList<String> Distance = new ArrayList<String>();
+//	public static ArrayList<String> OpenTime = new ArrayList<String>();
+//	public static ArrayList<String> CabStatus = new ArrayList<String>();
+//	public static ArrayList<String> imagename = new ArrayList<String>();
+//	public static ArrayList<String> BookingRefNo = new ArrayList<String>();
+//	public static ArrayList<String> DriverName = new ArrayList<String>();
+//	public static ArrayList<String> DriverNumber = new ArrayList<String>();
+//	public static ArrayList<String> CarNumber = new ArrayList<String>();
+//	public static ArrayList<String> CabName = new ArrayList<String>();
+//	public static ArrayList<String> ExpTripDuration = new ArrayList<String>();
+//	public static ArrayList<String> status = new ArrayList<String>();
+	public static 	 ArrayList<RideDetailsModel>		arrayRideDetailsModels = new ArrayList<RideDetailsModel>();
+
+
+	public static ViewPager viewPagerHome;
+	private FragmentStatePagerAdapter mFragmentStatePagerAdapter;
+	private TextView tvViewpagerHeading;
+	private CirclePageIndicator circlePageIndicator ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -243,7 +301,7 @@ public class HomeActivity extends FragmentActivity implements
 		// .setScreenName("help popup dialog").build());
 
 		// ///////////////////
-
+		tvViewpagerHeading = (TextView) findViewById(R.id.tvViewpagerHeading);
 		homepagerl = (RelativeLayout) findViewById(R.id.homepagerl);
 		homepagerl.setOnClickListener(new OnClickListener() {
 
@@ -1281,6 +1339,121 @@ public class HomeActivity extends FragmentActivity implements
 				}
 			}
 		});
+		setPagger();
+	}
+
+	// Set ViewPagger Adapter
+	private void setPagger() {
+		viewPagerHome = (ViewPager) findViewById(R.id.viewPagerHome);
+		final ArrayList<String> OwnerName = new ArrayList<String>();
+		final ArrayList<String> FromShortName = new ArrayList<String>();
+		final ArrayList<String> ToShortName = new ArrayList<String>();
+		final ArrayList<String> TravelDate = new ArrayList<String>();
+		final ArrayList<String> TravelTime = new ArrayList<String>();
+		final ArrayList<String> Seat_Status = new ArrayList<String>();
+		final ArrayList<String> imagename = new ArrayList<String>();
+		for (int i = 0; i < arrayRideDetailsModels.size(); i++) {
+			
+
+			OwnerName.add(arrayRideDetailsModels.get(i).getOwnerName());
+			FromShortName.add(arrayRideDetailsModels.get(i)
+					.getFromShortName());
+			ToShortName.add(arrayRideDetailsModels.get(i)
+					.getToShortName());
+			TravelDate.add(arrayRideDetailsModels.get(i)
+					.getTravelDate());
+			TravelTime.add(arrayRideDetailsModels.get(i)
+					.getTravelTime());
+			Seat_Status.add(arrayRideDetailsModels.get(i)
+					.getSeat_Status());
+			imagename.add(arrayRideDetailsModels.get(i).getImagename());
+		}
+		
+		// Get Rides
+		mFragmentStatePagerAdapter = new FragmentStatePagerAdapter(
+				getSupportFragmentManager()) {
+
+			@Override
+			public int getCount() {
+				return arrayRideDetailsModels.size();
+			}
+
+			@Override
+			public Fragment getItem(int position) {
+
+				return HomeRidePageFragment.newInstance(
+						FromShortName.get(position), ToShortName.get(position),
+						TravelDate.get(position), TravelTime.get(position),
+						Seat_Status.get(position), OwnerName.get(position),
+						imagename.get(position));
+
+				// return
+				// HomeRidePageFragment.newInstance("Pawan","Asati","30/07/15","1:45",
+				// "4/4",OwnerName.get(position),"");
+			}
+
+			@Override
+			public int getItemPosition(Object object) {
+				return PagerAdapter.POSITION_NONE;
+			}
+
+		};
+
+		viewPagerHome.setAdapter(mFragmentStatePagerAdapter);
+
+		String comefrom = getIntent().getStringExtra("comefrom");
+
+		Log.d("MyRidesActivity", "comefrom : " + comefrom);
+		 circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicatorHome);
+		circlePageIndicator.setViewPager(viewPagerHome, 0);
+		circlePageIndicator
+				.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+					@Override
+					public void onPageSelected(int position) {
+						// Log.d(TAG,
+						// "circlePageIndicator onPageSelected : " +
+						// position);
+						// mCurrentIndex = position;
+					}
+
+					@Override
+					public void onPageScrolled(int position,
+							float positionOffset,
+							int positionOffsetPixels) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onPageScrollStateChanged(int state) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+		
+
+	}
+
+	private void swipeAutomaticViewPagger() {
+
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				int index = viewPagerHome.getCurrentItem();
+
+				if (index < (arrayRideDetailsModels.size() - 1)) {
+					viewPagerHome.setCurrentItem(index + 1);
+
+				} else
+					viewPagerHome.setCurrentItem(0);
+				if (playAnimation)
+
+					swipeAutomaticViewPagger();
+
+			}
+		}, 4000);
 	}
 
 	private void showButtonsDialog() {
@@ -2539,6 +2712,16 @@ public class HomeActivity extends FragmentActivity implements
 			}
 
 		}
+		playAnimation = true;
+		if (!isRunning) {
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForFetchPool()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				new ConnectionTaskForFetchPool().execute();
+			}
+		}
 
 	}
 
@@ -2546,6 +2729,7 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		AppEventsLogger.deactivateApp(this);
+		playAnimation = false;
 	}
 
 	@Override
@@ -2715,4 +2899,187 @@ public class HomeActivity extends FragmentActivity implements
 
 	}
 
+	private void ConnectionTaskForFetchPoolPostExecute() {
+		String response = "";
+		String msg = "";
+		JSONObject obj = null;
+		try {
+			obj = new JSONObject(rideInvitationsResponse);
+			response = obj.getString("status");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// 07-30 16:42:37.665: D/poolresponse(13451): {status:"fail",
+		// message:"No Records Found"}
+
+		if (response.equalsIgnoreCase("fail")) {
+			// Toast.makeText(HomeActivity.this, ""+msg,
+			// Toast.LENGTH_LONG).show();
+			tvViewpagerHeading.setVisibility(View.GONE);
+			circlePageIndicator.setVisibility(View.GONE);
+			arrayRideDetailsModels.clear();
+			
+	
+			mFragmentStatePagerAdapter.notifyDataSetChanged();
+
+		}
+		
+		else {
+
+		
+			if (response.equalsIgnoreCase("success")) {
+				tvViewpagerHeading.setVisibility(View.VISIBLE);
+
+				circlePageIndicator.setVisibility(View.VISIBLE);
+
+
+
+				try {
+					arrayRideDetailsModels.clear();
+					Gson gson = new Gson();
+					
+	 	 ArrayList<RideDetailsModel>		arrayRideLocal=	gson.fromJson(obj.getJSONArray("data").toString(),
+							new TypeToken<ArrayList<RideDetailsModel>>() {
+							}.getType());
+		
+		for(int i=0;i<arrayRideLocal.size();i++){
+			
+			arrayRideDetailsModels.add(arrayRideLocal.get(i));
+			
+		}
+					
+					Log.d("MyRidesActivity",
+							"GSON pools : "
+									+ gson.toJson(arrayRideDetailsModels)
+											.toString());
+					
+					
+					
+		
+
+					mFragmentStatePagerAdapter.notifyDataSetChanged();
+
+				
+
+					viewPagerHome.setCurrentItem(0);
+
+					if (arrayRideDetailsModels.size() > 1) {
+
+						swipeAutomaticViewPagger();
+
+					}
+
+				
+					
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+
+	}
+
+	// ///////
+
+	private class ConnectionTaskForFetchPool extends
+			AsyncTask<String, Void, Void> {
+		
+
+		@Override
+		protected void onPreExecute() {
+			
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionFetchPool mAuth1 = new AuthenticateConnectionFetchPool();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(HomeActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			ConnectionTaskForFetchPoolPostExecute();
+			isRunning = false;
+
+			// clearBookedOrCarPreference();
+
+			String comefrom = getIntent().getStringExtra("comefrom");
+
+			if (comefrom != null && !comefrom.isEmpty()
+					&& !comefrom.equalsIgnoreCase("null")) {
+
+				
+
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionFetchPool {
+
+		public AuthenticateConnectionFetchPool() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select11 = GlobalVariables.ServiceUrl
+					+ "/rideInvitations.php";
+			HttpPost httpPost = new HttpPost(url_select11);
+			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+					"mobileNumber", MobileNumber);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(MobileNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse rideInvitations", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				rideInvitationsResponse = stringBuilder
+						.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("poolresponse", "" + stringBuilder.toString());
+		}
+	}
 }

@@ -86,5 +86,5 @@
     <string name="mobikwik_nothave_account">You do not have a Mobikwik wallet registered with your number, would you like to create one?</string>
     <string name="mobikwik_already_account">You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides</string>
     <string name="str_text_termandcondition">By clicking on submit I agree to the term &amp; conditions mentioned at the link below</string>
-    <string name="str_home_pagger_heading">Ride(s) you have been invited to</string>
+    <string name="str_home_pagger_heading">Open ride(s) in your clubs</string>
 </resources>

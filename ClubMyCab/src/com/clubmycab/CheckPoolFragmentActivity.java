@@ -499,7 +499,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				if (!rideDetailsModel.getBookingRefNo().isEmpty()
+				if (rideDetailsModel.getBookingRefNo() != null
+						&& !rideDetailsModel.getBookingRefNo().isEmpty()
 						&& !rideDetailsModel.getBookingRefNo()
 								.equalsIgnoreCase("null")) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -2561,7 +2562,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						// date.getTime());
 
 						if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-							if (rideDetailsModel.getBookingRefNo().isEmpty()
+							if (rideDetailsModel.getBookingRefNo() == null
+									|| rideDetailsModel.getBookingRefNo()
+											.isEmpty()
 									|| rideDetailsModel.getBookingRefNo()
 											.equalsIgnoreCase("null")) {
 								if (arrayList == null) {
@@ -2577,7 +2580,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								showTripStartDialog();
 							}
 						} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-							if (rideDetailsModel.getBookingRefNo().isEmpty()
+							if (rideDetailsModel.getBookingRefNo() == null
+									|| rideDetailsModel.getBookingRefNo()
+											.isEmpty()
 									|| rideDetailsModel.getBookingRefNo()
 											.equalsIgnoreCase("null")) {
 								if (arrayList == null) {
@@ -3561,7 +3566,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		}
 
-		if (rideDetailsModel.getBookingRefNo() == null || rideDetailsModel.getBookingRefNo().isEmpty()
+		if (rideDetailsModel.getBookingRefNo() == null
+				|| rideDetailsModel.getBookingRefNo().isEmpty()
 				|| rideDetailsModel.getBookingRefNo().equalsIgnoreCase("null")) {
 			LinearLayout linearLayout = (LinearLayout) dialog
 					.findViewById(R.id.cabbookingll);
@@ -4757,6 +4763,21 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			saveCalculatedFare = result;
 
 			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+
+			final JSONObject jsonObject = new JSONObject(result);
+			if (jsonObject.get("status").toString().equalsIgnoreCase("fail")) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						try {
+							Toast.makeText(CheckPoolFragmentActivity.this,
+									jsonObject.get("message").toString(),
+									Toast.LENGTH_LONG).show();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
 		}
 	}
 

@@ -626,7 +626,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				if (!rideDetailsModel.getBookingRefNo().isEmpty()
+				if (rideDetailsModel.getBookingRefNo() != null
+						&& !rideDetailsModel.getBookingRefNo().isEmpty()
 						&& !rideDetailsModel.getBookingRefNo()
 								.equalsIgnoreCase("null")) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -2913,7 +2914,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		}
 
-		if (rideDetailsModel.getBookingRefNo() == null || rideDetailsModel.getBookingRefNo().isEmpty()
+		if (rideDetailsModel.getBookingRefNo() == null
+				|| rideDetailsModel.getBookingRefNo().isEmpty()
 				|| rideDetailsModel.getBookingRefNo().equalsIgnoreCase("null")) {
 			LinearLayout linearLayout = (LinearLayout) dialog
 					.findViewById(R.id.cabbookingll);
@@ -5032,6 +5034,21 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			// saveCalculatedFare = result;
 
 			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+
+			final JSONObject jsonObject = new JSONObject(result);
+			if (jsonObject.get("status").toString().equalsIgnoreCase("fail")) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						try {
+							Toast.makeText(MemberRideFragmentActivity.this,
+									jsonObject.get("message").toString(),
+									Toast.LENGTH_LONG).show();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
 		}
 	}
 

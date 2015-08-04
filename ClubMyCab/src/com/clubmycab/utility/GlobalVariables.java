@@ -28,6 +28,8 @@ public class GlobalVariables {
 	public static final String GoogleAnalyticsTrackerId = "UA-63477985-1";
 
 	public static final String GoogleMapsAPIKey = "AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0";
+	
+	public static final String GCMProjectKey = "145246375713";
 
 	public static String UnreadNotificationCount = "0";
 

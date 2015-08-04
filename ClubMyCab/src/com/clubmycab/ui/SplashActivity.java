@@ -292,7 +292,7 @@ public class SplashActivity extends Activity {
 
 				GoogleCloudMessaging gcm = null;
 				String regid = null;
-				String PROJECT_NUMBER = "145246375713";
+				String PROJECT_NUMBER = GlobalVariables.GCMProjectKey;
 
 				try {
 					if (gcm == null) {
@@ -345,7 +345,7 @@ public class SplashActivity extends Activity {
 
 					GoogleCloudMessaging gcm = null;
 					String regid = null;
-					String PROJECT_NUMBER = "145246375713";
+					String PROJECT_NUMBER = GlobalVariables.GCMProjectKey;
 
 					try {
 						if (gcm == null) {

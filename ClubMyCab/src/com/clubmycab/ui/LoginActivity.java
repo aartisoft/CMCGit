@@ -378,7 +378,7 @@ public class LoginActivity extends Activity {
 		public void connection() throws Exception {
 
 			GoogleCloudMessaging gcm = null;
-			String PROJECT_NUMBER = "145246375713";
+			String PROJECT_NUMBER = GlobalVariables.GCMProjectKey;
 
 			try {
 				if (gcm == null) {

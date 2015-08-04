@@ -43,7 +43,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	String gotopoolresp;
 
 	public GCMIntentService() {
-		super("145246375713");
+		super(GlobalVariables.GCMProjectKey);
 	}
 
 	/**

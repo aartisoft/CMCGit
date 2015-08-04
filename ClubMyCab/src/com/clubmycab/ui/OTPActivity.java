@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -33,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.affle.affleinapptracker.AffleInAppTracker;
 import com.clubmycab.PhoneListener;
 import com.clubmycab.R;
 import com.clubmycab.SmsReciever;
@@ -353,6 +355,11 @@ public class OTPActivity extends Activity {
 			}
 
 			if (verifyotpresp.equalsIgnoreCase("SUCCESS")) {
+				
+				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+				extraParams.put("FullName", fullName);
+				extraParams.put("MobileNumber",mobNum);
+				AffleInAppTracker.inAppTrackerViewName(OTPActivity.this, "OTPActivity", "OTP verified", "User Registered", extraParams);
 
 				SharedPreferences sharedPreferences = getSharedPreferences(
 						"FacebookData", 0);

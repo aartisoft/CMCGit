@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
@@ -90,6 +91,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.affle.affleinapptracker.AffleInAppTracker;
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
 import com.clubmycab.maps.MapUtilityMethods;
@@ -2231,6 +2233,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			// //////////////////////////
 			if (rideDetailsModel.getCabStatus().equals("A")
 					&& rideDetailsModel.getStatus().equals("2")) {
+				
+				//For affle traking view
+				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+				extraParams.put("cabid", rideDetailsModel.getCabId());
+				AffleInAppTracker.inAppTrackerViewName(MemberRideFragmentActivity.this, "MemberRideFragmentActivity", "Trip completed", "Trip completed", extraParams);
+
 				showRideCompleteDialog();
 			} else if (rideDetailsModel.getCabStatus().equals("A")
 					&& rideDetailsModel.getStatus().equals("3")) {
@@ -4875,6 +4883,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			
+			//For affle traking view
+			Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+			extraParams.put("cabid", rideDetailsModel.getCabId());
+			AffleInAppTracker.inAppTrackerViewName(MemberRideFragmentActivity.this, "MemberRideFragmentActivity", "Trip completed", "Trip completed", extraParams);
+
 		}
 
 	}

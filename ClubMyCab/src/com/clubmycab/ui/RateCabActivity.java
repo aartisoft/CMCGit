@@ -274,9 +274,13 @@ public class RateCabActivity extends Activity {
 				Toast.makeText(RateCabActivity.this, "Thank you for the feedback!",
 						Toast.LENGTH_SHORT).show();
 
+				if(notificationIDIntent.equalsIgnoreCase("")){
+					
+				}else{
 				Intent intent = new Intent();
 				intent.putExtra("notificationID", notificationIDIntent);
 				setResult(Activity.RESULT_OK, intent);
+				}
 
 				finish();
 			}

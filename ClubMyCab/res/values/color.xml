@@ -8,6 +8,11 @@
     <color name="light_gray">#EDEDED</color>
     <color name="black">#000</color>
     <color name="dark_gray">#D9DBDE</color>
-    
+       <color name="white">#ffffff</color>
+    <color name="orange">#D26728</color>
+    <color name="bg_darkgray">#454545</color>
+    <color name="bg_lightgray">#f8f9f9</color>
+    <color name="bg_midgray">#787777</color>
+    <color name="bg_boundry_color">#C8C8C8</color>
     
 </resources>

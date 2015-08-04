@@ -36,7 +36,7 @@ public class UniversalDrawer {
 	TextView wallets;
 	TextView mypreferences;
 	// TextView about;
-	private TextView faq;
+	private TextView faq,tvaskforquery;
 
 	LinearLayout myclubslayout;
 	LinearLayout myrideslayout;
@@ -44,6 +44,7 @@ public class UniversalDrawer {
 	LinearLayout mywalletslayout;
 	LinearLayout settingslayout;
 	LinearLayout shareapplayout;
+	private LinearLayout llaskforquery;
 	// LinearLayout aboutlayout;
 	LinearLayout faqlayout;
 
@@ -90,6 +91,8 @@ public class UniversalDrawer {
 		// .findViewById(R.id.aboutlayout);
 		faqlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.faqlayout);
+		llaskforquery=(LinearLayout)((Activity) context)
+				.findViewById(R.id.llaskforquery);
 		sharelocationlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.sharelocationlayout);
 
@@ -128,6 +131,9 @@ public class UniversalDrawer {
 
 		faq = (TextView) ((Activity) context).findViewById(R.id.faq);
 		faq.setTypeface(Typeface.createFromAsset(context.getAssets(),
+				"NeutraText-Light.ttf"));
+		tvaskforquery = (TextView) ((Activity) context).findViewById(R.id.tvaskforquery);
+		tvaskforquery.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
 
 		myprofilelayout.setOnClickListener(new View.OnClickListener() {
@@ -337,6 +343,27 @@ public class UniversalDrawer {
 							.setLabel("Faq Click").build());
 
 					Intent mainIntent = new Intent(context, FAQActivity.class);
+					context.startActivity(mainIntent);
+					((Activity) context).overridePendingTransition(
+							R.anim.slide_in_right, R.anim.slide_out_left);
+					GlobalVariables.ActivityName = "FAQActivity";
+				}
+			}
+		});
+		llaskforquery.setOnClickListener(new View.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(View arg0) {
+
+				mNav.toggleDrawer();
+
+				if (!GlobalVariables.ActivityName.equals("ReportAProblemActivity")) {
+
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("ReportAProblem Click").setAction("ReportAProblem Click")
+							.setLabel("ReportAProblem Click").build());
+
+					Intent mainIntent = new Intent(context, NeedSupportFragmentActivity.class);
 					context.startActivity(mainIntent);
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);

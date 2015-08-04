@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -103,6 +104,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.affle.affleinapptracker.AffleInAppTracker;
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
@@ -114,6 +116,7 @@ import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
+import com.clubmycab.ui.OTPActivity;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -1974,6 +1977,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			//For affle traking view
+			Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+			extraParams.put("cabid", rideDetailsModel.getCabId());
+			AffleInAppTracker.inAppTrackerViewName(CheckPoolFragmentActivity.this, "CheckPoolFragmentActivity", "Trip completed", "Trip completed", extraParams);
+
 		}
 
 	}
@@ -2599,6 +2607,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					}
 				} else if (rideDetailsModel.getCabStatus().equals("A")
 						&& rideDetailsModel.getStatus().equals("2")) {
+					//For affle traking view
+					Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+					extraParams.put("cabid", rideDetailsModel.getCabId());
+					AffleInAppTracker.inAppTrackerViewName(CheckPoolFragmentActivity.this, "CheckPoolFragmentActivity", "Trip completed", "Trip completed", extraParams);
+
+
 					showRideCompleteDialog();
 				} else if (rideDetailsModel.getCabStatus().equals("A")
 						&& rideDetailsModel.getStatus().equals("3")) {

@@ -379,6 +379,33 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
+         <LinearLayout
+            android:id="@+id/llaskforquery"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp" >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/about_icon" />
+
+            <TextView
+                android:id="@+id/tvaskforquery"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:text="@string/askforquery"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

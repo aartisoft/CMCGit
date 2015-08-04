@@ -72,6 +72,7 @@
     <string name="change">(tap to change)</string>
     <string name="how_many_passenger">How many co-passengers?</string>
     <string name="faq">How To &amp; FAQs</string>
+    <string name="askforquery">Need Support?</string>
     <string name="quesiton1">What is ClubMyCab?</string>
     <string name="quesiton2">What should I do to make my clubs more effective?</string>
     <string name="quesiton3">How can I share a ride?</string>
@@ -87,4 +88,21 @@
     <string name="mobikwik_already_account">You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides</string>
     <string name="str_text_termandcondition">By clicking on submit I agree to the term &amp; conditions mentioned at the link below</string>
     <string name="str_home_pagger_heading">Open ride(s) in your clubs</string>
+    
+    <string name="str_problem">Problem</string>
+        <string name="str_screen">Screen</string>
+                <string name="str_description">Description</string>
+                <string name="str_hint_description">Enter a brief but detailed description of the problem</string>
+        <string name="str_thank">*Thank you for reporting a problem!\nOur team will look into this issue and correct it as soon as possible.</string>
+        <string name="str_hint_where_problem">Enter where the problem happened</string>
+        <string name="btn_submit">Submit</string>
+                <string name="check_box">Call me to explain</string>
+                                <string name="promt">Ask a question</string>
+                
+        
+     <string-array name="needsupport_arrays">
+        <item>Ask a question</item>
+        <item>Report a problem</item>
+      
+    </string-array>
 </resources>

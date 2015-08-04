@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -72,6 +73,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.affle.affleinapptracker.AffleInAppTracker;
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
@@ -263,6 +265,7 @@ public class HomeActivity extends FragmentActivity implements
 			builder.show();
 			return;
 		}
+	
 
 		// ////////////////////
 		GoogleAnalytics analytics = GoogleAnalytics

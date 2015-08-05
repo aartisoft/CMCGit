@@ -358,7 +358,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				String params = "rnum=" + "&nid=" + nid;
 				String endpoint = GlobalVariables.ServiceUrl
 						+ "/UpdateNotificationStatusToRead.php";
-				Log.d("CheckPoolFragmentActivity",
+				Log.d("MemberRideFragment",
 						"UpdateNotificationStatusToRead endpoint : " + endpoint
 								+ " params : " + params);
 				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);

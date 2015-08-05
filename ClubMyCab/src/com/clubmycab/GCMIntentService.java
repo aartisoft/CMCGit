@@ -864,8 +864,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			}
 
 			if (gotopoolresp.equalsIgnoreCase("This Ride no longer exist")) {
-				Toast.makeText(mcontext, "This ride no longer exists!",
-						Toast.LENGTH_LONG).show();
+				
 			} else {
 
 				try {

@@ -366,6 +366,24 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		// statusTrip = intent.getStringExtra("status");
 
 		comefrom = intent.getStringExtra("comefrom");
+		
+		
+		if (comefrom != null) {
+
+			if (comefrom.equalsIgnoreCase("GCM")) {
+
+				String nid = intent.getStringExtra("nid");
+				String params = "rnum=" + "&nid=" + nid;
+				String endpoint = GlobalVariables.ServiceUrl
+						+ "/UpdateNotificationStatusToRead.php";
+				Log.d("CheckPoolFragmentActivity",
+						"UpdateNotificationStatusToRead endpoint : " + endpoint
+								+ " params : " + params);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+
+			}
+
+		}
 
 	
 		Log.d("comefrom", "" + comefrom);

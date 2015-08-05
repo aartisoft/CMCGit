@@ -116,7 +116,6 @@ import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
-import com.clubmycab.ui.OTPActivity;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -368,6 +367,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		comefrom = intent.getStringExtra("comefrom");
 
+	
 		Log.d("comefrom", "" + comefrom);
 
 		Log.d("CabStatus", "" + rideDetailsModel.getCabStatus());
@@ -1977,10 +1977,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			//For affle traking view
+			// For affle traking view
 			Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
 			extraParams.put("cabid", rideDetailsModel.getCabId());
-			AffleInAppTracker.inAppTrackerViewName(CheckPoolFragmentActivity.this, "CheckPoolFragmentActivity", "Trip completed", "Trip completed", extraParams);
+			AffleInAppTracker.inAppTrackerViewName(
+					CheckPoolFragmentActivity.this,
+					"CheckPoolFragmentActivity", "Trip completed",
+					"Trip completed", extraParams);
 
 		}
 
@@ -2607,11 +2610,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					}
 				} else if (rideDetailsModel.getCabStatus().equals("A")
 						&& rideDetailsModel.getStatus().equals("2")) {
-					//For affle traking view
+					// For affle traking view
 					Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
 					extraParams.put("cabid", rideDetailsModel.getCabId());
-					AffleInAppTracker.inAppTrackerViewName(CheckPoolFragmentActivity.this, "CheckPoolFragmentActivity", "Trip completed", "Trip completed", extraParams);
-
+					AffleInAppTracker.inAppTrackerViewName(
+							CheckPoolFragmentActivity.this,
+							"CheckPoolFragmentActivity", "Trip completed",
+							"Trip completed", extraParams);
 
 					showRideCompleteDialog();
 				} else if (rideDetailsModel.getCabStatus().equals("A")

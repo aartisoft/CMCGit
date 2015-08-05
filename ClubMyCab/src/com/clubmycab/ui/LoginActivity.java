@@ -22,7 +22,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -38,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.R;
-import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;

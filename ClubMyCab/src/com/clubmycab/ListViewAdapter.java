@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-
-import com.clubmycab.utility.Log;
-import com.clubmycab.utility.StringTags;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +12,8 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 
 public class ListViewAdapter extends BaseAdapter {
 

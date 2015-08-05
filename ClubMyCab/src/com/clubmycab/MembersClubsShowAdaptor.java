@@ -23,10 +23,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-
-import com.clubmycab.utility.Log;
-import com.clubmycab.utility.StringTags;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +35,8 @@ import android.widget.Toast;
 
 import com.clubmycab.ui.MyClubsActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;

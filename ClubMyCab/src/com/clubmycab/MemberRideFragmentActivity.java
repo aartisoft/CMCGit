@@ -94,6 +94,8 @@ import android.widget.Toast;
 import com.affle.affleinapptracker.AffleInAppTracker;
 import com.androidquery.AQuery;
 import com.clubmycab.FareCalculator.FareCalculatorInterface;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.RideDetailsModel;
@@ -124,7 +126,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 public class MemberRideFragmentActivity extends FragmentActivity implements
-		FareCalculatorInterface, LocationListener {
+		FareCalculatorInterface, LocationListener,AsyncTaskResultListener {
 
 	RideDetailsModel rideDetailsModel;
 
@@ -346,6 +348,25 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		// statusTrip = intent.getStringExtra("status");
 
 		comefrom = intent.getStringExtra("comefrom");
+		
+		
+		if (comefrom != null) {
+
+			if (comefrom.equalsIgnoreCase("GCM")) {
+
+				String nid = intent.getStringExtra("nid");
+				String params = "rnum=" + "&nid=" + nid;
+				String endpoint = GlobalVariables.ServiceUrl
+						+ "/UpdateNotificationStatusToRead.php";
+				Log.d("CheckPoolFragmentActivity",
+						"UpdateNotificationStatusToRead endpoint : " + endpoint
+								+ " params : " + params);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+
+			}
+
+		}
+
 
 		Log.d("comefrom", "" + comefrom);
 
@@ -5881,5 +5902,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				dialog.dismiss();
 			}
 		}
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		// TODO Auto-generated method stub
+		
 	}
 }

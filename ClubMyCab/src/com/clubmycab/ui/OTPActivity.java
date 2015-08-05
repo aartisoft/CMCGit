@@ -237,6 +237,12 @@ public class OTPActivity extends Activity {
 				editor.putString("verifyotp", "true");
 				// editor.commit();
 
+				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+				extraParams.put("FullName", fullName);
+				extraParams.put("MobileNumber",mobNum);
+				AffleInAppTracker.inAppTrackerViewName(OTPActivity.this, "OTPActivity", "OTP verified", "User Registered", extraParams);
+
+				
 				editor.putString("FullName", fullName);
 				editor.putString("MobileNumber", mobNum);
 				editor.commit();
@@ -356,11 +362,7 @@ public class OTPActivity extends Activity {
 
 			if (verifyotpresp.equalsIgnoreCase("SUCCESS")) {
 				
-				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
-				extraParams.put("FullName", fullName);
-				extraParams.put("MobileNumber",mobNum);
-				AffleInAppTracker.inAppTrackerViewName(OTPActivity.this, "OTPActivity", "OTP verified", "User Registered", extraParams);
-
+				
 				SharedPreferences sharedPreferences = getSharedPreferences(
 						"FacebookData", 0);
 				SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -71,6 +71,8 @@ import com.clubmycab.ContactsListClass;
 import com.clubmycab.MembersClubsShowAdaptor;
 import com.clubmycab.MyClubsShowAdaptor;
 import com.clubmycab.R;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -78,7 +80,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyClubsActivity extends Activity {
+public class MyClubsActivity extends Activity implements AsyncTaskResultListener{
 
 	ListView lv, lvmyclub, listMembersclubs;
 	Button newclub;
@@ -401,6 +403,25 @@ public class MyClubsActivity extends Activity {
 		// R.anim.slide_out_left);
 		// }
 		// });
+		
+		
+		
+		if (comefrom != null) {
+
+			if (comefrom.equalsIgnoreCase("GCM")) {
+
+				String nid = intent.getStringExtra("nid");
+				String params = "rnum=" + "&nid=" + nid;
+				String endpoint = GlobalVariables.ServiceUrl
+						+ "/UpdateNotificationStatusToRead.php";
+				Log.d("MyClubMyActivity",
+						"UpdateNotificationStatusToRead endpoint : " + endpoint
+								+ " params : " + params);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+
+			}
+
+		}
 
 		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
@@ -2763,5 +2784,11 @@ public class MyClubsActivity extends Activity {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		// TODO Auto-generated method stub
+		
 	}
 }

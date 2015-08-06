@@ -53,6 +53,8 @@ import com.clubmycab.PagingListView;
 import com.clubmycab.R;
 import com.clubmycab.SafeAsyncTask;
 import com.clubmycab.ShowHistoryRidesAdaptor;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -62,7 +64,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyRidesActivity extends Activity {
+public class MyRidesActivity extends Activity implements
+		AsyncTaskResultListener {
 
 	String FullName;
 	String MobileNumberstr;
@@ -310,6 +313,17 @@ public class MyRidesActivity extends Activity {
 				}
 			}
 		} else {
+
+			// Mark notificaiton read call
+			String nid = getIntent().getStringExtra("nid");
+			String params = "rnum=" + "&nid=" + nid;
+			String endpoint = GlobalVariables.ServiceUrl
+					+ "/UpdateNotificationStatusToRead.php";
+			Log.d("MyRidesActivity",
+					"UpdateNotificationStatusToRead endpoint : " + endpoint
+							+ " params : " + params);
+			new GlobalAsyncTask(this, endpoint, params, null, this, false,
+					"UpdateNotificationStatusToRead", false);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchPool()
@@ -1407,5 +1421,10 @@ public class MyRidesActivity extends Activity {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+
 	}
 }

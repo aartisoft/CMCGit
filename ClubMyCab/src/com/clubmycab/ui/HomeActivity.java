@@ -2970,6 +2970,7 @@ public class HomeActivity extends FragmentActivity implements
 				exceptioncheck = true;
 				e.printStackTrace();
 			}
+			
 			return null;
 		}
 

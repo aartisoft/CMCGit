@@ -12,6 +12,10 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
 
 import com.clubmycab.R;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -19,7 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class LocationInMapFragmentActivity extends FragmentActivity {
+public class LocationInMapFragmentActivity extends FragmentActivity implements AsyncTaskResultListener{
 
 	String address;
 	String latlongmap;
@@ -60,6 +64,26 @@ public class LocationInMapFragmentActivity extends FragmentActivity {
 		Bundle extras = getIntent().getExtras();
 		address = extras.getString("address");
 		latlongmap = extras.getString("latlongmap");
+		
+		
+		
+
+			//if (comefrom.equalsIgnoreCase("GCM")) {
+//This api Call for mark notification read
+				String nid = extras.getString("nid");
+				String params = "rnum=" + "&nid=" + nid;
+				String endpoint = GlobalVariables.ServiceUrl
+						+ "/UpdateNotificationStatusToRead.php";
+				Log.d("LocationInMapFragment",
+						"UpdateNotificationStatusToRead endpoint : " + endpoint
+								+ " params : " + params);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+
+		//	}
+
+		
+
+		
 
 		sharelocationtext = (TextView) findViewById(R.id.sharelocationtext);
 		sharelocationtext.setTypeface(Typeface.createFromAsset(getAssets(),
@@ -94,5 +118,11 @@ public class LocationInMapFragmentActivity extends FragmentActivity {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		// TODO Auto-generated method stub
+		
 	}
 }

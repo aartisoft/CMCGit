@@ -33,10 +33,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.clubmycab.R;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 
-public class RateCabActivity extends Activity {
+public class RateCabActivity extends Activity implements AsyncTaskResultListener{
 
 	private JSONArray cabsJSONArray;
 	private JSONObject selectedJsonObject;
@@ -74,6 +76,28 @@ public class RateCabActivity extends Activity {
 		cabIDIntent = getIntent().getStringExtra("cabIDIntent");
 		notificationIDIntent = getIntent().getStringExtra(
 				"notificationIDString");
+		
+		
+String comefrom = getIntent().getStringExtra("comefrom");
+		
+		
+		if (comefrom != null) {
+
+			if (comefrom.equalsIgnoreCase("GCM")) {
+
+				String params = "rnum=" + "&nid=" + notificationIDIntent;
+				String endpoint = GlobalVariables.ServiceUrl
+						+ "/UpdateNotificationStatusToRead.php";
+				Log.d("RateCabActivity",
+						"UpdateNotificationStatusToRead endpoint : " + endpoint
+								+ " params : " + params);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+
+			}
+
+		}
+		
+		
 
 		hashMap = new HashMap<String, JSONObject>();
 
@@ -345,6 +369,12 @@ public class RateCabActivity extends Activity {
 
 			Log.d("cabratingresp", "" + stringBuilder.toString());
 		}
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

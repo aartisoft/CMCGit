@@ -227,7 +227,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 			}
 			if (status.equalsIgnoreCase("success")) {
 				Toast.makeText(NeedSupportFragmentActivity.this,
-						"Your request sent successfully", Toast.LENGTH_LONG)
+						"We have received your request, and we will get back to you soon ", Toast.LENGTH_LONG)
 						.show();
 				Intent mainIntent = new Intent(NeedSupportFragmentActivity.this,
 						HomeActivity.class);
@@ -261,31 +261,31 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 			String MobileNumber = mPrefs.getString("MobileNumber", "");
 			String FullName = mPrefs.getString("FullName", "");
 
-			String Email = mPrefs.getString("Email", "");
+		//	String Email = mPrefs.getString("Email", "");
 
 			HttpClient httpClient = new DefaultHttpClient();
 			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/rideInvitations.php";
+					+ "/customerQuery.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 
 			BasicNameValuePair DescriptionBasicNameValuePair = new BasicNameValuePair(
-					"description", etDescription.getText().toString());
+					"desciption", etDescription.getText().toString());
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumber);
-			BasicNameValuePair EmailBasicNameValuePair = new BasicNameValuePair(
-					"email", Email);
+					"mobileNumber", MobileNumber);
+//			BasicNameValuePair EmailBasicNameValuePair = new BasicNameValuePair(
+//					"email", Email);
 			BasicNameValuePair FullNameBasicNameValuePair = new BasicNameValuePair(
-					"fullname", FullName);
+					"name", FullName);
 			BasicNameValuePair TypeBasicNameValuePair = new BasicNameValuePair(
 					"type", spinnerStr);
 
 			BasicNameValuePair CallBasicNameValuePair = new BasicNameValuePair(
-					"call me to explain", cbSelected);
+					"callback", cbSelected);
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 
 			nameValuePairList.add(DescriptionBasicNameValuePair);
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			nameValuePairList.add(EmailBasicNameValuePair);
+			//nameValuePairList.add(EmailBasicNameValuePair);
 			nameValuePairList.add(FullNameBasicNameValuePair);
 			nameValuePairList.add(TypeBasicNameValuePair);
 			nameValuePairList.add(CallBasicNameValuePair);
@@ -312,7 +312,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 				response = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			Log.d("poolresponse", "" + stringBuilder.toString());
+			Log.d("customerQuery", "" + stringBuilder.toString());
 		}
 	}
 

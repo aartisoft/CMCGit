@@ -260,6 +260,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 
 			BasicNameValuePair poolidBasicNameValuePair = new BasicNameValuePair(
 					"poolid", poolid);
+			
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(poolidBasicNameValuePair);
@@ -269,7 +270,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.d("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse+"Pool Id:: "+poolid);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(

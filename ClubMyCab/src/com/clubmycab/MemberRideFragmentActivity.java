@@ -124,6 +124,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.google.maps.android.PolyUtil;
 
 public class MemberRideFragmentActivity extends FragmentActivity implements
 		FareCalculatorInterface, LocationListener,AsyncTaskResultListener {
@@ -3154,6 +3155,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void v) {
+			
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
@@ -3215,6 +3217,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 						PolylineOptions rectLine = new PolylineOptions().width(
 								5).color(color);
+						//
+										
 						rectLine.addAll(listGeopoints);
 						rectlinesarr.add(rectLine);
 
@@ -3223,6 +3227,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				double lat = memberlocationlatlong.latitude;
+				double longi = memberlocationlatlong.longitude;
+                LatLng ll=new LatLng(lat, longi);
+										
+                boolean isOnPath=PolyUtil.isLocationOnPath(ll, listGeopoints, false,5000.0);
+Log.d("isLocationonpath", ""+isOnPath);
+				
 			}
 
 			LatLngBounds.Builder bc = null;

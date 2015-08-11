@@ -166,10 +166,11 @@
                     android:src="@drawable/myrides_icon" />
 
                 <TextView
+                    android:id="@+id/tvJoinRide"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Join Ride"
+                    android:text="Select Ride Pick Location"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
             </LinearLayout>

@@ -84,13 +84,11 @@
             <EditText
                 android:id="@+id/etDescription"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="150dp"
                 android:background="@drawable/round_button_white_grey_boundry"
                 android:ellipsize="none"
                 android:gravity="top|left"
-                android:hint="@string/str_hint_description"
                 android:inputType="textCapSentences|textMultiLine"
-                android:maxLines="10"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="3dp"
@@ -111,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/check_box"
-                 
+                 android:visibility="gone"
                     android:textColor="#000" />
             </RelativeLayout>
 

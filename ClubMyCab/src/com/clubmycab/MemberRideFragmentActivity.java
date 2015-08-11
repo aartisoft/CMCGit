@@ -100,6 +100,7 @@ import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
+import com.clubmycab.ui.FavoriteLocationsAcivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.UpdatePickupLocationFragmentActivity;
 import com.clubmycab.utility.GlobalVariables;
@@ -122,12 +123,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.maps.android.PolyUtil;
 
 public class MemberRideFragmentActivity extends FragmentActivity implements
-		FareCalculatorInterface, LocationListener,AsyncTaskResultListener {
+		FareCalculatorInterface, LocationListener, AsyncTaskResultListener {
 
 	RideDetailsModel rideDetailsModel;
 
@@ -166,6 +169,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	ArrayList<String> endaddress = new ArrayList<String>();
 	ArrayList<LatLng> startaddlatlng = new ArrayList<LatLng>();
 	ArrayList<LatLng> endaddlatlng = new ArrayList<LatLng>();
+	ArrayList<Integer> durationList = new ArrayList<Integer>();
+	ArrayList<Integer> distanceList = new ArrayList<Integer>();
+
+	
 	ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
 	ArrayList<LatLng> via_waypoint = new ArrayList<LatLng>();
 	ArrayList<String> via_waypointstrarr = new ArrayList<String>();
@@ -175,8 +182,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	// boolean markerClicked;
 	// Marker memberlocationmarker;
 
-	String memberlocationaddress;
-	LatLng memberlocationlatlong;
+	String memberlocationaddressFrom=null, memberlocationaddressTo=null;
+	LatLng memberlocationlatlong = null, memberlocationlatlongTo = null;
+	boolean isPick = false;
 
 	String FullName;
 	String MemberNumberstr;
@@ -191,7 +199,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	ArrayList<String> ShowMemberName = new ArrayList<String>();
 	ArrayList<String> ShowMemberNumber = new ArrayList<String>();
 	ArrayList<String> ShowMemberLocationAddress = new ArrayList<String>();
+	ArrayList<String> ShowMemberLocationAddressEnd = new ArrayList<String>();
+	ArrayList<String> ShowMemberLocationLatLongEnd = new ArrayList<String>();
+
 	ArrayList<String> ShowMemberLocationLatLong = new ArrayList<String>();
+
 	ArrayList<String> ShowMemberImageName = new ArrayList<String>();
 	ArrayList<String> ShowMemberStatus = new ArrayList<String>();
 
@@ -219,7 +231,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	String usermemname = null;
 	String usermemnumber = null;
 	String usermemlocadd = null;
+	String usermemlocaddEnd = null;
+	String usermemloclatlongEnd = null;
+
 	String usermemloclatlong = null;
+
 	String usermemimagename = null;
 	String usermemst = null;
 
@@ -230,7 +246,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 	ImageView refreshlocationbtn;
 
-	Marker mylocationmarker;
+	Marker mylocationmarkerFrom,mylocationmarkerTo;
 
 	ArrayList<String> namearray = new ArrayList<String>();
 	ArrayList<String> phonenoarray = new ArrayList<String>();
@@ -275,6 +291,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	String amountToPay;
 	String payToPerson;
 	String totalFare;
+	private double maxDistace = 5000.0;
+	private TextView tvJoinRide;
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -349,8 +367,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		// statusTrip = intent.getStringExtra("status");
 
 		comefrom = intent.getStringExtra("comefrom");
-		
-		
+
 		if (comefrom != null) {
 
 			if (comefrom.equalsIgnoreCase("GCM")) {
@@ -362,12 +379,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				Log.d("MemberRideFragment",
 						"UpdateNotificationStatusToRead endpoint : " + endpoint
 								+ " params : " + params);
-				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false,
+						"UpdateNotificationStatusToRead", false);
 
 			}
 
 		}
-
 
 		Log.d("comefrom", "" + comefrom);
 
@@ -376,6 +393,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		beforejoinpoolll = (LinearLayout) findViewById(R.id.beforejoinpoolll);
 		afterjoinpoolll = (LinearLayout) findViewById(R.id.afterjoinpoolll);
+		tvJoinRide = (TextView) findViewById(R.id.tvJoinRide);
+		tvJoinRide.setText("Select Ride Pick Location");
 
 		// / before
 		mydetailbtn = (ImageView) findViewById(R.id.mydetailbtn);
@@ -397,7 +416,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		chatlayoutmainrl = (RelativeLayout) findViewById(R.id.chatlayoutmainrl);
 		chatlayoutmainrl.setVisibility(View.GONE);
 
-		memberlocationaddress = "";
+		memberlocationaddressFrom = "";
+		memberlocationaddressTo = "";
 
 		locationmarker = (ImageView) findViewById(R.id.locationmarker);
 		locationmarker.setVisibility(View.GONE);
@@ -480,44 +500,160 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				if (locationmarker.getVisibility() == View.VISIBLE) {
 
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							MemberRideFragmentActivity.this);
-					builder.setMessage(memberlocationaddress.toUpperCase());
-					builder.setCancelable(false);
-					builder.setPositiveButton("Confirm",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
+					if (!isPick) {
 
-									onedialog = new ProgressDialog(
-											MemberRideFragmentActivity.this);
-									onedialog.setMessage("Please Wait...");
-									onedialog.setCancelable(false);
-									onedialog.setCanceledOnTouchOutside(false);
-									onedialog.show();
+						if (memberlocationaddressFrom.equalsIgnoreCase("")) {
 
-									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-										new ConnectionTaskForJoiningapool()
-												.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-									} else {
-										new ConnectionTaskForJoiningapool()
-												.execute();
-									}
+							Toast.makeText(MemberRideFragmentActivity.this,
+									"Please select pick location",
+									Toast.LENGTH_LONG).show();
+							return;
 
-								}
-							});
-					builder.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
+						} else {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									MemberRideFragmentActivity.this);
+							builder.setMessage(memberlocationaddressFrom
+									.toUpperCase());
+							builder.setCancelable(false);
+							builder.setPositiveButton("Confirm",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+
+											isPick = true;
+
+											mylocationmarkerFrom = joinpoolmap
+													.addMarker(new MarkerOptions()
+															.position(
+																	memberlocationlatlong)
+															.snippet(
+																	"mylocation")
+															.title(usermemlocadd)
+															.icon(BitmapDescriptorFactory
+																	.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+											
+											
+											tvJoinRide
+													.setText("Select Ride Drop Location");
+											// onedialog = new ProgressDialog(
+											// MemberRideFragmentActivity.this);
+											// onedialog.setMessage("Please Wait...");
+											// onedialog.setCancelable(false);
+											// onedialog.setCanceledOnTouchOutside(false);
+											// onedialog.show();
+
+											// if (Build.VERSION.SDK_INT >=
+											// Build.VERSION_CODES.HONEYCOMB) {
+											// new
+											// ConnectionTaskForJoiningapool()
+											// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+											// } else {
+											// new
+											// ConnectionTaskForJoiningapool()
+											// .execute();
+											// }
+
+										}
+									});
+							builder.setNegativeButton("Cancel",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+							AlertDialog dialog = builder.show();
+							TextView messageText = (TextView) dialog
+									.findViewById(android.R.id.message);
+							messageText.setGravity(Gravity.CENTER);
+							dialog.show();
+
+						}
+					}
+
+					else {
+
+						if (memberlocationaddressTo.equalsIgnoreCase("")) {
+							Toast.makeText(MemberRideFragmentActivity.this,
+									"Please select drop location",
+									Toast.LENGTH_LONG).show();
+
+							return;
+						} else {
+
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									MemberRideFragmentActivity.this);
+							builder.setMessage(memberlocationaddressTo
+									.toUpperCase());
+							builder.setCancelable(false);
+							builder.setPositiveButton("Confirm",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											
+											
+											mylocationmarkerTo = joinpoolmap
+													.addMarker(new MarkerOptions()
+															.position(
+																	memberlocationlatlongTo)
+															.snippet(
+																	"myEndlocation")
+															.title(usermemlocadd)
+															.icon(BitmapDescriptorFactory
+																	.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+
+											Log.d("memberlocationlatlong:::",
+													"" + memberlocationlatlong);
+											Log.d("memberlocationaddress:::",
+													""
+															+ memberlocationaddressFrom);
+											Log.d("memberlocationlatlongTo:::",
+													""
+															+ memberlocationlatlongTo);
+											Log.d("memberlocationaddressTo:::",
+													""
+															+ memberlocationaddressTo);
+
+											// isPick=true;
+											locationmarker
+													.setVisibility(View.GONE);
+											onedialog = new ProgressDialog(
+													MemberRideFragmentActivity.this);
+											onedialog
+													.setMessage("Please Wait...");
+											onedialog.setCancelable(false);
+											onedialog
+													.setCanceledOnTouchOutside(false);
+											onedialog.show();
+
+											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+												new ConnectionTaskForJoiningapool()
+														.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+											} else {
+												new ConnectionTaskForJoiningapool()
+														.execute();
+											}
+
+										}
+									});
+							builder.setNegativeButton("Cancel",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+							AlertDialog dialog = builder.show();
+							TextView messageText = (TextView) dialog
+									.findViewById(android.R.id.message);
+							messageText.setGravity(Gravity.CENTER);
+							dialog.show();
+						}
+
+					}
+
 				} else {
 
 					// Location location = joinpoolmap.getMyLocation();
@@ -610,8 +746,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
 						UpdatePickupLocationFragmentActivity.class);
+		
 				mainIntent.putExtra("CabId", rideDetailsModel.getCabId());
+				mainIntent.putExtra("CabStatus", rideDetailsModel.getCabStatus());
 				mainIntent.putExtra("MobileNumber",
+						
 						rideDetailsModel.getMobileNumber());
 				mainIntent.putExtra("OwnerName",
 						rideDetailsModel.getOwnerName());
@@ -1598,6 +1737,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					beforejoinpoolll.setVisibility(View.GONE);
 					afterjoinpoolll.setVisibility(View.GONE);
 				}
+
 			} else {
 
 				if (rideDetailsModel.getCabStatus().toString().trim()
@@ -1670,6 +1810,418 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	}
 
 	// ///////
+
+	private class ConnectionTaskForSingleRoot extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionSingleRoot mAuth1 = new AuthenticateConnectionSingleRoot();
+			try {
+				mAuth1.wayPointUrl = args[0];
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+			
+			if (onedialog.isShowing()) {
+				onedialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			// int index = 0;
+			rectlinesarr.clear();
+			
+			Random rnd = new Random();
+		int color = Color.argb(255, rnd.nextInt(256),
+					rnd.nextInt(256), rnd.nextInt(256));
+			for (int i = 0; i < steps.size(); i++) {
+
+				ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
+
+				JSONArray subArray123;
+				try {
+					subArray123 = new JSONArray(steps.get(i));
+					for (int i111 = 0; i111 < subArray123.length(); i111++) {
+						String locationstr = subArray123.getJSONObject(i111)
+								.getString("start_location").toString();
+
+						JSONObject jsonObject11 = new JSONObject(locationstr);
+						double lat1 = Double.parseDouble(jsonObject11
+								.getString("lat"));
+						double lng1 = Double.parseDouble(jsonObject11
+								.getString("lng"));
+
+						listGeopoints.add(new LatLng(lat1, lng1));
+
+						// /
+						String locationstr1 = subArray123.getJSONObject(i111)
+								.getString("polyline").toString();
+
+						JSONObject jsonObject111 = new JSONObject(locationstr1);
+						String points = jsonObject111.getString("points");
+						ArrayList<LatLng> arr = decodePoly(points);
+						for (int j = 0; j < arr.size(); j++) {
+							listGeopoints.add(new LatLng(arr.get(j).latitude,
+									arr.get(j).longitude));
+						}
+						// /
+						String locationstr11 = subArray123.getJSONObject(i111)
+								.getString("end_location").toString();
+
+						JSONObject jsonObject1111 = new JSONObject(
+								locationstr11);
+						double lat11 = Double.parseDouble(jsonObject1111
+								.getString("lat"));
+						double lng11 = Double.parseDouble(jsonObject1111
+								.getString("lng"));
+
+						listGeopoints.add(new LatLng(lat11, lng11));
+
+//						Random rnd = new Random();
+//						int color = Color.argb(255, rnd.nextInt(256),
+//								rnd.nextInt(256), rnd.nextInt(256));
+
+						PolylineOptions rectLine = new PolylineOptions().width(
+								5).color(color);
+						rectLine.addAll(listGeopoints);
+						rectlinesarr.add(rectLine);
+
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			joinpoolmap = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.joinpoolmap)).getMap();
+
+			joinpoolmap.setMyLocationEnabled(true);
+
+			joinpoolchangelocationtext = (TextView) findViewById(R.id.joinpoolchangelocationtext);
+			joinpoolchangelocationtext.setTypeface(Typeface.createFromAsset(
+					getAssets(), "NeutraText-Bold.ttf"));
+
+			joinpoolmap.setOnMapClickListener(new OnMapClickListener() {
+
+				@Override
+				public void onMapClick(LatLng point) {
+					
+					
+
+					setOnMapClick(point);
+				}
+			});
+
+			
+
+			for(int i=0;i<startaddlatlng.size();i++){
+				
+				Log.d("duration:distance", ""+durationList.get(i)+":"+distanceList.get(i));
+				
+				if(i==0){
+				joinpoolmap.addMarker(new MarkerOptions()
+				.position(startaddlatlng.get(i))
+				.title(startaddress.get(i))
+				.snippet("start")
+				.icon(BitmapDescriptorFactory
+						.fromResource(R.drawable.start)));
+				}
+				else if(i==(startaddlatlng.size()-1)){
+					joinpoolmap
+					.addMarker(new MarkerOptions()
+							.position(endaddlatlng.get(i))
+							.title(endaddress.get(i))
+							.snippet("end")
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.end)));		
+				}
+				else{
+					
+					joinpoolmap
+					.addMarker(new MarkerOptions()
+							.position(startaddlatlng.get(i))
+							.title(startaddress.get(i))
+							.snippet("mylocation")
+						.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+					
+					
+					joinpoolmap
+					.addMarker(new MarkerOptions()
+							.position(endaddlatlng.get(i))
+							.title(endaddress.get(i))
+							.snippet("myEndlocation")
+						.icon(BitmapDescriptorFactory
+							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+					
+
+				
+				}
+
+	
+				
+			}
+			LatLngBounds.Builder bc = null;
+
+			for (int i = 0; i < rectlinesarr.size(); i++) {
+				joinpoolmap.addPolyline(rectlinesarr.get(i));
+
+				List<LatLng> points = rectlinesarr.get(i).getPoints();
+
+				bc = new LatLngBounds.Builder();
+
+				for (LatLng item : points) {
+					bc.include(item);
+				}
+			}
+
+			bc.include(startaddlatlng.get(0));
+			bc.include(endaddlatlng.get(endaddlatlng.size()-1));
+			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+					bc.build(), 50));
+			
+//			if(usermemlocadd!=null){
+//
+//			String[] latlong = usermemloclatlong.split(",");
+//			LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+//					Double.parseDouble(latlong[1]));
+//			mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
+//					.position(lt)
+//					.snippet("mylocation")
+//					.title(usermemlocadd)
+//					.icon(BitmapDescriptorFactory
+//							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+//			
+//
+//			String[] latlong1 = usermemloclatlongEnd.split(",");
+//			LatLng lt1 = new LatLng(Double.parseDouble(latlong1[0]),
+//					Double.parseDouble(latlong1[1]));
+//			mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
+//					.position(lt1)
+//					.snippet("myEndlocation")
+//					.title(usermemlocaddEnd)
+//					.icon(BitmapDescriptorFactory
+//							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+//			}
+
+			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// new ConnectionTaskForShowMembersOnMap()
+			// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			// } else {
+			// new ConnectionTaskForShowMembersOnMap().execute();
+			// }
+			//
+			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// new ConnectionTaskForOwnerLocation().executeOnExecutor(
+			// AsyncTask.THREAD_POOL_EXECUTOR,
+			// rideDetailsModel.getCabId());
+			// } else {
+			// new ConnectionTaskForOwnerLocation().execute(rideDetailsModel
+			// .getCabId());
+			// }
+
+		}
+
+	}
+
+	public class AuthenticateConnectionSingleRoot {
+		private String wayPointUrl;
+
+		public AuthenticateConnectionSingleRoot() {
+
+		}
+
+		public void connection() throws Exception {
+
+			String source = rideDetailsModel.getFromLocation().replaceAll(" ",
+					"%20");
+			String dest = rideDetailsModel.getToLocation().replaceAll(" ",
+					"%20");
+			Address locationAddressFrom = null, locationAddressTo = null;
+
+			String fromAdd = rideDetailsModel.getFromLocation();
+			String toAdd = rideDetailsModel.getToLocation();
+			Geocoder fcoder = new Geocoder(MemberRideFragmentActivity.this);
+			try {
+				ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+						.getFromLocationName(fromAdd, 50);
+
+				for (Address add : adresses) {
+					locationAddressFrom = add;
+				}
+
+				adresses = (ArrayList<Address>) fcoder.getFromLocationName(
+						toAdd, 50);
+				for (Address add : adresses) {
+					locationAddressTo = add;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+
+			String src = locationAddressFrom.getLatitude() + ","
+					+ locationAddressFrom.getLongitude();
+			String des = locationAddressTo.getLatitude() + ","
+					+ locationAddressTo.getLongitude();
+			
+			Log.d("src:", "" +src);
+			Log.d("des", "" + des);
+
+
+			// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
+
+			String url = "https://maps.googleapis.com/maps/api/directions/json?"
+					+ "origin="
+					+ src
+					+ "&destination="
+					+ des
+					+wayPointUrl
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+					+ GlobalVariables.GoogleMapsAPIKey;
+
+			Log.d("url single path", "" + url);
+
+			CompletePageResponse = new Communicator().executeHttpGet(url);
+
+			CompletePageResponse = CompletePageResponse
+					.replaceAll("\\\\/", "/");
+
+			JSONObject jsonObject = new JSONObject(CompletePageResponse);
+
+			String name = jsonObject.getString("routes");
+
+			JSONArray subArray = new JSONArray(name);
+			Summary.clear();
+
+			for (int i = 0; i < subArray.length(); i++) {
+
+				Summary.add(subArray.getJSONObject(i).getString("summary")
+						.toString());
+
+				String name1 = subArray.getJSONObject(i).getString("legs")
+						.toString();
+
+				JSONArray subArray1 = new JSONArray(name1);
+
+				for (int i1 = 0; i1 < subArray1.length(); i1++) {
+
+					// int i1 = 0;
+					startaddress.add(subArray1.getJSONObject(i1)
+							.getString("start_address").toString());
+					endaddress.add(subArray1.getJSONObject(i1)
+							.getString("end_address").toString());
+
+					String startadd = subArray1.getJSONObject(i1)
+							.getString("start_location").toString();
+
+					JSONObject jsonObject1 = new JSONObject(startadd);
+					double lat = Double.parseDouble(jsonObject1
+							.getString("lat"));
+					double lng = Double.parseDouble(jsonObject1
+							.getString("lng"));
+
+					startaddlatlng.add(new LatLng(lat, lng));
+
+					//
+					String endadd = subArray1.getJSONObject(i1)
+							.getString("end_location").toString();
+
+					JSONObject jsonObject41 = new JSONObject(endadd);
+					double lat4 = Double.parseDouble(jsonObject41
+							.getString("lat"));
+					double lng4 = Double.parseDouble(jsonObject41
+							.getString("lng"));
+
+					endaddlatlng.add(new LatLng(lat4, lng4));
+					
+					//Code fro get distance and duration
+					
+					String duration = subArray1.getJSONObject(i1)
+							.getString("duration").toString();	
+					JSONObject jsonObjectDuraton = new JSONObject(duration);
+					
+					durationList.add(jsonObjectDuraton.getInt("value"));
+
+					
+					String distance = subArray1.getJSONObject(i1)
+							.getString("distance").toString();
+					JSONObject jsonObjectDistance = new JSONObject(distance);
+
+distanceList.add(jsonObjectDistance.getInt("value"));
+					// ////////////
+
+					steps.add(subArray1.getJSONObject(i1).getString("steps")
+							.toString());
+
+					// //////////////
+					String mska = subArray1.getJSONObject(i1)
+							.getString("via_waypoint").toString();
+
+					if (mska.equalsIgnoreCase("[]")) {
+						via_waypoint.add(new LatLng(0, 0));
+					} else {
+						JSONArray subArray12 = new JSONArray(mska);
+
+						for (int i11 = 0; i11 < subArray12.length(); i11++) {
+
+							String locationstr = subArray12.getJSONObject(i11)
+									.getString("location").toString();
+
+							JSONObject jsonObject1111 = new JSONObject(
+									locationstr);
+							double lat1111 = Double.parseDouble(jsonObject1111
+									.getString("lat"));
+							double lng1111 = Double.parseDouble(jsonObject1111
+									.getString("lng"));
+
+							via_waypoint.add(new LatLng(lat1111, lng1111));
+
+						}
+					}
+				}
+			}
+
+			// /////
+			Log.d("Summary", "" + Summary);
+			Log.d("startaddress", "" + startaddress);
+			Log.d("endaddress", "" + endaddress);
+			Log.d("startaddlatlng", "" + startaddlatlng);
+			Log.d("endaddlatlng", "" + endaddlatlng);
+			Log.d("via_waypoint", "" + via_waypoint);
+
+			for (int i = 0; i < via_waypoint.size(); i++) {
+				String asd = MapUtilityMethods.getAddress(
+						MemberRideFragmentActivity.this,
+						via_waypoint.get(i).latitude,
+						via_waypoint.get(i).longitude);
+				via_waypointstrarr.add(asd);
+			}
+			Log.d("via_waypointstrarr", "" + via_waypointstrarr);
+		}
+	}
 
 	private class ConnectionTaskForDirections extends
 			AsyncTask<String, Void, Void> {
@@ -1758,7 +2310,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -1781,37 +2332,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				}
 			});
 
-			LatLngBounds.Builder bc = null;
-
-			for (int i = 0; i < rectlinesarr.size(); i++) {
-				joinpoolmap.addPolyline(rectlinesarr.get(i));
-
-				List<LatLng> points = rectlinesarr.get(i).getPoints();
-
-				bc = new LatLngBounds.Builder();
-
-				for (LatLng item : points) {
-					bc.include(item);
-				}
-			}
-
-			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
-					bc.build(), 50));
-
-			joinpoolmap.addMarker(new MarkerOptions()
-					.position(startaddlatlng.get(0))
-					.title(startaddress.get(0))
-					.snippet("start")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.start)));
-
-			joinpoolmap
-					.addMarker(new MarkerOptions()
-							.position(endaddlatlng.get(0))
-							.title(endaddress.get(0))
-							.snippet("end")
-							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.end)));
+		
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForShowMembersOnMap()
@@ -1835,18 +2356,32 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 	private void setOnMapClick(LatLng point) {
 		joinpoolmap.animateCamera(CameraUpdateFactory.newLatLng(point));
+		
+		if(memberlocationaddressFrom.equalsIgnoreCase("")||memberlocationaddressFrom.equalsIgnoreCase(""))
 		locationmarker.setVisibility(View.VISIBLE);
+		if (!isPick) {
+			memberlocationlatlong = point;
+			memberlocationaddressFrom = MapUtilityMethods.getAddress(
+					MemberRideFragmentActivity.this, point.latitude,
+					point.longitude);
+			Log.d("memberlocationlatlong", "" + memberlocationlatlong);
+			Log.d("memberlocationaddress", "" + memberlocationaddressFrom);
+			// tvJoinRide.setText("Join Ride Drop Location");
+			joinpoolchangelocationtext.setText(memberlocationaddressFrom);
+			// isPick=true;
 
-		memberlocationlatlong = point;
-		memberlocationaddress = MapUtilityMethods.getAddress(
-				MemberRideFragmentActivity.this, point.latitude,
-				point.longitude);
+		} else {
+			memberlocationlatlongTo = point;
+			memberlocationaddressTo = MapUtilityMethods.getAddress(
+					MemberRideFragmentActivity.this, point.latitude,
+					point.longitude);
+			joinpoolchangelocationtext.setText(memberlocationaddressTo);
 
-		Log.d("memberlocationlatlong", "" + memberlocationlatlong);
-		Log.d("memberlocationaddress", "" + memberlocationaddress);
+			Log.d("memberlocationlatlongTo", "" + memberlocationlatlongTo);
+			Log.d("memberlocationaddressTo", "" + memberlocationaddressTo);
+		}
 
 		joinpoolchangelocationtext.setVisibility(View.VISIBLE);
-		joinpoolchangelocationtext.setText(memberlocationaddress);
 
 		joinpoolmap.setOnCameraChangeListener(new OnCameraChangeListener() {
 
@@ -1855,15 +2390,31 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				LatLng mapcenter = cameraPosition.target;
 
-				memberlocationlatlong = mapcenter;
-				memberlocationaddress = MapUtilityMethods.getAddress(
-						MemberRideFragmentActivity.this, mapcenter.latitude,
-						mapcenter.longitude);
+				if (!isPick) {
+					memberlocationlatlong = mapcenter;
+					memberlocationaddressFrom = MapUtilityMethods.getAddress(
+							MemberRideFragmentActivity.this,
+							mapcenter.latitude, mapcenter.longitude);
 
-				Log.d("memberlocationlatlong", "" + memberlocationlatlong);
-				Log.d("memberlocationaddress", "" + memberlocationaddress);
+					Log.d("memberlocationlatlong", "" + memberlocationlatlong);
+					Log.d("memberlocationaddress", ""
+							+ memberlocationaddressFrom);
 
-				joinpoolchangelocationtext.setText(memberlocationaddress);
+					joinpoolchangelocationtext
+							.setText(memberlocationaddressFrom);
+				} else {
+					memberlocationlatlongTo = mapcenter;
+					memberlocationaddressTo = MapUtilityMethods.getAddress(
+							MemberRideFragmentActivity.this,
+							mapcenter.latitude, mapcenter.longitude);
+
+					Log.d("memberlocationlatlongTo", ""
+							+ memberlocationlatlongTo);
+					Log.d("memberlocationaddressTo", ""
+							+ memberlocationaddressTo);
+
+					joinpoolchangelocationtext.setText(memberlocationaddressTo);
+				}
 
 			}
 		});
@@ -1881,6 +2432,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					"%20");
 			String dest = rideDetailsModel.getToLocation().replaceAll(" ",
 					"%20");
+
+			// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
 
 			String url = "https://maps.googleapis.com/maps/api/directions/json?"
 					+ "origin="
@@ -2036,6 +2589,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				// mycalculatorbtn.setVisibility(View.VISIBLE);
 
 				try {
+					
+
+
 					JSONArray subArray = new JSONArray(checkpoolalreadyjoinresp);
 					for (int i = 0; i < subArray.length(); i++) {
 						try {
@@ -2049,6 +2605,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							usermemloclatlong = subArray.getJSONObject(i)
 									.getString("MemberLocationlatlong")
 									.toString();
+							
+							usermemlocaddEnd = subArray.getJSONObject(i)
+									.getString("MemberEndLocationAddress")
+									.toString();
+							usermemloclatlongEnd = subArray.getJSONObject(i)
+									.getString("MemberEndLocationlatlong")
+									.toString();
+
 							usermemimagename = subArray.getJSONObject(i)
 									.getString("MemberImageName").toString();
 							usermemst = subArray.getJSONObject(i)
@@ -2068,7 +2632,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
 						Double.parseDouble(latlong[1]));
 
-				mylocationmarker = joinpoolmap
+				mylocationmarkerFrom = joinpoolmap
 						.addMarker(new MarkerOptions()
 								.position(lt)
 								.snippet("mylocation")
@@ -2076,8 +2640,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								.icon(BitmapDescriptorFactory
 										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
+		
+				mylocationmarkerTo = joinpoolmap
+						.addMarker(new MarkerOptions()
+								.position(lt)
+								.snippet("myEndlocation")
+								.title(usermemlocaddEnd)
+								.icon(BitmapDescriptorFactory
+										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
 				memberlocationlatlong = lt;
-				memberlocationaddress = usermemlocadd;
+				memberlocationaddressFrom = usermemlocadd;
 
 				locationmarker.setVisibility(View.GONE);
 				joinpoolchangelocationtext.setVisibility(View.GONE);
@@ -2096,6 +2669,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				ShowMemberLocationLatLong.clear();
 				ShowMemberImageName.clear();
 				ShowMemberStatus.clear();
+				ShowMemberLocationAddressEnd.clear();
+				ShowMemberLocationLatLongEnd.clear();
 
 				try {
 					JSONArray subArray = new JSONArray(showmembersresp);
@@ -2109,9 +2684,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									.getJSONObject(i)
 									.getString("MemberLocationAddress")
 									.toString());
+							ShowMemberLocationAddressEnd.add(subArray
+									.getJSONObject(i)
+									.getString("MemberEndLocationAddress")
+									.toString());
+							
+							
 							ShowMemberLocationLatLong.add(subArray
 									.getJSONObject(i)
 									.getString("MemberLocationlatlong")
+									.toString());
+							
+							ShowMemberLocationLatLongEnd.add(subArray
+									.getJSONObject(i)
+									.getString("MemberEndLocationlatlong")
 									.toString());
 							ShowMemberImageName.add(subArray.getJSONObject(i)
 									.getString("MemberImageName").toString());
@@ -2124,25 +2710,131 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					}
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 				for (int i = 0; i < ShowMemberName.size(); i++) {
-					String[] latlong = ShowMemberLocationLatLong.get(i).split(
+					String[] latlongStart = ShowMemberLocationLatLong.get(i).split(
 							",");
-					LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
-							Double.parseDouble(latlong[1]));
+					String[] latlongEnd = ShowMemberLocationLatLongEnd.get(i).split(
+							",");
+					LatLng ltStart = new LatLng(Double.parseDouble(latlongStart[0]),
+							Double.parseDouble(latlongStart[1]));
+					LatLng ltEnd = new LatLng(Double.parseDouble(latlongEnd[0]),
+							Double.parseDouble(latlongEnd[1]));
 					joinpoolmap
 							.addMarker(new MarkerOptions()
-									.position(lt)
+									.position(ltStart)
 									.snippet(String.valueOf(i))
 									.title(ShowMemberLocationAddress.get(i))
 									.icon(BitmapDescriptorFactory
 											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+					joinpoolmap
+					.addMarker(new MarkerOptions()
+							.position(ltEnd)
+							.snippet(String.valueOf(i))
+							.title(ShowMemberLocationAddressEnd.get(i))
+							.icon(BitmapDescriptorFactory
+									.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 				}
 			}
+//For single root
+			
+			//https://maps.googleapis.com/maps/api/directions/json?origin=-23.3246,-51.1489&destination=-23.2975,-51.2007&%20waypoints=optimize:true|-23.3246,-51.1489|-23.3206,-51.1459|-23.2975,-51.2007&sensor=false
+			String wayPoint="&waypoints=optimize:true";
+			
+			if(!showmembersresp.equalsIgnoreCase("No Members joined yet")||!checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool"))
+			{
+				
+				steps.clear();
+				Summary.clear();
+				startaddress.clear();
+				endaddress.clear();
+				startaddlatlng.clear();
+				endaddlatlng.clear();
+				listGeopoints.clear();
+				via_waypoint.clear();
+				via_waypointstrarr.clear();
+				
+				for(int i=0;i<rectlinesarr.size();i++){
+					
+					Polyline polyline = joinpoolmap.addPolyline(rectlinesarr.get(i));
+					polyline.remove();
+					
+				}
+				joinpoolmap.clear();
 
+				rectlinesarr.clear();
+				
+//				http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
+				
+				if(!showmembersresp.equalsIgnoreCase("No Members joined yet")){
+				for(int i=0;i<ShowMemberLocationLatLong.size();i++){
+					
+					String latlong[]=ShowMemberLocationLatLong.get(i).split(",");
+					String latlong1[]=ShowMemberLocationLatLongEnd.get(i).split(",");
+
+					wayPoint+="%7C"+latlong[0]+","+latlong[1]+"%7C"+latlong1[0]+","+latlong1[1];		
+
+					
+				}
+					
+				}
+				if(!checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")){
+					String latlong[]=usermemloclatlong	.split(",");
+					String latlong1[]=usermemloclatlongEnd	.split(",");
+
+					wayPoint+="%7C"+latlong[0]+","+latlong[1]+"%7C"+latlong1[0]+","+latlong1[1];		
+
+
+				}
+				
+				
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForSingleRoot()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,wayPoint);
+				} else {
+					new ConnectionTaskForSingleRoot().execute(wayPoint);
+				}	
+				
+			}
+			else{
+				if (onedialog.isShowing()) {
+					onedialog.dismiss();
+				}
+				LatLngBounds.Builder bc = null;
+
+				for (int i = 0; i < rectlinesarr.size(); i++) {
+					joinpoolmap.addPolyline(rectlinesarr.get(i));
+
+					List<LatLng> points = rectlinesarr.get(i).getPoints();
+
+					bc = new LatLngBounds.Builder();
+
+					for (LatLng item : points) {
+						bc.include(item);
+					}
+				}
+
+				joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+						bc.build(), 50));
+
+				joinpoolmap.addMarker(new MarkerOptions()
+						.position(startaddlatlng.get(0))
+						.title(startaddress.get(0))
+						.snippet("start")
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.start)));
+
+				joinpoolmap
+						.addMarker(new MarkerOptions()
+								.position(endaddlatlng.get(0))
+								.title(endaddress.get(0))
+								.snippet("end")
+								.icon(BitmapDescriptorFactory
+										.fromResource(R.drawable.end)));
+			}
+			
 			joinpoolmap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 				@Override
@@ -2177,7 +2869,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									usermemimagename);
 						}
 
-					} else if (arg0.getTitle().equals("Last updated at")) {
+					} 
+					 else if (arg0.getSnippet().equals("myEndlocation")) {
+
+							if (rideDetailsModel.getCabStatus().toString().trim()
+									.equalsIgnoreCase("A")) {
+								showAlertDialogmylocation(usermemname,
+										usermemnumber, usermemlocaddEnd,
+										usermemimagename);
+							}
+
+						} 
+					
+					
+					else if (arg0.getTitle().equals("Last updated at")) {
 						// Log.d("MemberRideFragment",
 						// "setOnMarkerClickListener OwnerLocation : ");
 						arg0.showInfoWindow();
@@ -2248,18 +2953,19 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				}
 			}
 
-			if (onedialog.isShowing()) {
-				onedialog.dismiss();
-			}
+			
 
 			// //////////////////////////
 			if (rideDetailsModel.getCabStatus().equals("A")
 					&& rideDetailsModel.getStatus().equals("2")) {
-				
-				//For affle traking view
+
+				// For affle traking view
 				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
 				extraParams.put("cabid", rideDetailsModel.getCabId());
-				AffleInAppTracker.inAppTrackerViewName(MemberRideFragmentActivity.this, "MemberRideFragmentActivity", "Trip completed", "Trip completed", extraParams);
+				AffleInAppTracker.inAppTrackerViewName(
+						MemberRideFragmentActivity.this,
+						"MemberRideFragmentActivity", "Trip completed",
+						"Trip completed", extraParams);
 
 				showRideCompleteDialog();
 			} else if (rideDetailsModel.getCabStatus().equals("A")
@@ -2343,7 +3049,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						.toString();
 			}
 
-			Log.d("showmembersresp", "" + stringBuilder.toString());
+			Log.d("showmembersresp:", "" + stringBuilder.toString());
 		}
 	}
 
@@ -2444,7 +3150,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						bufferedStrChunk).toString();
 			}
 
-			Log.d("checkpoolalreadyjoinresp", "" + stringBuilder.toString());
+			Log.d("checkpoolalreadyjoinresp:", "" + stringBuilder.toString());
 		}
 	}
 
@@ -2549,13 +3255,23 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", MemberNumberstr);
 			BasicNameValuePair MemberLocationAddressBasicNameValuePair = new BasicNameValuePair(
-					"MemberLocationAddress", memberlocationaddress);
+					"MemberLocationAddress", memberlocationaddressFrom);
+			BasicNameValuePair MemberEndLocationAddressBasicNameValuePair = new BasicNameValuePair(
+					"MemberEndLocationAddress", memberlocationaddressTo);
 			double lat = memberlocationlatlong.latitude;
 			double longi = memberlocationlatlong.longitude;
+			double latEnd = memberlocationlatlongTo.latitude;
+			double longiEnd = memberlocationlatlongTo.longitude;
 
 			String latlong = String.valueOf(lat) + "," + String.valueOf(longi);
+			String latlongEnd = String.valueOf(latEnd) + ","
+					+ String.valueOf(longiEnd);
+
 			BasicNameValuePair MemberLocationlatlongBasicNameValuePair = new BasicNameValuePair(
 					"MemberLocationlatlong", latlong);
+			BasicNameValuePair MemberEndLocationlatlongBasicNameValuePair = new BasicNameValuePair(
+					"MemberEndLocationlatlong", latlongEnd);
+
 			BasicNameValuePair StatusBasicNameValuePair = new BasicNameValuePair(
 					"Status", "Nothing");
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
@@ -2573,6 +3289,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			nameValuePairList.add(MemberLocationlatlongBasicNameValuePair);
 			nameValuePairList.add(StatusBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+			nameValuePairList.add(MemberEndLocationAddressBasicNameValuePair);
+			nameValuePairList.add(MemberEndLocationlatlongBasicNameValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -3155,7 +3873,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void v) {
-			
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
@@ -3218,22 +3935,26 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						PolylineOptions rectLine = new PolylineOptions().width(
 								5).color(color);
 						//
-										
+
 						rectLine.addAll(listGeopoints);
 						rectlinesarr.add(rectLine);
 
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 				double lat = memberlocationlatlong.latitude;
 				double longi = memberlocationlatlong.longitude;
-                LatLng ll=new LatLng(lat, longi);
-										
-                boolean isOnPath=PolyUtil.isLocationOnPath(ll, listGeopoints, false,5000.0);
-Log.d("isLocationonpath", ""+isOnPath);
-				
+				LatLng ll = new LatLng(lat, longi);
+
+				// ::::: Check joinride location is within 5 km of path or not
+				// :::://
+
+				boolean isOnPath = PolyUtil.isLocationOnPath(ll, listGeopoints,
+						false, maxDistace);
+				Log.d("isLocationonpath", "" + isOnPath);
+
 			}
 
 			LatLngBounds.Builder bc = null;
@@ -3250,23 +3971,23 @@ Log.d("isLocationonpath", ""+isOnPath);
 				}
 			}
 
-			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
-					bc.build(), 50));
-
-			joinpoolmap.addMarker(new MarkerOptions()
-					.position(startaddlatlng.get(0))
-					.title(startaddress.get(0))
-					.snippet("start")
-					.icon(BitmapDescriptorFactory
-							.fromResource(R.drawable.start)));
-
-			joinpoolmap
-					.addMarker(new MarkerOptions()
-							.position(endaddlatlng.get(0))
-							.title(endaddress.get(0))
-							.snippet("end")
-							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.end)));
+//			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+//					bc.build(), 50));
+//
+//			joinpoolmap.addMarker(new MarkerOptions()
+//					.position(startaddlatlng.get(0))
+//					.title(startaddress.get(0))
+//					.snippet("start")
+//					.icon(BitmapDescriptorFactory
+//							.fromResource(R.drawable.start)));
+//
+//			joinpoolmap
+//					.addMarker(new MarkerOptions()
+//							.position(endaddlatlng.get(0))
+//							.title(endaddress.get(0))
+//							.snippet("end")
+//							.icon(BitmapDescriptorFactory
+//									.fromResource(R.drawable.end)));
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForShowMembersOnMap()
@@ -3533,83 +4254,116 @@ Log.d("isLocationonpath", ""+isOnPath);
 
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
+				
+				onedialog = new ProgressDialog(MemberRideFragmentActivity.this);
+				onedialog.setMessage("Please Wait...");
+				onedialog.setCancelable(false);
+				onedialog.setCanceledOnTouchOutside(false);
+				onedialog.show();
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForcheckpoolalreadyjoined()
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				} else {
+					new ConnectionTaskForcheckpoolalreadyjoined().execute();
+				}
 				final String updatedlocationaddress = data
 						.getStringExtra("memberlocationaddress");
 				String updatedlocationlatlong = data
 						.getStringExtra("memberlocationlatlong");
+				
+				final String updatedlocationaddressTo = data
+						.getStringExtra("memberlocationaddressTo");
+				String updatedlocationlatlongTo = data
+						.getStringExtra("memberlocationlatlongTo");
 
-				if (mylocationmarker != null) {
-					mylocationmarker.remove();
+				if (mylocationmarkerFrom != null) {
+					mylocationmarkerFrom.remove();
+				}
+				if (mylocationmarkerTo != null) {
+					mylocationmarkerTo.remove();
 				}
 
 				String[] latlong = updatedlocationlatlong.split(",");
 				LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
 						Double.parseDouble(latlong[1]));
+				
+				String[] latlongTo = updatedlocationlatlongTo.split(",");
+				LatLng ltTo = new LatLng(Double.parseDouble(latlongTo[0]),
+						Double.parseDouble(latlongTo[1]));
 
-				mylocationmarker = joinpoolmap
-						.addMarker(new MarkerOptions()
-								.position(lt)
-								.snippet("mylocation")
-								.title(updatedlocationaddress)
-								.icon(BitmapDescriptorFactory
-										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+//				mylocationmarkerFrom = joinpoolmap
+//						.addMarker(new MarkerOptions()
+//								.position(lt)
+//								.snippet("mylocation")
+//								.title(updatedlocationaddress)
+//								.icon(BitmapDescriptorFactory
+//										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+//
+//				
+//				mylocationmarkerFrom = joinpoolmap
+//						.addMarker(new MarkerOptions()
+//								.position(ltTo)
+//								.snippet("myEndlocation")
+//								.title(updatedlocationaddressTo)
+//								.icon(BitmapDescriptorFactory
+//										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
-				joinpoolmap
-						.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-							@Override
-							public boolean onMarkerClick(Marker arg0) {
-
-								if (arg0.getSnippet().equals("start")) {
-
-									showAlertDialog(
-											rideDetailsModel.getOwnerName(),
-											rideDetailsModel.getMobileNumber(),
-											rideDetailsModel.getFromLocation(),
-											rideDetailsModel.getImagename());
-
-								} else if (arg0.getSnippet().equals("end")) {
-
-									showAlertDialog(
-											rideDetailsModel.getOwnerName(),
-											rideDetailsModel.getMobileNumber(),
-											rideDetailsModel.getToLocation(),
-											rideDetailsModel.getImagename());
-
-								} else if (arg0.getSnippet().equals(
-										"mylocation")) {
-
-									showAlertDialogmylocation(usermemname,
-											usermemnumber,
-											updatedlocationaddress,
-											usermemimagename);
-								} else {
-
-									if (checkpoolalreadyjoinresp
-											.equalsIgnoreCase("fresh pool")) {
-
-										Toast.makeText(
-												MemberRideFragmentActivity.this,
-												"Join ride to see details of other members",
-												Toast.LENGTH_LONG).show();
-									} else {
-										final Integer index = Integer
-												.parseInt(arg0.getSnippet());
-
-										showAlertDialog(ShowMemberName
-												.get(index), ShowMemberNumber
-												.get(index),
-												ShowMemberLocationAddress
-														.get(index),
-												ShowMemberImageName.get(index));
-									}
-
-								}
-
-								return true;
-							}
-
-						});
+//				joinpoolmap
+//						.setOnMarkerClickListener(new OnMarkerClickListener() {
+//
+//							@Override
+//							public boolean onMarkerClick(Marker arg0) {
+//
+//								if (arg0.getSnippet().equals("start")) {
+//
+//									showAlertDialog(
+//											rideDetailsModel.getOwnerName(),
+//											rideDetailsModel.getMobileNumber(),
+//											rideDetailsModel.getFromLocation(),
+//											rideDetailsModel.getImagename());
+//
+//								} else if (arg0.getSnippet().equals("end")) {
+//
+//									showAlertDialog(
+//											rideDetailsModel.getOwnerName(),
+//											rideDetailsModel.getMobileNumber(),
+//											rideDetailsModel.getToLocation(),
+//											rideDetailsModel.getImagename());
+//
+//								} else if (arg0.getSnippet().equals(
+//										"mylocation")) {
+//
+//									showAlertDialogmylocation(usermemname,
+//											usermemnumber,
+//											updatedlocationaddress,
+//											usermemimagename);
+//								} else {
+//
+//									if (checkpoolalreadyjoinresp
+//											.equalsIgnoreCase("fresh pool")) {
+//
+//										Toast.makeText(
+//												MemberRideFragmentActivity.this,
+//												"Join ride to see details of other members",
+//												Toast.LENGTH_LONG).show();
+//									} else {
+//										final Integer index = Integer
+//												.parseInt(arg0.getSnippet());
+//
+//										showAlertDialog(ShowMemberName
+//												.get(index), ShowMemberNumber
+//												.get(index),
+//												ShowMemberLocationAddress
+//														.get(index),
+//												ShowMemberImageName.get(index));
+//									}
+//
+//								}
+//
+//								return true;
+//							}
+//
+//						});
 			}
 		}
 	}
@@ -4915,11 +5669,14 @@ Log.d("isLocationonpath", ""+isOnPath);
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			
-			//For affle traking view
+
+			// For affle traking view
 			Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
 			extraParams.put("cabid", rideDetailsModel.getCabId());
-			AffleInAppTracker.inAppTrackerViewName(MemberRideFragmentActivity.this, "MemberRideFragmentActivity", "Trip completed", "Trip completed", extraParams);
+			AffleInAppTracker.inAppTrackerViewName(
+					MemberRideFragmentActivity.this,
+					"MemberRideFragmentActivity", "Trip completed",
+					"Trip completed", extraParams);
 
 		}
 
@@ -5917,7 +6674,6 @@ Log.d("isLocationonpath", ""+isOnPath);
 
 	@Override
 	public void getResult(String response, String uniqueID) {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

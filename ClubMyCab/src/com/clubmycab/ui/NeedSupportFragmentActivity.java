@@ -54,9 +54,6 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 	boolean exceptioncheck = false;
 	private String cbSelected = "No";
 	private String spinnerStr = "Ask a question";
-	
-	
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -150,11 +147,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
-			// Toast.makeText(
-			// parent.getContext(),
-			// "OnItemSelectedListener : "
-			// + parent.getItemAtPosition(pos).toString(),
-			// Toast.LENGTH_SHORT).show();
+
 			spinnerStr = parent.getItemAtPosition(pos).toString();
 		}
 
@@ -194,7 +187,6 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 			try {
 				mAuth1.connection();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				exceptioncheck = true;
 				e.printStackTrace();
 			}
@@ -226,11 +218,12 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 
 			}
 			if (status.equalsIgnoreCase("success")) {
-				Toast.makeText(NeedSupportFragmentActivity.this,
-						"We have received your request, and we will get back to you soon ", Toast.LENGTH_LONG)
-						.show();
-				Intent mainIntent = new Intent(NeedSupportFragmentActivity.this,
-						HomeActivity.class);
+				Toast.makeText(
+						NeedSupportFragmentActivity.this,
+						"We have received your request, and we will get back to you soon ",
+						Toast.LENGTH_LONG).show();
+				Intent mainIntent = new Intent(
+						NeedSupportFragmentActivity.this, HomeActivity.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);
@@ -261,8 +254,6 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 			String MobileNumber = mPrefs.getString("MobileNumber", "");
 			String FullName = mPrefs.getString("FullName", "");
 
-		//	String Email = mPrefs.getString("Email", "");
-
 			HttpClient httpClient = new DefaultHttpClient();
 			String url_select11 = GlobalVariables.ServiceUrl
 					+ "/customerQuery.php";
@@ -272,8 +263,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 					"desciption", etDescription.getText().toString());
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"mobileNumber", MobileNumber);
-//			BasicNameValuePair EmailBasicNameValuePair = new BasicNameValuePair(
-//					"email", Email);
+
 			BasicNameValuePair FullNameBasicNameValuePair = new BasicNameValuePair(
 					"name", FullName);
 			BasicNameValuePair TypeBasicNameValuePair = new BasicNameValuePair(
@@ -285,7 +275,6 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 
 			nameValuePairList.add(DescriptionBasicNameValuePair);
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			//nameValuePairList.add(EmailBasicNameValuePair);
 			nameValuePairList.add(FullNameBasicNameValuePair);
 			nameValuePairList.add(TypeBasicNameValuePair);
 			nameValuePairList.add(CallBasicNameValuePair);

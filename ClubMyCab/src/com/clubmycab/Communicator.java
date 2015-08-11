@@ -20,6 +20,7 @@ public class Communicator {
 			HttpClient client = new DefaultHttpClient();
 			client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
 					"msie");
+			
 			HttpGet request = new HttpGet();
 			request.setHeader("Content-Type", "text/plain; charset=utf-8");
 			request.setURI(new URI(URL));

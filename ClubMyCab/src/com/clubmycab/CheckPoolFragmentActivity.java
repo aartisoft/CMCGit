@@ -113,6 +113,7 @@ import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
+import com.clubmycab.ui.FirstLoginWalletsActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
@@ -366,8 +367,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		// statusTrip = intent.getStringExtra("status");
 
 		comefrom = intent.getStringExtra("comefrom");
-		
-		
+
 		if (comefrom != null) {
 
 			if (comefrom.equalsIgnoreCase("GCM")) {
@@ -379,13 +379,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				Log.d("CheckPoolFragmentActivity",
 						"UpdateNotificationStatusToRead endpoint : " + endpoint
 								+ " params : " + params);
-				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false,
+						"UpdateNotificationStatusToRead", false);
 
 			}
 
 		}
 
-	
 		Log.d("comefrom", "" + comefrom);
 
 		Log.d("CabStatus", "" + rideDetailsModel.getCabStatus());
@@ -750,10 +750,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForGetMyFare().executeOnExecutor(
 					AsyncTask.THREAD_POOL_EXECUTOR,
-					rideDetailsModel.getCabId(), OwnerMobileNumber);
+					rideDetailsModel.getCabId(), OwnerMobileNumber, "");
 		} else {
 			new ConnectionTaskForGetMyFare().execute(
-					rideDetailsModel.getCabId(), OwnerMobileNumber);
+					rideDetailsModel.getCabId(), OwnerMobileNumber, "");
 		}
 	}
 
@@ -1134,11 +1134,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					new ConnectionTaskForMarkTripCompleted().executeOnExecutor(
 							AsyncTask.THREAD_POOL_EXECUTOR,
 							rideDetailsModel.getCabId(), OwnerMobileNumber,
-							MemberNumberstr);
+							OwnerMobileNumber);
 				} else {
 					new ConnectionTaskForMarkTripCompleted().execute(
 							rideDetailsModel.getCabId(), OwnerMobileNumber,
-							MemberNumberstr);
+							OwnerMobileNumber);
 				}
 			}
 		});
@@ -1150,58 +1150,60 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View view) {
 
-				// tracker.send(new HitBuilders.EventBuilder()
-				// .setCategory("Fare settled by wallet")
-				// .setAction("Fare settled by wallet")
-				// .setLabel("Fare settled by wallet").build());
-				//
-				// dialog.dismiss();
-				//
-				// SharedPreferences sharedPreferences = getSharedPreferences(
-				// "MobikwikToken", 0);
-				// String token = sharedPreferences.getString("token", "");
-				//
-				// if (token != null && !token.isEmpty()) {
-				// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				// new ConnectionTaskForGetMyFare().executeOnExecutor(
-				// AsyncTask.THREAD_POOL_EXECUTOR, CabId,
-				// OwnerMobileNumber);
-				// } else {
-				// new ConnectionTaskForGetMyFare().execute(CabId,
-				// OwnerMobileNumber);
-				// }
-				// } else {
-				// AlertDialog.Builder builder = new AlertDialog.Builder(
-				// CheckPoolFragmentActivity.this);
-				// builder.setMessage("You cannot make a transfer as you do not have a wallet integrated yet, would you like to add a wallet now?");
-				// builder.setCancelable(false);
-				//
-				// builder.setPositiveButton("Yes",
-				// new DialogInterface.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(DialogInterface dialog,
-				// int which) {
-				// Intent mainIntent = new Intent(
-				// CheckPoolFragmentActivity.this,
-				// WalletsAcitivity.class);
-				// mainIntent.putExtra("from", "wallet");
-				// startActivity(mainIntent);
-				// }
-				// });
-				//
-				// builder.setNegativeButton("NO",
-				// new DialogInterface.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(DialogInterface dialog,
-				// int which) {
-				//
-				// }
-				// });
-				//
-				// builder.show();
-				// }
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare settled by wallet")
+						.setAction("Fare settled by wallet")
+						.setLabel("Fare settled by wallet").build());
+
+				dialog.dismiss();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				String token = sharedPreferences.getString("token", "");
+
+				if (token != null && !token.isEmpty()) {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForGetMyFare().executeOnExecutor(
+								AsyncTask.THREAD_POOL_EXECUTOR,
+								rideDetailsModel.getCabId(), OwnerMobileNumber,
+								"isWalletToWallet");
+					} else {
+						new ConnectionTaskForGetMyFare().execute(
+								rideDetailsModel.getCabId(), OwnerMobileNumber,
+								"isWalletToWallet");
+					}
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							CheckPoolFragmentActivity.this);
+					builder.setMessage("You cannot make a transfer as you do not have a wallet integrated yet, would you like to add a wallet now?");
+					builder.setCancelable(false);
+
+					builder.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent mainIntent = new Intent(
+											CheckPoolFragmentActivity.this,
+											FirstLoginWalletsActivity.class);
+									mainIntent.putExtra("from", "wallet");
+									startActivity(mainIntent);
+								}
+							});
+
+					builder.setNegativeButton("NO",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+								}
+							});
+
+					builder.show();
+				}
 			}
 		});
 
@@ -1209,25 +1211,25 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	}
 
-	private void checkWalletExists(String mobilenumber) {
-		String msgcode = "500";
-		String action = "existingusercheck";
-
-		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
-				+ action + "''" + mobilenumber + "''"
-				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
-				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
-		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
-				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
-				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
-				+ "&checksum=" + checksumstring;
-		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
-				+ " params : " + params);
-		new GlobalAsyncTask(this, endpoint, params, null, this, true,
-				"querywallet", true);
-	}
+	// private void checkWalletExists(String mobilenumber) {
+	// String msgcode = "500";
+	// String action = "existingusercheck";
+	//
+	// String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+	// + action + "''" + mobilenumber + "''"
+	// + GlobalVariables.Mobikwik_MerchantName + "''"
+	// + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
+	// GlobalVariables.Mobikwik_14SecretKey);
+	// String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
+	// String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
+	// + "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
+	// + "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
+	// + "&checksum=" + checksumstring;
+	// Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
+	// + " params : " + params);
+	// new GlobalAsyncTask(this, endpoint, params, null, this, true,
+	// "querywallet", true);
+	// }
 
 	private void checkTransactionLimit(String mobilenumber, String amount) {
 
@@ -1248,20 +1250,19 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				"checkTransactionLimit", true);
 	}
 
-	private void transactionHistory(String amount, String fee,
-			String merchantname, String mid, String orderid, String token,
-			String sendercell, String receivercell) {
+	private void logTransaction(String amount, String fee, String merchantname,
+			String mid, String token, String sendercell, String receivercell,
+			String cabID) {
 
-		String endpoint = GlobalVariables.ServiceUrl
-				+ "/transactionHistory.php";
+		String endpoint = GlobalVariables.ServiceUrl + "/logTransaction.php";
 		String params = "amount=" + amount + "&fee=" + fee + "&merchantname="
-				+ merchantname + "&mid=" + mid + "&orderid=" + orderid
-				+ "&token=" + token + "&sendercell=" + sendercell
-				+ "&receivercell=" + receivercell;
-		Log.d("CheckPoolFragmentActivity", "transactionHistory endpoint : "
+				+ merchantname + "&mid=" + mid + "&token=" + token
+				+ "&sendercell=" + sendercell + "&receivercell=" + receivercell
+				+ "&cabId=" + cabID;
+		Log.d("CheckPoolFragmentActivity", "logTransaction endpoint : "
 				+ endpoint + " params : " + params);
 		new GlobalAsyncTask(this, endpoint, params, null, this, true,
-				"transactionHistory", false);
+				"logTransaction", false);
 	}
 
 	private void initiatePeerTransfer(String sendercell, String receivercell,
@@ -1270,8 +1271,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
 				+ amount + "''" + fee + "''"
 				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + orderid + "''" + token
-				+ "''" + sendercell + "''" + receivercell + "'",
+				+ GlobalVariables.Mobikwik_Mid + "''" + orderid + "''" + receivercell
+				+ "''" + sendercell + "''" + token + "'",
 				GlobalVariables.Mobikwik_14SecretKey);
 		String endpoint = GlobalVariables.Mobikwik_ServerURL
 				+ "/initiatePeerTransfer";
@@ -1287,13 +1288,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				"initiatePeerTransfer", true);
 	}
 
-	private void tokenRegenerate(String mobilenumber, String token) {
+	private void tokenRegenerate(String mobilenumber, String token,
+			boolean attemptReTransfer) {
 		String msgcode = "507";
 
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
 				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
 				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
-				+ token + "'", GlobalVariables.Mobikwik_14SecretKey);
+				+ token + "'",
+				GlobalVariables.Mobikwik_14SecretKey_TokenRegenerate);
 		String endpoint = GlobalVariables.Mobikwik_ServerURL
 				+ "/tokenregenerate";
 		String params = "cell=" + mobilenumber + "&token=" + token
@@ -1303,35 +1306,41 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				+ checksumstring;
 		Log.d("CheckPoolFragmentActivity", "tokenRegenerate endpoint : "
 				+ endpoint + " params : " + params);
-		new GlobalAsyncTask(this, endpoint, params, null, this, true,
-				"tokenregenerate", true);
+		if (attemptReTransfer) {
+			new GlobalAsyncTask(this, endpoint, params, null, this, true,
+					"tokenRegenerateReTransfer", true);
+		} else {
+			new GlobalAsyncTask(this, endpoint, params, null, this, true,
+					"tokenregenerate", true);
+		}
 	}
 
 	@Override
 	public void getResult(String response, String uniqueID) {
-		if (uniqueID.equals("querywallet")) {
-			try {
-				JSONObject jsonObject = new JSONObject(response);
-				Log.d("CheckPoolFragmentActivity", "querywallet jsonObject : "
-						+ jsonObject);
-				if (!checkResponseChecksum(response)) {
-					checksumInvalidToast();
-					return;
-				}
-
-				if (jsonObject.getString("status").equals("SUCCESS")) {
-					checkTransactionLimit(OwnerMobileNumber.substring(4),
-							amountToPay);
-				} else {
-					Toast.makeText(
-							CheckPoolFragmentActivity.this,
-							"The transfer cannot be made as the person you wish to transfer to does not have an active wallet",
-							Toast.LENGTH_LONG).show();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if (uniqueID.equals("checkTransactionLimit")) {
+		// if (uniqueID.equals("querywallet")) {
+		// try {
+		// JSONObject jsonObject = new JSONObject(response);
+		// Log.d("CheckPoolFragmentActivity", "querywallet jsonObject : "
+		// + jsonObject);
+		// if (!checkResponseChecksum(response)) {
+		// checksumInvalidToast();
+		// return;
+		// }
+		//
+		// if (jsonObject.getString("status").equals("SUCCESS")) {
+		// checkTransactionLimit(OwnerMobileNumber.substring(4),
+		// amountToPay);
+		// } else {
+		// Toast.makeText(
+		// CheckPoolFragmentActivity.this,
+		// "The transfer cannot be made as the person you wish to transfer to does not have an active wallet",
+		// Toast.LENGTH_LONG).show();
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// } else
+		if (uniqueID.equals("checkTransactionLimit")) {
 			Log.d("CheckPoolFragmentActivity",
 					"checkTransactionLimit response : " + response);
 			if (!checkResponseChecksum(response)) {
@@ -1342,7 +1351,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"MobikwikToken", 0);
+					String token = sharedPreferences.getString("token", "");
 
+					logTransaction(amountToPay, "0",
+							GlobalVariables.Mobikwik_MerchantName,
+							GlobalVariables.Mobikwik_Mid, token,
+							OwnerMobileNumber.substring(4),
+							payToPerson.substring(4),
+							rideDetailsModel.getCabId());
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							CheckPoolFragmentActivity.this);
@@ -1374,15 +1392,112 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (uniqueID.equals("transactionHistory")) {
-			Log.d("CheckPoolFragmentActivity", "transactionHistory response : "
+		} else if (uniqueID.equals("logTransaction")) {
+			Log.d("CheckPoolFragmentActivity", "logTransaction response : "
 					+ response);
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString()
+						.equalsIgnoreCase("success")) {
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"MobikwikToken", 0);
+					String token = sharedPreferences.getString("token", "");
+
+					initiatePeerTransfer(OwnerMobileNumber.substring(4),
+							payToPerson.substring(4), amountToPay, "0",
+							jsonObject.get("orderId").toString(), token);
+				} else {
+					Toast.makeText(CheckPoolFragmentActivity.this,
+							"Something went wrong, please try again",
+							Toast.LENGTH_LONG).show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						"Something went wrong, please try again",
+						Toast.LENGTH_LONG).show();
+			}
 		} else if (uniqueID.equals("initiatePeerTransfer")) {
 			Log.d("CheckPoolFragmentActivity",
 					"initiatePeerTransfer response : " + response);
+
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"MobikwikToken", 0);
+			String token = sharedPreferences.getString("token", "");
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString()
+						.equalsIgnoreCase("SUCCESS")) {
+					Toast.makeText(CheckPoolFragmentActivity.this,
+							jsonObject.get("statusdescription").toString(),
+							Toast.LENGTH_LONG).show();
+
+					tokenRegenerate(OwnerMobileNumber.substring(4), token,
+							false);
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForMarkTripCompleted()
+								.executeOnExecutor(
+										AsyncTask.THREAD_POOL_EXECUTOR,
+										rideDetailsModel.getCabId(),
+										OwnerMobileNumber, OwnerMobileNumber);
+					} else {
+						new ConnectionTaskForMarkTripCompleted().execute(
+								rideDetailsModel.getCabId(), OwnerMobileNumber,
+								OwnerMobileNumber);
+					}
+				} else {
+					if (jsonObject.get("statusdescription").toString()
+							.contains("Invalid Token")
+							|| jsonObject.get("statusdescription").toString()
+									.contains("Token Expired")) {
+						tokenRegenerate(OwnerMobileNumber.substring(4), token,
+								true);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} else if (uniqueID.equals("tokenregenerate")) {
 			Log.d("CheckPoolFragmentActivity", "tokenregenerate response : "
 					+ response);
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				String token = jsonObject.get("token").toString();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("token", token);
+				editor.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else if (uniqueID.equals("tokenRegenerateReTransfer")) {
+			Log.d("CheckPoolFragmentActivity",
+					"tokenRegenerateReTransfer response : " + response);
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				String token = jsonObject.get("token").toString();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("token", token);
+				editor.commit();
+
+				logTransaction(amountToPay, "0",
+						GlobalVariables.Mobikwik_MerchantName,
+						GlobalVariables.Mobikwik_Mid, token,
+						OwnerMobileNumber.substring(4),
+						payToPerson.substring(4), rideDetailsModel.getCabId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -1497,6 +1612,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			try {
 				mAuth1.cid = args[0];
 				mAuth1.mnum = args[1];
+				mAuth1.isWalletToWallet = args[2];
 
 				mAuth1.connection();
 			} catch (Exception e) {
@@ -1523,7 +1639,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	public class AuthenticateConnectionGetMyFare {
 
-		public String cid, mnum;
+		public String cid, mnum, isWalletToWallet;
 
 		public AuthenticateConnectionGetMyFare() {
 
@@ -1573,13 +1689,88 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				payToPerson = jsonObject.get("paidBy").toString();
 				totalFare = jsonObject.get("totalFare").toString();
 
-				// runOnUiThread(new Runnable() {
-				//
-				// @Override
-				// public void run() {
-				// checkWalletExists(payToPerson.substring(4));
-				// }
-				// });
+				if (isWalletToWallet.equals("isWalletToWallet")) {
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							ArrayList<String> JoinedMemberName = new ArrayList<String>();
+							ArrayList<String> joinedMemberNumber = new ArrayList<String>();
+
+							try {
+								JSONArray subArray = new JSONArray(
+										showmembersresp);
+								for (int i = 0; i < subArray.length(); i++) {
+									try {
+										JoinedMemberName.add(subArray
+												.getJSONObject(i)
+												.getString("MemberName")
+												.toString().trim());
+										joinedMemberNumber.add(subArray
+												.getJSONObject(i)
+												.getString("MemberNumber")
+												.toString().trim());
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							int index = joinedMemberNumber.indexOf(payToPerson);
+							if (index != -1) {
+								String membName = JoinedMemberName.get(index);
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										CheckPoolFragmentActivity.this);
+								builder.setMessage(rideDetailsModel
+										.getOwnerName()
+										+ " ("
+										+ rideDetailsModel.getMobileNumber()
+												.substring(4)
+										+ ") agrees to transfer \u20B9"
+										+ amountToPay
+										+ " towards trip cost, undertaken between "
+										+ rideDetailsModel.getFromShortName()
+										+ " to "
+										+ rideDetailsModel.getToShortName()
+										+ ", to "
+										+ membName
+										+ " ("
+										+ payToPerson.substring(4) + ")");
+								builder.setCancelable(false);
+
+								builder.setPositiveButton("Yes",
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												// checkWalletExists(payToPerson.substring(4));
+												checkTransactionLimit(
+														OwnerMobileNumber
+																.substring(4),
+														amountToPay);
+											}
+										});
+
+								builder.setNegativeButton("No",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+											}
+										});
+
+								builder.show();
+							}
+						}
+					});
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

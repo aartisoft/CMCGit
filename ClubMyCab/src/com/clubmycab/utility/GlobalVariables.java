@@ -44,5 +44,6 @@ public class GlobalVariables {
 	public static final String Mobikwik_MerchantName = "MyMerchantName";
 
 	public static final String Mobikwik_14SecretKey = "ju6tygh7u7tdg554k098ujd5468o";
+	public static final String Mobikwik_14SecretKey_TokenRegenerate = "lu6tygh7u7tdg554k098ujd5468o";
 
 }

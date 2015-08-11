@@ -1271,6 +1271,23 @@ public class ContactsInviteForRideActivity extends Activity {
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
 					"Message", msg);
 
+			Log.d("ContactsToInviteForRideActivity",
+					"AuthenticateConnectionSendInvite : "
+							+ GlobalVariables.ServiceUrl + "/openacab.php"
+							+ " CabId : " + CabId + " MobileNumber : "
+							+ MobileNumberstr + " OwnerName : " + OwnerName
+							+ " FromLocation : " + FromLocation
+							+ " ToLocation : " + ToLocation
+							+ " FromShortName : " + fromshortname
+							+ " ToShortName : " + toshortname
+							+ " TravelDate : " + TravelDate + " TravelTime : "
+							+ TravelTime + " Seats : " + Seats
+							+ " RemainingSeats : " + Seats + " Distance : "
+							+ distancetext + " ExpTripDuration : "
+							+ durationvalue + " MembersNumber : "
+							+ selectednumbers.toString() + " MembersName : "
+							+ selectednames.toString() + " Message : " + msg);
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MobileNumberBasicNameValuePair);

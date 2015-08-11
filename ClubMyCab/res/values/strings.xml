@@ -84,25 +84,24 @@
     <string name="Affle_TRACKER_URL">http://affle.co/1111111111/clubmycab/clubmycabandroid/dl_android.php?ad2cid=1438003779&amp;affle</string>
     <string name="seatcount">3</string>
     <string name="otpsent">We have sent One Time Password (OTP) to your Mobile</string>
-    <string name="mobikwik_nothave_account">You do not have a Mobikwik wallet registered with your number, would you like to create one?</string>
-    <string name="mobikwik_already_account">You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides</string>
+    <string name="mobikwik_nothave_account">You do not have a Mobikwik wallet registered with your number, would you like to create one? This will help you settle the fare split for your rides. Click on send OTP</string>
+    <string name="mobikwik_already_account">You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides. Click on send OTP</string>
+    <string name="mobikwik_signup_tnc">(User agrees to allow ClubMyCab to transfer amount to/from user\'s Mobikwik wallet to settle fare splits at the end of each journey undertaken by the user. These transfers will be undertaken only after confirmation of fare split by both sending and receiving user. Further upon completion of journey and subsequent payment done, the User will not claim any other charges whatsoever from ClubMyCab or its partners)</string>
     <string name="str_text_termandcondition">By clicking on submit I agree to the term &amp; conditions mentioned at the link below</string>
     <string name="str_home_pagger_heading">Open ride(s) in your clubs</string>
-    
     <string name="str_problem">Problem</string>
-        <string name="str_screen">Screen</string>
-                <string name="str_description">Description</string>
-                <string name="str_hint_description">Enter a brief but detailed description of the problem</string>
-        <string name="str_thank">*Thank you for reporting a problem!\nOur team will look into this issue and correct it as soon as possible.</string>
-        <string name="str_hint_where_problem">Enter where the problem happened</string>
-        <string name="btn_submit">Submit</string>
-                <string name="check_box">Call me to explain</string>
-                                <string name="promt">Ask a question</string>
-                
-        
-     <string-array name="needsupport_arrays">
+    <string name="str_screen">Screen</string>
+    <string name="str_description">Description</string>
+    <string name="str_hint_description">Enter a brief but detailed description of the problem</string>
+    <string name="str_thank">*Thank you for reporting a problem!\nOur team will look into this issue and correct it as soon as possible.</string>
+    <string name="str_hint_where_problem">Enter where the problem happened</string>
+    <string name="btn_submit">Submit</string>
+    <string name="check_box">Call me to explain</string>
+    <string name="promt">Ask a question</string>
+
+    <string-array name="needsupport_arrays">
         <item>Ask a question</item>
         <item>Report a problem</item>
-      
     </string-array>
+
 </resources>

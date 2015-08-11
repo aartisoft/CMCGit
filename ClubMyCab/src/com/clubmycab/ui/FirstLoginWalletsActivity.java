@@ -108,7 +108,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		//
 		// @Override
 		// public void onClick(View v) {
-
+		//
 		// if (from.equalsIgnoreCase("reg")) {
 		// querywallet();
 		//
@@ -190,6 +190,24 @@ public class FirstLoginWalletsActivity extends Activity implements
 				}
 			}
 		});
+
+		if (from.equalsIgnoreCase("reg")) {
+			querywallet();
+
+		} else {
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"MobikwikToken", 0);
+			token = sharedPreferences.getString("token", "");
+			if (!token.isEmpty() && !token.equalsIgnoreCase("")) {
+
+				otphardtext
+						.setText("Your Mobikwik wallet is already linked with the app");
+				walletLinearLayout.setVisibility(View.INVISIBLE);
+			} else {
+				querywallet();
+			}
+
+		}
 
 	}
 
@@ -515,7 +533,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 					editor.putString("token", token);
 					editor.commit();
 					Toast.makeText(FirstLoginWalletsActivity.this,
-							"Link account succesfully!", Toast.LENGTH_LONG)
+							"Account linked successfully!", Toast.LENGTH_LONG)
 							.show();
 
 					if (from.equalsIgnoreCase("reg")) {
@@ -524,6 +542,10 @@ public class FirstLoginWalletsActivity extends Activity implements
 								FirstLoginClubsActivity.class);
 						startActivity(mainIntent);
 						finish();
+					} else {
+						otphardtext
+								.setText("Your Mobikwik wallet is already linked with the app");
+						walletLinearLayout.setVisibility(View.INVISIBLE);
 					}
 
 				} else {

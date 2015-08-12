@@ -2820,9 +2820,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					for(int i=0;i<ShowMemberLocationLatLong.size();i++){
 						
 						String latlong[]=ShowMemberLocationLatLong.get(i).split(",");
-						String latlong1[]=ShowMemberLocationLatLongEnd.get(i).split(",");
+						
+						wayPoint+="%7C"+latlong[0]+","+latlong[1];
+						if(!ShowMemberLocationLatLongEnd.get(i).equalsIgnoreCase("")){
+							String latlong1[]=ShowMemberLocationLatLongEnd.get(i).split(",");
+                        wayPoint+="%7C"+latlong1[0]+","+latlong1[1];		
+						}
 
-						wayPoint+="%7C"+latlong[0]+","+latlong[1]+"%7C"+latlong1[0]+","+latlong1[1];		
+						
 
 						
 					}
@@ -2989,16 +2994,21 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
           
           else if(pickdrop.equalsIgnoreCase("Drop")){
         	  
-        	  
-        	  showAlertDialog(ShowMemberName
-						.get(index), ShowMemberNumber
-						.get(index),
-						ShowMemberLocationAddressEnd
-								.get(index),
-						ShowMemberLocationLatLongEnd
-								.get(index),
-						ShowMemberImageName.get(index),
-						ShowMemberStatus.get(index),pickdrop);
+        	  if(!ShowMemberLocationLatLongEnd
+								.get(index).equalsIgnoreCase("")){
+        		  
+        		  showAlertDialog(ShowMemberName
+  						.get(index), ShowMemberNumber
+  						.get(index),
+  						ShowMemberLocationAddressEnd
+  								.get(index),
+  						ShowMemberLocationLatLongEnd
+  								.get(index),
+  						ShowMemberImageName.get(index),
+  						ShowMemberStatus.get(index),pickdrop);
+        		  
+        	  }
+        	
           }
 									}
 								}
@@ -3217,6 +3227,7 @@ checkpoolmap
 					.snippet(String.valueOf(i)+","+"Pick")
 				.icon(BitmapDescriptorFactory
 					.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+			
 			
 			
 			checkpoolmap

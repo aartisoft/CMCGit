@@ -299,6 +299,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	private double maxDistace = 5000.0;
 	private TextView tvJoinRide;
 
+	private ArrayList<Double> FaredistanceList = new ArrayList<Double>();
+	private ArrayList<LatLng> FareLocationList = new ArrayList<LatLng>();
+
+	private ArrayList<String> FareMobNoList = new ArrayList<String>();
+	private ArrayList<LatLng> FareMemberPickLocaton = new ArrayList<LatLng>();
+	private ArrayList<LatLng> FareMemberDropLocaton = new ArrayList<LatLng>();
+
+
 	@SuppressLint("DefaultLocale")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -1293,10 +1301,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			new ConnectionTaskForGetMyFare().executeOnExecutor(
 					AsyncTask.THREAD_POOL_EXECUTOR,
-					rideDetailsModel.getCabId(), MemberNumberstr);
+					rideDetailsModel.getCabId(), MemberNumberstr, "");
 		} else {
 			new ConnectionTaskForGetMyFare().execute(
-					rideDetailsModel.getCabId(), MemberNumberstr);
+					rideDetailsModel.getCabId(), MemberNumberstr, "");
 		}
 	}
 
@@ -2039,46 +2047,21 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			bc.include(endaddlatlng.get(endaddlatlng.size() - 1));
 			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
 					bc.build(), 50));
+			
+			
+			//for(int i=0;i<FareMobNoList.size();i++){
+				
+				Log.d("FareMobno", ""+FareMobNoList);
+				Log.d("FareDistance", ""+FaredistanceList);
+				Log.d("FareLocation", ""+FareLocationList);
+				Log.d("FarePick", ""+FareMemberPickLocaton);
+				Log.d("FareDrop", ""+FareMemberDropLocaton);
 
-			// if(usermemlocadd!=null){
-			//
-			// String[] latlong = usermemloclatlong.split(",");
-			// LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
-			// Double.parseDouble(latlong[1]));
-			// mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
-			// .position(lt)
-			// .snippet("mylocation")
-			// .title(usermemlocadd)
-			// .icon(BitmapDescriptorFactory
-			// .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-			//
-			//
-			// String[] latlong1 = usermemloclatlongEnd.split(",");
-			// LatLng lt1 = new LatLng(Double.parseDouble(latlong1[0]),
-			// Double.parseDouble(latlong1[1]));
-			// mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
-			// .position(lt1)
-			// .snippet("myEndlocation")
-			// .title(usermemlocaddEnd)
-			// .icon(BitmapDescriptorFactory
-			// .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-			// }
 
-			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			// new ConnectionTaskForShowMembersOnMap()
-			// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			// } else {
-			// new ConnectionTaskForShowMembersOnMap().execute();
-			// }
-			//
-			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			// new ConnectionTaskForOwnerLocation().executeOnExecutor(
-			// AsyncTask.THREAD_POOL_EXECUTOR,
-			// rideDetailsModel.getCabId());
-			// } else {
-			// new ConnectionTaskForOwnerLocation().execute(rideDetailsModel
-			// .getCabId());
-			// }
+
+
+			///}
+
 
 		}
 
@@ -2210,6 +2193,23 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					distanceList.add(jsonObjectDistance.getInt("value"));
 					// ////////////
 
+					if(i1==0){
+						FareLocationList.add(new LatLng(lat, lng));
+						FareLocationList.add(new LatLng(lat4, lng4));
+						FaredistanceList.add(0.0);
+						FaredistanceList.add(Double.parseDouble(""+jsonObjectDistance.getInt("value")));
+						
+
+					}
+					else{
+						FareLocationList.add(new LatLng(lat4, lng4));
+						FaredistanceList.add(Double.parseDouble(""+jsonObjectDistance.getInt("value")));
+	
+					}
+
+					
+
+					
 					steps.add(subArray1.getJSONObject(i1).getString("steps")
 							.toString());
 
@@ -2393,8 +2393,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		joinpoolmap.animateCamera(CameraUpdateFactory.newLatLng(point));
 
 		if (memberlocationaddressFrom.equalsIgnoreCase("")
-				|| memberlocationaddressFrom.equalsIgnoreCase(""))
+				|| memberlocationaddressFrom.equalsIgnoreCase("")) {
+
+			joinpoolchangelocationtext.setVisibility(View.VISIBLE);
 			locationmarker.setVisibility(View.VISIBLE);
+
+		}
+
 		if (!isPick) {
 			memberlocationlatlong = point;
 			memberlocationaddressFrom = MapUtilityMethods.getAddress(
@@ -2416,8 +2421,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			Log.d("memberlocationlatlongTo", "" + memberlocationlatlongTo);
 			Log.d("memberlocationaddressTo", "" + memberlocationaddressTo);
 		}
-
-		joinpoolchangelocationtext.setVisibility(View.VISIBLE);
 
 		joinpoolmap.setOnCameraChangeListener(new OnCameraChangeListener() {
 
@@ -2519,7 +2522,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					startaddlatlng.add(new LatLng(lat, lng));
-
+				
 					//
 					String endadd = subArray1.getJSONObject(i1)
 							.getString("end_location").toString();
@@ -2531,6 +2534,18 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					endaddlatlng.add(new LatLng(lat4, lng4));
+					
+					
+					if(i1==0){
+						FareLocationList.add(new LatLng(lat, lng));
+						FareLocationList.add(new LatLng(lat4, lng4));
+
+					}
+					else
+						FareLocationList.add(new LatLng(lat4, lng4));
+
+					
+
 
 					// ////////////
 
@@ -2618,6 +2633,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			FaredistanceList.clear();
+			FareLocationList.clear();
+			FareMemberDropLocaton.clear();
+			FareMemberPickLocaton.clear();
+			FareMobNoList.clear();
+			
 			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
 
 			} else {
@@ -2651,14 +2672,68 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									.getString("MemberImageName").toString();
 							usermemst = subArray.getJSONObject(i)
 									.getString("Status").toString();
+							
+							//Added Owner no and start end location for fare
+							
+							FareMobNoList.add(subArray.getJSONObject(i)
+									.getString("OwnerNumber").toString());
+							
+							Address locationAddressFrom = null, locationAddressTo = null;
+
+							
+							String fromAdd = rideDetailsModel.getFromLocation();
+							String toAdd = rideDetailsModel.getToLocation();
+							Geocoder fcoder = new Geocoder(MemberRideFragmentActivity.this);
+							try {
+								ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+										.getFromLocationName(fromAdd, 50);
+
+								for (Address add : adresses) {
+									locationAddressFrom = add;
+								}
+
+								adresses = (ArrayList<Address>) fcoder.getFromLocationName(
+										toAdd, 50);
+								for (Address add : adresses) {
+									locationAddressTo = add;
+								}
+
+							} catch (Exception e) {
+								e.printStackTrace();
+
+							}
+
+							String src = locationAddressFrom.getLatitude() + ","
+									+ locationAddressFrom.getLongitude();
+							String des = locationAddressTo.getLatitude() + ","
+									+ locationAddressTo.getLongitude();
+							
+							LatLng llFrom=new LatLng(locationAddressFrom.getLatitude(), locationAddressFrom.getLongitude());
+							LatLng llTo=new LatLng(locationAddressTo.getLatitude(), locationAddressTo.getLongitude());
+
+							FareMemberPickLocaton.add(llFrom);
+							FareMemberDropLocaton.add(llTo);
+
+							
+							FareMobNoList.add(usermemnumber);
+							
+							
+							
+							String arr[]=usermemloclatlong.split(",");
+							
+							LatLng l=new LatLng(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
+							FareMemberPickLocaton.add(l);
+							String arr1[]=usermemloclatlongEnd.split(",");
+
+							LatLng l1=new LatLng(Double.parseDouble(arr1[0]), Double.parseDouble(arr1[1]));
+							FareMemberDropLocaton.add(l1);
+							
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
 
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -2735,6 +2810,26 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									.getString("MemberImageName").toString());
 							ShowMemberStatus.add(subArray.getJSONObject(i)
 									.getString("Status").toString());
+							
+							//Added for fare calculation
+							FareMobNoList.add(subArray.getJSONObject(i)
+									.getString("MemberNumber").toString());
+
+	            String arr[]=subArray
+						.getJSONObject(i)
+						.getString("MemberLocationlatlong")
+						.toString().split(",");
+							
+							LatLng l=new LatLng(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
+							FareMemberPickLocaton.add(l);
+							String arr1[]=subArray
+									.getJSONObject(i)
+									.getString("MemberEndLocationlatlong")
+									.toString().split(",");
+
+							LatLng l1=new LatLng(Double.parseDouble(arr1[0]), Double.parseDouble(arr1[1]));
+							FareMemberDropLocaton.add(l1);
+							
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -2763,13 +2858,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									.title(ShowMemberLocationAddress.get(i))
 									.icon(BitmapDescriptorFactory
 											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-					joinpoolmap
-							.addMarker(new MarkerOptions()
-									.position(ltEnd)
-									.snippet(String.valueOf(i))
-									.title(ShowMemberLocationAddressEnd.get(i))
-									.icon(BitmapDescriptorFactory
-											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+					if (!ShowMemberLocationAddressEnd.get(i).equalsIgnoreCase(
+							""))
+						joinpoolmap
+								.addMarker(new MarkerOptions()
+										.position(ltEnd)
+										.snippet(String.valueOf(i))
+										.title(ShowMemberLocationAddressEnd
+												.get(i))
+										.icon(BitmapDescriptorFactory
+												.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 				}
 			}
 			// For single root
@@ -4048,6 +4146,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			via_waypoint.clear();
 			via_waypointstrarr.clear();
 			rectlinesarr.clear();
+			FareLocationList.clear();
 
 			JSONObject jsonObject = new JSONObject(CompletePageResponse);
 
@@ -4094,6 +4193,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					endaddlatlng.add(new LatLng(lat4, lng4));
+					
+					if(i1==0){
+						FareLocationList.add(new LatLng(lat, lng));
+						FareLocationList.add(new LatLng(lat4, lng4));
+
+					}
+					else
+						FareLocationList.add(new LatLng(lat4, lng4));
+
+					
+
 
 					// ////////////
 

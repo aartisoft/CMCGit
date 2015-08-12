@@ -15,8 +15,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -51,6 +54,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -100,9 +104,12 @@ import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
-import com.clubmycab.ui.FavoriteLocationsAcivity;
+import com.clubmycab.ui.FirstLoginWalletsActivity;
 import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.MobileSiteActivity;
+import com.clubmycab.ui.MobileSiteFragment;
 import com.clubmycab.ui.UpdatePickupLocationFragmentActivity;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
@@ -126,7 +133,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.maps.android.PolyUtil;
 
 public class MemberRideFragmentActivity extends FragmentActivity implements
@@ -172,7 +178,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	ArrayList<Integer> durationList = new ArrayList<Integer>();
 	ArrayList<Integer> distanceList = new ArrayList<Integer>();
 
-	
 	ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
 	ArrayList<LatLng> via_waypoint = new ArrayList<LatLng>();
 	ArrayList<String> via_waypointstrarr = new ArrayList<String>();
@@ -182,7 +187,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	// boolean markerClicked;
 	// Marker memberlocationmarker;
 
-	String memberlocationaddressFrom=null, memberlocationaddressTo=null;
+	String memberlocationaddressFrom = null, memberlocationaddressTo = null;
 	LatLng memberlocationlatlong = null, memberlocationlatlongTo = null;
 	boolean isPick = false;
 
@@ -246,7 +251,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 	ImageView refreshlocationbtn;
 
-	Marker mylocationmarkerFrom,mylocationmarkerTo;
+	Marker mylocationmarkerFrom, mylocationmarkerTo;
 
 	ArrayList<String> namearray = new ArrayList<String>();
 	ArrayList<String> phonenoarray = new ArrayList<String>();
@@ -532,8 +537,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 															.icon(BitmapDescriptorFactory
 																	.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
-											
-											
 											tvJoinRide
 													.setText("Select Ride Drop Location");
 											// onedialog = new ProgressDialog(
@@ -591,8 +594,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									new DialogInterface.OnClickListener() {
 										public void onClick(
 												DialogInterface dialog, int id) {
-											
-											
+
 											mylocationmarkerTo = joinpoolmap
 													.addMarker(new MarkerOptions()
 															.position(
@@ -602,7 +604,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 															.title(usermemlocadd)
 															.icon(BitmapDescriptorFactory
 																	.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
 
 											Log.d("memberlocationlatlong:::",
 													"" + memberlocationlatlong);
@@ -746,12 +747,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
 						UpdatePickupLocationFragmentActivity.class);
-		
+
 				mainIntent.putExtra("CabId", rideDetailsModel.getCabId());
-				mainIntent.putExtra("CabStatus", rideDetailsModel.getCabStatus());
+				mainIntent.putExtra("CabStatus",
+						rideDetailsModel.getCabStatus());
 				mainIntent.putExtra("MobileNumber",
-						
-						rideDetailsModel.getMobileNumber());
+
+				rideDetailsModel.getMobileNumber());
 				mainIntent.putExtra("OwnerName",
 						rideDetailsModel.getOwnerName());
 				mainIntent.putExtra("FromLocation",
@@ -1662,12 +1664,60 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View view) {
 
-				// tracker.send(new HitBuilders.EventBuilder()
-				// .setCategory("Fare settled by wallet")
-				// .setAction("Fare settled by wallet")
-				// .setLabel("Fare settled by wallet").build());
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare settled by wallet")
+						.setAction("Fare settled by wallet")
+						.setLabel("Fare settled by wallet").build());
 
 				dialog.dismiss();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				String token = sharedPreferences.getString("token", "");
+
+				if (token != null && !token.isEmpty()) {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForGetMyFare().executeOnExecutor(
+								AsyncTask.THREAD_POOL_EXECUTOR,
+								rideDetailsModel.getCabId(), MemberNumberstr,
+								"isWalletToWallet");
+					} else {
+						new ConnectionTaskForGetMyFare().execute(
+								rideDetailsModel.getCabId(), MemberNumberstr,
+								"isWalletToWallet");
+					}
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("You cannot make a transfer as you do not have a wallet integrated yet, would you like to add a wallet now?");
+					builder.setCancelable(false);
+
+					builder.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent mainIntent = new Intent(
+											MemberRideFragmentActivity.this,
+											FirstLoginWalletsActivity.class);
+									mainIntent.putExtra("from", "wallet");
+									startActivity(mainIntent);
+								}
+							});
+
+					builder.setNegativeButton("NO",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+								}
+							});
+
+					builder.show();
+				}
 
 			}
 		});
@@ -1835,7 +1885,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void v) {
-			
+
 			if (onedialog.isShowing()) {
 				onedialog.dismiss();
 			}
@@ -1850,10 +1900,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			// int index = 0;
 			rectlinesarr.clear();
-			
+
 			Random rnd = new Random();
-		int color = Color.argb(255, rnd.nextInt(256),
-					rnd.nextInt(256), rnd.nextInt(256));
+			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
+					rnd.nextInt(256));
 			for (int i = 0; i < steps.size(); i++) {
 
 				ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
@@ -1897,9 +1947,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 						listGeopoints.add(new LatLng(lat11, lng11));
 
-//						Random rnd = new Random();
-//						int color = Color.argb(255, rnd.nextInt(256),
-//								rnd.nextInt(256), rnd.nextInt(256));
+						// Random rnd = new Random();
+						// int color = Color.argb(255, rnd.nextInt(256),
+						// rnd.nextInt(256), rnd.nextInt(256));
 
 						PolylineOptions rectLine = new PolylineOptions().width(
 								5).color(color);
@@ -1926,61 +1976,50 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				@Override
 				public void onMapClick(LatLng point) {
-					
-					
 
 					setOnMapClick(point);
 				}
 			});
 
-			
+			for (int i = 0; i < startaddlatlng.size(); i++) {
 
-			for(int i=0;i<startaddlatlng.size();i++){
-				
-				Log.d("duration:distance", ""+durationList.get(i)+":"+distanceList.get(i));
-				
-				if(i==0){
-				joinpoolmap.addMarker(new MarkerOptions()
-				.position(startaddlatlng.get(i))
-				.title(startaddress.get(i))
-				.snippet("start")
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.start)));
-				}
-				else if(i==(startaddlatlng.size()-1)){
-					joinpoolmap
-					.addMarker(new MarkerOptions()
+				Log.d("duration:distance", "" + durationList.get(i) + ":"
+						+ distanceList.get(i));
+
+				if (i == 0) {
+					joinpoolmap.addMarker(new MarkerOptions()
+							.position(startaddlatlng.get(i))
+							.title(startaddress.get(i))
+							.snippet("start")
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.start)));
+				} else if (i == (startaddlatlng.size() - 1)) {
+					joinpoolmap.addMarker(new MarkerOptions()
 							.position(endaddlatlng.get(i))
 							.title(endaddress.get(i))
 							.snippet("end")
 							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.end)));		
-				}
-				else{
-					
-					joinpoolmap
-					.addMarker(new MarkerOptions()
-							.position(startaddlatlng.get(i))
-							.title(startaddress.get(i))
-							.snippet("mylocation")
-						.icon(BitmapDescriptorFactory
-							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-					
-					
-					joinpoolmap
-					.addMarker(new MarkerOptions()
-							.position(endaddlatlng.get(i))
-							.title(endaddress.get(i))
-							.snippet("myEndlocation")
-						.icon(BitmapDescriptorFactory
-							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-					
+									.fromResource(R.drawable.end)));
+				} else {
 
-				
+					joinpoolmap
+							.addMarker(new MarkerOptions()
+									.position(startaddlatlng.get(i))
+									.title(startaddress.get(i))
+									.snippet("mylocation")
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+					joinpoolmap
+							.addMarker(new MarkerOptions()
+									.position(endaddlatlng.get(i))
+									.title(endaddress.get(i))
+									.snippet("myEndlocation")
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
 				}
 
-	
-				
 			}
 			LatLngBounds.Builder bc = null;
 
@@ -1997,33 +2036,33 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			bc.include(startaddlatlng.get(0));
-			bc.include(endaddlatlng.get(endaddlatlng.size()-1));
+			bc.include(endaddlatlng.get(endaddlatlng.size() - 1));
 			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
 					bc.build(), 50));
-			
-//			if(usermemlocadd!=null){
-//
-//			String[] latlong = usermemloclatlong.split(",");
-//			LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
-//					Double.parseDouble(latlong[1]));
-//			mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
-//					.position(lt)
-//					.snippet("mylocation")
-//					.title(usermemlocadd)
-//					.icon(BitmapDescriptorFactory
-//							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-//			
-//
-//			String[] latlong1 = usermemloclatlongEnd.split(",");
-//			LatLng lt1 = new LatLng(Double.parseDouble(latlong1[0]),
-//					Double.parseDouble(latlong1[1]));
-//			mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
-//					.position(lt1)
-//					.snippet("myEndlocation")
-//					.title(usermemlocaddEnd)
-//					.icon(BitmapDescriptorFactory
-//							.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-//			}
+
+			// if(usermemlocadd!=null){
+			//
+			// String[] latlong = usermemloclatlong.split(",");
+			// LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+			// Double.parseDouble(latlong[1]));
+			// mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
+			// .position(lt)
+			// .snippet("mylocation")
+			// .title(usermemlocadd)
+			// .icon(BitmapDescriptorFactory
+			// .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+			//
+			//
+			// String[] latlong1 = usermemloclatlongEnd.split(",");
+			// LatLng lt1 = new LatLng(Double.parseDouble(latlong1[0]),
+			// Double.parseDouble(latlong1[1]));
+			// mylocationmarker = joinpoolmap.addMarker(new MarkerOptions()
+			// .position(lt1)
+			// .snippet("myEndlocation")
+			// .title(usermemlocaddEnd)
+			// .icon(BitmapDescriptorFactory
+			// .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+			// }
 
 			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			// new ConnectionTaskForShowMembersOnMap()
@@ -2086,10 +2125,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					+ locationAddressFrom.getLongitude();
 			String des = locationAddressTo.getLatitude() + ","
 					+ locationAddressTo.getLongitude();
-			
-			Log.d("src:", "" +src);
-			Log.d("des", "" + des);
 
+			Log.d("src:", "" + src);
+			Log.d("des", "" + des);
 
 			// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
 
@@ -2098,7 +2136,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					+ src
 					+ "&destination="
 					+ des
-					+wayPointUrl
+					+ wayPointUrl
 					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
 					+ GlobalVariables.GoogleMapsAPIKey;
 
@@ -2156,21 +2194,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					endaddlatlng.add(new LatLng(lat4, lng4));
-					
-					//Code fro get distance and duration
-					
+
+					// Code fro get distance and duration
+
 					String duration = subArray1.getJSONObject(i1)
-							.getString("duration").toString();	
+							.getString("duration").toString();
 					JSONObject jsonObjectDuraton = new JSONObject(duration);
-					
+
 					durationList.add(jsonObjectDuraton.getInt("value"));
 
-					
 					String distance = subArray1.getJSONObject(i1)
 							.getString("distance").toString();
 					JSONObject jsonObjectDistance = new JSONObject(distance);
 
-distanceList.add(jsonObjectDistance.getInt("value"));
+					distanceList.add(jsonObjectDistance.getInt("value"));
 					// ////////////
 
 					steps.add(subArray1.getJSONObject(i1).getString("steps")
@@ -2332,8 +2369,6 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				}
 			});
 
-		
-
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForShowMembersOnMap()
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -2356,9 +2391,10 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 
 	private void setOnMapClick(LatLng point) {
 		joinpoolmap.animateCamera(CameraUpdateFactory.newLatLng(point));
-		
-		if(memberlocationaddressFrom.equalsIgnoreCase("")||memberlocationaddressFrom.equalsIgnoreCase(""))
-		locationmarker.setVisibility(View.VISIBLE);
+
+		if (memberlocationaddressFrom.equalsIgnoreCase("")
+				|| memberlocationaddressFrom.equalsIgnoreCase(""))
+			locationmarker.setVisibility(View.VISIBLE);
 		if (!isPick) {
 			memberlocationlatlong = point;
 			memberlocationaddressFrom = MapUtilityMethods.getAddress(
@@ -2589,8 +2625,6 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				// mycalculatorbtn.setVisibility(View.VISIBLE);
 
 				try {
-					
-
 
 					JSONArray subArray = new JSONArray(checkpoolalreadyjoinresp);
 					for (int i = 0; i < subArray.length(); i++) {
@@ -2605,7 +2639,7 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 							usermemloclatlong = subArray.getJSONObject(i)
 									.getString("MemberLocationlatlong")
 									.toString();
-							
+
 							usermemlocaddEnd = subArray.getJSONObject(i)
 									.getString("MemberEndLocationAddress")
 									.toString();
@@ -2640,7 +2674,6 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 								.icon(BitmapDescriptorFactory
 										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
-		
 				mylocationmarkerTo = joinpoolmap
 						.addMarker(new MarkerOptions()
 								.position(lt)
@@ -2688,13 +2721,12 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 									.getJSONObject(i)
 									.getString("MemberEndLocationAddress")
 									.toString());
-							
-							
+
 							ShowMemberLocationLatLong.add(subArray
 									.getJSONObject(i)
 									.getString("MemberLocationlatlong")
 									.toString());
-							
+
 							ShowMemberLocationLatLongEnd.add(subArray
 									.getJSONObject(i)
 									.getString("MemberEndLocationlatlong")
@@ -2714,13 +2746,15 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				}
 
 				for (int i = 0; i < ShowMemberName.size(); i++) {
-					String[] latlongStart = ShowMemberLocationLatLong.get(i).split(
-							",");
-					String[] latlongEnd = ShowMemberLocationLatLongEnd.get(i).split(
-							",");
-					LatLng ltStart = new LatLng(Double.parseDouble(latlongStart[0]),
+					String[] latlongStart = ShowMemberLocationLatLong.get(i)
+							.split(",");
+					String[] latlongEnd = ShowMemberLocationLatLongEnd.get(i)
+							.split(",");
+					LatLng ltStart = new LatLng(
+							Double.parseDouble(latlongStart[0]),
 							Double.parseDouble(latlongStart[1]));
-					LatLng ltEnd = new LatLng(Double.parseDouble(latlongEnd[0]),
+					LatLng ltEnd = new LatLng(
+							Double.parseDouble(latlongEnd[0]),
 							Double.parseDouble(latlongEnd[1]));
 					joinpoolmap
 							.addMarker(new MarkerOptions()
@@ -2730,22 +2764,22 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 									.icon(BitmapDescriptorFactory
 											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 					joinpoolmap
-					.addMarker(new MarkerOptions()
-							.position(ltEnd)
-							.snippet(String.valueOf(i))
-							.title(ShowMemberLocationAddressEnd.get(i))
-							.icon(BitmapDescriptorFactory
-									.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+							.addMarker(new MarkerOptions()
+									.position(ltEnd)
+									.snippet(String.valueOf(i))
+									.title(ShowMemberLocationAddressEnd.get(i))
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 				}
 			}
-//For single root
-			
-			//https://maps.googleapis.com/maps/api/directions/json?origin=-23.3246,-51.1489&destination=-23.2975,-51.2007&%20waypoints=optimize:true|-23.3246,-51.1489|-23.3206,-51.1459|-23.2975,-51.2007&sensor=false
-			String wayPoint="&waypoints=optimize:true";
-			
-			if(!showmembersresp.equalsIgnoreCase("No Members joined yet")||!checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool"))
-			{
-				
+			// For single root
+
+			// https://maps.googleapis.com/maps/api/directions/json?origin=-23.3246,-51.1489&destination=-23.2975,-51.2007&%20waypoints=optimize:true|-23.3246,-51.1489|-23.3206,-51.1459|-23.2975,-51.2007&sensor=false
+			String wayPoint = "&waypoints=optimize:true";
+
+			if (!showmembersresp.equalsIgnoreCase("No Members joined yet")
+					|| !checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+
 				steps.clear();
 				Summary.clear();
 				startaddress.clear();
@@ -2755,50 +2789,51 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				listGeopoints.clear();
 				via_waypoint.clear();
 				via_waypointstrarr.clear();
-				
-				for(int i=0;i<rectlinesarr.size();i++){
-					
-					Polyline polyline = joinpoolmap.addPolyline(rectlinesarr.get(i));
+
+				for (int i = 0; i < rectlinesarr.size(); i++) {
+
+					Polyline polyline = joinpoolmap.addPolyline(rectlinesarr
+							.get(i));
 					polyline.remove();
-					
+
 				}
 				joinpoolmap.clear();
 
 				rectlinesarr.clear();
-				
-//				http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
-				
-				if(!showmembersresp.equalsIgnoreCase("No Members joined yet")){
-				for(int i=0;i<ShowMemberLocationLatLong.size();i++){
-					
-					String latlong[]=ShowMemberLocationLatLong.get(i).split(",");
-					String latlong1[]=ShowMemberLocationLatLongEnd.get(i).split(",");
 
-					wayPoint+="%7C"+latlong[0]+","+latlong[1]+"%7C"+latlong1[0]+","+latlong1[1];		
+				// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
 
-					
-				}
-					
-				}
-				if(!checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")){
-					String latlong[]=usermemloclatlong	.split(",");
-					String latlong1[]=usermemloclatlongEnd	.split(",");
+				if (!showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+					for (int i = 0; i < ShowMemberLocationLatLong.size(); i++) {
 
-					wayPoint+="%7C"+latlong[0]+","+latlong[1]+"%7C"+latlong1[0]+","+latlong1[1];		
+						String latlong[] = ShowMemberLocationLatLong.get(i)
+								.split(",");
+						String latlong1[] = ShowMemberLocationLatLongEnd.get(i)
+								.split(",");
 
+						wayPoint += "%7C" + latlong[0] + "," + latlong[1]
+								+ "%7C" + latlong1[0] + "," + latlong1[1];
+
+					}
 
 				}
-				
-				
+				if (!checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
+					String latlong[] = usermemloclatlong.split(",");
+					String latlong1[] = usermemloclatlongEnd.split(",");
+
+					wayPoint += "%7C" + latlong[0] + "," + latlong[1] + "%7C"
+							+ latlong1[0] + "," + latlong1[1];
+
+				}
+
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					new ConnectionTaskForSingleRoot()
-							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,wayPoint);
+					new ConnectionTaskForSingleRoot().executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, wayPoint);
 				} else {
 					new ConnectionTaskForSingleRoot().execute(wayPoint);
-				}	
-				
-			}
-			else{
+				}
+
+			} else {
 				if (onedialog.isShowing()) {
 					onedialog.dismiss();
 				}
@@ -2826,15 +2861,14 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.start)));
 
-				joinpoolmap
-						.addMarker(new MarkerOptions()
-								.position(endaddlatlng.get(0))
-								.title(endaddress.get(0))
-								.snippet("end")
-								.icon(BitmapDescriptorFactory
-										.fromResource(R.drawable.end)));
+				joinpoolmap.addMarker(new MarkerOptions()
+						.position(endaddlatlng.get(0))
+						.title(endaddress.get(0))
+						.snippet("end")
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.end)));
 			}
-			
+
 			joinpoolmap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 				@Override
@@ -2869,19 +2903,17 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 									usermemimagename);
 						}
 
-					} 
-					 else if (arg0.getSnippet().equals("myEndlocation")) {
+					} else if (arg0.getSnippet().equals("myEndlocation")) {
 
-							if (rideDetailsModel.getCabStatus().toString().trim()
-									.equalsIgnoreCase("A")) {
-								showAlertDialogmylocation(usermemname,
-										usermemnumber, usermemlocaddEnd,
-										usermemimagename);
-							}
+						if (rideDetailsModel.getCabStatus().toString().trim()
+								.equalsIgnoreCase("A")) {
+							showAlertDialogmylocation(usermemname,
+									usermemnumber, usermemlocaddEnd,
+									usermemimagename);
+						}
 
-						} 
-					
-					
+					}
+
 					else if (arg0.getTitle().equals("Last updated at")) {
 						// Log.d("MemberRideFragment",
 						// "setOnMarkerClickListener OwnerLocation : ");
@@ -2952,8 +2984,6 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 
 				}
 			}
-
-			
 
 			// //////////////////////////
 			if (rideDetailsModel.getCabStatus().equals("A")
@@ -3971,23 +4001,23 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				}
 			}
 
-//			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
-//					bc.build(), 50));
-//
-//			joinpoolmap.addMarker(new MarkerOptions()
-//					.position(startaddlatlng.get(0))
-//					.title(startaddress.get(0))
-//					.snippet("start")
-//					.icon(BitmapDescriptorFactory
-//							.fromResource(R.drawable.start)));
-//
-//			joinpoolmap
-//					.addMarker(new MarkerOptions()
-//							.position(endaddlatlng.get(0))
-//							.title(endaddress.get(0))
-//							.snippet("end")
-//							.icon(BitmapDescriptorFactory
-//									.fromResource(R.drawable.end)));
+			// joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+			// bc.build(), 50));
+			//
+			// joinpoolmap.addMarker(new MarkerOptions()
+			// .position(startaddlatlng.get(0))
+			// .title(startaddress.get(0))
+			// .snippet("start")
+			// .icon(BitmapDescriptorFactory
+			// .fromResource(R.drawable.start)));
+			//
+			// joinpoolmap
+			// .addMarker(new MarkerOptions()
+			// .position(endaddlatlng.get(0))
+			// .title(endaddress.get(0))
+			// .snippet("end")
+			// .icon(BitmapDescriptorFactory
+			// .fromResource(R.drawable.end)));
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForShowMembersOnMap()
@@ -4254,7 +4284,7 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
-				
+
 				onedialog = new ProgressDialog(MemberRideFragmentActivity.this);
 				onedialog.setMessage("Please Wait...");
 				onedialog.setCancelable(false);
@@ -4270,7 +4300,7 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 						.getStringExtra("memberlocationaddress");
 				String updatedlocationlatlong = data
 						.getStringExtra("memberlocationlatlong");
-				
+
 				final String updatedlocationaddressTo = data
 						.getStringExtra("memberlocationaddressTo");
 				String updatedlocationlatlongTo = data
@@ -4286,84 +4316,84 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				String[] latlong = updatedlocationlatlong.split(",");
 				LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
 						Double.parseDouble(latlong[1]));
-				
+
 				String[] latlongTo = updatedlocationlatlongTo.split(",");
 				LatLng ltTo = new LatLng(Double.parseDouble(latlongTo[0]),
 						Double.parseDouble(latlongTo[1]));
 
-//				mylocationmarkerFrom = joinpoolmap
-//						.addMarker(new MarkerOptions()
-//								.position(lt)
-//								.snippet("mylocation")
-//								.title(updatedlocationaddress)
-//								.icon(BitmapDescriptorFactory
-//										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-//
-//				
-//				mylocationmarkerFrom = joinpoolmap
-//						.addMarker(new MarkerOptions()
-//								.position(ltTo)
-//								.snippet("myEndlocation")
-//								.title(updatedlocationaddressTo)
-//								.icon(BitmapDescriptorFactory
-//										.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+				// mylocationmarkerFrom = joinpoolmap
+				// .addMarker(new MarkerOptions()
+				// .position(lt)
+				// .snippet("mylocation")
+				// .title(updatedlocationaddress)
+				// .icon(BitmapDescriptorFactory
+				// .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+				//
+				//
+				// mylocationmarkerFrom = joinpoolmap
+				// .addMarker(new MarkerOptions()
+				// .position(ltTo)
+				// .snippet("myEndlocation")
+				// .title(updatedlocationaddressTo)
+				// .icon(BitmapDescriptorFactory
+				// .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
-//				joinpoolmap
-//						.setOnMarkerClickListener(new OnMarkerClickListener() {
-//
-//							@Override
-//							public boolean onMarkerClick(Marker arg0) {
-//
-//								if (arg0.getSnippet().equals("start")) {
-//
-//									showAlertDialog(
-//											rideDetailsModel.getOwnerName(),
-//											rideDetailsModel.getMobileNumber(),
-//											rideDetailsModel.getFromLocation(),
-//											rideDetailsModel.getImagename());
-//
-//								} else if (arg0.getSnippet().equals("end")) {
-//
-//									showAlertDialog(
-//											rideDetailsModel.getOwnerName(),
-//											rideDetailsModel.getMobileNumber(),
-//											rideDetailsModel.getToLocation(),
-//											rideDetailsModel.getImagename());
-//
-//								} else if (arg0.getSnippet().equals(
-//										"mylocation")) {
-//
-//									showAlertDialogmylocation(usermemname,
-//											usermemnumber,
-//											updatedlocationaddress,
-//											usermemimagename);
-//								} else {
-//
-//									if (checkpoolalreadyjoinresp
-//											.equalsIgnoreCase("fresh pool")) {
-//
-//										Toast.makeText(
-//												MemberRideFragmentActivity.this,
-//												"Join ride to see details of other members",
-//												Toast.LENGTH_LONG).show();
-//									} else {
-//										final Integer index = Integer
-//												.parseInt(arg0.getSnippet());
-//
-//										showAlertDialog(ShowMemberName
-//												.get(index), ShowMemberNumber
-//												.get(index),
-//												ShowMemberLocationAddress
-//														.get(index),
-//												ShowMemberImageName.get(index));
-//									}
-//
-//								}
-//
-//								return true;
-//							}
-//
-//						});
+				// joinpoolmap
+				// .setOnMarkerClickListener(new OnMarkerClickListener() {
+				//
+				// @Override
+				// public boolean onMarkerClick(Marker arg0) {
+				//
+				// if (arg0.getSnippet().equals("start")) {
+				//
+				// showAlertDialog(
+				// rideDetailsModel.getOwnerName(),
+				// rideDetailsModel.getMobileNumber(),
+				// rideDetailsModel.getFromLocation(),
+				// rideDetailsModel.getImagename());
+				//
+				// } else if (arg0.getSnippet().equals("end")) {
+				//
+				// showAlertDialog(
+				// rideDetailsModel.getOwnerName(),
+				// rideDetailsModel.getMobileNumber(),
+				// rideDetailsModel.getToLocation(),
+				// rideDetailsModel.getImagename());
+				//
+				// } else if (arg0.getSnippet().equals(
+				// "mylocation")) {
+				//
+				// showAlertDialogmylocation(usermemname,
+				// usermemnumber,
+				// updatedlocationaddress,
+				// usermemimagename);
+				// } else {
+				//
+				// if (checkpoolalreadyjoinresp
+				// .equalsIgnoreCase("fresh pool")) {
+				//
+				// Toast.makeText(
+				// MemberRideFragmentActivity.this,
+				// "Join ride to see details of other members",
+				// Toast.LENGTH_LONG).show();
+				// } else {
+				// final Integer index = Integer
+				// .parseInt(arg0.getSnippet());
+				//
+				// showAlertDialog(ShowMemberName
+				// .get(index), ShowMemberNumber
+				// .get(index),
+				// ShowMemberLocationAddress
+				// .get(index),
+				// ShowMemberImageName.get(index));
+				// }
+				//
+				// }
+				//
+				// return true;
+				// }
+				//
+				// });
 			}
 		}
 	}
@@ -5855,6 +5885,376 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 		}
 	}
 
+	private void checkTransactionLimit(String mobilenumber, String amount) {
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ amount + "''" + mobilenumber + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/checkTransactionLimit";
+		String params = "cell=" + mobilenumber + "&amount=" + amount + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("CheckPoolFragmentActivity", "checkTransactionLimit endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"checkTransactionLimit", true);
+	}
+
+	private void logTransaction(String amount, String fee, String merchantname,
+			String mid, String token, String sendercell, String receivercell,
+			String cabID) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/logTransaction.php";
+		String params = "amount=" + amount + "&fee=" + fee + "&merchantname="
+				+ merchantname + "&mid=" + mid + "&token=" + token
+				+ "&sendercell=" + sendercell + "&receivercell=" + receivercell
+				+ "&cabId=" + cabID;
+		Log.d("CheckPoolFragmentActivity", "logTransaction endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"logTransaction", false);
+	}
+
+	private void initiatePeerTransfer(String sendercell, String receivercell,
+			String amount, String fee, String orderid, String token) {
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ amount + "''" + fee + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + orderid + "''"
+				+ receivercell + "''" + sendercell + "''" + token + "'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/initiatePeerTransfer";
+		String params = "sendercell=" + sendercell + "&receivercell="
+				+ receivercell + "&amount=" + amount + "&fee=" + fee
+				+ "&orderid=" + orderid + "&token=" + token + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("CheckPoolFragmentActivity", "initiatePeerTransfer endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"initiatePeerTransfer", true);
+	}
+
+	private void tokenRegenerate(String mobilenumber, String token,
+			boolean attemptReTransfer) {
+		String msgcode = "507";
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
+				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
+				+ token + "'",
+				GlobalVariables.Mobikwik_14SecretKey_TokenRegenerate);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/tokenregenerate";
+		String params = "cell=" + mobilenumber + "&token=" + token
+				+ "&msgcode=" + msgcode + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("CheckPoolFragmentActivity", "tokenRegenerate endpoint : "
+				+ endpoint + " params : " + params);
+		if (attemptReTransfer) {
+			new GlobalAsyncTask(this, endpoint, params, null, this, true,
+					"tokenRegenerateReTransfer", true);
+		} else {
+			new GlobalAsyncTask(this, endpoint, params, null, this, true,
+					"tokenregenerate", true);
+		}
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		// if (uniqueID.equals("querywallet")) {
+		// try {
+		// JSONObject jsonObject = new JSONObject(response);
+		// Log.d("CheckPoolFragmentActivity", "querywallet jsonObject : "
+		// + jsonObject);
+		// if (!checkResponseChecksum(response)) {
+		// checksumInvalidToast();
+		// return;
+		// }
+		//
+		// if (jsonObject.getString("status").equals("SUCCESS")) {
+		// checkTransactionLimit(OwnerMobileNumber.substring(4),
+		// amountToPay);
+		// } else {
+		// Toast.makeText(
+		// CheckPoolFragmentActivity.this,
+		// "The transfer cannot be made as the person you wish to transfer to does not have an active wallet",
+		// Toast.LENGTH_LONG).show();
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// } else
+		if (uniqueID.equals("checkTransactionLimit")) {
+			Log.d("CheckPoolFragmentActivity",
+					"checkTransactionLimit response : " + response);
+			if (!checkResponseChecksum(response)) {
+				checksumInvalidToast();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("SUCCESS")) {
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"MobikwikToken", 0);
+					String token = sharedPreferences.getString("token", "");
+
+					logTransaction(amountToPay, "0",
+							GlobalVariables.Mobikwik_MerchantName,
+							GlobalVariables.Mobikwik_Mid, token,
+							MemberNumberstr.substring(4),
+							payToPerson.substring(4),
+							rideDetailsModel.getCabId());
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("You do not have sufficient balance in your wallet to make this transfer, would you like to top-up your wallet?");
+					builder.setCancelable(false);
+
+					builder.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									openAppOrMSite();
+								}
+							});
+
+					builder.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+
+								}
+							});
+
+					builder.show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("logTransaction")) {
+			Log.d("CheckPoolFragmentActivity", "logTransaction response : "
+					+ response);
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString()
+						.equalsIgnoreCase("success")) {
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"MobikwikToken", 0);
+					String token = sharedPreferences.getString("token", "");
+
+					initiatePeerTransfer(MemberNumberstr.substring(4),
+							payToPerson.substring(4), amountToPay, "0",
+							jsonObject.get("orderId").toString(), token);
+				} else {
+					Toast.makeText(MemberRideFragmentActivity.this,
+							"Something went wrong, please try again",
+							Toast.LENGTH_LONG).show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(MemberRideFragmentActivity.this,
+						"Something went wrong, please try again",
+						Toast.LENGTH_LONG).show();
+			}
+		} else if (uniqueID.equals("initiatePeerTransfer")) {
+			Log.d("CheckPoolFragmentActivity",
+					"initiatePeerTransfer response : " + response);
+
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"MobikwikToken", 0);
+			String token = sharedPreferences.getString("token", "");
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString()
+						.equalsIgnoreCase("SUCCESS")) {
+					Toast.makeText(MemberRideFragmentActivity.this,
+							jsonObject.get("statusdescription").toString(),
+							Toast.LENGTH_LONG).show();
+
+					tokenRegenerate(MemberNumberstr.substring(4), token, false);
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForMarkTripCompleted()
+								.executeOnExecutor(
+										AsyncTask.THREAD_POOL_EXECUTOR,
+										rideDetailsModel.getCabId(),
+										OwnerMobileNumber, MemberNumberstr);
+					} else {
+						new ConnectionTaskForMarkTripCompleted().execute(
+								rideDetailsModel.getCabId(), OwnerMobileNumber,
+								MemberNumberstr);
+					}
+				} else {
+					if (jsonObject.get("statusdescription").toString()
+							.contains("Invalid Token")
+							|| jsonObject.get("statusdescription").toString()
+									.contains("Token Expired")) {
+						tokenRegenerate(MemberNumberstr.substring(4), token,
+								true);
+					} else {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								jsonObject.get("statusdescription").toString(),
+								Toast.LENGTH_LONG).show();
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("tokenregenerate")) {
+			Log.d("CheckPoolFragmentActivity", "tokenregenerate response : "
+					+ response);
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				String token = jsonObject.get("token").toString();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("token", token);
+				editor.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else if (uniqueID.equals("tokenRegenerateReTransfer")) {
+			Log.d("CheckPoolFragmentActivity",
+					"tokenRegenerateReTransfer response : " + response);
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				String token = jsonObject.get("token").toString();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("token", token);
+				editor.commit();
+
+				logTransaction(amountToPay, "0",
+						GlobalVariables.Mobikwik_MerchantName,
+						GlobalVariables.Mobikwik_Mid, token,
+						MemberNumberstr.substring(4), payToPerson.substring(4),
+						rideDetailsModel.getCabId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private boolean checkResponseChecksum(String response) {
+
+		try {
+			JSONObject jsonObject = new JSONObject(response);
+
+			Iterator<String> iterator = jsonObject.keys();
+			String responseValues = "";
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String value = jsonObject.get(key).toString();
+
+				if (!value.isEmpty() && value.length() > 0
+						&& !key.equalsIgnoreCase("checksum")) {
+					hashMap.put(key, value);
+				}
+
+				// if (!value.isEmpty() && value.length() > 0 &&
+				// !key.equalsIgnoreCase("checksum")) {
+				// responseValues += (value + "''");
+				// }
+			}
+			// Log.d("checkResponseChecksum", "hashMap : " + hashMap);
+			Map<String, String> map = new TreeMap<String, String>(hashMap);
+			List<String> list = new ArrayList<String>(map.keySet());
+			Log.d("checkResponseChecksum",
+					"map : " + map + " keySet : " + map.keySet() + " list : "
+							+ list);
+
+			for (int i = 0; i < list.size(); i++) {
+				responseValues += (map.get(list.get(i)) + "''");
+			}
+
+			responseValues = responseValues.substring(0,
+					responseValues.length() - 2);
+			String responseValuesFinal = "'" + responseValues + "'";
+
+			// Log.d("checkResponseChecksum", "responseValuesFinal : "
+			// + responseValuesFinal);
+
+			String checkSumGenerated = GlobalMethods
+					.calculateCheckSumForService(responseValuesFinal,
+							GlobalVariables.Mobikwik_14SecretKey);
+			Log.d("checkResponseChecksum", checkSumGenerated);
+
+			if (checkSumGenerated.equals(jsonObject.get("checksum").toString())) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private void checksumInvalidToast() {
+		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
+		Toast.makeText(MemberRideFragmentActivity.this,
+				"Something went wrong, please try again", Toast.LENGTH_LONG)
+				.show();
+	}
+
+	private void openAppOrMSite() {
+
+		String packageName = "com.mobikwik_new";
+		String mSite = "https://m.mobikwik.com";
+
+		if (checkIfAppInstalled(packageName)) {
+
+			Intent launchIntent = getPackageManager()
+					.getLaunchIntentForPackage(packageName);
+			startActivity(launchIntent);
+
+		} else {
+
+			Intent intent = new Intent(this, MobileSiteActivity.class);
+			intent.putExtra(MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL, mSite);
+			startActivity(intent);
+		}
+	}
+
+	private boolean checkIfAppInstalled(String packageName) {
+
+		PackageManager packageManager = getPackageManager();
+
+		try {
+			packageManager.getPackageInfo(packageName,
+					PackageManager.GET_ACTIVITIES);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	private class ConnectionTaskForGetMyFare extends
 			AsyncTask<String, Void, Void> {
 
@@ -5869,6 +6269,7 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 			try {
 				mAuth1.cid = args[0];
 				mAuth1.mnum = args[1];
+				mAuth1.isWalletToWallet = args[2];
 
 				mAuth1.connection();
 			} catch (Exception e) {
@@ -5895,7 +6296,7 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 
 	public class AuthenticateConnectionGetMyFare {
 
-		public String cid, mnum;
+		public String cid, mnum, isWalletToWallet;
 
 		public AuthenticateConnectionGetMyFare() {
 
@@ -5945,13 +6346,112 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				payToPerson = jsonObject.get("paidBy").toString();
 				totalFare = jsonObject.get("totalFare").toString();
 
-				// runOnUiThread(new Runnable() {
-				//
-				// @Override
-				// public void run() {
-				// checkWalletExists(payToPerson.substring(4));
-				// }
-				// });
+				if (isWalletToWallet.equals("isWalletToWallet")) {
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							ArrayList<String> JoinedMemberName = new ArrayList<String>();
+							ArrayList<String> joinedMemberNumber = new ArrayList<String>();
+
+							try {
+								JSONArray subArray = new JSONArray(
+										showmembersresp);
+								for (int i = 0; i < subArray.length(); i++) {
+									try {
+										JoinedMemberName.add(subArray
+												.getJSONObject(i)
+												.getString("MemberName")
+												.toString().trim());
+										joinedMemberNumber.add(subArray
+												.getJSONObject(i)
+												.getString("MemberNumber")
+												.toString().trim());
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							try {
+								JSONArray subArray = new JSONArray(
+										checkpoolalreadyjoinresp);
+								for (int i = 0; i < subArray.length(); i++) {
+									try {
+										JoinedMemberName.add(subArray
+												.getJSONObject(i)
+												.getString("MemberName")
+												.toString().trim());
+										joinedMemberNumber.add(subArray
+												.getJSONObject(i)
+												.getString("MemberNumber")
+												.toString().trim());
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							int index = joinedMemberNumber.indexOf(payToPerson);
+							String membName = "";
+							if (index != -1) {
+								membName = JoinedMemberName.get(index);
+							} else {
+								if (payToPerson.equals(OwnerMobileNumber)) {
+									membName = rideDetailsModel.getOwnerName();
+								}
+							}
+
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									MemberRideFragmentActivity.this);
+							builder.setMessage(FullName + " ("
+									+ MemberNumberstr.substring(4)
+									+ ") agrees to transfer \u20B9"
+									+ amountToPay
+									+ " towards trip cost, undertaken between "
+									+ rideDetailsModel.getFromShortName()
+									+ " to "
+									+ rideDetailsModel.getToShortName()
+									+ ", to " + membName + " ("
+									+ payToPerson.substring(4) + ")");
+							builder.setCancelable(false);
+
+							builder.setPositiveButton("Yes",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// checkWalletExists(payToPerson.substring(4));
+											checkTransactionLimit(
+													MemberNumberstr
+															.substring(4),
+													amountToPay);
+										}
+									});
+
+							builder.setNegativeButton("No",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+										}
+									});
+
+							builder.show();
+						}
+					});
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -6670,10 +7170,5 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 				dialog.dismiss();
 			}
 		}
-	}
-
-	@Override
-	public void getResult(String response, String uniqueID) {
-
 	}
 }

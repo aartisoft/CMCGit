@@ -128,6 +128,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -135,6 +136,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
@@ -173,7 +175,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	//
 	// String ExpTripDuration;
 	// String statusTrip;
-
+	ArrayList<Integer> durationList = new ArrayList<Integer>();
+	ArrayList<Integer> distanceList = new ArrayList<Integer>();
 	String comefrom;
 
 	GoogleMap checkpoolmap;
@@ -202,6 +205,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	ArrayList<String> ShowMemberLocationLatLong = new ArrayList<String>();
 	ArrayList<String> ShowMemberImageName = new ArrayList<String>();
 	ArrayList<String> ShowMemberStatus = new ArrayList<String>();
+	ArrayList<String> ShowMemberLocationAddressEnd = new ArrayList<String>();
+	ArrayList<String> ShowMemberLocationLatLongEnd = new ArrayList<String>();
 
 	LinearLayout ownermessage;
 	LinearLayout ownerinvite;
@@ -337,6 +342,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		rideDetailsModel = gson.fromJson(
 				intent.getStringExtra("RideDetailsModel"),
 				RideDetailsModel.class);
+		checkpoolmap = ((SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.checkpoolmap)).getMap();
+		
 
 		// CabId = intent.getStringExtra("CabId");
 		// MobileNumber = intent.getStringExtra("MobileNumber");
@@ -2361,6 +2369,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			
+			for(int i=0;i<rectlinesarr.size();i++){
+				
+				Polyline polyline = checkpoolmap.addPolyline(rectlinesarr.get(i));
+				polyline.remove();
+				
+			}
+			checkpoolmap.clear();
+
+			rectlinesarr.clear();
 
 			for (int i = 0; i < steps.size(); i++) {
 
@@ -2422,8 +2440,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				}
 			}
 
-			checkpoolmap = ((SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.checkpoolmap)).getMap();
+			
 
 			// Enabling MyLocation Layer of Google Map
 			checkpoolmap.setMyLocationEnabled(true);
@@ -2672,6 +2689,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+				
+				if (onedialog.isShowing()) {
+					onedialog.dismiss();
+				}
 
 			} else {
 
@@ -2683,6 +2704,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				ShowMemberLocationLatLong.clear();
 				ShowMemberImageName.clear();
 				ShowMemberStatus.clear();
+				ShowMemberLocationAddressEnd.clear();
+				ShowMemberLocationLatLongEnd.clear();
 
 				try {
 					JSONArray subArray = new JSONArray(showmembersresp);
@@ -2704,6 +2727,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.getString("MemberImageName").toString());
 							ShowMemberStatus.add(subArray.getJSONObject(i)
 									.getString("Status").toString());
+							
+							ShowMemberLocationAddressEnd.add(subArray
+									.getJSONObject(i)
+									.getString("MemberEndLocationAddress")
+									.toString());
+							ShowMemberLocationLatLongEnd.add(subArray
+									.getJSONObject(i)
+									.getString("MemberEndLocationlatlong")
+									.toString());
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -2715,39 +2747,236 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					e.printStackTrace();
 				}
 
-				for (int i = 0; i < ShowMemberName.size(); i++) {
-					String[] latlong = ShowMemberLocationLatLong.get(i).split(
-							",");
-					LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
-							Double.parseDouble(latlong[1]));
-					checkpoolmap
-							.addMarker(new MarkerOptions()
-									.position(lt)
-									.snippet(String.valueOf(i))
-									.title(ShowMemberLocationAddress.get(i))
-									.icon(BitmapDescriptorFactory
-											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+//				for (int i = 0; i < ShowMemberName.size(); i++) {
+//					
+//
+//					String[] latlongStart = ShowMemberLocationLatLong.get(i).split(
+//							",");
+//					String[] latlongEnd = ShowMemberLocationLatLongEnd.get(i).split(
+//							",");
+//					LatLng ltStart = new LatLng(Double.parseDouble(latlongStart[0]),
+//							Double.parseDouble(latlongStart[1]));
+//					LatLng ltEnd = new LatLng(Double.parseDouble(latlongEnd[0]),
+//							Double.parseDouble(latlongEnd[1]));
+//					checkpoolmap
+//							.addMarker(new MarkerOptions()
+//									.position(ltStart)
+//									.snippet(String.valueOf(i))
+//									.title(ShowMemberLocationAddress.get(i))
+//									.icon(BitmapDescriptorFactory
+//											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+//					checkpoolmap
+//					.addMarker(new MarkerOptions()
+//							.position(ltEnd)
+//							.snippet("myEndlocation")
+//							.title(ShowMemberLocationAddressEnd.get(i))
+//							.icon(BitmapDescriptorFactory
+//									.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+//				
+//					
+////					String[] latlong = ShowMemberLocationLatLong.get(i).split(
+////							",");
+////					LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+////							Double.parseDouble(latlong[1]));
+////					checkpoolmap
+////							.addMarker(new MarkerOptions()
+////									.position(lt)
+////									.snippet(String.valueOf(i))
+////									.title(ShowMemberLocationAddress.get(i))
+////									.icon(BitmapDescriptorFactory
+////											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+////			
+//					}
+				
+				String wayPoint="&waypoints=optimize:true";
+
+				
+				if(!showmembersresp.equalsIgnoreCase("No Members joined yet"))
+				{
+					
+					steps.clear();
+					Summary.clear();
+					startaddress.clear();
+					endaddress.clear();
+					startaddlatlng.clear();
+					endaddlatlng.clear();
+					listGeopoints.clear();
+					via_waypoint.clear();
+					via_waypointstrarr.clear();
+					
+					for(int i=0;i<rectlinesarr.size();i++){
+						
+						Polyline polyline = checkpoolmap.addPolyline(rectlinesarr.get(i));
+						polyline.remove();
+						
+					}
+					checkpoolmap.clear();
+
+					rectlinesarr.clear();
+					
+//					http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
+					
+					if(!showmembersresp.equalsIgnoreCase("No Members joined yet")){
+					for(int i=0;i<ShowMemberLocationLatLong.size();i++){
+						
+						String latlong[]=ShowMemberLocationLatLong.get(i).split(",");
+						String latlong1[]=ShowMemberLocationLatLongEnd.get(i).split(",");
+
+						wayPoint+="%7C"+latlong[0]+","+latlong[1]+"%7C"+latlong1[0]+","+latlong1[1];		
+
+						
+					}
+						
+					}
+					
+					
+					
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForSingleRoot()
+								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,wayPoint);
+					} else {
+						new ConnectionTaskForSingleRoot().execute(wayPoint);
+					}	
+					
 				}
+				else{
+					if (onedialog.isShowing()) {
+						onedialog.dismiss();
+					}
+					
+					
+					// //////////////////////////
+					if (rideDetailsModel.getCabStatus().equals("A")
+							&& rideDetailsModel.getStatus().equals("0")) {
+						try {
+							SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+									"dd/MM/yyyy hh:mm aa");
+							Date date = simpleDateFormat.parse(rideDetailsModel
+									.getTravelDate()
+									+ " "
+									+ rideDetailsModel.getTravelTime());
+
+							ArrayList<String> arrayList = readBookedOrCarPreference();
+
+							// Log.d("CheckPoolFragmentActivity", "startTime : " +
+							// date.getTime());
+
+							if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+								if (rideDetailsModel.getBookingRefNo() == null
+										|| rideDetailsModel.getBookingRefNo()
+												.isEmpty()
+										|| rideDetailsModel.getBookingRefNo()
+												.equalsIgnoreCase("null")) {
+									if (arrayList == null) {
+										showCabBookingDialog(true);
+									} else if (arrayList != null
+											&& arrayList.indexOf(rideDetailsModel
+													.getCabId()) == -1) {
+										showCabBookingDialog(true);
+									} else {
+										showTripStartDialog();
+									}
+								} else {
+									showTripStartDialog();
+								}
+							} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+								if (rideDetailsModel.getBookingRefNo() == null
+										|| rideDetailsModel.getBookingRefNo()
+												.isEmpty()
+										|| rideDetailsModel.getBookingRefNo()
+												.equalsIgnoreCase("null")) {
+									if (arrayList == null) {
+										showCabBookingDialog(false);
+									} else if (arrayList != null
+											&& arrayList.indexOf(rideDetailsModel
+													.getCabId()) == -1) {
+										showCabBookingDialog(false);
+									}
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} else if (rideDetailsModel.getCabStatus().equals("A")
+							&& rideDetailsModel.getStatus().equals("2")) {
+						// For affle traking view
+						Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+						extraParams.put("cabid", rideDetailsModel.getCabId());
+						AffleInAppTracker.inAppTrackerViewName(
+								CheckPoolFragmentActivity.this,
+								"CheckPoolFragmentActivity", "Trip completed",
+								"Trip completed", extraParams);
+
+						showRideCompleteDialog();
+					} else if (rideDetailsModel.getCabStatus().equals("A")
+							&& rideDetailsModel.getStatus().equals("3")) {
+						showPaymentDialog();
+					} else if (rideDetailsModel.getCabStatus().equals("A")) {
+						try {
+							SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+									"dd/MM/yyyy hh:mm aa");
+							Date date = simpleDateFormat.parse(rideDetailsModel
+									.getTravelDate()
+									+ " "
+									+ rideDetailsModel.getTravelTime());
+
+							long expDuration = Long.parseLong(rideDetailsModel
+									.getExpTripDuration());
+
+							if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+								Log.d("CheckPoolFragmentActivity",
+										"ExpTripDuration trip completed");
+								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+									new ConnectionTaskForTripCompleted()
+											.executeOnExecutor(
+													AsyncTask.THREAD_POOL_EXECUTOR,
+													rideDetailsModel.getCabId());
+								} else {
+									new ConnectionTaskForTripCompleted()
+											.execute(rideDetailsModel.getCabId());
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					// //////////////////////////
+
+				}
+				
+				
 
 				checkpoolmap
 						.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 							@Override
 							public boolean onMarkerClick(Marker arg0) {
+								
+								
 
-								if (arg0.getSnippet().equals("start")) {
+								if (arg0.getSnippet().equalsIgnoreCase("start")) {
+									
+									
 
-								} else if (arg0.getSnippet().equals("end")) {
+									arg0.showInfoWindow();
+								} else if (arg0.getSnippet().equalsIgnoreCase("end")) {
+									arg0.showInfoWindow();
 
-								} else {
+								} 
+
+								else {
 
 									if (rideDetailsModel.getCabStatus()
 											.toString().trim()
 											.equalsIgnoreCase("A")) {
-
+										String[] arr=arg0.getSnippet().split(",");
+										
 										final Integer index = Integer
-												.parseInt(arg0.getSnippet());
-
+												.parseInt(arr[0])-1;
+							String pickdrop=arr[1];
+					
+									
+          if(pickdrop.equalsIgnoreCase("Pick"))
 										showAlertDialog(ShowMemberName
 												.get(index), ShowMemberNumber
 												.get(index),
@@ -2756,7 +2985,21 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 												ShowMemberLocationLatLong
 														.get(index),
 												ShowMemberImageName.get(index),
-												ShowMemberStatus.get(index));
+												ShowMemberStatus.get(index),pickdrop);
+          
+          else if(pickdrop.equalsIgnoreCase("Drop")){
+        	  
+        	  
+        	  showAlertDialog(ShowMemberName
+						.get(index), ShowMemberNumber
+						.get(index),
+						ShowMemberLocationAddressEnd
+								.get(index),
+						ShowMemberLocationLatLongEnd
+								.get(index),
+						ShowMemberImageName.get(index),
+						ShowMemberStatus.get(index),pickdrop);
+          }
 									}
 								}
 
@@ -2765,109 +3008,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 						});
 
-				// //////////////////////////
-				if (rideDetailsModel.getCabStatus().equals("A")
-						&& rideDetailsModel.getStatus().equals("0")) {
-					try {
-						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-								"dd/MM/yyyy hh:mm aa");
-						Date date = simpleDateFormat.parse(rideDetailsModel
-								.getTravelDate()
-								+ " "
-								+ rideDetailsModel.getTravelTime());
-
-						ArrayList<String> arrayList = readBookedOrCarPreference();
-
-						// Log.d("CheckPoolFragmentActivity", "startTime : " +
-						// date.getTime());
-
-						if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-							if (rideDetailsModel.getBookingRefNo() == null
-									|| rideDetailsModel.getBookingRefNo()
-											.isEmpty()
-									|| rideDetailsModel.getBookingRefNo()
-											.equalsIgnoreCase("null")) {
-								if (arrayList == null) {
-									showCabBookingDialog(true);
-								} else if (arrayList != null
-										&& arrayList.indexOf(rideDetailsModel
-												.getCabId()) == -1) {
-									showCabBookingDialog(true);
-								} else {
-									showTripStartDialog();
-								}
-							} else {
-								showTripStartDialog();
-							}
-						} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-							if (rideDetailsModel.getBookingRefNo() == null
-									|| rideDetailsModel.getBookingRefNo()
-											.isEmpty()
-									|| rideDetailsModel.getBookingRefNo()
-											.equalsIgnoreCase("null")) {
-								if (arrayList == null) {
-									showCabBookingDialog(false);
-								} else if (arrayList != null
-										&& arrayList.indexOf(rideDetailsModel
-												.getCabId()) == -1) {
-									showCabBookingDialog(false);
-								}
-							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else if (rideDetailsModel.getCabStatus().equals("A")
-						&& rideDetailsModel.getStatus().equals("2")) {
-					// For affle traking view
-					Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
-					extraParams.put("cabid", rideDetailsModel.getCabId());
-					AffleInAppTracker.inAppTrackerViewName(
-							CheckPoolFragmentActivity.this,
-							"CheckPoolFragmentActivity", "Trip completed",
-							"Trip completed", extraParams);
-
-					showRideCompleteDialog();
-				} else if (rideDetailsModel.getCabStatus().equals("A")
-						&& rideDetailsModel.getStatus().equals("3")) {
-					showPaymentDialog();
-				} else if (rideDetailsModel.getCabStatus().equals("A")) {
-					try {
-						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-								"dd/MM/yyyy hh:mm aa");
-						Date date = simpleDateFormat.parse(rideDetailsModel
-								.getTravelDate()
-								+ " "
-								+ rideDetailsModel.getTravelTime());
-
-						long expDuration = Long.parseLong(rideDetailsModel
-								.getExpTripDuration());
-
-						if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
-							Log.d("CheckPoolFragmentActivity",
-									"ExpTripDuration trip completed");
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-								new ConnectionTaskForTripCompleted()
-										.executeOnExecutor(
-												AsyncTask.THREAD_POOL_EXECUTOR,
-												rideDetailsModel.getCabId());
-							} else {
-								new ConnectionTaskForTripCompleted()
-										.execute(rideDetailsModel.getCabId());
-							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				// //////////////////////////
+			
 
 			}
 
-			if (onedialog.isShowing()) {
-				onedialog.dismiss();
-			}
-
+			
 		}
 	}
 
@@ -2919,6 +3064,478 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	// /////////////////////
 	// ///////
+	
+	private class ConnectionTaskForSingleRoot extends
+	AsyncTask<String, Void, Void> {
+
+@Override
+protected void onPreExecute() {
+
+}
+
+@Override
+protected Void doInBackground(String... args) {
+	AuthenticateConnectionSingleRoot mAuth1 = new AuthenticateConnectionSingleRoot();
+	try {
+		mAuth1.wayPointUrl = args[0];
+		mAuth1.connection();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		exceptioncheck = true;
+		e.printStackTrace();
+	}
+	return null;
+}
+
+@Override
+protected void onPostExecute(Void v) {
+	
+	if (onedialog.isShowing()) {
+		onedialog.dismiss();
+	}
+
+	if (exceptioncheck) {
+		exceptioncheck = false;
+		Toast.makeText(CheckPoolFragmentActivity.this,
+				getResources().getString(R.string.exceptionstring),
+				Toast.LENGTH_LONG).show();
+		return;
+	}
+
+	// int index = 0;
+	rectlinesarr.clear();
+	
+	Random rnd = new Random();
+int color = Color.argb(255, rnd.nextInt(256),
+			rnd.nextInt(256), rnd.nextInt(256));
+	for (int i = 0; i < steps.size(); i++) {
+
+		ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
+
+		JSONArray subArray123;
+		try {
+			subArray123 = new JSONArray(steps.get(i));
+			for (int i111 = 0; i111 < subArray123.length(); i111++) {
+				String locationstr = subArray123.getJSONObject(i111)
+						.getString("start_location").toString();
+
+				JSONObject jsonObject11 = new JSONObject(locationstr);
+				double lat1 = Double.parseDouble(jsonObject11
+						.getString("lat"));
+				double lng1 = Double.parseDouble(jsonObject11
+						.getString("lng"));
+
+				listGeopoints.add(new LatLng(lat1, lng1));
+
+				// /
+				String locationstr1 = subArray123.getJSONObject(i111)
+						.getString("polyline").toString();
+
+				JSONObject jsonObject111 = new JSONObject(locationstr1);
+				String points = jsonObject111.getString("points");
+				ArrayList<LatLng> arr = decodePoly(points);
+				for (int j = 0; j < arr.size(); j++) {
+					listGeopoints.add(new LatLng(arr.get(j).latitude,
+							arr.get(j).longitude));
+				}
+				// /
+				String locationstr11 = subArray123.getJSONObject(i111)
+						.getString("end_location").toString();
+
+				JSONObject jsonObject1111 = new JSONObject(
+						locationstr11);
+				double lat11 = Double.parseDouble(jsonObject1111
+						.getString("lat"));
+				double lng11 = Double.parseDouble(jsonObject1111
+						.getString("lng"));
+
+				listGeopoints.add(new LatLng(lat11, lng11));
+
+//				Random rnd = new Random();
+//				int color = Color.argb(255, rnd.nextInt(256),
+//						rnd.nextInt(256), rnd.nextInt(256));
+
+				PolylineOptions rectLine = new PolylineOptions().width(
+						5).color(color);
+				rectLine.addAll(listGeopoints);
+				rectlinesarr.add(rectLine);
+
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
+
+	checkpoolmap.setMyLocationEnabled(true);
+
+	
+
+	checkpoolmap.setOnMapClickListener(new OnMapClickListener() {
+
+		@Override
+		public void onMapClick(LatLng point) {
+			
+			
+
+			//setOnMapClick(point);
+		}
+	});
+
+	
+
+	for(int i=0;i<startaddlatlng.size();i++){
+		
+		Log.d("startaddlatlng"
+				, ""+startaddlatlng.size());
+		
+		if(i==0)
+		checkpoolmap.addMarker(new MarkerOptions()
+		.position(startaddlatlng.get(i))
+		.title(startaddress.get(i))
+		.snippet("start")
+		.icon(BitmapDescriptorFactory
+				.fromResource(R.drawable.start)));
+		
+		else	if(i==(startaddlatlng.size()-1))
+
+checkpoolmap
+		.addMarker(new MarkerOptions()
+				.position(endaddlatlng.get(i))
+				.title(endaddress.get(i))
+				.snippet("end")
+				.icon(BitmapDescriptorFactory
+						.fromResource(R.drawable.end)));
+			else{
+			
+			checkpoolmap
+			.addMarker(new MarkerOptions()
+					.position(startaddlatlng.get(i))
+					.title(startaddress.get(i))
+					.snippet(String.valueOf(i)+","+"Pick")
+				.icon(BitmapDescriptorFactory
+					.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+			
+			
+			checkpoolmap
+			.addMarker(new MarkerOptions()
+					.position(endaddlatlng.get(i))
+					.title(endaddress.get(i))
+					.snippet(String.valueOf(i)+","+"Drop")
+				.icon(BitmapDescriptorFactory
+					.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+		}
+			
+
+		
+		
+
+
+		
+	}
+	LatLngBounds.Builder bc = null;
+
+	for (int i = 0; i < rectlinesarr.size(); i++) {
+		checkpoolmap.addPolyline(rectlinesarr.get(i));
+
+		List<LatLng> points = rectlinesarr.get(i).getPoints();
+
+		bc = new LatLngBounds.Builder();
+
+		for (LatLng item : points) {
+			bc.include(item);
+		}
+	}
+
+	bc.include(startaddlatlng.get(0));
+	bc.include(endaddlatlng.get(endaddlatlng.size()-1));
+	checkpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+			bc.build(), 50));
+	
+	// //////////////////////////
+	if (rideDetailsModel.getCabStatus().equals("A")
+			&& rideDetailsModel.getStatus().equals("0")) {
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+					"dd/MM/yyyy hh:mm aa");
+			Date date = simpleDateFormat.parse(rideDetailsModel
+					.getTravelDate()
+					+ " "
+					+ rideDetailsModel.getTravelTime());
+
+			ArrayList<String> arrayList = readBookedOrCarPreference();
+
+			// Log.d("CheckPoolFragmentActivity", "startTime : " +
+			// date.getTime());
+
+			if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+				if (rideDetailsModel.getBookingRefNo() == null
+						|| rideDetailsModel.getBookingRefNo()
+								.isEmpty()
+						|| rideDetailsModel.getBookingRefNo()
+								.equalsIgnoreCase("null")) {
+					if (arrayList == null) {
+						showCabBookingDialog(true);
+					} else if (arrayList != null
+							&& arrayList.indexOf(rideDetailsModel
+									.getCabId()) == -1) {
+						showCabBookingDialog(true);
+					} else {
+						showTripStartDialog();
+					}
+				} else {
+					showTripStartDialog();
+				}
+			} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+				if (rideDetailsModel.getBookingRefNo() == null
+						|| rideDetailsModel.getBookingRefNo()
+								.isEmpty()
+						|| rideDetailsModel.getBookingRefNo()
+								.equalsIgnoreCase("null")) {
+					if (arrayList == null) {
+						showCabBookingDialog(false);
+					} else if (arrayList != null
+							&& arrayList.indexOf(rideDetailsModel
+									.getCabId()) == -1) {
+						showCabBookingDialog(false);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	} else if (rideDetailsModel.getCabStatus().equals("A")
+			&& rideDetailsModel.getStatus().equals("2")) {
+		// For affle traking view
+		Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+		extraParams.put("cabid", rideDetailsModel.getCabId());
+		AffleInAppTracker.inAppTrackerViewName(
+				CheckPoolFragmentActivity.this,
+				"CheckPoolFragmentActivity", "Trip completed",
+				"Trip completed", extraParams);
+
+		showRideCompleteDialog();
+	} else if (rideDetailsModel.getCabStatus().equals("A")
+			&& rideDetailsModel.getStatus().equals("3")) {
+		showPaymentDialog();
+	} else if (rideDetailsModel.getCabStatus().equals("A")) {
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+					"dd/MM/yyyy hh:mm aa");
+			Date date = simpleDateFormat.parse(rideDetailsModel
+					.getTravelDate()
+					+ " "
+					+ rideDetailsModel.getTravelTime());
+
+			long expDuration = Long.parseLong(rideDetailsModel
+					.getExpTripDuration());
+
+			if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+				Log.d("CheckPoolFragmentActivity",
+						"ExpTripDuration trip completed");
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForTripCompleted()
+							.executeOnExecutor(
+									AsyncTask.THREAD_POOL_EXECUTOR,
+									rideDetailsModel.getCabId());
+				} else {
+					new ConnectionTaskForTripCompleted()
+							.execute(rideDetailsModel.getCabId());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// //////////////////////////
+
+}
+
+}
+
+public class AuthenticateConnectionSingleRoot {
+private String wayPointUrl;
+
+public AuthenticateConnectionSingleRoot() {
+
+}
+
+public void connection() throws Exception {
+
+	String source = rideDetailsModel.getFromLocation().replaceAll(" ",
+			"%20");
+	String dest = rideDetailsModel.getToLocation().replaceAll(" ",
+			"%20");
+	Address locationAddressFrom = null, locationAddressTo = null;
+
+	String fromAdd = rideDetailsModel.getFromLocation();
+	String toAdd = rideDetailsModel.getToLocation();
+	Geocoder fcoder = new Geocoder(CheckPoolFragmentActivity.this);
+	try {
+		ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+				.getFromLocationName(fromAdd, 50);
+
+		for (Address add : adresses) {
+			locationAddressFrom = add;
+		}
+
+		adresses = (ArrayList<Address>) fcoder.getFromLocationName(
+				toAdd, 50);
+		for (Address add : adresses) {
+			locationAddressTo = add;
+		}
+
+	} catch (Exception e) {
+		e.printStackTrace();
+
+	}
+
+	String src = locationAddressFrom.getLatitude() + ","
+			+ locationAddressFrom.getLongitude();
+	String des = locationAddressTo.getLatitude() + ","
+			+ locationAddressTo.getLongitude();
+	
+	Log.d("src:", "" +src);
+	Log.d("des", "" + des);
+
+
+	// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
+
+	String url = "https://maps.googleapis.com/maps/api/directions/json?"
+			+ "origin="
+			+ src
+			+ "&destination="
+			+ des
+			+wayPointUrl
+			+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+			+ GlobalVariables.GoogleMapsAPIKey;
+
+	Log.d("url single path", "" + url);
+
+	CompletePageResponse = new Communicator().executeHttpGet(url);
+
+	CompletePageResponse = CompletePageResponse
+			.replaceAll("\\\\/", "/");
+
+	JSONObject jsonObject = new JSONObject(CompletePageResponse);
+
+	String name = jsonObject.getString("routes");
+
+	JSONArray subArray = new JSONArray(name);
+	Summary.clear();
+
+	for (int i = 0; i < subArray.length(); i++) {
+
+		Summary.add(subArray.getJSONObject(i).getString("summary")
+				.toString());
+
+		String name1 = subArray.getJSONObject(i).getString("legs")
+				.toString();
+
+		JSONArray subArray1 = new JSONArray(name1);
+
+		for (int i1 = 0; i1 < subArray1.length(); i1++) {
+
+			// int i1 = 0;
+			startaddress.add(subArray1.getJSONObject(i1)
+					.getString("start_address").toString());
+			endaddress.add(subArray1.getJSONObject(i1)
+					.getString("end_address").toString());
+
+			String startadd = subArray1.getJSONObject(i1)
+					.getString("start_location").toString();
+
+			JSONObject jsonObject1 = new JSONObject(startadd);
+			double lat = Double.parseDouble(jsonObject1
+					.getString("lat"));
+			double lng = Double.parseDouble(jsonObject1
+					.getString("lng"));
+
+			startaddlatlng.add(new LatLng(lat, lng));
+
+			//
+			String endadd = subArray1.getJSONObject(i1)
+					.getString("end_location").toString();
+
+			JSONObject jsonObject41 = new JSONObject(endadd);
+			double lat4 = Double.parseDouble(jsonObject41
+					.getString("lat"));
+			double lng4 = Double.parseDouble(jsonObject41
+					.getString("lng"));
+
+			endaddlatlng.add(new LatLng(lat4, lng4));
+			
+			//Code fro get distance and duration
+			
+			String duration = subArray1.getJSONObject(i1)
+					.getString("duration").toString();	
+			JSONObject jsonObjectDuraton = new JSONObject(duration);
+			
+			durationList.add(jsonObjectDuraton.getInt("value"));
+
+			
+			String distance = subArray1.getJSONObject(i1)
+					.getString("distance").toString();
+			JSONObject jsonObjectDistance = new JSONObject(distance);
+
+distanceList.add(jsonObjectDistance.getInt("value"));
+			// ////////////
+
+			steps.add(subArray1.getJSONObject(i1).getString("steps")
+					.toString());
+
+			// //////////////
+			String mska = subArray1.getJSONObject(i1)
+					.getString("via_waypoint").toString();
+
+			if (mska.equalsIgnoreCase("[]")) {
+				via_waypoint.add(new LatLng(0, 0));
+			} else {
+				JSONArray subArray12 = new JSONArray(mska);
+
+				for (int i11 = 0; i11 < subArray12.length(); i11++) {
+
+					String locationstr = subArray12.getJSONObject(i11)
+							.getString("location").toString();
+
+					JSONObject jsonObject1111 = new JSONObject(
+							locationstr);
+					double lat1111 = Double.parseDouble(jsonObject1111
+							.getString("lat"));
+					double lng1111 = Double.parseDouble(jsonObject1111
+							.getString("lng"));
+
+					via_waypoint.add(new LatLng(lat1111, lng1111));
+
+				}
+			}
+		}
+	}
+
+	// /////
+	Log.d("Summary", "" + Summary);
+	Log.d("startaddress", "" + startaddress);
+	Log.d("endaddress", "" + endaddress);
+	Log.d("startaddlatlng", "" + startaddlatlng);
+	Log.d("endaddlatlng", "" + endaddlatlng);
+	Log.d("via_waypoint", "" + via_waypoint);
+
+	for (int i = 0; i < via_waypoint.size(); i++) {
+		String asd = MapUtilityMethods.getAddress(
+				CheckPoolFragmentActivity.this,
+				via_waypoint.get(i).latitude,
+				via_waypoint.get(i).longitude);
+		via_waypointstrarr.add(asd);
+	}
+	Log.d("via_waypointstrarr", "" + via_waypointstrarr);
+}
+}
+	
+	
+	////////////
+	/////
 
 	private class ConnectionTaskForDirectionsnew extends
 			AsyncTask<String, Void, Void> {
@@ -3293,13 +3910,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	}
 
 	private void showAlertDialog(final String mname, final String mnum,
-			String mlocadd, String mloclatlon, String mimgname, String mstatus) {
+			String mlocadd, String mloclatlon, String mimgname, String mstatus,String pickdrop) {
 
-		final Dialog dialog = new Dialog(this);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.memberdeatilspopup);
+		final Dialog dialogMain = new Dialog(this);
+		dialogMain.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialogMain.setContentView(R.layout.memberdeatilspopup);
 
-		memimage = (CircularImageView) dialog.findViewById(R.id.memimage);
+		memimage = (CircularImageView) dialogMain.findViewById(R.id.memimage);
 
 		String url1 = null;
 
@@ -3316,15 +3933,15 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		}
 
-		TextView memname = (TextView) dialog.findViewById(R.id.memname);
+		TextView memname = (TextView) dialogMain.findViewById(R.id.memname);
 		memname.setText(mname.toUpperCase());
-		dialog.show();
+		dialogMain.show();
 
-		TextView memlocationadd = (TextView) dialog
+		TextView memlocationadd = (TextView) dialogMain
 				.findViewById(R.id.memlocationadd);
-		memlocationadd.setText(mlocadd);
+		memlocationadd.setText(pickdrop+" Location: "+mlocadd);
 
-		LinearLayout dropuser = (LinearLayout) dialog
+		LinearLayout dropuser = (LinearLayout) dialogMain
 				.findViewById(R.id.dropuser);
 		dropuser.setOnClickListener(new View.OnClickListener() {
 
@@ -3341,7 +3958,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 							public void onClick(DialogInterface dialog, int id) {
 
 								dialog.dismiss();
-
+								dialogMain.dismiss();
 								onedialog = new ProgressDialog(
 										CheckPoolFragmentActivity.this);
 								onedialog.setMessage("Please Wait...");
@@ -3363,8 +3980,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				builder.setNegativeButton("NO",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
+								dialogMain.dismiss();
 
 								dialog.dismiss();
+
 							}
 						});
 				AlertDialog dialog = builder.show();
@@ -3375,7 +3994,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		LinearLayout call = (LinearLayout) dialog.findViewById(R.id.call);
+		LinearLayout call = (LinearLayout) dialogMain.findViewById(R.id.call);
 		call.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -3390,11 +4009,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				intent.setData(Uri.parse("tel:" + mnum));
 				startActivity(intent);
 
-				dialog.dismiss();
+				dialogMain.dismiss();
 			}
 		});
 
-		LinearLayout addtocontacts = (LinearLayout) dialog
+		LinearLayout addtocontacts = (LinearLayout) dialogMain
 				.findViewById(R.id.addtocontacts);
 
 		if (phonenoarraynew.indexOf(mnum.toString().trim().substring(4)) != -1) {
@@ -3437,11 +4056,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								.parse("tel:" + mnum));
 				startActivity(intent);
 
-				dialog.dismiss();
+				dialogMain.dismiss();
 			}
 		});
 
-		dialog.show();
+		dialogMain.show();
 	}
 
 	// //////////////////
@@ -3482,10 +4101,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForDirectionsnew()
+				new ConnectionTaskForDirections()
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			} else {
-				new ConnectionTaskForDirectionsnew().execute();
+				new ConnectionTaskForDirections().execute();
 			}
 
 		}

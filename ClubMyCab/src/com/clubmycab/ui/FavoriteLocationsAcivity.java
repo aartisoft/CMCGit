@@ -835,7 +835,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			finish();
 		} else {
 			Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
-					FirstLoginClubsActivity.class);
+					FirstLoginWalletsActivity.class);
+			mainIntent.putExtra("from", "reg");
 			startActivity(mainIntent);
 		}
 
@@ -847,7 +848,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			finish();
 		} else {
 			Intent mainIntent = new Intent(FavoriteLocationsAcivity.this,
-					FirstLoginClubsActivity.class);
+					FirstLoginWalletsActivity.class);
+			mainIntent.putExtra("from", "reg");
 			startActivity(mainIntent);
 		}
 	}

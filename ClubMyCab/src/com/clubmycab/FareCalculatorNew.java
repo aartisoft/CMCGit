@@ -3,6 +3,9 @@ package com.clubmycab;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.location.Location;
+
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 public class FareCalculatorNew {
@@ -41,14 +44,46 @@ public class FareCalculatorNew {
 			LatLng memberPickup = pickupLatLng.get(i);
 			LatLng memberDrop = dropLatLng.get(i);
 
-			int memberPickupIndex = routePointsLatLng.indexOf(memberPickup);
-			int memberDropIndex = routePointsLatLng.indexOf(memberDrop);
+			// int memberPickupIndex = routePointsLatLng.indexOf(memberPickup);
+			// int memberDropIndex = routePointsLatLng.indexOf(memberDrop);
+			int memberPickupIndex = -1;
+			int memberDropIndex = -1;
 
+			Location pickLocation = new Location("");
+			pickLocation.setLatitude(memberPickup.latitude);
+			pickLocation.setLongitude(memberPickup.longitude);
+			Location dropLocation = new Location("");
+			dropLocation.setLatitude(memberDrop.latitude);
+			dropLocation.setLongitude(memberDrop.longitude);
+
+			for (int j = 0; j < routePointsLatLng.size(); j++) {
+				Location routePointLocation = new Location("");
+				routePointLocation
+						.setLatitude(routePointsLatLng.get(j).latitude);
+				routePointLocation
+						.setLongitude(routePointsLatLng.get(j).longitude);
+
+				float distance = pickLocation.distanceTo(routePointLocation);
+				Log.d("FareCalculatorNew", "Distance pick : " + distance);
+				if (distance <= 1000) {
+					memberPickupIndex = j;
+				}
+
+				distance = dropLocation.distanceTo(routePointLocation);
+				Log.d("FareCalculatorNew", "Distance drop : " + distance);
+				if (distance <= 1000) {
+					memberDropIndex = j;
+				}
+			}
+
+			Log.d("FareCalculatorNew", "memberPickupIndex : "
+					+ memberPickupIndex + " memberDropIndex : "
+					+ memberDropIndex);
 			if (memberPickupIndex != -1 && memberDropIndex != -1) {
 
 				Double memberDistanceTravelled = 0.0;
 
-				for (int j = memberPickupIndex; j <= memberDropIndex; j++) {
+				for (int j = (memberPickupIndex + 1); j <= memberDropIndex; j++) {
 					memberDistanceTravelled += routePointsDistance.get(j);
 				}
 
@@ -62,11 +97,17 @@ public class FareCalculatorNew {
 			totalDistance += distanceTravelledHashMap.get(member);
 		}
 
+		Log.d("FareCalculatorNew", "distanceTravelledHashMap : "
+				+ distanceTravelledHashMap + " totalDistance : "
+				+ totalDistance);
+
 		for (String member : distanceTravelledHashMap.keySet()) {
 			fareSplitHashMap.put(member,
 					(distanceTravelledHashMap.get(member) / totalDistance)
 							* totalFare);
 		}
+
+		fareSplitHashMap.put("tripTotalFare", totalFare);
 
 		return fareSplitHashMap;
 	}

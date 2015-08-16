@@ -306,7 +306,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	private ArrayList<LatLng> FareMemberPickLocaton = new ArrayList<LatLng>();
 	private ArrayList<LatLng> FareMemberDropLocaton = new ArrayList<LatLng>();
 
-
 	@SuppressLint("DefaultLocale")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -1454,72 +1453,90 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								im.hideSoftInputFromWindow(
 										input.getWindowToken(), 0);
 
-								if (showmembersresp
-										.equalsIgnoreCase("No Members joined yet")) {
+								FareCalculatorNew fareCalculatorNew = new FareCalculatorNew(
+										FareMobNoList, FareMemberPickLocaton,
+										FareMemberDropLocaton,
+										FareLocationList, FaredistanceList,
+										fare);
 
-								} else {
+								HashMap<String, Double> hashMap = fareCalculatorNew
+										.getFareSplit();
 
-									try {
+								Log.d("CheckPoolFragmentActivity",
+										"fareCalculatorNew : " + hashMap);
 
-										JSONObject ownerJsonObject = new JSONObject();
-										ownerJsonObject
-												.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
-														rideDetailsModel
-																.getFromLocation());
-										ownerJsonObject
-												.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
-														rideDetailsModel
-																.getToLocation());
-										ownerJsonObject
-												.put(FareCalculator.JSON_NAME_OWNER_NAME,
-														rideDetailsModel
-																.getOwnerName());
+								sendFareSplitToMembers(hashMap);
 
-										ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
-
-										for (int i = 0; i < ShowMemberName
-												.size(); i++) {
-											JSONObject memberJsonObject = new JSONObject();
-											memberJsonObject
-													.put
-
-													(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
-															ShowMemberLocationAddress
-																	.get(i)
-																	.toString());
-
-											String[] latlong = ShowMemberLocationLatLong
-													.get(i).split(",");
-											LatLng lt = new LatLng(
-													Double.parseDouble(latlong[0]),
-													Double.parseDouble(latlong[1]));
-											memberJsonObject
-													.put
-
-													(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
-															lt);
-
-											memberJsonObject
-													.put(FareCalculator.JSON_NAME_MEMBER_NAME,
-															ShowMemberName.get(
-																	i)
-																	.toString());
-
-											memberArrayList
-													.add(memberJsonObject);
-										}
-
-										FareCalculator fareCalculator = new FareCalculator(
-												MemberRideFragmentActivity.this,
-												ownerJsonObject,
-												memberArrayList);
-										fareCalculator.calculateFareSplit(fare);
-
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-
-								}
+								// if (showmembersresp
+								// .equalsIgnoreCase("No Members joined yet")) {
+								//
+								// } else {
+								//
+								// try {
+								//
+								// JSONObject ownerJsonObject = new
+								// JSONObject();
+								// ownerJsonObject
+								// .put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
+								// rideDetailsModel
+								// .getFromLocation());
+								// ownerJsonObject
+								// .put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
+								// rideDetailsModel
+								// .getToLocation());
+								// ownerJsonObject
+								// .put(FareCalculator.JSON_NAME_OWNER_NAME,
+								// rideDetailsModel
+								// .getOwnerName());
+								//
+								// ArrayList<JSONObject> memberArrayList = new
+								// ArrayList<JSONObject>();
+								//
+								// for (int i = 0; i < ShowMemberName
+								// .size(); i++) {
+								// JSONObject memberJsonObject = new
+								// JSONObject();
+								// memberJsonObject
+								// .put
+								//
+								// (FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+								// ShowMemberLocationAddress
+								// .get(i)
+								// .toString());
+								//
+								// String[] latlong = ShowMemberLocationLatLong
+								// .get(i).split(",");
+								// LatLng lt = new LatLng(
+								// Double.parseDouble(latlong[0]),
+								// Double.parseDouble(latlong[1]));
+								// memberJsonObject
+								// .put
+								//
+								// (FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+								// lt);
+								//
+								// memberJsonObject
+								// .put(FareCalculator.JSON_NAME_MEMBER_NAME,
+								// ShowMemberName.get(
+								// i)
+								// .toString());
+								//
+								// memberArrayList
+								// .add(memberJsonObject);
+								// }
+								//
+								// FareCalculator fareCalculator = new
+								// FareCalculator(
+								// MemberRideFragmentActivity.this,
+								// ownerJsonObject,
+								// memberArrayList);
+								// fareCalculator.calculateFareSplit(fare);
+								//
+								// } catch (Exception e) {
+								// e.printStackTrace();
+								// }
+								//
+								// }
 							}
 						}
 					}
@@ -1561,6 +1578,102 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		messageText.setGravity(Gravity.CENTER);
 		dialog.show();
 
+	}
+
+	private void sendFareSplitToMembers(final HashMap<String, Double> hashMap) {
+		if (onedialog.isShowing()) {
+			onedialog.dismiss();
+		}
+
+		if (hashMap == null) {
+			Toast.makeText(MemberRideFragmentActivity.this,
+					getResources().getString(R.string.exceptionstring),
+					Toast.LENGTH_LONG).show();
+		} else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MemberRideFragmentActivity.this);
+			View builderView = (View) getLayoutInflater().inflate(
+					R.layout.fare_split_dialog, null);
+
+			ListView listView = (ListView) builderView
+					.findViewById(R.id.listViewFareSplit);
+
+			Button button = (Button) builderView
+					.findViewById(R.id.buttonFareSplit);
+
+			builder.setView(builderView);
+			final AlertDialog dialog = builder.create();
+
+			ArrayList<String> arrayList = new ArrayList<String>();
+			for (String key : hashMap.keySet()) {
+				if (!key.equalsIgnoreCase("tripTotalFare")) {
+
+					String displayName = "";
+					if (key.equals(OwnerMobileNumber)) {
+						displayName = rideDetailsModel.getOwnerName();
+					} else if (key.equals(MemberNumberstr)) {
+						displayName = FullName;
+					} else {
+						int index = ShowMemberNumber.indexOf(key);
+						if (index != -1) {
+							displayName = ShowMemberName.get(index);
+						}
+					}
+					arrayList.add(displayName
+							+ " : \u20B9 "
+							+ String.format(
+									"%d%n",
+									Math.round(Double.parseDouble(hashMap.get(
+											key).toString()))));
+				}
+			}
+			arrayList.add(0,
+					"Total Fare : \u20B9 "
+							+ hashMap.get("tripTotalFare").toString());
+
+			listView.setAdapter(new ListViewAdapterFareSplit(
+					MemberRideFragmentActivity.this, arrayList));
+
+			button.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+
+					String numberfareString = "";
+					for (String key : hashMap.keySet()) {
+						if (!key.equalsIgnoreCase("tripTotalFare")) {
+							numberfareString += (key
+									+ "~"
+									+ String.format("%d%n", Math.round(Double
+											.parseDouble(hashMap.get(key)
+													.toString()))) + ",");
+						}
+					}
+
+					numberfareString = numberfareString.substring(0,
+							numberfareString.length() - 1);
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForSaveCalculatedFare()
+								.executeOnExecutor(
+										AsyncTask.THREAD_POOL_EXECUTOR,
+										rideDetailsModel.getCabId(), hashMap
+												.get("tripTotalFare")
+												.toString(), numberfareString,
+										MemberNumberstr, OwnerMobileNumber);
+					} else {
+						new ConnectionTaskForSaveCalculatedFare().execute(
+								rideDetailsModel.getCabId(),
+								hashMap.get("tripTotalFare").toString(),
+								numberfareString, MemberNumberstr,
+								OwnerMobileNumber);
+					}
+				}
+			});
+
+			dialog.show();
+		}
 	}
 
 	private void showEqualFareSplitDialog(final double fare) {
@@ -2047,21 +2160,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			bc.include(endaddlatlng.get(endaddlatlng.size() - 1));
 			joinpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
 					bc.build(), 50));
-			
-			
-			//for(int i=0;i<FareMobNoList.size();i++){
-				
-				Log.d("FareMobno", ""+FareMobNoList);
-				Log.d("FareDistance", ""+FaredistanceList);
-				Log.d("FareLocation", ""+FareLocationList);
-				Log.d("FarePick", ""+FareMemberPickLocaton);
-				Log.d("FareDrop", ""+FareMemberDropLocaton);
 
+			// for(int i=0;i<FareMobNoList.size();i++){
 
+			Log.d("FareMobno", "" + FareMobNoList);
+			Log.d("FareDistance", "" + FaredistanceList);
+			Log.d("FareLocation", "" + FareLocationList);
+			Log.d("FarePick", "" + FareMemberPickLocaton);
+			Log.d("FareDrop", "" + FareMemberDropLocaton);
 
-
-			///}
-
+			// /}
 
 		}
 
@@ -2193,23 +2301,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					distanceList.add(jsonObjectDistance.getInt("value"));
 					// ////////////
 
-					if(i1==0){
+					if (i1 == 0) {
 						FareLocationList.add(new LatLng(lat, lng));
 						FareLocationList.add(new LatLng(lat4, lng4));
 						FaredistanceList.add(0.0);
-						FaredistanceList.add(Double.parseDouble(""+jsonObjectDistance.getInt("value")));
-						
+						FaredistanceList.add(Double.parseDouble(""
+								+ jsonObjectDistance.getInt("value")));
 
-					}
-					else{
+					} else {
 						FareLocationList.add(new LatLng(lat4, lng4));
-						FaredistanceList.add(Double.parseDouble(""+jsonObjectDistance.getInt("value")));
-	
+						FaredistanceList.add(Double.parseDouble(""
+								+ jsonObjectDistance.getInt("value")));
+
 					}
 
-					
-
-					
 					steps.add(subArray1.getJSONObject(i1).getString("steps")
 							.toString());
 
@@ -2522,7 +2627,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					startaddlatlng.add(new LatLng(lat, lng));
-				
+
 					//
 					String endadd = subArray1.getJSONObject(i1)
 							.getString("end_location").toString();
@@ -2534,18 +2639,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					endaddlatlng.add(new LatLng(lat4, lng4));
-					
-					
-					if(i1==0){
+
+					if (i1 == 0) {
 						FareLocationList.add(new LatLng(lat, lng));
 						FareLocationList.add(new LatLng(lat4, lng4));
 
-					}
-					else
+					} else
 						FareLocationList.add(new LatLng(lat4, lng4));
-
-					
-
 
 					// ////////////
 
@@ -2638,7 +2738,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			FareMemberDropLocaton.clear();
 			FareMemberPickLocaton.clear();
 			FareMobNoList.clear();
-			
+
 			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
 
 			} else {
@@ -2672,18 +2772,18 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									.getString("MemberImageName").toString();
 							usermemst = subArray.getJSONObject(i)
 									.getString("Status").toString();
-							
-							//Added Owner no and start end location for fare
-							
+
+							// Added Owner no and start end location for fare
+
 							FareMobNoList.add(subArray.getJSONObject(i)
 									.getString("OwnerNumber").toString());
-							
+
 							Address locationAddressFrom = null, locationAddressTo = null;
 
-							
 							String fromAdd = rideDetailsModel.getFromLocation();
 							String toAdd = rideDetailsModel.getToLocation();
-							Geocoder fcoder = new Geocoder(MemberRideFragmentActivity.this);
+							Geocoder fcoder = new Geocoder(
+									MemberRideFragmentActivity.this);
 							try {
 								ArrayList<Address> adresses = (ArrayList<Address>) fcoder
 										.getFromLocationName(fromAdd, 50);
@@ -2692,8 +2792,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									locationAddressFrom = add;
 								}
 
-								adresses = (ArrayList<Address>) fcoder.getFromLocationName(
-										toAdd, 50);
+								adresses = (ArrayList<Address>) fcoder
+										.getFromLocationName(toAdd, 50);
 								for (Address add : adresses) {
 									locationAddressTo = add;
 								}
@@ -2703,31 +2803,34 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 							}
 
-							String src = locationAddressFrom.getLatitude() + ","
-									+ locationAddressFrom.getLongitude();
+							String src = locationAddressFrom.getLatitude()
+									+ "," + locationAddressFrom.getLongitude();
 							String des = locationAddressTo.getLatitude() + ","
 									+ locationAddressTo.getLongitude();
-							
-							LatLng llFrom=new LatLng(locationAddressFrom.getLatitude(), locationAddressFrom.getLongitude());
-							LatLng llTo=new LatLng(locationAddressTo.getLatitude(), locationAddressTo.getLongitude());
+
+							LatLng llFrom = new LatLng(
+									locationAddressFrom.getLatitude(),
+									locationAddressFrom.getLongitude());
+							LatLng llTo = new LatLng(
+									locationAddressTo.getLatitude(),
+									locationAddressTo.getLongitude());
 
 							FareMemberPickLocaton.add(llFrom);
 							FareMemberDropLocaton.add(llTo);
 
-							
 							FareMobNoList.add(usermemnumber);
-							
-							
-							
-							String arr[]=usermemloclatlong.split(",");
-							
-							LatLng l=new LatLng(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
-							FareMemberPickLocaton.add(l);
-							String arr1[]=usermemloclatlongEnd.split(",");
 
-							LatLng l1=new LatLng(Double.parseDouble(arr1[0]), Double.parseDouble(arr1[1]));
+							String arr[] = usermemloclatlong.split(",");
+
+							LatLng l = new LatLng(Double.parseDouble(arr[0]),
+									Double.parseDouble(arr[1]));
+							FareMemberPickLocaton.add(l);
+							String arr1[] = usermemloclatlongEnd.split(",");
+
+							LatLng l1 = new LatLng(Double.parseDouble(arr1[0]),
+									Double.parseDouble(arr1[1]));
 							FareMemberDropLocaton.add(l1);
-							
+
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -2810,26 +2913,26 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									.getString("MemberImageName").toString());
 							ShowMemberStatus.add(subArray.getJSONObject(i)
 									.getString("Status").toString());
-							
-							//Added for fare calculation
+
+							// Added for fare calculation
 							FareMobNoList.add(subArray.getJSONObject(i)
 									.getString("MemberNumber").toString());
 
-	            String arr[]=subArray
-						.getJSONObject(i)
-						.getString("MemberLocationlatlong")
-						.toString().split(",");
-							
-							LatLng l=new LatLng(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
+							String arr[] = subArray.getJSONObject(i)
+									.getString("MemberLocationlatlong")
+									.toString().split(",");
+
+							LatLng l = new LatLng(Double.parseDouble(arr[0]),
+									Double.parseDouble(arr[1]));
 							FareMemberPickLocaton.add(l);
-							String arr1[]=subArray
-									.getJSONObject(i)
+							String arr1[] = subArray.getJSONObject(i)
 									.getString("MemberEndLocationlatlong")
 									.toString().split(",");
 
-							LatLng l1=new LatLng(Double.parseDouble(arr1[0]), Double.parseDouble(arr1[1]));
+							LatLng l1 = new LatLng(Double.parseDouble(arr1[0]),
+									Double.parseDouble(arr1[1]));
 							FareMemberDropLocaton.add(l1);
-							
+
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -4193,17 +4296,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.getString("lng"));
 
 					endaddlatlng.add(new LatLng(lat4, lng4));
-					
-					if(i1==0){
+
+					if (i1 == 0) {
 						FareLocationList.add(new LatLng(lat, lng));
 						FareLocationList.add(new LatLng(lat4, lng4));
 
-					}
-					else
+					} else
 						FareLocationList.add(new LatLng(lat4, lng4));
-
-					
-
 
 					// ////////////
 
@@ -6059,12 +6158,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
 				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
 				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
-				+ token + "'",
+				+ token + "''1'",
 				GlobalVariables.Mobikwik_14SecretKey_TokenRegenerate);
 		String endpoint = GlobalVariables.Mobikwik_ServerURL
 				+ "/tokenregenerate";
 		String params = "cell=" + mobilenumber + "&token=" + token
-				+ "&msgcode=" + msgcode + "&mid="
+				+ "&tokentype=1" + "&msgcode=" + msgcode + "&mid="
 				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
 				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
 				+ checksumstring;

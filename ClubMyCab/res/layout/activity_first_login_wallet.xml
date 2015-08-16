@@ -12,7 +12,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical" >
 
         <ImageView
@@ -113,6 +113,18 @@
             android:text="@string/mobikwik_signup_tnc"
             android:textColor="#9e9e9e"
             android:textSize="12sp" />
+        
+        <Button
+            android:id="@+id/maybelaterbutton"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="#4279bd"
+            android:text="Maybe later"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

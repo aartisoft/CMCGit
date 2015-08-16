@@ -1385,6 +1385,25 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+			
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String referfriendresponse = "";
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				referfriendresponse = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("MyClubsActivity", "referFriendStepOne : " + referfriendresponse);
 		}
 	}
 

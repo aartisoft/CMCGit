@@ -249,7 +249,7 @@ public class UniversalDrawer {
 
 					Intent mainIntent = new Intent(context,
 							FirstLoginWalletsActivity.class);
-					mainIntent.putExtra("from","wallet");
+					mainIntent.putExtra("from", "wallet");
 					context.startActivity(mainIntent);
 					
 					((Activity) context).overridePendingTransition(

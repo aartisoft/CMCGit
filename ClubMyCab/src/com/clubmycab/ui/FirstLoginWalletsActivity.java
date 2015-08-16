@@ -194,6 +194,20 @@ public class FirstLoginWalletsActivity extends Activity implements
 		if (from.equalsIgnoreCase("reg")) {
 			querywallet();
 
+			Button button = (Button) findViewById(R.id.maybelaterbutton);
+			button.setVisibility(View.VISIBLE);
+			button.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent mainIntent = new Intent(
+							FirstLoginWalletsActivity.this,
+							FirstLoginClubsActivity.class);
+					startActivity(mainIntent);
+					finish();
+				}
+			});
+
 		} else {
 			SharedPreferences sharedPreferences = getSharedPreferences(
 					"MobikwikToken", 0);
@@ -219,7 +233,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
 				+ action + "''" + mobilenumber + "''"
 				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''",
+				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
 				GlobalVariables.Mobikwik_14SecretKey);
 		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
 		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode

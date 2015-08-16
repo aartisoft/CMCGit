@@ -296,6 +296,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	String payToPerson;
 	String totalFare;
 
+	private ArrayList<Double> FaredistanceList = new ArrayList<Double>();
+	private ArrayList<LatLng> FareLocationList = new ArrayList<LatLng>();
+
+	private ArrayList<String> FareMobNoList = new ArrayList<String>();
+	private ArrayList<LatLng> FareMemberPickLocaton = new ArrayList<LatLng>();
+	private ArrayList<LatLng> FareMemberDropLocaton = new ArrayList<LatLng>();
+
 	// /////////////////
 
 	@SuppressLint("DefaultLocale")
@@ -344,7 +351,6 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				RideDetailsModel.class);
 		checkpoolmap = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.checkpoolmap)).getMap();
-		
 
 		// CabId = intent.getStringExtra("CabId");
 		// MobileNumber = intent.getStringExtra("MobileNumber");
@@ -941,72 +947,90 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								im.hideSoftInputFromWindow(
 										input.getWindowToken(), 0);
 
-								if (showmembersresp
-										.equalsIgnoreCase("No Members joined yet")) {
+								FareCalculatorNew fareCalculatorNew = new FareCalculatorNew(
+										FareMobNoList, FareMemberPickLocaton,
+										FareMemberDropLocaton,
+										FareLocationList, FaredistanceList,
+										fare);
 
-								} else {
+								HashMap<String, Double> hashMap = fareCalculatorNew
+										.getFareSplit();
 
-									try {
+								Log.d("CheckPoolFragmentActivity",
+										"fareCalculatorNew : " + hashMap);
 
-										JSONObject ownerJsonObject = new JSONObject();
-										ownerJsonObject
-												.put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
-														rideDetailsModel
-																.getFromLocation());
-										ownerJsonObject
-												.put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
-														rideDetailsModel
-																.getToLocation());
-										ownerJsonObject
-												.put(FareCalculator.JSON_NAME_OWNER_NAME,
-														rideDetailsModel
-																.getOwnerName());
+								sendFareSplitToMembers(hashMap);
 
-										ArrayList<JSONObject> memberArrayList = new ArrayList<JSONObject>();
-
-										for (int i = 0; i < ShowMemberName
-												.size(); i++) {
-											JSONObject memberJsonObject = new JSONObject();
-											memberJsonObject
-													.put
-
-													(FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
-															ShowMemberLocationAddress
-																	.get(i)
-																	.toString());
-
-											String[] latlong = ShowMemberLocationLatLong
-													.get(i).split(",");
-											LatLng lt = new LatLng(
-													Double.parseDouble(latlong[0]),
-													Double.parseDouble(latlong[1]));
-											memberJsonObject
-													.put
-
-													(FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
-															lt);
-
-											memberJsonObject
-													.put(FareCalculator.JSON_NAME_MEMBER_NAME,
-															ShowMemberName.get(
-																	i)
-																	.toString());
-
-											memberArrayList
-													.add(memberJsonObject);
-										}
-
-										FareCalculator fareCalculator = new FareCalculator(
-												CheckPoolFragmentActivity.this,
-												ownerJsonObject,
-												memberArrayList);
-										fareCalculator.calculateFareSplit(fare);
-
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-
-								}
+								// if (showmembersresp
+								// .equalsIgnoreCase("No Members joined yet")) {
+								//
+								// } else {
+								//
+								// try {
+								//
+								// JSONObject ownerJsonObject = new
+								// JSONObject();
+								// ownerJsonObject
+								// .put(FareCalculator.JSON_NAME_OWNER_START_ADDRESS,
+								// rideDetailsModel
+								// .getFromLocation());
+								// ownerJsonObject
+								// .put(FareCalculator.JSON_NAME_OWNER_END_ADDRESS,
+								// rideDetailsModel
+								// .getToLocation());
+								// ownerJsonObject
+								// .put(FareCalculator.JSON_NAME_OWNER_NAME,
+								// rideDetailsModel
+								// .getOwnerName());
+								//
+								// ArrayList<JSONObject> memberArrayList = new
+								// ArrayList<JSONObject>();
+								//
+								// for (int i = 0; i < ShowMemberName
+								// .size(); i++) {
+								// JSONObject memberJsonObject = new
+								// JSONObject();
+								// memberJsonObject
+								// .put
+								//
+								// (FareCalculator.JSON_NAME_MEMBER_LOCATION_ADDRESS,
+								// ShowMemberLocationAddress
+								// .get(i)
+								// .toString());
+								//
+								// String[] latlong = ShowMemberLocationLatLong
+								// .get(i).split(",");
+								// LatLng lt = new LatLng(
+								// Double.parseDouble(latlong[0]),
+								// Double.parseDouble(latlong[1]));
+								// memberJsonObject
+								// .put
+								//
+								// (FareCalculator.JSON_NAME_MEMBER_LOCATION_LATLNG,
+								// lt);
+								//
+								// memberJsonObject
+								// .put(FareCalculator.JSON_NAME_MEMBER_NAME,
+								// ShowMemberName.get(
+								// i)
+								// .toString());
+								//
+								// memberArrayList
+								// .add(memberJsonObject);
+								// }
+								//
+								// FareCalculator fareCalculator = new
+								// FareCalculator(
+								// CheckPoolFragmentActivity.this,
+								// ownerJsonObject,
+								// memberArrayList);
+								// fareCalculator.calculateFareSplit(fare);
+								//
+								// } catch (Exception e) {
+								// e.printStackTrace();
+								// }
+								//
+								// }
 							}
 						}
 					}
@@ -1047,6 +1071,101 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		messageText.setGravity(Gravity.CENTER);
 		dialog.show();
 
+	}
+
+	private void sendFareSplitToMembers(final HashMap<String, Double> hashMap) {
+		if (onedialog.isShowing()) {
+			onedialog.dismiss();
+		}
+
+		if (hashMap == null) {
+			Toast.makeText(CheckPoolFragmentActivity.this,
+					getResources().getString(R.string.exceptionstring),
+					Toast.LENGTH_LONG).show();
+		} else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					CheckPoolFragmentActivity.this);
+			View builderView = (View) getLayoutInflater().inflate(
+					R.layout.fare_split_dialog, null);
+
+			ListView listView = (ListView) builderView
+					.findViewById(R.id.listViewFareSplit);
+
+			Button button = (Button) builderView
+					.findViewById(R.id.buttonFareSplit);
+
+			builder.setView(builderView);
+			final AlertDialog dialog = builder.create();
+
+			ArrayList<String> arrayList = new ArrayList<String>();
+			for (String key : hashMap.keySet()) {
+				if (!key.equalsIgnoreCase("tripTotalFare")) {
+
+					String displayName = "";
+					if (key.equals(OwnerMobileNumber)) {
+						displayName = rideDetailsModel.getOwnerName();
+					} else {
+						int index = ShowMemberNumber.indexOf(key);
+						if (index != -1) {
+							displayName = ShowMemberName.get(index);
+						}
+					}
+
+					arrayList.add(displayName
+							+ " : \u20B9 "
+							+ String.format(
+									"%d%n",
+									Math.round(Double.parseDouble(hashMap.get(
+											key).toString()))));
+				}
+			}
+			arrayList.add(0,
+					"Total Fare : \u20B9 "
+							+ hashMap.get("tripTotalFare").toString());
+
+			listView.setAdapter(new ListViewAdapterFareSplit(
+					CheckPoolFragmentActivity.this, arrayList));
+
+			button.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+
+					String numberfareString = "";
+					for (String key : hashMap.keySet()) {
+						if (!key.equalsIgnoreCase("tripTotalFare")) {
+							numberfareString += (key
+									+ "~"
+									+ String.format("%d%n", Math.round(Double
+											.parseDouble(hashMap.get(key)
+													.toString()))) + ",");
+						}
+					}
+
+					numberfareString = numberfareString.substring(0,
+							numberfareString.length() - 1);
+
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						new ConnectionTaskForSaveCalculatedFare()
+								.executeOnExecutor(
+										AsyncTask.THREAD_POOL_EXECUTOR,
+										rideDetailsModel.getCabId(), hashMap
+												.get("tripTotalFare")
+												.toString(), numberfareString,
+										OwnerMobileNumber, OwnerMobileNumber);
+					} else {
+						new ConnectionTaskForSaveCalculatedFare().execute(
+								rideDetailsModel.getCabId(),
+								hashMap.get("tripTotalFare").toString(),
+								numberfareString, OwnerMobileNumber,
+								OwnerMobileNumber);
+					}
+				}
+			});
+
+			dialog.show();
+		}
 	}
 
 	private void showEqualFareSplitDialog(final double fare) {
@@ -1279,8 +1398,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
 				+ amount + "''" + fee + "''"
 				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + orderid + "''" + receivercell
-				+ "''" + sendercell + "''" + token + "'",
+				+ GlobalVariables.Mobikwik_Mid + "''" + orderid + "''"
+				+ receivercell + "''" + sendercell + "''" + token + "'",
 				GlobalVariables.Mobikwik_14SecretKey);
 		String endpoint = GlobalVariables.Mobikwik_ServerURL
 				+ "/initiatePeerTransfer";
@@ -1303,12 +1422,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
 				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
 				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
-				+ token + "'",
+				+ token + "''1'",
 				GlobalVariables.Mobikwik_14SecretKey_TokenRegenerate);
 		String endpoint = GlobalVariables.Mobikwik_ServerURL
 				+ "/tokenregenerate";
 		String params = "cell=" + mobilenumber + "&token=" + token
-				+ "&msgcode=" + msgcode + "&mid="
+				+ "&tokentype=1" + "&msgcode=" + msgcode + "&mid="
 				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
 				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
 				+ checksumstring;
@@ -2369,12 +2488,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			
-			for(int i=0;i<rectlinesarr.size();i++){
-				
-				Polyline polyline = checkpoolmap.addPolyline(rectlinesarr.get(i));
+
+			for (int i = 0; i < rectlinesarr.size(); i++) {
+
+				Polyline polyline = checkpoolmap.addPolyline(rectlinesarr
+						.get(i));
 				polyline.remove();
-				
+
 			}
 			checkpoolmap.clear();
 
@@ -2439,8 +2559,6 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					e.printStackTrace();
 				}
 			}
-
-			
 
 			// Enabling MyLocation Layer of Google Map
 			checkpoolmap.setMyLocationEnabled(true);
@@ -2688,8 +2806,54 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			FaredistanceList.clear();
+			FareLocationList.clear();
+			FareMemberDropLocaton.clear();
+			FareMemberPickLocaton.clear();
+			FareMobNoList.clear();
+
+			// Added Owner no and start end location for fare
+			FareMobNoList.add(rideDetailsModel.getMobileNumber());
+
+			Address locationAddressFrom = null, locationAddressTo = null;
+
+			String fromAdd = rideDetailsModel.getFromLocation();
+			String toAdd = rideDetailsModel.getToLocation();
+			Geocoder fcoder = new Geocoder(CheckPoolFragmentActivity.this);
+			try {
+				ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+						.getFromLocationName(fromAdd, 50);
+
+				for (Address add : adresses) {
+					locationAddressFrom = add;
+				}
+
+				adresses = (ArrayList<Address>) fcoder.getFromLocationName(
+						toAdd, 50);
+				for (Address add : adresses) {
+					locationAddressTo = add;
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+
+			String src = locationAddressFrom.getLatitude() + ","
+					+ locationAddressFrom.getLongitude();
+			String des = locationAddressTo.getLatitude() + ","
+					+ locationAddressTo.getLongitude();
+
+			LatLng llFrom = new LatLng(locationAddressFrom.getLatitude(),
+					locationAddressFrom.getLongitude());
+			LatLng llTo = new LatLng(locationAddressTo.getLatitude(),
+					locationAddressTo.getLongitude());
+
+			FareMemberPickLocaton.add(llFrom);
+			FareMemberDropLocaton.add(llTo);
+
 			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
-				
+
 				if (onedialog.isShowing()) {
 					onedialog.dismiss();
 				}
@@ -2727,7 +2891,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.getString("MemberImageName").toString());
 							ShowMemberStatus.add(subArray.getJSONObject(i)
 									.getString("Status").toString());
-							
+
 							ShowMemberLocationAddressEnd.add(subArray
 									.getJSONObject(i)
 									.getString("MemberEndLocationAddress")
@@ -2736,6 +2900,25 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.getJSONObject(i)
 									.getString("MemberEndLocationlatlong")
 									.toString());
+
+							// Added for fare calculation
+							FareMobNoList.add(subArray.getJSONObject(i)
+									.getString("MemberNumber").toString());
+
+							String arr[] = subArray.getJSONObject(i)
+									.getString("MemberLocationlatlong")
+									.toString().split(",");
+
+							LatLng l = new LatLng(Double.parseDouble(arr[0]),
+									Double.parseDouble(arr[1]));
+							FareMemberPickLocaton.add(l);
+							String arr1[] = subArray.getJSONObject(i)
+									.getString("MemberEndLocationlatlong")
+									.toString().split(",");
+
+							LatLng l1 = new LatLng(Double.parseDouble(arr1[0]),
+									Double.parseDouble(arr1[1]));
+							FareMemberDropLocaton.add(l1);
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -2747,53 +2930,54 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					e.printStackTrace();
 				}
 
-//				for (int i = 0; i < ShowMemberName.size(); i++) {
-//					
-//
-//					String[] latlongStart = ShowMemberLocationLatLong.get(i).split(
-//							",");
-//					String[] latlongEnd = ShowMemberLocationLatLongEnd.get(i).split(
-//							",");
-//					LatLng ltStart = new LatLng(Double.parseDouble(latlongStart[0]),
-//							Double.parseDouble(latlongStart[1]));
-//					LatLng ltEnd = new LatLng(Double.parseDouble(latlongEnd[0]),
-//							Double.parseDouble(latlongEnd[1]));
-//					checkpoolmap
-//							.addMarker(new MarkerOptions()
-//									.position(ltStart)
-//									.snippet(String.valueOf(i))
-//									.title(ShowMemberLocationAddress.get(i))
-//									.icon(BitmapDescriptorFactory
-//											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-//					checkpoolmap
-//					.addMarker(new MarkerOptions()
-//							.position(ltEnd)
-//							.snippet("myEndlocation")
-//							.title(ShowMemberLocationAddressEnd.get(i))
-//							.icon(BitmapDescriptorFactory
-//									.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-//				
-//					
-////					String[] latlong = ShowMemberLocationLatLong.get(i).split(
-////							",");
-////					LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
-////							Double.parseDouble(latlong[1]));
-////					checkpoolmap
-////							.addMarker(new MarkerOptions()
-////									.position(lt)
-////									.snippet(String.valueOf(i))
-////									.title(ShowMemberLocationAddress.get(i))
-////									.icon(BitmapDescriptorFactory
-////											.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-////			
-//					}
-				
-				String wayPoint="&waypoints=optimize:true";
+				// for (int i = 0; i < ShowMemberName.size(); i++) {
+				//
+				//
+				// String[] latlongStart =
+				// ShowMemberLocationLatLong.get(i).split(
+				// ",");
+				// String[] latlongEnd =
+				// ShowMemberLocationLatLongEnd.get(i).split(
+				// ",");
+				// LatLng ltStart = new
+				// LatLng(Double.parseDouble(latlongStart[0]),
+				// Double.parseDouble(latlongStart[1]));
+				// LatLng ltEnd = new LatLng(Double.parseDouble(latlongEnd[0]),
+				// Double.parseDouble(latlongEnd[1]));
+				// checkpoolmap
+				// .addMarker(new MarkerOptions()
+				// .position(ltStart)
+				// .snippet(String.valueOf(i))
+				// .title(ShowMemberLocationAddress.get(i))
+				// .icon(BitmapDescriptorFactory
+				// .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+				// checkpoolmap
+				// .addMarker(new MarkerOptions()
+				// .position(ltEnd)
+				// .snippet("myEndlocation")
+				// .title(ShowMemberLocationAddressEnd.get(i))
+				// .icon(BitmapDescriptorFactory
+				// .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+				//
+				//
+				// // String[] latlong = ShowMemberLocationLatLong.get(i).split(
+				// // ",");
+				// // LatLng lt = new LatLng(Double.parseDouble(latlong[0]),
+				// // Double.parseDouble(latlong[1]));
+				// // checkpoolmap
+				// // .addMarker(new MarkerOptions()
+				// // .position(lt)
+				// // .snippet(String.valueOf(i))
+				// // .title(ShowMemberLocationAddress.get(i))
+				// // .icon(BitmapDescriptorFactory
+				// // .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+				// //
+				// }
 
-				
-				if(!showmembersresp.equalsIgnoreCase("No Members joined yet"))
-				{
-					
+				String wayPoint = "&waypoints=optimize:true";
+
+				if (!showmembersresp.equalsIgnoreCase("No Members joined yet")) {
+
 					steps.clear();
 					Summary.clear();
 					startaddress.clear();
@@ -2803,53 +2987,52 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					listGeopoints.clear();
 					via_waypoint.clear();
 					via_waypointstrarr.clear();
-					
-					for(int i=0;i<rectlinesarr.size();i++){
-						
-						Polyline polyline = checkpoolmap.addPolyline(rectlinesarr.get(i));
+
+					for (int i = 0; i < rectlinesarr.size(); i++) {
+
+						Polyline polyline = checkpoolmap
+								.addPolyline(rectlinesarr.get(i));
 						polyline.remove();
-						
+
 					}
 					checkpoolmap.clear();
 
 					rectlinesarr.clear();
-					
-//					http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
-					
-					if(!showmembersresp.equalsIgnoreCase("No Members joined yet")){
-					for(int i=0;i<ShowMemberLocationLatLong.size();i++){
-						
-						String latlong[]=ShowMemberLocationLatLong.get(i).split(",");
-						
-						wayPoint+="%7C"+latlong[0]+","+latlong[1];
-						if(!ShowMemberLocationLatLongEnd.get(i).equalsIgnoreCase("")){
-							String latlong1[]=ShowMemberLocationLatLongEnd.get(i).split(",");
-                        wayPoint+="%7C"+latlong1[0]+","+latlong1[1];		
+
+					// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
+
+					if (!showmembersresp
+							.equalsIgnoreCase("No Members joined yet")) {
+						for (int i = 0; i < ShowMemberLocationLatLong.size(); i++) {
+
+							String latlong[] = ShowMemberLocationLatLong.get(i)
+									.split(",");
+
+							wayPoint += "%7C" + latlong[0] + "," + latlong[1];
+							if (!ShowMemberLocationLatLongEnd.get(i)
+									.equalsIgnoreCase("")) {
+								String latlong1[] = ShowMemberLocationLatLongEnd
+										.get(i).split(",");
+								wayPoint += "%7C" + latlong1[0] + ","
+										+ latlong1[1];
+							}
+
 						}
 
-						
+					}
 
-						
-					}
-						
-					}
-					
-					
-					
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						new ConnectionTaskForSingleRoot()
-								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,wayPoint);
+						new ConnectionTaskForSingleRoot().executeOnExecutor(
+								AsyncTask.THREAD_POOL_EXECUTOR, wayPoint);
 					} else {
 						new ConnectionTaskForSingleRoot().execute(wayPoint);
-					}	
-					
-				}
-				else{
+					}
+
+				} else {
 					if (onedialog.isShowing()) {
 						onedialog.dismiss();
 					}
-					
-					
+
 					// //////////////////////////
 					if (rideDetailsModel.getCabStatus().equals("A")
 							&& rideDetailsModel.getStatus().equals("0")) {
@@ -2863,7 +3046,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 							ArrayList<String> arrayList = readBookedOrCarPreference();
 
-							// Log.d("CheckPoolFragmentActivity", "startTime : " +
+							// Log.d("CheckPoolFragmentActivity", "startTime : "
+							// +
 							// date.getTime());
 
 							if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
@@ -2875,8 +3059,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									if (arrayList == null) {
 										showCabBookingDialog(true);
 									} else if (arrayList != null
-											&& arrayList.indexOf(rideDetailsModel
-													.getCabId()) == -1) {
+											&& arrayList
+													.indexOf(rideDetailsModel
+															.getCabId()) == -1) {
 										showCabBookingDialog(true);
 									} else {
 										showTripStartDialog();
@@ -2884,7 +3069,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								} else {
 									showTripStartDialog();
 								}
-							} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+							} else if ((date.getTime() - System
+									.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
 								if (rideDetailsModel.getBookingRefNo() == null
 										|| rideDetailsModel.getBookingRefNo()
 												.isEmpty()
@@ -2893,8 +3079,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									if (arrayList == null) {
 										showCabBookingDialog(false);
 									} else if (arrayList != null
-											&& arrayList.indexOf(rideDetailsModel
-													.getCabId()) == -1) {
+											&& arrayList
+													.indexOf(rideDetailsModel
+															.getCabId()) == -1) {
 										showCabBookingDialog(false);
 									}
 								}
@@ -2938,7 +3125,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 													rideDetailsModel.getCabId());
 								} else {
 									new ConnectionTaskForTripCompleted()
-											.execute(rideDetailsModel.getCabId());
+											.execute(rideDetailsModel
+													.getCabId());
 								}
 							}
 						} catch (Exception e) {
@@ -2948,68 +3136,71 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					// //////////////////////////
 
 				}
-				
-				
 
 				checkpoolmap
 						.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 							@Override
 							public boolean onMarkerClick(Marker arg0) {
-								
-								
 
 								if (arg0.getSnippet().equalsIgnoreCase("start")) {
-									
-									
 
 									arg0.showInfoWindow();
-								} else if (arg0.getSnippet().equalsIgnoreCase("end")) {
+								} else if (arg0.getSnippet().equalsIgnoreCase(
+										"end")) {
 									arg0.showInfoWindow();
 
-								} 
+								}
 
 								else {
 
 									if (rideDetailsModel.getCabStatus()
 											.toString().trim()
 											.equalsIgnoreCase("A")) {
-										String[] arr=arg0.getSnippet().split(",");
-										
+										String[] arr = arg0.getSnippet().split(
+												",");
+
 										final Integer index = Integer
-												.parseInt(arr[0])-1;
-							String pickdrop=arr[1];
-					
-									
-          if(pickdrop.equalsIgnoreCase("Pick"))
-										showAlertDialog(ShowMemberName
-												.get(index), ShowMemberNumber
-												.get(index),
-												ShowMemberLocationAddress
+												.parseInt(arr[0]) - 1;
+										String pickdrop = arr[1];
+
+										if (pickdrop.equalsIgnoreCase("Pick"))
+											showAlertDialog(
+													ShowMemberName.get(index),
+													ShowMemberNumber.get(index),
+													ShowMemberLocationAddress
+															.get(index),
+													ShowMemberLocationLatLong
+															.get(index),
+													ShowMemberImageName
+															.get(index),
+													ShowMemberStatus.get(index),
+													pickdrop);
+
+										else if (pickdrop
+												.equalsIgnoreCase("Drop")) {
+
+											if (!ShowMemberLocationLatLongEnd
+													.get(index)
+													.equalsIgnoreCase("")) {
+
+												showAlertDialog(ShowMemberName
 														.get(index),
-												ShowMemberLocationLatLong
-														.get(index),
-												ShowMemberImageName.get(index),
-												ShowMemberStatus.get(index),pickdrop);
-          
-          else if(pickdrop.equalsIgnoreCase("Drop")){
-        	  
-        	  if(!ShowMemberLocationLatLongEnd
-								.get(index).equalsIgnoreCase("")){
-        		  
-        		  showAlertDialog(ShowMemberName
-  						.get(index), ShowMemberNumber
-  						.get(index),
-  						ShowMemberLocationAddressEnd
-  								.get(index),
-  						ShowMemberLocationLatLongEnd
-  								.get(index),
-  						ShowMemberImageName.get(index),
-  						ShowMemberStatus.get(index),pickdrop);
-        		  
-        	  }
-        	
-          }
+														ShowMemberNumber
+																.get(index),
+														ShowMemberLocationAddressEnd
+																.get(index),
+														ShowMemberLocationLatLongEnd
+																.get(index),
+														ShowMemberImageName
+																.get(index),
+														ShowMemberStatus
+																.get(index),
+														pickdrop);
+
+											}
+
+										}
 									}
 								}
 
@@ -3018,11 +3209,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 						});
 
-			
-
 			}
 
-			
 		}
 	}
 
@@ -3074,479 +3262,476 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 	// /////////////////////
 	// ///////
-	
+
 	private class ConnectionTaskForSingleRoot extends
-	AsyncTask<String, Void, Void> {
-
-@Override
-protected void onPreExecute() {
-
-}
-
-@Override
-protected Void doInBackground(String... args) {
-	AuthenticateConnectionSingleRoot mAuth1 = new AuthenticateConnectionSingleRoot();
-	try {
-		mAuth1.wayPointUrl = args[0];
-		mAuth1.connection();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		exceptioncheck = true;
-		e.printStackTrace();
-	}
-	return null;
-}
-
-@Override
-protected void onPostExecute(Void v) {
-	
-	if (onedialog.isShowing()) {
-		onedialog.dismiss();
-	}
-
-	if (exceptioncheck) {
-		exceptioncheck = false;
-		Toast.makeText(CheckPoolFragmentActivity.this,
-				getResources().getString(R.string.exceptionstring),
-				Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	// int index = 0;
-	rectlinesarr.clear();
-	
-	Random rnd = new Random();
-int color = Color.argb(255, rnd.nextInt(256),
-			rnd.nextInt(256), rnd.nextInt(256));
-	for (int i = 0; i < steps.size(); i++) {
-
-		ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
-
-		JSONArray subArray123;
-		try {
-			subArray123 = new JSONArray(steps.get(i));
-			for (int i111 = 0; i111 < subArray123.length(); i111++) {
-				String locationstr = subArray123.getJSONObject(i111)
-						.getString("start_location").toString();
-
-				JSONObject jsonObject11 = new JSONObject(locationstr);
-				double lat1 = Double.parseDouble(jsonObject11
-						.getString("lat"));
-				double lng1 = Double.parseDouble(jsonObject11
-						.getString("lng"));
-
-				listGeopoints.add(new LatLng(lat1, lng1));
-
-				// /
-				String locationstr1 = subArray123.getJSONObject(i111)
-						.getString("polyline").toString();
-
-				JSONObject jsonObject111 = new JSONObject(locationstr1);
-				String points = jsonObject111.getString("points");
-				ArrayList<LatLng> arr = decodePoly(points);
-				for (int j = 0; j < arr.size(); j++) {
-					listGeopoints.add(new LatLng(arr.get(j).latitude,
-							arr.get(j).longitude));
-				}
-				// /
-				String locationstr11 = subArray123.getJSONObject(i111)
-						.getString("end_location").toString();
-
-				JSONObject jsonObject1111 = new JSONObject(
-						locationstr11);
-				double lat11 = Double.parseDouble(jsonObject1111
-						.getString("lat"));
-				double lng11 = Double.parseDouble(jsonObject1111
-						.getString("lng"));
-
-				listGeopoints.add(new LatLng(lat11, lng11));
-
-//				Random rnd = new Random();
-//				int color = Color.argb(255, rnd.nextInt(256),
-//						rnd.nextInt(256), rnd.nextInt(256));
-
-				PolylineOptions rectLine = new PolylineOptions().width(
-						5).color(color);
-				rectLine.addAll(listGeopoints);
-				rectlinesarr.add(rectLine);
-
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	
-
-	checkpoolmap.setMyLocationEnabled(true);
-
-	
-
-	checkpoolmap.setOnMapClickListener(new OnMapClickListener() {
+			AsyncTask<String, Void, Void> {
 
 		@Override
-		public void onMapClick(LatLng point) {
-			
-			
+		protected void onPreExecute() {
 
-			//setOnMapClick(point);
 		}
-	});
 
-	
-
-	for(int i=0;i<startaddlatlng.size();i++){
-		
-		Log.d("startaddlatlng"
-				, ""+startaddlatlng.size());
-		
-		if(i==0)
-		checkpoolmap.addMarker(new MarkerOptions()
-		.position(startaddlatlng.get(i))
-		.title(startaddress.get(i))
-		.snippet("start")
-		.icon(BitmapDescriptorFactory
-				.fromResource(R.drawable.start)));
-		
-		else	if(i==(startaddlatlng.size()-1))
-
-checkpoolmap
-		.addMarker(new MarkerOptions()
-				.position(endaddlatlng.get(i))
-				.title(endaddress.get(i))
-				.snippet("end")
-				.icon(BitmapDescriptorFactory
-						.fromResource(R.drawable.end)));
-			else{
-			
-			checkpoolmap
-			.addMarker(new MarkerOptions()
-					.position(startaddlatlng.get(i))
-					.title(startaddress.get(i))
-					.snippet(String.valueOf(i)+","+"Pick")
-				.icon(BitmapDescriptorFactory
-					.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-			
-			
-			
-			checkpoolmap
-			.addMarker(new MarkerOptions()
-					.position(endaddlatlng.get(i))
-					.title(endaddress.get(i))
-					.snippet(String.valueOf(i)+","+"Drop")
-				.icon(BitmapDescriptorFactory
-					.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionSingleRoot mAuth1 = new AuthenticateConnectionSingleRoot();
+			try {
+				mAuth1.wayPointUrl = args[0];
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
 		}
-			
 
-		
-		
+		@Override
+		protected void onPostExecute(Void v) {
 
+			if (onedialog.isShowing()) {
+				onedialog.dismiss();
+			}
 
-		
-	}
-	LatLngBounds.Builder bc = null;
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 
-	for (int i = 0; i < rectlinesarr.size(); i++) {
-		checkpoolmap.addPolyline(rectlinesarr.get(i));
+			// int index = 0;
+			rectlinesarr.clear();
 
-		List<LatLng> points = rectlinesarr.get(i).getPoints();
+			Random rnd = new Random();
+			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
+					rnd.nextInt(256));
+			for (int i = 0; i < steps.size(); i++) {
 
-		bc = new LatLngBounds.Builder();
+				ArrayList<LatLng> listGeopoints = new ArrayList<LatLng>();
 
-		for (LatLng item : points) {
-			bc.include(item);
-		}
-	}
+				JSONArray subArray123;
+				try {
+					subArray123 = new JSONArray(steps.get(i));
+					for (int i111 = 0; i111 < subArray123.length(); i111++) {
+						String locationstr = subArray123.getJSONObject(i111)
+								.getString("start_location").toString();
 
-	bc.include(startaddlatlng.get(0));
-	bc.include(endaddlatlng.get(endaddlatlng.size()-1));
-	checkpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
-			bc.build(), 50));
-	
-	// //////////////////////////
-	if (rideDetailsModel.getCabStatus().equals("A")
-			&& rideDetailsModel.getStatus().equals("0")) {
-		try {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-					"dd/MM/yyyy hh:mm aa");
-			Date date = simpleDateFormat.parse(rideDetailsModel
-					.getTravelDate()
-					+ " "
-					+ rideDetailsModel.getTravelTime());
+						JSONObject jsonObject11 = new JSONObject(locationstr);
+						double lat1 = Double.parseDouble(jsonObject11
+								.getString("lat"));
+						double lng1 = Double.parseDouble(jsonObject11
+								.getString("lng"));
 
-			ArrayList<String> arrayList = readBookedOrCarPreference();
+						listGeopoints.add(new LatLng(lat1, lng1));
 
-			// Log.d("CheckPoolFragmentActivity", "startTime : " +
-			// date.getTime());
+						// /
+						String locationstr1 = subArray123.getJSONObject(i111)
+								.getString("polyline").toString();
 
-			if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-				if (rideDetailsModel.getBookingRefNo() == null
-						|| rideDetailsModel.getBookingRefNo()
-								.isEmpty()
-						|| rideDetailsModel.getBookingRefNo()
-								.equalsIgnoreCase("null")) {
-					if (arrayList == null) {
-						showCabBookingDialog(true);
-					} else if (arrayList != null
-							&& arrayList.indexOf(rideDetailsModel
-									.getCabId()) == -1) {
-						showCabBookingDialog(true);
-					} else {
-						showTripStartDialog();
+						JSONObject jsonObject111 = new JSONObject(locationstr1);
+						String points = jsonObject111.getString("points");
+						ArrayList<LatLng> arr = decodePoly(points);
+						for (int j = 0; j < arr.size(); j++) {
+							listGeopoints.add(new LatLng(arr.get(j).latitude,
+									arr.get(j).longitude));
+						}
+						// /
+						String locationstr11 = subArray123.getJSONObject(i111)
+								.getString("end_location").toString();
+
+						JSONObject jsonObject1111 = new JSONObject(
+								locationstr11);
+						double lat11 = Double.parseDouble(jsonObject1111
+								.getString("lat"));
+						double lng11 = Double.parseDouble(jsonObject1111
+								.getString("lng"));
+
+						listGeopoints.add(new LatLng(lat11, lng11));
+
+						// Random rnd = new Random();
+						// int color = Color.argb(255, rnd.nextInt(256),
+						// rnd.nextInt(256), rnd.nextInt(256));
+
+						PolylineOptions rectLine = new PolylineOptions().width(
+								5).color(color);
+						rectLine.addAll(listGeopoints);
+						rectlinesarr.add(rectLine);
+
 					}
-				} else {
-					showTripStartDialog();
-				}
-			} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
-				if (rideDetailsModel.getBookingRefNo() == null
-						|| rideDetailsModel.getBookingRefNo()
-								.isEmpty()
-						|| rideDetailsModel.getBookingRefNo()
-								.equalsIgnoreCase("null")) {
-					if (arrayList == null) {
-						showCabBookingDialog(false);
-					} else if (arrayList != null
-							&& arrayList.indexOf(rideDetailsModel
-									.getCabId()) == -1) {
-						showCabBookingDialog(false);
-					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	} else if (rideDetailsModel.getCabStatus().equals("A")
-			&& rideDetailsModel.getStatus().equals("2")) {
-		// For affle traking view
-		Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
-		extraParams.put("cabid", rideDetailsModel.getCabId());
-		AffleInAppTracker.inAppTrackerViewName(
-				CheckPoolFragmentActivity.this,
-				"CheckPoolFragmentActivity", "Trip completed",
-				"Trip completed", extraParams);
 
-		showRideCompleteDialog();
-	} else if (rideDetailsModel.getCabStatus().equals("A")
-			&& rideDetailsModel.getStatus().equals("3")) {
-		showPaymentDialog();
-	} else if (rideDetailsModel.getCabStatus().equals("A")) {
-		try {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-					"dd/MM/yyyy hh:mm aa");
-			Date date = simpleDateFormat.parse(rideDetailsModel
-					.getTravelDate()
-					+ " "
-					+ rideDetailsModel.getTravelTime());
+			checkpoolmap.setMyLocationEnabled(true);
 
-			long expDuration = Long.parseLong(rideDetailsModel
-					.getExpTripDuration());
+			checkpoolmap.setOnMapClickListener(new OnMapClickListener() {
 
-			if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
-				Log.d("CheckPoolFragmentActivity",
-						"ExpTripDuration trip completed");
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					new ConnectionTaskForTripCompleted()
-							.executeOnExecutor(
-									AsyncTask.THREAD_POOL_EXECUTOR,
-									rideDetailsModel.getCabId());
-				} else {
-					new ConnectionTaskForTripCompleted()
-							.execute(rideDetailsModel.getCabId());
+				@Override
+				public void onMapClick(LatLng point) {
+
+					// setOnMapClick(point);
+				}
+			});
+
+			for (int i = 0; i < startaddlatlng.size(); i++) {
+
+				Log.d("startaddlatlng", "" + startaddlatlng.size());
+
+				if (i == 0)
+					checkpoolmap.addMarker(new MarkerOptions()
+							.position(startaddlatlng.get(i))
+							.title(startaddress.get(i))
+							.snippet("start")
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.start)));
+
+				else if (i == (startaddlatlng.size() - 1))
+
+					checkpoolmap.addMarker(new MarkerOptions()
+							.position(endaddlatlng.get(i))
+							.title(endaddress.get(i))
+							.snippet("end")
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.end)));
+				else {
+
+					checkpoolmap
+							.addMarker(new MarkerOptions()
+									.position(startaddlatlng.get(i))
+									.title(startaddress.get(i))
+									.snippet(String.valueOf(i) + "," + "Pick")
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+					checkpoolmap
+							.addMarker(new MarkerOptions()
+									.position(endaddlatlng.get(i))
+									.title(endaddress.get(i))
+									.snippet(String.valueOf(i) + "," + "Drop")
+									.icon(BitmapDescriptorFactory
+											.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+				}
+
+			}
+			LatLngBounds.Builder bc = null;
+
+			for (int i = 0; i < rectlinesarr.size(); i++) {
+				checkpoolmap.addPolyline(rectlinesarr.get(i));
+
+				List<LatLng> points = rectlinesarr.get(i).getPoints();
+
+				bc = new LatLngBounds.Builder();
+
+				for (LatLng item : points) {
+					bc.include(item);
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			bc.include(startaddlatlng.get(0));
+			bc.include(endaddlatlng.get(endaddlatlng.size() - 1));
+			checkpoolmap.moveCamera(CameraUpdateFactory.newLatLngBounds(
+					bc.build(), 50));
+
+			Log.d("FareMobno", "" + FareMobNoList);
+			Log.d("FareDistance", "" + FaredistanceList);
+			Log.d("FareLocation", "" + FareLocationList);
+			Log.d("FarePick", "" + FareMemberPickLocaton);
+			Log.d("FareDrop", "" + FareMemberDropLocaton);
+
+			// //////////////////////////
+			if (rideDetailsModel.getCabStatus().equals("A")
+					&& rideDetailsModel.getStatus().equals("0")) {
+				try {
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy hh:mm aa");
+					Date date = simpleDateFormat.parse(rideDetailsModel
+							.getTravelDate()
+							+ " "
+							+ rideDetailsModel.getTravelTime());
+
+					ArrayList<String> arrayList = readBookedOrCarPreference();
+
+					// Log.d("CheckPoolFragmentActivity", "startTime : " +
+					// date.getTime());
+
+					if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.START_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+						if (rideDetailsModel.getBookingRefNo() == null
+								|| rideDetailsModel.getBookingRefNo().isEmpty()
+								|| rideDetailsModel.getBookingRefNo()
+										.equalsIgnoreCase("null")) {
+							if (arrayList == null) {
+								showCabBookingDialog(true);
+							} else if (arrayList != null
+									&& arrayList.indexOf(rideDetailsModel
+											.getCabId()) == -1) {
+								showCabBookingDialog(true);
+							} else {
+								showTripStartDialog();
+							}
+						} else {
+							showTripStartDialog();
+						}
+					} else if ((date.getTime() - System.currentTimeMillis()) <= (UpcomingStartTripAlarm.UPCOMING_TRIP_NOTIFICATION_TIME * 60 * 1000)) {
+						if (rideDetailsModel.getBookingRefNo() == null
+								|| rideDetailsModel.getBookingRefNo().isEmpty()
+								|| rideDetailsModel.getBookingRefNo()
+										.equalsIgnoreCase("null")) {
+							if (arrayList == null) {
+								showCabBookingDialog(false);
+							} else if (arrayList != null
+									&& arrayList.indexOf(rideDetailsModel
+											.getCabId()) == -1) {
+								showCabBookingDialog(false);
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (rideDetailsModel.getCabStatus().equals("A")
+					&& rideDetailsModel.getStatus().equals("2")) {
+				// For affle traking view
+				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
+				extraParams.put("cabid", rideDetailsModel.getCabId());
+				AffleInAppTracker.inAppTrackerViewName(
+						CheckPoolFragmentActivity.this,
+						"CheckPoolFragmentActivity", "Trip completed",
+						"Trip completed", extraParams);
+
+				showRideCompleteDialog();
+			} else if (rideDetailsModel.getCabStatus().equals("A")
+					&& rideDetailsModel.getStatus().equals("3")) {
+				showPaymentDialog();
+			} else if (rideDetailsModel.getCabStatus().equals("A")) {
+				try {
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"dd/MM/yyyy hh:mm aa");
+					Date date = simpleDateFormat.parse(rideDetailsModel
+							.getTravelDate()
+							+ " "
+							+ rideDetailsModel.getTravelTime());
+
+					long expDuration = Long.parseLong(rideDetailsModel
+							.getExpTripDuration());
+
+					if (System.currentTimeMillis() >= (date.getTime() + expDuration * 1000)) {
+						Log.d("CheckPoolFragmentActivity",
+								"ExpTripDuration trip completed");
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							new ConnectionTaskForTripCompleted()
+									.executeOnExecutor(
+											AsyncTask.THREAD_POOL_EXECUTOR,
+											rideDetailsModel.getCabId());
+						} else {
+							new ConnectionTaskForTripCompleted()
+									.execute(rideDetailsModel.getCabId());
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			// //////////////////////////
+
 		}
+
 	}
-	// //////////////////////////
 
-}
+	public class AuthenticateConnectionSingleRoot {
+		private String wayPointUrl;
 
-}
+		public AuthenticateConnectionSingleRoot() {
 
-public class AuthenticateConnectionSingleRoot {
-private String wayPointUrl;
-
-public AuthenticateConnectionSingleRoot() {
-
-}
-
-public void connection() throws Exception {
-
-	String source = rideDetailsModel.getFromLocation().replaceAll(" ",
-			"%20");
-	String dest = rideDetailsModel.getToLocation().replaceAll(" ",
-			"%20");
-	Address locationAddressFrom = null, locationAddressTo = null;
-
-	String fromAdd = rideDetailsModel.getFromLocation();
-	String toAdd = rideDetailsModel.getToLocation();
-	Geocoder fcoder = new Geocoder(CheckPoolFragmentActivity.this);
-	try {
-		ArrayList<Address> adresses = (ArrayList<Address>) fcoder
-				.getFromLocationName(fromAdd, 50);
-
-		for (Address add : adresses) {
-			locationAddressFrom = add;
 		}
 
-		adresses = (ArrayList<Address>) fcoder.getFromLocationName(
-				toAdd, 50);
-		for (Address add : adresses) {
-			locationAddressTo = add;
-		}
+		public void connection() throws Exception {
 
-	} catch (Exception e) {
-		e.printStackTrace();
+			String source = rideDetailsModel.getFromLocation().replaceAll(" ",
+					"%20");
+			String dest = rideDetailsModel.getToLocation().replaceAll(" ",
+					"%20");
+			Address locationAddressFrom = null, locationAddressTo = null;
 
-	}
+			String fromAdd = rideDetailsModel.getFromLocation();
+			String toAdd = rideDetailsModel.getToLocation();
+			Geocoder fcoder = new Geocoder(CheckPoolFragmentActivity.this);
+			try {
+				ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+						.getFromLocationName(fromAdd, 50);
 
-	String src = locationAddressFrom.getLatitude() + ","
-			+ locationAddressFrom.getLongitude();
-	String des = locationAddressTo.getLatitude() + ","
-			+ locationAddressTo.getLongitude();
-	
-	Log.d("src:", "" +src);
-	Log.d("des", "" + des);
+				for (Address add : adresses) {
+					locationAddressFrom = add;
+				}
 
+				adresses = (ArrayList<Address>) fcoder.getFromLocationName(
+						toAdd, 50);
+				for (Address add : adresses) {
+					locationAddressTo = add;
+				}
 
-	// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
+			} catch (Exception e) {
+				e.printStackTrace();
 
-	String url = "https://maps.googleapis.com/maps/api/directions/json?"
-			+ "origin="
-			+ src
-			+ "&destination="
-			+ des
-			+wayPointUrl
-			+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
-			+ GlobalVariables.GoogleMapsAPIKey;
+			}
 
-	Log.d("url single path", "" + url);
+			String src = locationAddressFrom.getLatitude() + ","
+					+ locationAddressFrom.getLongitude();
+			String des = locationAddressTo.getLatitude() + ","
+					+ locationAddressTo.getLongitude();
 
-	CompletePageResponse = new Communicator().executeHttpGet(url);
+			Log.d("src:", "" + src);
+			Log.d("des", "" + des);
 
-	CompletePageResponse = CompletePageResponse
-			.replaceAll("\\\\/", "/");
+			// http://maps.googleapis.com/maps/api/directions/json?origin=28.48971,77.062282&destination=28.6289146,77.2152869&waypoints=optimize:true|28.5440936,77.2359|28.549156,77.2527764|28.5252398,77.2543449&sensor=false
 
-	JSONObject jsonObject = new JSONObject(CompletePageResponse);
+			String url = "https://maps.googleapis.com/maps/api/directions/json?"
+					+ "origin="
+					+ src
+					+ "&destination="
+					+ des
+					+ wayPointUrl
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+					+ GlobalVariables.GoogleMapsAPIKey;
 
-	String name = jsonObject.getString("routes");
+			Log.d("url single path", "" + url);
 
-	JSONArray subArray = new JSONArray(name);
-	Summary.clear();
+			CompletePageResponse = new Communicator().executeHttpGet(url);
 
-	for (int i = 0; i < subArray.length(); i++) {
+			CompletePageResponse = CompletePageResponse
+					.replaceAll("\\\\/", "/");
 
-		Summary.add(subArray.getJSONObject(i).getString("summary")
-				.toString());
+			JSONObject jsonObject = new JSONObject(CompletePageResponse);
 
-		String name1 = subArray.getJSONObject(i).getString("legs")
-				.toString();
+			String name = jsonObject.getString("routes");
 
-		JSONArray subArray1 = new JSONArray(name1);
+			JSONArray subArray = new JSONArray(name);
+			Summary.clear();
 
-		for (int i1 = 0; i1 < subArray1.length(); i1++) {
+			for (int i = 0; i < subArray.length(); i++) {
 
-			// int i1 = 0;
-			startaddress.add(subArray1.getJSONObject(i1)
-					.getString("start_address").toString());
-			endaddress.add(subArray1.getJSONObject(i1)
-					.getString("end_address").toString());
+				Summary.add(subArray.getJSONObject(i).getString("summary")
+						.toString());
 
-			String startadd = subArray1.getJSONObject(i1)
-					.getString("start_location").toString();
+				String name1 = subArray.getJSONObject(i).getString("legs")
+						.toString();
 
-			JSONObject jsonObject1 = new JSONObject(startadd);
-			double lat = Double.parseDouble(jsonObject1
-					.getString("lat"));
-			double lng = Double.parseDouble(jsonObject1
-					.getString("lng"));
+				JSONArray subArray1 = new JSONArray(name1);
 
-			startaddlatlng.add(new LatLng(lat, lng));
+				for (int i1 = 0; i1 < subArray1.length(); i1++) {
 
-			//
-			String endadd = subArray1.getJSONObject(i1)
-					.getString("end_location").toString();
+					// int i1 = 0;
+					startaddress.add(subArray1.getJSONObject(i1)
+							.getString("start_address").toString());
+					endaddress.add(subArray1.getJSONObject(i1)
+							.getString("end_address").toString());
 
-			JSONObject jsonObject41 = new JSONObject(endadd);
-			double lat4 = Double.parseDouble(jsonObject41
-					.getString("lat"));
-			double lng4 = Double.parseDouble(jsonObject41
-					.getString("lng"));
+					String startadd = subArray1.getJSONObject(i1)
+							.getString("start_location").toString();
 
-			endaddlatlng.add(new LatLng(lat4, lng4));
-			
-			//Code fro get distance and duration
-			
-			String duration = subArray1.getJSONObject(i1)
-					.getString("duration").toString();	
-			JSONObject jsonObjectDuraton = new JSONObject(duration);
-			
-			durationList.add(jsonObjectDuraton.getInt("value"));
-
-			
-			String distance = subArray1.getJSONObject(i1)
-					.getString("distance").toString();
-			JSONObject jsonObjectDistance = new JSONObject(distance);
-
-distanceList.add(jsonObjectDistance.getInt("value"));
-			// ////////////
-
-			steps.add(subArray1.getJSONObject(i1).getString("steps")
-					.toString());
-
-			// //////////////
-			String mska = subArray1.getJSONObject(i1)
-					.getString("via_waypoint").toString();
-
-			if (mska.equalsIgnoreCase("[]")) {
-				via_waypoint.add(new LatLng(0, 0));
-			} else {
-				JSONArray subArray12 = new JSONArray(mska);
-
-				for (int i11 = 0; i11 < subArray12.length(); i11++) {
-
-					String locationstr = subArray12.getJSONObject(i11)
-							.getString("location").toString();
-
-					JSONObject jsonObject1111 = new JSONObject(
-							locationstr);
-					double lat1111 = Double.parseDouble(jsonObject1111
+					JSONObject jsonObject1 = new JSONObject(startadd);
+					double lat = Double.parseDouble(jsonObject1
 							.getString("lat"));
-					double lng1111 = Double.parseDouble(jsonObject1111
+					double lng = Double.parseDouble(jsonObject1
 							.getString("lng"));
 
-					via_waypoint.add(new LatLng(lat1111, lng1111));
+					startaddlatlng.add(new LatLng(lat, lng));
 
+					//
+					String endadd = subArray1.getJSONObject(i1)
+							.getString("end_location").toString();
+
+					JSONObject jsonObject41 = new JSONObject(endadd);
+					double lat4 = Double.parseDouble(jsonObject41
+							.getString("lat"));
+					double lng4 = Double.parseDouble(jsonObject41
+							.getString("lng"));
+
+					endaddlatlng.add(new LatLng(lat4, lng4));
+
+					// Code fro get distance and duration
+
+					String duration = subArray1.getJSONObject(i1)
+							.getString("duration").toString();
+					JSONObject jsonObjectDuraton = new JSONObject(duration);
+
+					durationList.add(jsonObjectDuraton.getInt("value"));
+
+					String distance = subArray1.getJSONObject(i1)
+							.getString("distance").toString();
+					JSONObject jsonObjectDistance = new JSONObject(distance);
+
+					distanceList.add(jsonObjectDistance.getInt("value"));
+					// ////////////
+
+					if (i1 == 0) {
+						FareLocationList.add(new LatLng(lat, lng));
+						FareLocationList.add(new LatLng(lat4, lng4));
+						FaredistanceList.add(0.0);
+						FaredistanceList.add(Double.parseDouble(""
+								+ jsonObjectDistance.getInt("value")));
+
+					} else {
+						FareLocationList.add(new LatLng(lat4, lng4));
+						FaredistanceList.add(Double.parseDouble(""
+								+ jsonObjectDistance.getInt("value")));
+
+					}
+
+					steps.add(subArray1.getJSONObject(i1).getString("steps")
+							.toString());
+
+					// //////////////
+					String mska = subArray1.getJSONObject(i1)
+							.getString("via_waypoint").toString();
+
+					if (mska.equalsIgnoreCase("[]")) {
+						via_waypoint.add(new LatLng(0, 0));
+					} else {
+						JSONArray subArray12 = new JSONArray(mska);
+
+						for (int i11 = 0; i11 < subArray12.length(); i11++) {
+
+							String locationstr = subArray12.getJSONObject(i11)
+									.getString("location").toString();
+
+							JSONObject jsonObject1111 = new JSONObject(
+									locationstr);
+							double lat1111 = Double.parseDouble(jsonObject1111
+									.getString("lat"));
+							double lng1111 = Double.parseDouble(jsonObject1111
+									.getString("lng"));
+
+							via_waypoint.add(new LatLng(lat1111, lng1111));
+
+						}
+					}
 				}
 			}
+
+			// /////
+			Log.d("Summary", "" + Summary);
+			Log.d("startaddress", "" + startaddress);
+			Log.d("endaddress", "" + endaddress);
+			Log.d("startaddlatlng", "" + startaddlatlng);
+			Log.d("endaddlatlng", "" + endaddlatlng);
+			Log.d("via_waypoint", "" + via_waypoint);
+
+			for (int i = 0; i < via_waypoint.size(); i++) {
+				String asd = MapUtilityMethods.getAddress(
+						CheckPoolFragmentActivity.this,
+						via_waypoint.get(i).latitude,
+						via_waypoint.get(i).longitude);
+				via_waypointstrarr.add(asd);
+			}
+			Log.d("via_waypointstrarr", "" + via_waypointstrarr);
 		}
 	}
 
-	// /////
-	Log.d("Summary", "" + Summary);
-	Log.d("startaddress", "" + startaddress);
-	Log.d("endaddress", "" + endaddress);
-	Log.d("startaddlatlng", "" + startaddlatlng);
-	Log.d("endaddlatlng", "" + endaddlatlng);
-	Log.d("via_waypoint", "" + via_waypoint);
-
-	for (int i = 0; i < via_waypoint.size(); i++) {
-		String asd = MapUtilityMethods.getAddress(
-				CheckPoolFragmentActivity.this,
-				via_waypoint.get(i).latitude,
-				via_waypoint.get(i).longitude);
-		via_waypointstrarr.add(asd);
-	}
-	Log.d("via_waypointstrarr", "" + via_waypointstrarr);
-}
-}
-	
-	
-	////////////
-	/////
+	// //////////
+	// ///
 
 	private class ConnectionTaskForDirectionsnew extends
 			AsyncTask<String, Void, Void> {
@@ -3921,7 +4106,8 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 	}
 
 	private void showAlertDialog(final String mname, final String mnum,
-			String mlocadd, String mloclatlon, String mimgname, String mstatus,String pickdrop) {
+			String mlocadd, String mloclatlon, String mimgname, String mstatus,
+			String pickdrop) {
 
 		final Dialog dialogMain = new Dialog(this);
 		dialogMain.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -3950,7 +4136,7 @@ distanceList.add(jsonObjectDistance.getInt("value"));
 
 		TextView memlocationadd = (TextView) dialogMain
 				.findViewById(R.id.memlocationadd);
-		memlocationadd.setText(pickdrop+" Location: "+mlocadd);
+		memlocationadd.setText(pickdrop + " Location: " + mlocadd);
 
 		LinearLayout dropuser = (LinearLayout) dialogMain
 				.findViewById(R.id.dropuser);

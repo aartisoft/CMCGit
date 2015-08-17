@@ -293,200 +293,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		flagchk = true;
 
-		// mNav = new SimpleSideDrawer(this);
-		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-		//
-		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v) {
-		//
-		// // mainhomepagerl.setAlpha((float) 0.3);
-		// mNav.toggleLeftDrawer();
-		//
-		// }
-		// });
-		//
-		// myprofile = (TextView) findViewById(R.id.myprofile);
-		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myrides = (TextView) findViewById(R.id.myrides);
-		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// bookacab = (TextView) findViewById(R.id.bookacab);
-		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myclubs = (TextView) findViewById(R.id.myclubs);
-		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// mypreferences = (TextView) findViewById(R.id.mypreferences);
-		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// about = (TextView) findViewById(R.id.about);
-		// about.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		//
-		// myprofile.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyProfile Click")
-		// .setAction("MyProfile Click")
-		// .setLabel("MyProfile Click").build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// MyProfileActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myrides.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyRides Click")
-		// .setAction("MyRides Click").setLabel("MyRides Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// MyRidesActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// bookacab.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("BookaCab Click")
-		// .setAction("BookaCab Click").setLabel("BookaCab Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// BookaCabFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharemylocation.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("ShareLocation Click")
-		// .setAction("ShareLocation Click")
-		// .setLabel("ShareLocation Click").build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// ShareLocationFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myclubs.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyClubs Click")
-		// .setAction("MyClubs Click").setLabel("MyClubs Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// MyClubsActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharethisapp.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("ShareApp Click")
-		// .setAction("ShareApp Click").setLabel("ShareApp Click")
-		// .build());
-		//
-		// Intent sendIntent = new Intent();
-		// sendIntent.setAction(Intent.ACTION_SEND);
-		// sendIntent
-		// .putExtra(
-		// Intent.EXTRA_TEXT,
-		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-		// sendIntent.setType("text/plain");
-		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
-		//
-		// }
-		// });
-		//
-		// mypreferences.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("Settings Click")
-		// .setAction("Settings Click").setLabel("Settings Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// SettingActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// about.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("About Click").setAction("About Click")
-		// .setLabel("About Click").build());
-		//
-		// Intent mainIntent = new Intent(InviteFragmentActivity.this,
-		// AboutPagerFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-
 		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
 
@@ -645,25 +451,26 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		cancel.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-	//	final Calendar calendar = Calendar.getInstance();
-		long time= System.currentTimeMillis();
-		   
-		long nextTime=time+(60000*30);			 
-		 Calendar calendar = Calendar.getInstance();
-		 calendar.setTimeInMillis(nextTime);
+		// final Calendar calendar = Calendar.getInstance();
+		long time = System.currentTimeMillis();
+
+		long nextTime = time + (60000 * 30);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(nextTime);
 		final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
 				InviteFragmentActivity.this, calendar.get(Calendar.YEAR),
 				calendar.get(Calendar.MONTH),
 				calendar.get(Calendar.DAY_OF_MONTH), isVibrate());
-		
-	
-		 String selecteddate = calendar.get(Calendar.DAY_OF_MONTH) + "/" +( calendar.get(Calendar.MONTH) +1) + "/" + calendar.get(Calendar.YEAR);
-			datetextview.setText(selecteddate.toString().trim());
-			datetextview2.setText(selecteddate.toString().trim());
-			datetextview3.setText(selecteddate.toString().trim());
 
-	//	calendar.add(Calendar.HOUR, 1);
-		hour =  calendar.get(Calendar.HOUR_OF_DAY) ;
+		String selecteddate = calendar.get(Calendar.DAY_OF_MONTH) + "/"
+				+ (calendar.get(Calendar.MONTH) + 1) + "/"
+				+ calendar.get(Calendar.YEAR);
+		datetextview.setText(selecteddate.toString().trim());
+		datetextview2.setText(selecteddate.toString().trim());
+		datetextview3.setText(selecteddate.toString().trim());
+
+		// calendar.add(Calendar.HOUR, 1);
+		hour = calendar.get(Calendar.HOUR_OF_DAY);
 		minute = calendar.get(Calendar.MINUTE);
 		updateTime(hour, minute);
 
@@ -714,22 +521,27 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				ivHalfArrow.setVisibility(View.INVISIBLE);
 				ivDateTimeArrow.setVisibility(View.INVISIBLE);
 
-			//	Calendar calendar = Calendar.getInstance();
-				long time= System.currentTimeMillis();
-				   
-				long nextTime=time+(60000*60);			 
-				 Calendar cl = Calendar.getInstance();
-				 cl.setTimeInMillis(nextTime);  //here your time in miliseconds
-				// String date = "" + cl.get(Calendar.DAY_OF_MONTH) + ":" + cl.get(Calendar.MONTH) + ":" + cl.get(Calendar.YEAR);
-				 String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND);
-				 Log.d("Time:::",time1);
-				 String selecteddate = cl.get(Calendar.DAY_OF_MONTH) + "/" +( cl.get(Calendar.MONTH) +1) + "/" + cl.get(Calendar.YEAR);
-					datetextview.setText(selecteddate.toString().trim());
-					datetextview2.setText(selecteddate.toString().trim());
-					datetextview3.setText(selecteddate.toString().trim());
+				// Calendar calendar = Calendar.getInstance();
+				long time = System.currentTimeMillis();
 
-			//	calendar.add(Calendar.HOUR, 1);
-				hour =  cl.get(Calendar.HOUR_OF_DAY) ;
+				long nextTime = time + (60000 * 60);
+				Calendar cl = Calendar.getInstance();
+				cl.setTimeInMillis(nextTime); // here your time in miliseconds
+				// String date = "" + cl.get(Calendar.DAY_OF_MONTH) + ":" +
+				// cl.get(Calendar.MONTH) + ":" + cl.get(Calendar.YEAR);
+				String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":"
+						+ cl.get(Calendar.MINUTE) + ":"
+						+ cl.get(Calendar.SECOND);
+				Log.d("Time:::", time1);
+				String selecteddate = cl.get(Calendar.DAY_OF_MONTH) + "/"
+						+ (cl.get(Calendar.MONTH) + 1) + "/"
+						+ cl.get(Calendar.YEAR);
+				datetextview.setText(selecteddate.toString().trim());
+				datetextview2.setText(selecteddate.toString().trim());
+				datetextview3.setText(selecteddate.toString().trim());
+
+				// calendar.add(Calendar.HOUR, 1);
+				hour = cl.get(Calendar.HOUR_OF_DAY);
 				minute = cl.get(Calendar.MINUTE);
 				updateTime(hour, minute);
 			}
@@ -797,20 +609,24 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				ivOneArrow.setVisibility(View.INVISIBLE);
 				ivHalfArrow.setVisibility(View.VISIBLE);
 				ivDateTimeArrow.setVisibility(View.INVISIBLE);
-				long time= System.currentTimeMillis();
-				   
-				long nextTime=time+(60000*30);			 
-				 Calendar cl = Calendar.getInstance();
-				 cl.setTimeInMillis(nextTime);  //here your time in miliseconds
-				 String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND);
-				 Log.d("Time:::",time1);
-				 String selecteddate = cl.get(Calendar.DAY_OF_MONTH) + "/" +( cl.get(Calendar.MONTH) +1) + "/" + cl.get(Calendar.YEAR);
-					datetextview.setText(selecteddate.toString().trim());
-					datetextview2.setText(selecteddate.toString().trim());
-					datetextview3.setText(selecteddate.toString().trim());
+				long time = System.currentTimeMillis();
 
-			//	calendar.add(Calendar.HOUR, 1);
-				hour =  cl.get(Calendar.HOUR_OF_DAY) ;
+				long nextTime = time + (60000 * 30);
+				Calendar cl = Calendar.getInstance();
+				cl.setTimeInMillis(nextTime); // here your time in miliseconds
+				String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":"
+						+ cl.get(Calendar.MINUTE) + ":"
+						+ cl.get(Calendar.SECOND);
+				Log.d("Time:::", time1);
+				String selecteddate = cl.get(Calendar.DAY_OF_MONTH) + "/"
+						+ (cl.get(Calendar.MONTH) + 1) + "/"
+						+ cl.get(Calendar.YEAR);
+				datetextview.setText(selecteddate.toString().trim());
+				datetextview2.setText(selecteddate.toString().trim());
+				datetextview3.setText(selecteddate.toString().trim());
+
+				// calendar.add(Calendar.HOUR, 1);
+				hour = cl.get(Calendar.HOUR_OF_DAY);
 				minute = cl.get(Calendar.MINUTE);
 				updateTime(hour, minute);
 

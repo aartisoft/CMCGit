@@ -177,7 +177,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 	int flag = 1;
 	Button donebtn;
-private TextView validmobiletxt1;
+	private TextView validmobiletxt1;
 	String appusers;
 
 	ArrayList<String> selectednames = new ArrayList<String>();
@@ -254,7 +254,8 @@ private TextView validmobiletxt1;
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(ShareLocationFragmentActivity.this);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("Share Location");
@@ -269,189 +270,6 @@ private TextView validmobiletxt1;
 				Log.d("sharelocationrl", "sharelocationrl");
 			}
 		});
-
-		// mNav = new SimpleSideDrawer(this);
-		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-		//
-		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v) {
-		//
-		// // mainhomepagerl.setAlpha((float) 0.3);
-		// mNav.toggleLeftDrawer();
-		//
-		// }
-		// });
-		//
-		// myprofile = (TextView) findViewById(R.id.myprofile);
-		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myrides = (TextView) findViewById(R.id.myrides);
-		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// bookacab = (TextView) findViewById(R.id.bookacab);
-		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myclubs = (TextView) findViewById(R.id.myclubs);
-		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// mypreferences = (TextView) findViewById(R.id.mypreferences);
-		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// about = (TextView) findViewById(R.id.about);
-		// about.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		//
-		// myprofile.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyProfile Click")
-		// .setAction("MyProfile Click")
-		// .setLabel("MyProfile Click").build());
-		//
-		// Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-		// MyProfileActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myrides.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyRides Click")
-		// .setAction("MyRides Click").setLabel("MyRides Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-		// MyRidesActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// bookacab.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("BookaCab Click")
-		// .setAction("BookaCab Click").setLabel("BookaCab Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-		// BookaCabFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharemylocation.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		// }
-		// });
-		//
-		// myclubs.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyClubs Click")
-		// .setAction("MyClubs Click").setLabel("MyClubs Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-		// MyClubsActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharethisapp.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("ShareApp Click")
-		// .setAction("ShareApp Click").setLabel("ShareApp Click")
-		// .build());
-		//
-		// Intent sendIntent = new Intent();
-		// sendIntent.setAction(Intent.ACTION_SEND);
-		// sendIntent
-		// .putExtra(
-		// Intent.EXTRA_TEXT,
-		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-		// sendIntent.setType("text/plain");
-		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
-		//
-		// }
-		// });
-		//
-		// mypreferences.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("Settings Click")
-		// .setAction("Settings Click").setLabel("Settings Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-		// SettingActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// about.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("About Click").setAction("About Click")
-		// .setLabel("About Click").build());
-		//
-		// Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-		// AboutPagerFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
 
 		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
 		drawer.createDrawer();
@@ -506,7 +324,7 @@ private TextView validmobiletxt1;
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
-		
+
 		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
 
 			unreadnoticountrl.setVisibility(View.GONE);
@@ -570,67 +388,69 @@ private TextView validmobiletxt1;
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				R.layout.list_item);
 		adapter.setNotifyOnChange(true);
-		
+
 		from_places.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				//isCallresetIntentParams = true;
+				// isCallresetIntentParams = true;
 				watchmeforvalue.setText("Select Time");
 				Intent intent = new Intent(ShareLocationFragmentActivity.this,
 						FavoritePlaceFindActivity.class);
 
-				startActivityForResult(intent, 5);				
+				startActivityForResult(intent, 5);
 			}
 		});
-//
-//		from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
-//				R.layout.list_item));
-//
-//		from_places
-//				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//
-//					@Override
-//					public boolean onEditorAction(TextView v, int actionId,
-//							KeyEvent event) {
-//						if (event != null
-//								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-//							InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//							in.hideSoftInputFromWindow(
-//									from_places.getApplicationWindowToken(),
-//									InputMethodManager.HIDE_NOT_ALWAYS);
-//						}
-//
-//						return false;
-//					}
-//				});
-//
-//		from_places
-//				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//					@Override
-//					public void onItemClick(AdapterView<?> parent, View view,
-//							int position, long id) {
-//						fAddress = null; // reset previous
-//						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//						in.hideSoftInputFromWindow(
-//								from_places.getApplicationWindowToken(),
-//								InputMethodManager.HIDE_NOT_ALWAYS);
-//
-//						fAddress = geocodeAddress(from_places.getText()
-//								.toString());
-//					}
-//				});
-//
-//		from_places.setOnTouchListener(new View.OnTouchListener() {
-//			public boolean onTouch(View view, MotionEvent motionEvent) {
-//
-//				watchmeforvalue.setText("Select Time");
-//				return false;
-//
-//			}
-//		});
-//
+		//
+		// from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+		// R.layout.list_item));
+		//
+		// from_places
+		// .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		//
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId,
+		// KeyEvent event) {
+		// if (event != null
+		// && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+		// InputMethodManager in = (InputMethodManager)
+		// getSystemService(Context.INPUT_METHOD_SERVICE);
+		// in.hideSoftInputFromWindow(
+		// from_places.getApplicationWindowToken(),
+		// InputMethodManager.HIDE_NOT_ALWAYS);
+		// }
+		//
+		// return false;
+		// }
+		// });
+		//
+		// from_places
+		// .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		//
+		// @Override
+		// public void onItemClick(AdapterView<?> parent, View view,
+		// int position, long id) {
+		// fAddress = null; // reset previous
+		// InputMethodManager in = (InputMethodManager)
+		// getSystemService(Context.INPUT_METHOD_SERVICE);
+		// in.hideSoftInputFromWindow(
+		// from_places.getApplicationWindowToken(),
+		// InputMethodManager.HIDE_NOT_ALWAYS);
+		//
+		// fAddress = geocodeAddress(from_places.getText()
+		// .toString());
+		// }
+		// });
+		//
+		// from_places.setOnTouchListener(new View.OnTouchListener() {
+		// public boolean onTouch(View view, MotionEvent motionEvent) {
+		//
+		// watchmeforvalue.setText("Select Time");
+		// return false;
+		//
+		// }
+		// });
+		//
 		from_places.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -1336,8 +1156,9 @@ private TextView validmobiletxt1;
 
 				LatLng mapcenter = cameraPosition.target;
 
-				String address = MapUtilityMethods.getAddress(ShareLocationFragmentActivity.this,
-						mapcenter.latitude, mapcenter.longitude);
+				String address = MapUtilityMethods.getAddress(
+						ShareLocationFragmentActivity.this, mapcenter.latitude,
+						mapcenter.longitude);
 				Log.d("address", "" + address);
 
 				fromlocation.setText(address);
@@ -1434,12 +1255,12 @@ private TextView validmobiletxt1;
 		}
 
 		// ///////////////
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//			new ConnectionTaskForreadunreadnotification()
-//					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//		} else {
-//			new ConnectionTaskForreadunreadnotification().execute();
-//		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -1485,16 +1306,15 @@ private TextView validmobiletxt1;
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (resultCode == RESULT_OK) {
-			
-			if(requestCode==5){
 
+		if (resultCode == RESULT_OK) {
+
+			if (requestCode == 5) {
 
 				String value = (String) data.getExtras().getString("address");
 
@@ -1515,114 +1335,116 @@ private TextView validmobiletxt1;
 								"Could not locate the address, please try using the map or a different address",
 								Toast.LENGTH_LONG).show();
 					} else {
-						//fAddress = null; // reset previous
+						// fAddress = null; // reset previous
 						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						in.hideSoftInputFromWindow(
 								from_places.getApplicationWindowToken(),
 								InputMethodManager.HIDE_NOT_ALWAYS);
 
-//						fAddress = geocodeAddress(from_places.getText()
-//							.toString());
+						// fAddress = geocodeAddress(from_places.getText()
+						// .toString());
 					}
 				}
-			
+
 			}
 		}
 	}
 
 	// ///////
-//	private class ConnectionTaskForreadunreadnotification extends
-//			AsyncTask<String, Void, Void> {
-//
-//		@Override
-//		protected void onPreExecute() {
-//
-//		}
-//
-//		@Override
-//		protected Void doInBackground(String... args) {
-//			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-//			try {
-//				mAuth1.connection();
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				exceptioncheck = true;
-//				e.printStackTrace();
-//			}
-//			return null;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(Void v) {
-//
-//			if (exceptioncheck) {
-//				exceptioncheck = false;
-//				Toast.makeText(ShareLocationFragmentActivity.this,
-//						getResources().getString(R.string.exceptionstring),
-//						Toast.LENGTH_LONG).show();
-//				return;
-//			}
-//
-//			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-//
-//				unreadnoticountrl.setVisibility(View.GONE);
-//
-//			} else {
-//
-//				unreadnoticountrl.setVisibility(View.VISIBLE);
-//				unreadnoticount.setText(readunreadnotiresp);
-//			}
-//		}
-//
-//	}
-//
-//	public class AuthenticateConnectionreadunreadnotification {
-//
-//		public AuthenticateConnectionreadunreadnotification() {
-//
-//		}
-//
-//		public void connection() throws Exception {
-//
-//			// Connect to google.com
-//			HttpClient httpClient = new DefaultHttpClient();
-//			String url_select = GlobalVariables.ServiceUrl
-//					+ "/FetchUnreadNotificationCount.php";
-//
-//			HttpPost httpPost = new HttpPost(url_select);
-//			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-//					"MobileNumber", MobileNumber);
-//
-//			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-//			nameValuePairList.add(MobileNumberBasicNameValuePair);
-//
-//			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-//					nameValuePairList);
-//			httpPost.setEntity(urlEncodedFormEntity);
-//			HttpResponse httpResponse = httpClient.execute(httpPost);
-//
-//			Log.d("httpResponse", "" + httpResponse);
-//
-//			InputStream inputStream = httpResponse.getEntity().getContent();
-//			InputStreamReader inputStreamReader = new InputStreamReader(
-//					inputStream);
-//
-//			BufferedReader bufferedReader = new BufferedReader(
-//					inputStreamReader);
-//
-//			StringBuilder stringBuilder = new StringBuilder();
-//
-//			String bufferedStrChunk = null;
-//
-//			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-//				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-//						.toString();
-//			}
-//
-//			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-//
-//		}
-//	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(ShareLocationFragmentActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumber);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	// ////////////////////////
 	// ///////
@@ -2069,7 +1891,7 @@ private TextView validmobiletxt1;
 		appFrends = (Button) dialog.findViewById(R.id.appFrends1);
 		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn1);
 		donebtn = (Button) dialog.findViewById(R.id.donebtn);
-		 validmobiletxt1=(TextView)dialog.findViewById(R.id.validmobiletxt1);
+		validmobiletxt1 = (TextView) dialog.findViewById(R.id.validmobiletxt1);
 
 		clubcontactslistll = (LinearLayout) dialog
 				.findViewById(R.id.clubcontactslistll1);
@@ -2095,8 +1917,9 @@ private TextView validmobiletxt1;
 		contactsbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				
-				validmobiletxt1.setText("(Please select contacts with valid Indian mobile numbers)");
+
+				validmobiletxt1
+						.setText("(Please select contacts with valid Indian mobile numbers)");
 
 				flag = 1;
 
@@ -2244,14 +2067,17 @@ private TextView validmobiletxt1;
 										.getString("PoolId").toString());
 								MyClubPoolName.add(subArray.getJSONObject(i)
 										.getString("PoolName").toString());
-								
-								if(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString().equalsIgnoreCase("null"))
-								MyClubNoofMembers.add("1");
+
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MyClubNoofMembers.add("1");
 								else
-									MyClubNoofMembers.add(subArray.getJSONObject(i)
-											.getString("NoofMembers").toString());
-								
+									MyClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MyClubOwnerName.add(subArray.getJSONObject(i)
 										.getString("OwnerName").toString());
 								MyClubMembers.add(subArray.getJSONObject(i)
@@ -2262,12 +2088,15 @@ private TextView validmobiletxt1;
 								MemberClubPoolName.add(subArray
 										.getJSONObject(i).getString("PoolName")
 										.toString());
-								if(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString().equalsIgnoreCase("null"))
-								MemberClubNoofMembers.add("1");
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MemberClubNoofMembers.add("1");
 								else
-									MemberClubNoofMembers.add(subArray.getJSONObject(i)
-											.getString("NoofMembers").toString());
+									MemberClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
 								MemberClubOwnerName.add(subArray
 										.getJSONObject(i)
 										.getString("OwnerName").toString());
@@ -2309,199 +2138,205 @@ private TextView validmobiletxt1;
 							}
 						}
 
-//							ClubsAdaptor adapter = new ClubsAdaptor(
-//									ShareLocationFragmentActivity.this,
-//									ClubListClass.ClubList);
-//							listMyclubs.setAdapter(adapter);
-//							listMyclubs
-//									.setOnItemClickListener(new OnItemClickListener() {
-//
-//										@Override
-//										public void onItemClick(
-//												AdapterView<?> parent, View v,
-//												int position, long id) {
-//											// TODO Auto-generated method stub
-//											CheckBox chk = (CheckBox) v
-//													.findViewById(R.id.myclubcheckBox);
-//											ClubObject bean = ClubListClass.ClubList
-//													.get(position);
-//
-//											if (bean.isSelected()) {
-//												bean.setSelected(false);
-//												chk.setChecked(false);
-//											} else {
-//												bean.setSelected(true);
-//												chk.setChecked(true);
-//											}
-//
-//										}
-//									});
-							
-							//Pawan 
-							ContactsInviteForRideActivity.	adapterClubMy = new ClubsAdaptor(
+						// ClubsAdaptor adapter = new ClubsAdaptor(
+						// ShareLocationFragmentActivity.this,
+						// ClubListClass.ClubList);
+						// listMyclubs.setAdapter(adapter);
+						// listMyclubs
+						// .setOnItemClickListener(new OnItemClickListener() {
+						//
+						// @Override
+						// public void onItemClick(
+						// AdapterView<?> parent, View v,
+						// int position, long id) {
+						// // TODO Auto-generated method stub
+						// CheckBox chk = (CheckBox) v
+						// .findViewById(R.id.myclubcheckBox);
+						// ClubObject bean = ClubListClass.ClubList
+						// .get(position);
+						//
+						// if (bean.isSelected()) {
+						// bean.setSelected(false);
+						// chk.setChecked(false);
+						// } else {
+						// bean.setSelected(true);
+						// chk.setChecked(true);
+						// }
+						//
+						// }
+						// });
+
+						// Pawan
+						ContactsInviteForRideActivity.adapterClubMy = new ClubsAdaptor(
+								ShareLocationFragmentActivity.this,
+								ClubListClass.ClubList, false);
+						listMyclubs
+								.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
+						// listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+						listMyclubs
+								.setOnItemClickListener(new OnItemClickListener() {
+
+									@Override
+									public void onItemClick(
+											AdapterView<?> parent, View v,
+											int position, long id) {
+										// TODO Auto-generated method stub
+
+										ClubObject bean = ClubListClass.ClubList
+												.get(position);
+										bean.setSelected(true);
+
+										for (int i = 0; i < ClubListClass.ClubList
+												.size(); i++) {
+
+											if (i == position)
+												continue;
+
+											bean = ClubListClass.ClubList
+													.get(i);
+											bean.setSelected(false);
+										}
+										// Remove all memberclib list selection
+										for (int i = 0; i < ClubListClass.MemberClubList
+												.size(); i++) {
+
+											bean = ClubListClass.MemberClubList
+													.get(i);
+											bean.setSelected(false);
+										}
+
+										ContactsInviteForRideActivity.adapterClubMember
+												.setSelectedIndex(-1);
+										ContactsInviteForRideActivity.adapterClubMember
+												.notifyDataSetChanged();
+
+										// if (bean.isSelected()) {
+										// bean.setSelected(false);
+										// chk.setChecked(false);
+										// } else {
+										// bean.setSelected(true);
+										// chk.setChecked(true);
+										// }
+										ContactsInviteForRideActivity.adapterClubMy
+												.setSelectedIndex(position);
+										ContactsInviteForRideActivity.adapterClubMy
+												.notifyDataSetChanged();
+
+									}
+								});
+
+						if (MemberClubPoolName.size() > 0) {
+
+							for (int i = 0; i < MemberClubPoolName.size(); i++) {
+
+								ClubObject cp = new ClubObject();
+
+								cp.setName(MemberClubPoolName.get(i).toString()
+										.trim());
+								cp.setClubmembers(MemberClubMembers.get(i)
+										.toString().trim());
+
+								cp.setNoofMembers(MemberClubNoofMembers.get(i)
+										.toString().trim());
+
+								cp.setClubOwnerName(MemberClubOwnerName.get(i)
+										.toString().trim());
+
+								ClubListClass.MemberClubList.add(cp);
+							}
+
+							// ClubsAdaptor adapter = new ClubsAdaptor(
+							// ShareLocationFragmentActivity.this,
+							// ClubListClass.MemberClubList);
+							//
+							// listMembersclubs.setAdapter(adapter);
+							// listMembersclubs
+							// .setOnItemClickListener(new OnItemClickListener()
+							// {
+							//
+							// @Override
+							// public void onItemClick(
+							// AdapterView<?> parent, View v,
+							// int position, long id) {
+							// // TODO Auto-generated method stub
+							// CheckBox chk = (CheckBox) v
+							// .findViewById(R.id.myclubcheckBox);
+							// ClubObject bean = ClubListClass.MemberClubList
+							// .get(position);
+							//
+							// if (bean.isSelected()) {
+							// bean.setSelected(false);
+							// chk.setChecked(false);
+							// } else {
+							// bean.setSelected(true);
+							// chk.setChecked(true);
+							// }
+							//
+							// }
+							// });
+
+							ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
 									ShareLocationFragmentActivity.this,
-									ClubListClass.ClubList,false);
-							listMyclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
-							//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-							listMyclubs
+									ClubListClass.MemberClubList, false);
+
+							listMembersclubs
+									.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
+							listMembersclubs
 									.setOnItemClickListener(new OnItemClickListener() {
 
 										@Override
-										public void onItemClick(AdapterView<?> parent,
-												View v, int position, long id) {
+										public void onItemClick(
+												AdapterView<?> parent, View v,
+												int position, long id) {
 											// TODO Auto-generated method stub
-											
-											ClubObject bean = ClubListClass.ClubList
+
+											ClubObject bean = ClubListClass.MemberClubList
 													.get(position);
 											bean.setSelected(true);
-											
-											for (int i=0;i<ClubListClass.ClubList.size();i++) {
-												
-												if(i==position)
+
+											for (int i = 0; i < ClubListClass.MemberClubList
+													.size(); i++) {
+
+												if (i == position)
 													continue;
-												
-												 bean = ClubListClass.ClubList
-														.get(i);
-												bean.setSelected(false);
-											}
-										//Remove all memberclib list selection	
-					for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
-												
-												
-												
-												 bean = ClubListClass.MemberClubList
+
+												bean = ClubListClass.MemberClubList
 														.get(i);
 												bean.setSelected(false);
 											}
 
-					ContactsInviteForRideActivity.	adapterClubMember .setSelectedIndex(-1);
-					ContactsInviteForRideActivity.	adapterClubMember .notifyDataSetChanged();
+											// Unselect all MyClub
+											for (int i = 0; i < ClubListClass.ClubList
+													.size(); i++) {
 
-//											if (bean.isSelected()) {
-//												bean.setSelected(false);
-//												chk.setChecked(false);
-//											} else {
-//												bean.setSelected(true);
-//												chk.setChecked(true);
-//											}
-					ContactsInviteForRideActivity.	adapterClubMy .setSelectedIndex(position);
-					ContactsInviteForRideActivity.	adapterClubMy .notifyDataSetChanged();
+												bean = ClubListClass.ClubList
+														.get(i);
+												bean.setSelected(false);
+
+											}
+
+											ContactsInviteForRideActivity.adapterClubMy
+													.setSelectedIndex(-1);
+											ContactsInviteForRideActivity.adapterClubMy
+													.notifyDataSetChanged();
+											// if (bean.isSelected()) {
+											// bean.setSelected(false);
+											// chk.setChecked(false);
+											// } else {
+											// bean.setSelected(true);
+											// chk.setChecked(true);
+											// }
+
+											ContactsInviteForRideActivity.adapterClubMember
+													.setSelectedIndex(position);
+											ContactsInviteForRideActivity.adapterClubMember
+													.notifyDataSetChanged();
 
 										}
 									});
-							
-							if (MemberClubPoolName.size() > 0) {
 
-								for (int i = 0; i < MemberClubPoolName.size(); i++) {
-
-									ClubObject cp = new ClubObject();
-
-									cp.setName(MemberClubPoolName.get(i).toString()
-											.trim());
-									cp.setClubmembers(MemberClubMembers.get(i)
-											.toString().trim());
-
-									cp.setNoofMembers(MemberClubNoofMembers.get(i)
-											.toString().trim());
-
-									cp.setClubOwnerName(MemberClubOwnerName.get(i)
-											.toString().trim());
-
-									ClubListClass.MemberClubList.add(cp);
-								}
-
-//								ClubsAdaptor adapter = new ClubsAdaptor(
-//										ShareLocationFragmentActivity.this,
-//										ClubListClass.MemberClubList);
-//
-//								listMembersclubs.setAdapter(adapter);
-//								listMembersclubs
-//										.setOnItemClickListener(new OnItemClickListener() {
-//
-//											@Override
-//											public void onItemClick(
-//													AdapterView<?> parent, View v,
-//													int position, long id) {
-//												// TODO Auto-generated method stub
-//												CheckBox chk = (CheckBox) v
-//														.findViewById(R.id.myclubcheckBox);
-//												ClubObject bean = ClubListClass.MemberClubList
-//														.get(position);
-//
-//												if (bean.isSelected()) {
-//													bean.setSelected(false);
-//													chk.setChecked(false);
-//												} else {
-//													bean.setSelected(true);
-//													chk.setChecked(true);
-//												}
-//
-//											}
-//										});
-								
-								ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
-										ShareLocationFragmentActivity.this,
-										ClubListClass.MemberClubList,false);
-
-								listMembersclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
-								listMembersclubs
-										.setOnItemClickListener(new OnItemClickListener() {
-
-											@Override
-											public void onItemClick(AdapterView<?> parent,
-													View v, int position, long id) {
-												// TODO Auto-generated method stub
-												
-												ClubObject bean = ClubListClass.MemberClubList
-														.get(position);
-												bean.setSelected(true);
-												
-							for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
-													
-													if(i==position)
-														continue;
-													
-													 bean = ClubListClass.MemberClubList
-															.get(i);
-													bean.setSelected(false);
-												}
-							
-							//Unselect all MyClub
-							for (int i=0;i<ClubListClass.ClubList.size();i++) {
-								
-								
-								
-								 bean = ClubListClass.ClubList
-										.get(i);
-								bean.setSelected(false);
-							
-							}
-
-							ContactsInviteForRideActivity.adapterClubMy.setSelectedIndex(-1);
-							ContactsInviteForRideActivity.adapterClubMy.notifyDataSetChanged();
-//												if (bean.isSelected()) {
-//													bean.setSelected(false);
-//													chk.setChecked(false);
-//												} else {
-//													bean.setSelected(true);
-//													chk.setChecked(true);
-//												}
-												
-							ContactsInviteForRideActivity.adapterClubMember	.setSelectedIndex(position);
-							ContactsInviteForRideActivity.adapterClubMember.notifyDataSetChanged();
-
-											}
-										});
-								
-							
-							
-						
-							
-							
-							
 						}
 
-						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2732,14 +2567,13 @@ private TextView validmobiletxt1;
 									.getString("PoolId").toString());
 							MyClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							if(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString().equalsIgnoreCase("null"))
-							MyClubNoofMembers.add("1");
+							if (subArray.getJSONObject(i)
+									.getString("NoofMembers").toString()
+									.equalsIgnoreCase("null"))
+								MyClubNoofMembers.add("1");
 							else
 								MyClubNoofMembers.add(subArray.getJSONObject(i)
 										.getString("NoofMembers").toString());
-							
-
 
 							MyClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
@@ -2750,11 +2584,13 @@ private TextView validmobiletxt1;
 									.getString("PoolId").toString());
 							MemberClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							if(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString().equalsIgnoreCase("null"))
-							MemberClubNoofMembers.add("1");
+							if (subArray.getJSONObject(i)
+									.getString("NoofMembers").toString()
+									.equalsIgnoreCase("null"))
+								MemberClubNoofMembers.add("1");
 							else
-								MemberClubNoofMembers.add(subArray.getJSONObject(i)
+								MemberClubNoofMembers.add(subArray
+										.getJSONObject(i)
 										.getString("NoofMembers").toString());
 							MemberClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
@@ -2793,83 +2629,89 @@ private TextView validmobiletxt1;
 							ClubListClass.ClubList.add(cp);
 						}
 
-//						ClubsAdaptor adapter = new ClubsAdaptor(
-//								ShareLocationFragmentActivity.this,
-//								ClubListClass.ClubList);
-//						listMyclubs.setAdapter(adapter);
-//						listMyclubs
-//								.setOnItemClickListener(new OnItemClickListener() {
-//
-//									@Override
-//									public void onItemClick(
-//											AdapterView<?> parent, View v,
-//											int position, long id) {
-//										// TODO Auto-generated method stub
-//										CheckBox chk = (CheckBox) v
-//												.findViewById(R.id.myclubcheckBox);
-//										ClubObject bean = ClubListClass.ClubList
-//												.get(position);
-//
-//										if (bean.isSelected()) {
-//											bean.setSelected(false);
-//											chk.setChecked(false);
-//										} else {
-//											bean.setSelected(true);
-//											chk.setChecked(true);
-//										}
-//
-//									}
-//								});
-						
-						//Pawan 
-						ContactsInviteForRideActivity.	adapterClubMy = new ClubsAdaptor(
+						// ClubsAdaptor adapter = new ClubsAdaptor(
+						// ShareLocationFragmentActivity.this,
+						// ClubListClass.ClubList);
+						// listMyclubs.setAdapter(adapter);
+						// listMyclubs
+						// .setOnItemClickListener(new OnItemClickListener() {
+						//
+						// @Override
+						// public void onItemClick(
+						// AdapterView<?> parent, View v,
+						// int position, long id) {
+						// // TODO Auto-generated method stub
+						// CheckBox chk = (CheckBox) v
+						// .findViewById(R.id.myclubcheckBox);
+						// ClubObject bean = ClubListClass.ClubList
+						// .get(position);
+						//
+						// if (bean.isSelected()) {
+						// bean.setSelected(false);
+						// chk.setChecked(false);
+						// } else {
+						// bean.setSelected(true);
+						// chk.setChecked(true);
+						// }
+						//
+						// }
+						// });
+
+						// Pawan
+						ContactsInviteForRideActivity.adapterClubMy = new ClubsAdaptor(
 								ShareLocationFragmentActivity.this,
-								ClubListClass.ClubList,false);
-						listMyclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
-						//listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+								ClubListClass.ClubList, false);
+						listMyclubs
+								.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
+						// listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 						listMyclubs
 								.setOnItemClickListener(new OnItemClickListener() {
 
 									@Override
-									public void onItemClick(AdapterView<?> parent,
-											View v, int position, long id) {
+									public void onItemClick(
+											AdapterView<?> parent, View v,
+											int position, long id) {
 										// TODO Auto-generated method stub
-										
+
 										ClubObject bean = ClubListClass.ClubList
 												.get(position);
 										bean.setSelected(true);
-										
-										for (int i=0;i<ClubListClass.ClubList.size();i++) {
-											
-											if(i==position)
+
+										for (int i = 0; i < ClubListClass.ClubList
+												.size(); i++) {
+
+											if (i == position)
 												continue;
-											
-											 bean = ClubListClass.ClubList
+
+											bean = ClubListClass.ClubList
 													.get(i);
 											bean.setSelected(false);
 										}
-									//Remove all memberclib list selection	
-				for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
-											
-											
-											
-											 bean = ClubListClass.MemberClubList
+										// Remove all memberclib list selection
+										for (int i = 0; i < ClubListClass.MemberClubList
+												.size(); i++) {
+
+											bean = ClubListClass.MemberClubList
 													.get(i);
 											bean.setSelected(false);
 										}
 
-				ContactsInviteForRideActivity.	adapterClubMember .setSelectedIndex(-1);
-				ContactsInviteForRideActivity.	adapterClubMember .notifyDataSetChanged();
+										ContactsInviteForRideActivity.adapterClubMember
+												.setSelectedIndex(-1);
+										ContactsInviteForRideActivity.adapterClubMember
+												.notifyDataSetChanged();
 
-//										if (bean.isSelected()) {
-//											bean.setSelected(false);
-//											chk.setChecked(false);
-//										} else {
-//											bean.setSelected(true);
-//											chk.setChecked(true);
-//										}
-				ContactsInviteForRideActivity.	adapterClubMy .setSelectedIndex(position);
-				ContactsInviteForRideActivity.	adapterClubMy .notifyDataSetChanged();
+										// if (bean.isSelected()) {
+										// bean.setSelected(false);
+										// chk.setChecked(false);
+										// } else {
+										// bean.setSelected(true);
+										// chk.setChecked(true);
+										// }
+										ContactsInviteForRideActivity.adapterClubMy
+												.setSelectedIndex(position);
+										ContactsInviteForRideActivity.adapterClubMy
+												.notifyDataSetChanged();
 
 									}
 								});
@@ -2895,89 +2737,95 @@ private TextView validmobiletxt1;
 							ClubListClass.MemberClubList.add(cp);
 						}
 
-//						ClubsAdaptor adapter = new ClubsAdaptor(
-//								ShareLocationFragmentActivity.this,
-//								ClubListClass.MemberClubList);
+						// ClubsAdaptor adapter = new ClubsAdaptor(
+						// ShareLocationFragmentActivity.this,
+						// ClubListClass.MemberClubList);
 
-//						listMembersclubs.setAdapter(adapter);
-//						listMembersclubs
-//								.setOnItemClickListener(new OnItemClickListener() {
-//
-//									@Override
-//									public void onItemClick(
-//											AdapterView<?> parent, View v,
-//											int position, long id) {
-//										// TODO Auto-generated method stub
-//										CheckBox chk = (CheckBox) v
-//												.findViewById(R.id.myclubcheckBox);
-//										ClubObject bean = ClubListClass.MemberClubList
-//												.get(position);
-//
-//										if (bean.isSelected()) {
-//											bean.setSelected(false);
-//											chk.setChecked(false);
-//										} else {
-//											bean.setSelected(true);
-//											chk.setChecked(true);
-//										}
-//
-//									}
-//								});
-						
+						// listMembersclubs.setAdapter(adapter);
+						// listMembersclubs
+						// .setOnItemClickListener(new OnItemClickListener() {
+						//
+						// @Override
+						// public void onItemClick(
+						// AdapterView<?> parent, View v,
+						// int position, long id) {
+						// // TODO Auto-generated method stub
+						// CheckBox chk = (CheckBox) v
+						// .findViewById(R.id.myclubcheckBox);
+						// ClubObject bean = ClubListClass.MemberClubList
+						// .get(position);
+						//
+						// if (bean.isSelected()) {
+						// bean.setSelected(false);
+						// chk.setChecked(false);
+						// } else {
+						// bean.setSelected(true);
+						// chk.setChecked(true);
+						// }
+						//
+						// }
+						// });
+
 						ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
 								ShareLocationFragmentActivity.this,
-								ClubListClass.MemberClubList,false);
+								ClubListClass.MemberClubList, false);
 
-						listMembersclubs.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
+						listMembersclubs
+								.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
 						listMembersclubs
 								.setOnItemClickListener(new OnItemClickListener() {
 
 									@Override
-									public void onItemClick(AdapterView<?> parent,
-											View v, int position, long id) {
+									public void onItemClick(
+											AdapterView<?> parent, View v,
+											int position, long id) {
 										// TODO Auto-generated method stub
-										
+
 										ClubObject bean = ClubListClass.MemberClubList
 												.get(position);
 										bean.setSelected(true);
-										
-					for (int i=0;i<ClubListClass.MemberClubList.size();i++) {
-											
-											if(i==position)
+
+										for (int i = 0; i < ClubListClass.MemberClubList
+												.size(); i++) {
+
+											if (i == position)
 												continue;
-											
-											 bean = ClubListClass.MemberClubList
+
+											bean = ClubListClass.MemberClubList
 													.get(i);
 											bean.setSelected(false);
 										}
-					
-					//Unselect all MyClub
-					for (int i=0;i<ClubListClass.ClubList.size();i++) {
-						
-						
-						
-						 bean = ClubListClass.ClubList
-								.get(i);
-						bean.setSelected(false);
-					
-					}
 
-					ContactsInviteForRideActivity.adapterClubMy.setSelectedIndex(-1);
-					ContactsInviteForRideActivity.adapterClubMy.notifyDataSetChanged();
-//										if (bean.isSelected()) {
-//											bean.setSelected(false);
-//											chk.setChecked(false);
-//										} else {
-//											bean.setSelected(true);
-//											chk.setChecked(true);
-//										}
-										
-					ContactsInviteForRideActivity.adapterClubMember	.setSelectedIndex(position);
-					ContactsInviteForRideActivity.adapterClubMember.notifyDataSetChanged();
+										// Unselect all MyClub
+										for (int i = 0; i < ClubListClass.ClubList
+												.size(); i++) {
+
+											bean = ClubListClass.ClubList
+													.get(i);
+											bean.setSelected(false);
+
+										}
+
+										ContactsInviteForRideActivity.adapterClubMy
+												.setSelectedIndex(-1);
+										ContactsInviteForRideActivity.adapterClubMy
+												.notifyDataSetChanged();
+										// if (bean.isSelected()) {
+										// bean.setSelected(false);
+										// chk.setChecked(false);
+										// } else {
+										// bean.setSelected(true);
+										// chk.setChecked(true);
+										// }
+
+										ContactsInviteForRideActivity.adapterClubMember
+												.setSelectedIndex(position);
+										ContactsInviteForRideActivity.adapterClubMember
+												.notifyDataSetChanged();
 
 									}
 								});
-						
+
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

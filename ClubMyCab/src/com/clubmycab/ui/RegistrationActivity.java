@@ -50,7 +50,7 @@ public class RegistrationActivity extends Activity {
 	TextView passwordtxt;
 	TextView emailtxt;
 	TextView confirmpasswordtxt;
-	TextView mobiletxt,textViewTNCLink;
+	TextView mobiletxt, textViewTNCLink;
 
 	EditText fullnameedittext;
 	EditText emailedittext;
@@ -66,7 +66,7 @@ public class RegistrationActivity extends Activity {
 	String FullName;
 
 	String result;
-private String mobNo="";
+	private String mobNo = "";
 	boolean exceptioncheck = false;
 
 	@Override
@@ -98,14 +98,14 @@ private String mobNo="";
 			builder.show();
 			return;
 		}
-		
-		try{
-			
-			mobNo=getIntent().getExtras().getString("mob");
-			
-		}catch(Exception e){
-			mobNo="";
-			
+
+		try {
+
+			mobNo = getIntent().getExtras().getString("mob");
+
+		} catch (Exception e) {
+			mobNo = "";
+
 		}
 
 		registerheadertxt = (TextView) findViewById(R.id.registerheadertxt);
@@ -124,8 +124,8 @@ private String mobNo="";
 		countrycode = (EditText) findViewById(R.id.countrycode);
 
 		registerbtn = (Button) findViewById(R.id.registerbtn);
-		 textViewTNCLink = (TextView)findViewById(R.id.textViewTNCLink);
-		 textViewTNCLink.setMovementMethod(LinkMovementMethod.getInstance());
+		textViewTNCLink = (TextView) findViewById(R.id.textViewTNCLink);
+		textViewTNCLink.setMovementMethod(LinkMovementMethod.getInstance());
 
 		registerheadertxt.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
@@ -416,6 +416,7 @@ private String mobNo="";
 				editor.putString("MobileNumber", countrycode.getText()
 						.toString().trim()
 						+ mobileedittext.getText().toString().trim());
+				editor.putString("Email", emailedittext.getText().toString().trim());
 				editor.putString("verifyotp", "false");
 				editor.putString("LastRegisteredAppVersion", version);
 				editor.commit();

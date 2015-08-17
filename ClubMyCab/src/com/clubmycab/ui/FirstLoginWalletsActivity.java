@@ -31,11 +31,14 @@ import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class FirstLoginWalletsActivity extends Activity implements
 		AsyncTaskResultListener {
 
-	private String FullName, MobileNumber;
+	private String FullName, MobileNumber, Email;
 
 	private LinearLayout walletLinearLayout;
 
@@ -50,6 +53,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 	private String mobilenumber;
 	private String from = "";
 	private String token = "";
+
+	Tracker tracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,15 @@ public class FirstLoginWalletsActivity extends Activity implements
 			return;
 		}
 
+		// ////////////////////
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(FirstLoginWalletsActivity.this);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+
+		// All subsequent hits will be send with screen name = "main screen"
+		tracker.setScreenName("WalletsPage");
+
 		try {
 			from = getIntent().getExtras().getString("from");
 
@@ -92,6 +106,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
 		MobileNumber = mPrefs.getString("MobileNumber", "");
+		Email = mPrefs.getString("Email", "");
 
 		// mobilenumber = "8200012345";
 		mobilenumber = MobileNumber.substring(4);
@@ -163,6 +178,12 @@ public class FirstLoginWalletsActivity extends Activity implements
 								.show();
 						return;
 					}
+
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("LinkExistingWallet")
+							.setAction("LinkExistingWallet")
+							.setLabel("LinkExistingWallet").build());
+
 					linkWallet();
 				}
 
@@ -180,6 +201,12 @@ public class FirstLoginWalletsActivity extends Activity implements
 								.show();
 						return;
 					}
+
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("CreateNewWallet")
+							.setAction("CreateNewWallet")
+							.setLabel("CreateNewWallet").build());
+
 					createWallet();
 				} else {
 					Toast.makeText(
@@ -188,6 +215,23 @@ public class FirstLoginWalletsActivity extends Activity implements
 							Toast.LENGTH_LONG).show();
 
 				}
+			}
+		});
+
+		TextView textView = (TextView) findViewById(R.id.textViewTNCMobikwik);
+		textView.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						FirstLoginWalletsActivity.this);
+				builder.setMessage(getResources().getString(
+						R.string.mobikwik_signup_tnc));
+				builder.setCancelable(false);
+				builder.setPositiveButton("OK", null);
+				builder.show();
+
 			}
 		});
 
@@ -217,10 +261,23 @@ public class FirstLoginWalletsActivity extends Activity implements
 				otphardtext
 						.setText("Your Mobikwik wallet is already linked with the app");
 				walletLinearLayout.setVisibility(View.INVISIBLE);
+
+				SharedPreferences sharedPreferences2 = getSharedPreferences(
+						"MobikwikCoupon", 0);
+				String couponCode = sharedPreferences2.getString("couponCode",
+						"");
+				if (!couponCode.isEmpty() && couponCode.length() > 0) {
+					TextView textView2 = (TextView) findViewById(R.id.couponcodemobikwik);
+					textView2.setVisibility(View.VISIBLE);
+					textView2.setText("Your 50 on 50 offer coupon code : "
+							+ couponCode);
+
+					textView2 = (TextView) findViewById(R.id.couponcodemobikwiktnc);
+					textView2.setVisibility(View.VISIBLE);
+				}
 			} else {
 				querywallet();
 			}
-
 		}
 
 	}
@@ -318,6 +375,18 @@ public class FirstLoginWalletsActivity extends Activity implements
 		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
 				null, FirstLoginWalletsActivity.this, true, "createwalletuser",
 				true);
+	}
+
+	private void getCoupons() {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/getCoupons.php";
+		String params = "type=newWallet&provider=mobikwik&mobileNumber="
+				+ MobileNumber;
+		Log.d("getCoupons", "getCoupons endpoint : " + endpoint + " params : "
+				+ params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, false, "getCoupons",
+				false);
 	}
 
 	private boolean checkResponseChecksum(String response) {
@@ -454,6 +523,9 @@ public class FirstLoginWalletsActivity extends Activity implements
 					otphardtext.setText(getResources().getString(
 							R.string.mobikwik_nothave_account));
 					emailEditText.setVisibility(View.VISIBLE);
+					if (Email != null && !Email.isEmpty() && Email.length() > 0) {
+						emailEditText.setText(Email);
+					}
 
 					walletAction = CREATE_WALLET;
 
@@ -550,6 +622,20 @@ public class FirstLoginWalletsActivity extends Activity implements
 							"Account linked successfully!", Toast.LENGTH_LONG)
 							.show();
 
+					SharedPreferences sharedPreferences2 = getSharedPreferences(
+							"MobikwikCoupon", 0);
+					String couponCode = sharedPreferences2.getString(
+							"couponCode", "");
+					if (!couponCode.isEmpty() && couponCode.length() > 0) {
+						TextView textView2 = (TextView) findViewById(R.id.couponcodemobikwik);
+						textView2.setVisibility(View.VISIBLE);
+						textView2.setText("Your 50 on 50 offer coupon code : "
+								+ couponCode);
+
+						textView2 = (TextView) findViewById(R.id.couponcodemobikwiktnc);
+						textView2.setVisibility(View.VISIBLE);
+					}
+
 					if (from.equalsIgnoreCase("reg")) {
 						Intent mainIntent = new Intent(
 								FirstLoginWalletsActivity.this,
@@ -561,7 +647,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 								.setText("Your Mobikwik wallet is already linked with the app");
 						walletLinearLayout.setVisibility(View.INVISIBLE);
 					}
-
 				} else {
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							jsonObject.getString("statusdescription"),
@@ -587,7 +672,9 @@ public class FirstLoginWalletsActivity extends Activity implements
 							.show();
 
 					Log.d("Response:::", response);
-					linkWallet();
+					// linkWallet(); moved to getCoupons
+
+					getCoupons();
 
 				} else {
 					Toast.makeText(FirstLoginWalletsActivity.this,
@@ -595,6 +682,31 @@ public class FirstLoginWalletsActivity extends Activity implements
 							Toast.LENGTH_LONG).show();
 					// {"statusdescription":"EIther OTP mismatch or Invalid OTP due to mismatch in order id and transaction amount","checksum":"d7e1b38d51db8d5b0b7f0b431e7a95fe9450fc8ea477132e5405f27e84b01aeb","messagecode":"502","statuscode":"164","status":"FAILURE"}
 
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("getCoupons")) {
+			Log.d("FirstLoginWalletActivity", "getCoupons response : "
+					+ response);
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("success")) {
+					JSONObject jsonObject2 = new JSONObject(jsonObject.get(
+							"data").toString());
+					String couponName = jsonObject2.get("couponName")
+							.toString();
+					Log.d("FirstLoginWalletActivity",
+							"getCoupons jsonObject2 : " + couponName);
+
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"MobikwikCoupon", 0);
+					SharedPreferences.Editor editor = sharedPreferences.edit();
+					editor.putString("couponCode", couponName);
+					editor.commit();
+
+					linkWallet();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

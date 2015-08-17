@@ -1581,6 +1581,10 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 									.contains("Token Expired")) {
 						tokenRegenerate(OwnerMobileNumber.substring(4), token,
 								true);
+					} else {
+						Toast.makeText(CheckPoolFragmentActivity.this,
+								jsonObject.get("statusdescription").toString(),
+								Toast.LENGTH_LONG).show();
 					}
 				}
 			} catch (Exception e) {

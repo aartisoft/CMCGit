@@ -406,7 +406,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		beforejoinpoolll = (LinearLayout) findViewById(R.id.beforejoinpoolll);
 		afterjoinpoolll = (LinearLayout) findViewById(R.id.afterjoinpoolll);
 		tvJoinRide = (TextView) findViewById(R.id.tvJoinRide);
-		tvJoinRide.setText("Select Ride Pick Location");
+//		tvJoinRide.setText("Select Pickup Location");
 
 		// / before
 		mydetailbtn = (ImageView) findViewById(R.id.mydetailbtn);
@@ -545,7 +545,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 																	.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 											tvJoinRide
-													.setText("Select Ride Drop Location");
+													.setText("Select Drop Location");
 											// onedialog = new ProgressDialog(
 											// MemberRideFragmentActivity.this);
 											// onedialog.setMessage("Please Wait...");
@@ -689,6 +689,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								MemberRideFragmentActivity.this,
 								"We have set your pick-up to your current location, please move the map around to select a different location & press join ride again",
 								Toast.LENGTH_LONG).show();
+
+						tvJoinRide.setText("Select Pickup Location");
 					} else {
 						Toast.makeText(
 								MemberRideFragmentActivity.this,

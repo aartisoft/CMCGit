@@ -80,7 +80,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyClubsActivity extends Activity implements AsyncTaskResultListener{
+public class MyClubsActivity extends Activity implements
+		AsyncTaskResultListener {
 
 	ListView lv, lvmyclub, listMembersclubs;
 	Button newclub;
@@ -221,191 +222,6 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 			}
 		});
 
-		// mNav = new SimpleSideDrawer(this);
-		// mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-		//
-		// findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v) {
-		//
-		// // mainhomepagerl.setAlpha((float) 0.3);
-		// mNav.toggleLeftDrawer();
-		//
-		// }
-		// });
-		//
-		// myprofile = (TextView) findViewById(R.id.myprofile);
-		// myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myrides = (TextView) findViewById(R.id.myrides);
-		// myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// bookacab = (TextView) findViewById(R.id.bookacab);
-		// bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		// sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// myclubs = (TextView) findViewById(R.id.myclubs);
-		// myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		// sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// mypreferences = (TextView) findViewById(R.id.mypreferences);
-		// mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		// about = (TextView) findViewById(R.id.about);
-		// about.setTypeface(Typeface.createFromAsset(getAssets(),
-		// "NeutraText-Light.ttf"));
-		//
-		// myprofile.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyProfile Click")
-		// .setAction("MyProfile Click")
-		// .setLabel("MyProfile Click").build());
-		//
-		// Intent mainIntent = new Intent(MyClubsActivity.this,
-		// MyProfileActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myrides.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("MyRides Click")
-		// .setAction("MyRides Click").setLabel("MyRides Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(MyClubsActivity.this,
-		// MyRidesActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// bookacab.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("BookaCab Click")
-		// .setAction("BookaCab Click").setLabel("BookaCab Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(MyClubsActivity.this,
-		// BookaCabFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// sharemylocation.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("ShareLocation Click")
-		// .setAction("ShareLocation Click")
-		// .setLabel("ShareLocation Click").build());
-		//
-		// Intent mainIntent = new Intent(MyClubsActivity.this,
-		// ShareLocationFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// myclubs.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		// }
-		// });
-		//
-		// sharethisapp.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("ShareApp Click")
-		// .setAction("ShareApp Click").setLabel("ShareApp Click")
-		// .build());
-		//
-		// Intent sendIntent = new Intent();
-		// sendIntent.setAction(Intent.ACTION_SEND);
-		// sendIntent
-		// .putExtra(
-		// Intent.EXTRA_TEXT,
-		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-		// sendIntent.setType("text/plain");
-		// startActivity(Intent.createChooser(sendIntent, "Share Via"));
-		//
-		// }
-		// });
-		//
-		// mypreferences.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("Settings Click")
-		// .setAction("Settings Click").setLabel("Settings Click")
-		// .build());
-		//
-		// Intent mainIntent = new Intent(MyClubsActivity.this,
-		// SettingActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		//
-		// about.setOnClickListener(new View.OnClickListener() {
-		// @SuppressWarnings("deprecation")
-		// @Override
-		// public void onClick(View arg0) {
-		// mNav.toggleDrawer();
-		//
-		// tracker.send(new HitBuilders.EventBuilder()
-		// .setCategory("About Click").setAction("About Click")
-		// .setLabel("About Click").build());
-		//
-		// Intent mainIntent = new Intent(MyClubsActivity.this,
-		// AboutPagerFragmentActivity.class);
-		// startActivityForResult(mainIntent, 500);
-		// overridePendingTransition(R.anim.slide_in_right,
-		// R.anim.slide_out_left);
-		// }
-		// });
-		
-		
-		
 		if (comefrom != null) {
 
 			if (comefrom.equalsIgnoreCase("GCM")) {
@@ -417,7 +233,8 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 				Log.d("MyClubMyActivity",
 						"UpdateNotificationStatusToRead endpoint : " + endpoint
 								+ " params : " + params);
-				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false,
+						"UpdateNotificationStatusToRead", false);
 
 			}
 
@@ -868,7 +685,8 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 										.toString().trim());
 							}
 						} else {
-							showpoolid.add(MyClubPoolId.get(position).toString());
+							showpoolid.add(MyClubPoolId.get(position)
+									.toString());
 						}
 
 						Log.d("shownames", "" + shownames);
@@ -913,7 +731,7 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 					try {
 						subArray = new JSONArray(MemberClubMembers
 								.get(position).toString().trim());
-						
+
 						if (subArray.length() > 0) {
 							for (int i = 0; i < subArray.length(); i++) {
 								shownames.add(subArray.getJSONObject(i)
@@ -926,7 +744,8 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 										.toString().trim());
 							}
 						} else {
-							showpoolid.add(MemberClubPoolId.get(position).toString());
+							showpoolid.add(MemberClubPoolId.get(position)
+									.toString());
 						}
 
 						Log.d("shownames", "" + shownames);
@@ -1385,7 +1204,7 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
-			
+
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
 					inputStream);
@@ -1403,7 +1222,8 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 						.toString();
 			}
 
-			Log.d("MyClubsActivity", "referFriendStepOne : " + referfriendresponse);
+			Log.d("MyClubsActivity", "referFriendStepOne : "
+					+ referfriendresponse);
 		}
 	}
 
@@ -2808,6 +2628,6 @@ public class MyClubsActivity extends Activity implements AsyncTaskResultListener
 	@Override
 	public void getResult(String response, String uniqueID) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

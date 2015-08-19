@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="We have sent One Time Password (OTP) to your Mobile"
+            android:text="We have sent One Time Password (OTP) to your Mobile and E-mail ID. In case you have not recieved it on your mobile, do check your e-mail"
             android:textColor="#9e9e9e"
             android:textSize="15sp" />
 

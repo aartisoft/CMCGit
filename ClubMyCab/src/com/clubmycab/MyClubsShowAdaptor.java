@@ -23,7 +23,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,16 +35,18 @@ import android.widget.Toast;
 
 import com.clubmycab.ui.MyClubsActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 
 public class MyClubsShowAdaptor extends BaseAdapter {
 
 	// Declare Variables
-	Context context;
-	ArrayList<String> MyClubPoolId;
-	ArrayList<String> MyClubPoolName;
-	ArrayList<String> MyClubNoofMembers;
-	ArrayList<String> MyClubOwnerName;
-	LayoutInflater inflater;
+	private Context context;
+	private ArrayList<String> MyClubPoolId;
+	private ArrayList<String> MyClubPoolName;
+	private ArrayList<String> MyClubNoofMembers;
+	private ArrayList<String> MyClubOwnerName;
+	private LayoutInflater inflater;
 
 	
 	boolean exceptioncheck = false;
@@ -75,32 +76,69 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	@SuppressLint("ViewHolder")
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View itemView, ViewGroup parent) {
+		ViewHolder viewHolder;
+		if(itemView==null){
+			viewHolder=new ViewHolder();
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View itemView = inflater.inflate(R.layout.myclubs_listrow, parent,
-				false);
+			 itemView = inflater.inflate(R.layout.myclubs_listrow, parent,
+					false);
 
-		// Locate the TextViews in listview_item.xml
+			// Locate the TextViews in listview_item.xml
+			
+			 viewHolder.ivWarnning1=(ImageView)itemView.findViewById(R.id.ivWarnning1);
 
-		TextView Mname = (TextView) itemView.findViewById(R.id.nameofclub);
-		TextView noofmembers = (TextView) itemView
-				.findViewById(R.id.noofmembers);
-		ImageView removeclub = (ImageView) itemView
-				.findViewById(R.id.removeclub);
+			 viewHolder.Mname = (TextView) itemView.findViewById(R.id.nameofclub);
+			viewHolder.noofmembers = (TextView) itemView
+					.findViewById(R.id.noofmembers);
+			viewHolder.removeclub = (ImageView) itemView
+					.findViewById(R.id.removeclub);
+			
+			itemView.setTag(viewHolder);
+			
+		}
+		else{
+			viewHolder=(ViewHolder)itemView.getTag();
+			
+		}
 
-		Mname.setText(MyClubPoolName.get(position).toString().trim());
-		noofmembers.setText("("
+
+		viewHolder.Mname.setText(MyClubPoolName.get(position).toString().trim());
+		viewHolder.noofmembers.setText("("
 				+ MyClubNoofMembers.get(position).toString().trim() + ")");
+		
+		viewHolder.ivWarnning1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Toast.makeText(context,StringTags.TAG_LOW_MEMBER, Toast.LENGTH_LONG).show();
+				
+			}
+		});
+		try{
+			int count=Integer.parseInt(MyClubNoofMembers.get(position).toString().trim());
+			if(count<=10)
+				viewHolder.ivWarnning1.setVisibility(View.VISIBLE);
+			else
+				viewHolder.ivWarnning1.setVisibility(View.GONE);
 
-		removeclub.setOnClickListener(new OnClickListener() {
+		}
+		catch(Exception e){
+			viewHolder.ivWarnning1.setVisibility(View.GONE);
+
+			
+		}
+
+		viewHolder.removeclub.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -140,7 +178,17 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 
 		return itemView;
 	}
+	
+	//ViewHolder for inflate layout only one time
 
+	public class ViewHolder{
+		public ImageView ivWarnning1;
+		public TextView Mname;
+		public TextView noofmembers;
+		public ImageView removeclub ;
+		
+	}
+	
 	// ///////
 
 	private class ConnectionTaskForRemoveclub extends
@@ -188,7 +236,6 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 			try {
 				((MyClubsActivity) context).showclub();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -213,6 +260,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 
 			BasicNameValuePair poolidBasicNameValuePair = new BasicNameValuePair(
 					"poolid", poolid);
+			
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(poolidBasicNameValuePair);
@@ -222,7 +270,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
-			Log.d("httpResponse", "" + httpResponse);
+			Log.d("httpResponse", "" + httpResponse+"Pool Id:: "+poolid);
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(
@@ -289,7 +337,7 @@ public class MyClubsShowAdaptor extends BaseAdapter {
 			editor1.putString("clubs", myclubsresp.toString().trim());
 			editor1.commit();
 
-			// ///////////////
+			
 		}
 	}
 }

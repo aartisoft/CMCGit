@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -20,13 +19,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,15 +33,16 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
-import com.clubmycab.utility.Log;
 
+import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 public class LocationShareService extends Service implements LocationListener {
 
-	private static String TAG = "Inchoo.net tutorial";
+	private static String TAG = "LocationShareService";
 
 	ArrayList<String> recpnames = new ArrayList<String>();
 	ArrayList<String> recpnumbers = new ArrayList<String>();
@@ -193,7 +190,7 @@ public class LocationShareService extends Service implements LocationListener {
 						Log.d("dist", "" + dist);
 
 						if ((System.currentTimeMillis() < destinationtimevalue)
-								&& (dist > 0.002)) {
+								&& (dist > GlobalVariables.GEOFENCING_RADIUS)) {
 
 							sendlocation(recpnames, recpnumbers);
 						} else {
@@ -272,7 +269,7 @@ public class LocationShareService extends Service implements LocationListener {
 			mycurrentlocation = location;
 			// locationManager.removeUpdates(this);
 
-			String lcladdress = getAddress(getApplicationContext(),
+			String lcladdress = MapUtilityMethods.getAddress(getApplicationContext(),
 					mycurrentlocation.getLatitude(),
 					mycurrentlocation.getLongitude());
 
@@ -431,27 +428,6 @@ public class LocationShareService extends Service implements LocationListener {
 		}
 
 		return location;
-	}
-
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
 	}
 
 	// ///////

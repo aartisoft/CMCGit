@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.clubmycab"
-    android:versionCode="6"
-    android:versionName="1.5" >
+    android:versionCode="9"
+    android:versionName="1.8" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -44,9 +44,10 @@
         android:allowBackup="true"
         android:icon="@drawable/cabappicon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustResize" >
         <activity
-            android:name="com.clubmycab.ui.SplashActivity"
+            android:name=".ui.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
@@ -55,9 +56,33 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <data android:scheme="clubmycabandroid" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="af_DebugMode"
+            android:value="false" />
+        <meta-data
+            android:name="af_TrackerURL"
+            android:value="@string/Affle_TRACKER_URL" />
+        
+        <meta-data
+android:name="af_SessionTimeOut"
+android:value="3600" />
+        
+        <meta-data
+            android:name="ClubMyCab"
+            android:value="" />
+
         <activity
-            android:name="com.clubmycab.ui.OTPActivity"
+            android:name=".ui.OTPActivity"
             android:label="@string/title_activity_enter_otp"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
@@ -68,12 +93,18 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+        <!-- <receiver android:name="com.clubmycab.AffleInstallReceiver"  android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.android.vending.INSTALL_REFERRER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
         <activity
-            android:name="com.clubmycab.ui.HomeActivity"
+            android:name=".ui.HomeActivity"
             android:label="@string/title_activity_home_page"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
 
         <meta-data
@@ -87,21 +118,21 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="com.clubmycab.InviteFragmentActivity"
+            android:name="com.clubmycab.ui.InviteFragmentActivity"
             android:label="@string/title_activity_invite"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.RegistrationActivity"
+            android:name=".ui.RegistrationActivity"
             android:label="@string/title_activity_registration"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login_via_phone_number"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -128,119 +159,129 @@
             android:name=".LocationShareService"
             android:stopWithTask="true" >
         </service>
+        <service
+            android:name=".LocationShareForRideService"
+            android:stopWithTask="true" >
+        </service>
 
         <activity
-            android:name="com.clubmycab.ui.MyRidesActivity"
+            android:name=".ui.MyRidesActivity"
             android:label="@string/title_activity_my_pool"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.clubmycab.MemberRideFragmentActivity"
+            android:name=".MemberRideFragmentActivity"
             android:label="@string/title_activity_join_pool"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.clubmycab.CheckPoolFragmentActivity"
+            android:name=".CheckPoolFragmentActivity"
             android:label="@string/title_activity_check_pool"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.ContactsToInviteActivity"
+            android:name=".ui.ContactsToInviteActivity"
             android:label="@string/title_activity_contacts_my_club"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.BookaCabFragmentActivity"
+            android:name=".BookaCabFragmentActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.NotificationListActivity"
+            android:name=".ui.NotificationListActivity"
             android:label="@string/title_activity_all_notification_request"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.UpdatePickupLocationFragmentActivity"
+            android:name=".ui.UpdatePickupLocationFragmentActivity"
             android:label="@string/title_activity_update_pickup_location"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.MyProfileActivity"
+            android:name=".ui.MyProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.MyClubsActivity"
+            android:name=".ui.MyClubsActivity"
             android:label="@string/title_activity_chat_to_all"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ShareLocationFragmentActivity"
+            android:name=".ShareLocationFragmentActivity"
             android:label="@string/title_activity_share_location"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.LocationInMapFragmentActivity"
+            android:name=".ui.LocationInMapFragmentActivity"
             android:label="@string/title_activity_location_in_map"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.AboutActivity"
+            android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.SettingActivity"
+            android:name=".ui.SettingActivity"
             android:label="@string/title_activity_setting_details"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.AboutPagerFragmentActivity"
+            android:name=".ui.AboutPagerFragmentActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.MobileSiteActivity"
+            android:name=".ui.MobileSiteActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.TermsAndConditionsActivity"
+            android:name=".ui.TermsAndConditionsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.ResetPasswordActivity"
+            android:name=".ui.ResetPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.clubmycab.ui.RateCabActivity"
+            android:name=".ui.RateCabActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".ui.WalletsAcitivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden" >
@@ -260,16 +301,65 @@
             android:exported="false" />
 
         <receiver
-            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:name="com.clubmycab.AffleInstallReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="UpcomingStartTripAlarm"
+            android:process=":remote" >
+        </receiver>
+        <receiver
+            android:name="StartTripPHPAlarm"
+            android:process=":remote" >
+        </receiver>
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
 
-        <!-- ... -->
+        <activity
+            android:name="com.clubmycab.ui.FavoriteLocationsAcivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.clubmycab.ui.FirstLoginClubsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.clubmycab.ui.FirstLoginWalletsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".ui.ContactsInviteForRideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.clubmycab.ui.FavoritePlaceFindActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
+        </activity>
+        <activity
+            android:name="com.clubmycab.ui.FAQActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
+        </activity>
+         <activity
+            android:name="com.clubmycab.ui.NeedSupportFragmentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
+        </activity>
     </application>
 
 </manifest>

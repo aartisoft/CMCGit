@@ -1,11 +1,8 @@
 package com.clubmycab;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,8 +12,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Build;
-import com.clubmycab.utility.Log;
 
+import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -294,7 +292,7 @@ public class FareCalculator {
 					+ Double.toString(endLatLng.latitude)
 					+ ","
 					+ Double.toString(endLatLng.longitude)
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="+GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 
@@ -364,26 +362,6 @@ public class FareCalculator {
 		}
 	}
 
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
-	}
 
 //	private ArrayList<LatLng> decodePoly(String encoded) {
 //		ArrayList<LatLng> poly = new ArrayList<LatLng>();

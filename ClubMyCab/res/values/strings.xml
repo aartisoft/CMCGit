@@ -39,6 +39,8 @@
         <item>By your command</item>
     </string-array>
 
+    <string name="tag_where_work">Where do you work/study?</string>
+    <string name="tag_where_live">Where do you live?</string>
     <string name="btnCrash">Test Calc</string>
     <string name="btnBackgroundCrash">Test Background Crash</string>
     <string name="btnNext">Next Activity</string>
@@ -54,5 +56,55 @@
     <string name="facebook_app_id">1061232687227968</string>
     <string name="loading">Loading&#8230;</string>
     <string name="exceptionstring">Something went wrong, please try again!</string>
+    <string name="title_activity_wallets_acitivity">WalletsAcitivity</string>
+    <string name="title_activity_favorite_locations_acivity">FavoriteLocationsAcivity</string>
+    <string name="text_firstloginclubs_member">Congratulations! You are already member of the following clubs and can start sharing rides immediately!</string>
+    <string name="text_firstloginclubs_notmember">You are not yet a member of any club, create one and invite your friends!</string>
+    <string name="button_flc_create_club">Create more clubs</string>
+    <string name="button_flc_continue">Continue</string>
+    <string name="button_flc_create_club_notmember">Create clubs</string>
+    <string name="button_flc_continue_notmember">Maybe later</string>
+    <string name="btn_done">Done</string>
+    <string name="hint_select_address">Enter address or select on map ></string>
+    <string name="in_30min">In 30 min</string>
+    <string name="in_1_hour">In 1 Hour</string>
+    <string name="select_datetime"> Select Date/Time</string>
+    <string name="change">(tap to change)</string>
+    <string name="how_many_passenger">How many co-passengers?</string>
+    <string name="faq">How To &amp; FAQs</string>
+    <string name="askforquery">Need Support?</string>
+    <string name="quesiton1">What is ClubMyCab?</string>
+    <string name="quesiton2">What should I do to make my clubs more effective?</string>
+    <string name="quesiton3">How can I share a ride?</string>
+    <string name="quesiton4">While sharing a ride</string>
+    <string name="quesiton5">Booking a cab in ClubMyCab</string>
+    <string name="quesiton6">What about privacy and safety?</string>
+    <string name="selectclub">Select a club from above</string>
+    <string name="memberexcludingmsg">(Number in brackets is members including the person who created the club)</string>
+    <string name="Affle_TRACKER_URL">http://affle.co/1111111111/clubmycab/clubmycabandroid/dl_android.php?ad2cid=1438003779&amp;affle</string>
+    <string name="seatcount">3</string>
+    <string name="otpsent">We have sent One Time Password (OTP) to your Mobile</string>
+    <string name="mobikwik_nothave_account">You do not have a Mobikwik wallet registered with your number, would you like to create one? This will help you settle the fare split for your rides. Click on send OTP</string>
+    <string name="mobikwik_already_account">You already have a Mobikwik wallet registered with your number, would you like to link it with the app? This will help you settle the fare split for your rides. Click on send OTP</string>
+    <string name="mobikwik_signup_tnc">User agrees to allow ClubMyCab to transfer amount to/from user\'s Mobikwik wallet to settle fare splits at the end of each journey undertaken by the user. These transfers will be undertaken only after confirmation of fare split by both sending and receiving user. Further upon completion of journey and subsequent payment done, the User will not claim any other charges whatsoever from ClubMyCab or its partners</string>
+    <string name="str_text_termandcondition_mobikwik">By clicking on the button I agree to the terms &amp; conditions mentioned at the link below</string>
+    <string name="str_text_termandcondition_mobikwik_coupon">1. Extra cash Amount is fixed at Rs. 50/- for a Minimum "Add Money" amount of Rs.50/- \r\n2. Sign Up platform, Coupon Redemption and Payment should be done on  iPhone, Windows or Android App\r\n3. Offer can be redeemed only once per user per card and is applicable for the "Add Money" payment done during the offer period on MobiKwik App\r\n4. Offer will be valid only for the transactions done through Debit Card or Credit Card. Not valid on Net Banking and Virtual Cards\r\n5. Offer valid for new MobiKwik user only\r\n6. Valid till 31st Oct\'15</string>
+    <string name="underline_text_mobikwik_tnc"><u>Terms &amp; Conditions</u></string>
+    <string name="str_text_termandcondition">By clicking on submit I agree to the terms &amp; conditions mentioned at the link below</string>
+    <string name="str_home_pagger_heading">Open ride(s) in your clubs</string>
+    <string name="str_problem">Problem</string>
+    <string name="str_screen">Screen</string>
+    <string name="str_description">Description</string>
+    <string name="str_hint_description">Enter a brief but detailed description of the problem</string>
+    <string name="str_thank">*Thank you for reporting a problem!\nOur team will look into this issue and correct it as soon as possible.</string>
+    <string name="str_hint_where_problem">Enter where the problem happened</string>
+    <string name="btn_submit">Submit</string>
+    <string name="check_box">Call me to explain</string>
+    <string name="promt">Ask a question</string>
+
+    <string-array name="needsupport_arrays">
+        <item>Ask a question</item>
+        <item>Report a problem</item>
+    </string-array>
 
 </resources>

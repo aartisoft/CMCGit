@@ -65,7 +65,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CheckPoolFragmentActivity;
 import com.clubmycab.CircularImageView;
 import com.clubmycab.ClubListClass;
@@ -76,12 +75,13 @@ import com.clubmycab.ContactObject;
 import com.clubmycab.ContactsAdapter;
 import com.clubmycab.ContactsListClass;
 import com.clubmycab.R;
-import com.clubmycab.ShareLocationFragmentActivity;
+import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
 public class ContactsToInviteActivity extends Activity {
@@ -174,12 +174,11 @@ public class ContactsToInviteActivity extends Activity {
 
 	AlertDialog dialogseats;
 
-	RelativeLayout contexthelpcontacts;
+	// RelativeLayout contexthelpcontacts;
 	String distancetext;
 
 	String imagenameresp;
 
-	
 	RelativeLayout contactsmyclubrl;
 	Tracker tracker;
 
@@ -217,7 +216,8 @@ public class ContactsToInviteActivity extends Activity {
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(ContactsToInviteActivity.this);
-		tracker = analytics.newTracker("UA-63477985-1");
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("Create Invitation");
@@ -233,8 +233,6 @@ public class ContactsToInviteActivity extends Activity {
 			}
 		});
 
-		
-
 		Bundle extras = getIntent().getExtras();
 		fromcome = extras.getString("fromcome");
 		CabId = extras.getString("CabId");
@@ -248,198 +246,8 @@ public class ContactsToInviteActivity extends Activity {
 		fromshortname = extras.getString("fromshortname");
 		toshortname = extras.getString("toshortname");
 
-		mNav = new SimpleSideDrawer(this);
-		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-
-		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// mainhomepagerl.setAlpha((float) 0.3);
-				mNav.toggleLeftDrawer();
-
-			}
-		});
-
-		myprofile = (TextView) findViewById(R.id.myprofile);
-		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myrides = (TextView) findViewById(R.id.myrides);
-		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		bookacab = (TextView) findViewById(R.id.bookacab);
-		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myclubs = (TextView) findViewById(R.id.myclubs);
-		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		mypreferences = (TextView) findViewById(R.id.mypreferences);
-		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		about = (TextView) findViewById(R.id.about);
-		about.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-
-		myprofile.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyProfile Click")
-						.setAction("MyProfile Click")
-						.setLabel("MyProfile Click").build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						MyProfileActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myrides.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyRides Click")
-						.setAction("MyRides Click").setLabel("MyRides Click")
-						.build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						MyRidesActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		bookacab.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("BookaCab Click")
-						.setAction("BookaCab Click").setLabel("BookaCab Click")
-						.build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						BookaCabFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharemylocation.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareLocation Click")
-						.setAction("ShareLocation Click")
-						.setLabel("ShareLocation Click").build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						ShareLocationFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myclubs.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyClubs Click")
-						.setAction("MyClubs Click").setLabel("MyClubs Click")
-						.build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						MyClubsActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharethisapp.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareApp Click")
-						.setAction("ShareApp Click").setLabel("ShareApp Click")
-						.build());
-
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent
-						.putExtra(
-								Intent.EXTRA_TEXT,
-								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-
-			}
-		});
-
-		mypreferences.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("Settings Click")
-						.setAction("Settings Click").setLabel("Settings Click")
-						.build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						SettingActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		about.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("About Click").setAction("About Click")
-						.setLabel("About Click").build());
-
-				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
-						AboutPagerFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
+		drawer.createDrawer();
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
@@ -476,6 +284,16 @@ public class ContactsToInviteActivity extends Activity {
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
 
+		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+			unreadnoticountrl.setVisibility(View.GONE);
+
+		} else {
+
+			unreadnoticountrl.setVisibility(View.VISIBLE);
+			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
+		}
+
 		NeutraTextLight = Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf");
 
@@ -505,17 +323,22 @@ public class ContactsToInviteActivity extends Activity {
 		sendtocontacts.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-		if (fromcome.equalsIgnoreCase("invite")
-				|| fromcome.equalsIgnoreCase("checkpool")) {
-
-			contactsbtn.setVisibility(View.VISIBLE);
-			validmobiletxt.setVisibility(View.VISIBLE);
-			myclubbtn.setVisibility(View.VISIBLE);
-		} else {
-			contactsbtn.setVisibility(View.VISIBLE);
-			validmobiletxt.setVisibility(View.VISIBLE);
-			myclubbtn.setVisibility(View.GONE);
-		}
+		// if (fromcome.equalsIgnoreCase("invite")
+		// || fromcome.equalsIgnoreCase("checkpool")) {
+		//
+		// contactsbtn.setVisibility(View.VISIBLE);
+		// validmobiletxt.setVisibility(View.VISIBLE);
+		// myclubbtn.setVisibility(View.VISIBLE);
+		// } else {
+		// contactsbtn.setVisibility(View.VISIBLE);
+		// validmobiletxt.setVisibility(View.VISIBLE);
+		// myclubbtn.setVisibility(View.GONE);
+		// }
+		//
+		clubcontactslistll.setVisibility(View.VISIBLE);
+		searchfromlist.setVisibility(View.VISIBLE);
+		validmobiletxt.setVisibility(View.VISIBLE);
+		mainclublistll.setVisibility(View.GONE);
 
 		// /// For contacts list
 
@@ -593,8 +416,8 @@ public class ContactsToInviteActivity extends Activity {
 
 				flag = 1;
 
-				contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
-				contactsbtn.setTextColor(Color.BLACK);
+				// contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+				// contactsbtn.setTextColor(Color.BLACK);
 
 				appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
 				appFrends.setTextColor(Color.WHITE);
@@ -740,8 +563,18 @@ public class ContactsToInviteActivity extends Activity {
 										.getString("PoolId").toString());
 								MyClubPoolName.add(subArray.getJSONObject(i)
 										.getString("PoolName").toString());
-								MyClubNoofMembers.add(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString());
+
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MyClubNoofMembers.add("1");
+
+								else
+									MyClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MyClubOwnerName.add(subArray.getJSONObject(i)
 										.getString("OwnerName").toString());
 								MyClubMembers.add(subArray.getJSONObject(i)
@@ -752,9 +585,18 @@ public class ContactsToInviteActivity extends Activity {
 								MemberClubPoolName.add(subArray
 										.getJSONObject(i).getString("PoolName")
 										.toString());
-								MemberClubNoofMembers.add(subArray
-										.getJSONObject(i)
-										.getString("NoofMembers").toString());
+								// pawan check null
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MemberClubNoofMembers.add("1");
+
+								else
+									MemberClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MemberClubOwnerName.add(subArray
 										.getJSONObject(i)
 										.getString("OwnerName").toString());
@@ -796,7 +638,8 @@ public class ContactsToInviteActivity extends Activity {
 							}
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
-									ContactsToInviteActivity.this, ClubListClass.ClubList);
+									ContactsToInviteActivity.this,
+									ClubListClass.ClubList, true);
 							listMyclubs.setAdapter(adapter);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
@@ -845,7 +688,7 @@ public class ContactsToInviteActivity extends Activity {
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									ContactsToInviteActivity.this,
-									ClubListClass.MemberClubList);
+									ClubListClass.MemberClubList, true);
 
 							listMembersclubs.setAdapter(adapter);
 							listMembersclubs
@@ -885,8 +728,9 @@ public class ContactsToInviteActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				Animation animScale = AnimationUtils.loadAnimation(
-						ContactsToInviteActivity.this, R.anim.button_click_anim);
+				Animation animScale = AnimationUtils
+						.loadAnimation(ContactsToInviteActivity.this,
+								R.anim.button_click_anim);
 				sendtocontacts.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -1127,12 +971,12 @@ public class ContactsToInviteActivity extends Activity {
 		});
 
 		// ///////////////
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForreadunreadnotification()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForreadunreadnotification().execute();
-		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -1160,32 +1004,33 @@ public class ContactsToInviteActivity extends Activity {
 			drawerprofilepic.setImageBitmap(yourSelectedImage);
 		}
 
-		contexthelpcontacts = (RelativeLayout) findViewById(R.id.contexthelpcontacts);
-
-		SharedPreferences mPrefs1 = getSharedPreferences("ContextHelp", 0);
-		String whichtimeforcontactsmyclub = mPrefs1.getString(
-				"whichtimeforcontactsmyclub", "");
-
-		if (whichtimeforcontactsmyclub.isEmpty()
-				|| whichtimeforcontactsmyclub == null
-				|| whichtimeforcontactsmyclub.equalsIgnoreCase("")) {
-			contexthelpcontacts.setVisibility(View.VISIBLE);
-		}
-
-		contexthelpcontacts.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				contexthelpcontacts.setVisibility(View.GONE);
-
-				SharedPreferences sharedPreferences = getSharedPreferences(
-						"ContextHelp", 0);
-				SharedPreferences.Editor editor = sharedPreferences.edit();
-				editor.putString("whichtimeforcontactsmyclub", "second");
-				editor.commit();
-			}
-		});
+		// contexthelpcontacts = (RelativeLayout)
+		// findViewById(R.id.contexthelpcontacts);
+		//
+		// SharedPreferences mPrefs1 = getSharedPreferences("ContextHelp", 0);
+		// String whichtimeforcontactsmyclub = mPrefs1.getString(
+		// "whichtimeforcontactsmyclub", "");
+		//
+		// if (whichtimeforcontactsmyclub.isEmpty()
+		// || whichtimeforcontactsmyclub == null
+		// || whichtimeforcontactsmyclub.equalsIgnoreCase("")) {
+		// contexthelpcontacts.setVisibility(View.VISIBLE);
+		// }
+		//
+		// contexthelpcontacts.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		//
+		// contexthelpcontacts.setVisibility(View.GONE);
+		//
+		// SharedPreferences sharedPreferences = getSharedPreferences(
+		// "ContextHelp", 0);
+		// SharedPreferences.Editor editor = sharedPreferences.edit();
+		// editor.putString("whichtimeforcontactsmyclub", "second");
+		// editor.commit();
+		// }
+		// });
 
 		SharedPreferences mPrefs11111 = getSharedPreferences("MyClubs", 0);
 		String clubs = mPrefs11111.getString("clubs", "");
@@ -1196,6 +1041,8 @@ public class ContactsToInviteActivity extends Activity {
 			clubcreated = true;
 		}
 
+		// For avoidig open club only contacts will open in this activity
+		clubcreated = false;
 		if (fromcome.equalsIgnoreCase("invite")
 				|| fromcome.equalsIgnoreCase("checkpool")) {
 
@@ -1270,9 +1117,19 @@ public class ContactsToInviteActivity extends Activity {
 								MemberClubPoolName.add(subArray
 										.getJSONObject(i).getString("PoolName")
 										.toString());
-								MemberClubNoofMembers.add(subArray
-										.getJSONObject(i)
-										.getString("NoofMembers").toString());
+
+								// pawan check null
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MemberClubNoofMembers.add("1");
+
+								else
+									MemberClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MemberClubOwnerName.add(subArray
 										.getJSONObject(i)
 										.getString("OwnerName").toString());
@@ -1314,7 +1171,8 @@ public class ContactsToInviteActivity extends Activity {
 							}
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
-									ContactsToInviteActivity.this, ClubListClass.ClubList);
+									ContactsToInviteActivity.this,
+									ClubListClass.ClubList, true);
 							listMyclubs.setAdapter(adapter);
 							listMyclubs
 									.setOnItemClickListener(new OnItemClickListener() {
@@ -1363,7 +1221,7 @@ public class ContactsToInviteActivity extends Activity {
 
 							ClubsAdaptor adapter = new ClubsAdaptor(
 									ContactsToInviteActivity.this,
-									ClubListClass.MemberClubList);
+									ClubListClass.MemberClubList, true);
 
 							listMembersclubs.setAdapter(adapter);
 							listMembersclubs
@@ -1402,14 +1260,14 @@ public class ContactsToInviteActivity extends Activity {
 
 				flag = 1;
 
-				contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
-				contactsbtn.setTextColor(Color.BLACK);
+				// contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+				// contactsbtn.setTextColor(Color.BLACK);
 
 				appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
 				appFrends.setTextColor(Color.WHITE);
 
-				myclubbtn.setBackgroundColor(Color.parseColor("#4279bd"));
-				myclubbtn.setTextColor(Color.WHITE);
+				// myclubbtn.setBackgroundColor(Color.parseColor("#4279bd"));
+				// myclubbtn.setTextColor(Color.WHITE);
 
 				clubcontactslistll.setVisibility(View.VISIBLE);
 				searchfromlist.setVisibility(View.VISIBLE);
@@ -1492,8 +1350,8 @@ public class ContactsToInviteActivity extends Activity {
 
 			flag = 1;
 
-			contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
-			contactsbtn.setTextColor(Color.BLACK);
+			// contactsbtn.setBackgroundColor(Color.parseColor("#B1C8E6"));
+			// contactsbtn.setTextColor(Color.BLACK);
 
 			appFrends.setBackgroundColor(Color.parseColor("#4279bd"));
 			appFrends.setTextColor(Color.WHITE);
@@ -1581,97 +1439,99 @@ public class ContactsToInviteActivity extends Activity {
 	}
 
 	// ///////
-	private class ConnectionTaskForreadunreadnotification extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(ContactsToInviteActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
-			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount.setText(readunreadnotiresp);
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionreadunreadnotification {
-
-		public AuthenticateConnectionreadunreadnotification() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/FetchUnreadNotificationCount.php";
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumberstr);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-
-		}
-	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(ContactsToInviteActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumberstr);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	// ////////////////////////
 	// ///////
@@ -1807,7 +1667,8 @@ public class ContactsToInviteActivity extends Activity {
 
 	private class ConnectionTaskForSendInvite extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(ContactsToInviteActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				ContactsToInviteActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1850,34 +1711,70 @@ public class ContactsToInviteActivity extends Activity {
 
 				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
 						CheckPoolFragmentActivity.class);
-				mainIntent.putExtra("CabId", CabId);
-				mainIntent.putExtra("MobileNumber", MobileNumberstr);
-				mainIntent.putExtra("OwnerName", OwnerName);
+
+				RideDetailsModel rideDetailsModel = new RideDetailsModel();
+				rideDetailsModel.setCabId(CabId);
+				rideDetailsModel.setMobileNumber(MobileNumberstr);
+				rideDetailsModel.setOwnerName(OwnerName);
 				SharedPreferences mPrefs111 = getSharedPreferences("userimage",
 						0);
 				String imgname = mPrefs111.getString("imgname", "");
-				mainIntent.putExtra("OwnerImage", imgname);
-				mainIntent.putExtra("FromLocation", FromLocation);
-				mainIntent.putExtra("ToLocation", ToLocation);
-
-				mainIntent.putExtra("FromShortName", fromshortname);
-				mainIntent.putExtra("ToShortName", toshortname);
-
-				mainIntent.putExtra("TravelDate", TravelDate);
-				mainIntent.putExtra("TravelTime", TravelTime);
-				mainIntent.putExtra("Seats", Seats);
-				mainIntent.putExtra("RemainingSeats", Seats);
-				mainIntent.putExtra("Seat_Status", "0/" + Seats);
-				mainIntent.putExtra("Distance", distancetext);
-				mainIntent.putExtra("OpenTime", "");
-				mainIntent.putExtra("CabStatus", "A");
+				rideDetailsModel.setImagename(imgname);
+				rideDetailsModel.setFromLocation(FromLocation);
+				rideDetailsModel.setToLocation(ToLocation);
+				rideDetailsModel.setFromShortName(fromshortname);
+				rideDetailsModel.setToShortName(toshortname);
+				rideDetailsModel.setTravelDate(TravelDate);
+				rideDetailsModel.setTravelTime(TravelTime);
+				rideDetailsModel.setSeats(Seats);
+				rideDetailsModel.setRemainingSeats(Seats);
+				rideDetailsModel.setSeat_Status("0/" + Seats);
+				rideDetailsModel.setDistance(distancetext);
+				rideDetailsModel.setOpenTime("");
+				rideDetailsModel.setCabStatus("A");
 				mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+				rideDetailsModel.setBookingRefNo("");
+				rideDetailsModel.setDriverName("");
+				rideDetailsModel.setDriverNumber("");
+				rideDetailsModel.setCarNumber("");
+				rideDetailsModel.setCabName("");
 
-				mainIntent.putExtra("BookingRefNo", "");
-				mainIntent.putExtra("DriverName", "");
-				mainIntent.putExtra("DriverNumber", "");
-				mainIntent.putExtra("CarNumber", "");
-				
+				mainIntent.putExtra("RideDetailsModel",
+						(new Gson()).toJson(rideDetailsModel));
+
+				// mainIntent.putExtra("CabId", CabId);
+				// mainIntent.putExtra("MobileNumber", MobileNumberstr);
+				// mainIntent.putExtra("OwnerName", OwnerName);
+				// SharedPreferences mPrefs111 =
+				// getSharedPreferences("userimage",
+				// 0);
+				// String imgname = mPrefs111.getString("imgname", "");
+				// mainIntent.putExtra("OwnerImage", imgname);
+				// mainIntent.putExtra("FromLocation", FromLocation);
+				// mainIntent.putExtra("ToLocation", ToLocation);
+				//
+				// mainIntent.putExtra("FromShortName", fromshortname);
+				// mainIntent.putExtra("ToShortName", toshortname);
+				//
+				// mainIntent.putExtra("TravelDate", TravelDate);
+				// mainIntent.putExtra("TravelTime", TravelTime);
+				// mainIntent.putExtra("Seats", Seats);
+				// mainIntent.putExtra("RemainingSeats", Seats);
+				// mainIntent.putExtra("Seat_Status", "0/" + Seats);
+				// mainIntent.putExtra("Distance", distancetext);
+				// mainIntent.putExtra("OpenTime", "");
+				// mainIntent.putExtra("CabStatus", "A");
+				// mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+				//
+				// mainIntent.putExtra("BookingRefNo", "");
+				// mainIntent.putExtra("DriverName", "");
+				// mainIntent.putExtra("DriverNumber", "");
+				// mainIntent.putExtra("CarNumber", "");
+				// mainIntent.putExtra("CabName", "");
+
+				// mainIntent.putExtra("ExpTripDuration",
+				// ExpTripDuration.get(arg2));
+
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
@@ -1936,33 +1833,69 @@ public class ContactsToInviteActivity extends Activity {
 
 				Intent mainIntent = new Intent(ContactsToInviteActivity.this,
 						CheckPoolFragmentActivity.class);
-				mainIntent.putExtra("CabId", CabId);
-				mainIntent.putExtra("MobileNumber", MobileNumberstr);
-				mainIntent.putExtra("OwnerName", OwnerName);
+
+				RideDetailsModel rideDetailsModel = new RideDetailsModel();
+				rideDetailsModel.setCabId(CabId);
+				rideDetailsModel.setMobileNumber(MobileNumberstr);
+				rideDetailsModel.setOwnerName(OwnerName);
 				SharedPreferences mPrefs111 = getSharedPreferences("userimage",
 						0);
 				String imgname = mPrefs111.getString("imgname", "");
-				mainIntent.putExtra("OwnerImage", imgname);
-				mainIntent.putExtra("FromLocation", FromLocation);
-				mainIntent.putExtra("ToLocation", ToLocation);
-
-				mainIntent.putExtra("FromShortName", fromshortname);
-				mainIntent.putExtra("ToShortName", toshortname);
-
-				mainIntent.putExtra("TravelDate", TravelDate);
-				mainIntent.putExtra("TravelTime", TravelTime);
-				mainIntent.putExtra("Seats", Seats);
-				mainIntent.putExtra("RemainingSeats", Seats);
-				mainIntent.putExtra("Seat_Status", "0/" + Seats);
-				mainIntent.putExtra("Distance", distancetext);
-				mainIntent.putExtra("OpenTime", "");
-				mainIntent.putExtra("CabStatus", "A");
+				rideDetailsModel.setImagename(imgname);
+				rideDetailsModel.setFromLocation(FromLocation);
+				rideDetailsModel.setToLocation(ToLocation);
+				rideDetailsModel.setFromShortName(fromshortname);
+				rideDetailsModel.setToShortName(toshortname);
+				rideDetailsModel.setTravelDate(TravelDate);
+				rideDetailsModel.setTravelTime(TravelTime);
+				rideDetailsModel.setSeats(Seats);
+				rideDetailsModel.setRemainingSeats(Seats);
+				rideDetailsModel.setSeat_Status("0/" + Seats);
+				rideDetailsModel.setDistance(distancetext);
+				rideDetailsModel.setOpenTime("");
+				rideDetailsModel.setCabStatus("A");
 				mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+				rideDetailsModel.setBookingRefNo("");
+				rideDetailsModel.setDriverName("");
+				rideDetailsModel.setDriverNumber("");
+				rideDetailsModel.setCarNumber("");
+				rideDetailsModel.setCabName("");
 
-				mainIntent.putExtra("BookingRefNo", "");
-				mainIntent.putExtra("DriverName", "");
-				mainIntent.putExtra("DriverNumber", "");
-				mainIntent.putExtra("CarNumber", "");
+				mainIntent.putExtra("RideDetailsModel",
+						(new Gson()).toJson(rideDetailsModel));
+
+				// mainIntent.putExtra("CabId", CabId);
+				// mainIntent.putExtra("MobileNumber", MobileNumberstr);
+				// mainIntent.putExtra("OwnerName", OwnerName);
+				// SharedPreferences mPrefs111 =
+				// getSharedPreferences("userimage",
+				// 0);
+				// String imgname = mPrefs111.getString("imgname", "");
+				// mainIntent.putExtra("OwnerImage", imgname);
+				// mainIntent.putExtra("FromLocation", FromLocation);
+				// mainIntent.putExtra("ToLocation", ToLocation);
+				//
+				// mainIntent.putExtra("FromShortName", fromshortname);
+				// mainIntent.putExtra("ToShortName", toshortname);
+				//
+				// mainIntent.putExtra("TravelDate", TravelDate);
+				// mainIntent.putExtra("TravelTime", TravelTime);
+				// mainIntent.putExtra("Seats", Seats);
+				// mainIntent.putExtra("RemainingSeats", Seats);
+				// mainIntent.putExtra("Seat_Status", "0/" + Seats);
+				// mainIntent.putExtra("Distance", distancetext);
+				// mainIntent.putExtra("OpenTime", "");
+				// mainIntent.putExtra("CabStatus", "A");
+				// mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+				//
+				// mainIntent.putExtra("BookingRefNo", "");
+				// mainIntent.putExtra("DriverName", "");
+				// mainIntent.putExtra("DriverNumber", "");
+				// mainIntent.putExtra("CarNumber", "");
+				// mainIntent.putExtra("CabName", "");
+
+				// mainIntent.putExtra("ExpTripDuration",
+				// ExpTripDuration.get(arg2));
 
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
@@ -1989,7 +1922,8 @@ public class ContactsToInviteActivity extends Activity {
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+					+ GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 
@@ -2206,34 +2140,69 @@ public class ContactsToInviteActivity extends Activity {
 				return;
 			}
 
-			Intent mainIntent = new Intent(ContactsToInviteActivity.this, CheckPoolFragmentActivity.class);
+			Intent mainIntent = new Intent(ContactsToInviteActivity.this,
+					CheckPoolFragmentActivity.class);
 
-			mainIntent.putExtra("CabId", CabId);
-			mainIntent.putExtra("MobileNumber", MobileNumberstr);
-			mainIntent.putExtra("OwnerName", OwnerName);
+			RideDetailsModel rideDetailsModel = new RideDetailsModel();
+			rideDetailsModel.setCabId(CabId);
+			rideDetailsModel.setMobileNumber(MobileNumberstr);
+			rideDetailsModel.setOwnerName(OwnerName);
 			SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
 			String imgname = mPrefs111.getString("imgname", "");
-			mainIntent.putExtra("OwnerImage", imgname);
-			mainIntent.putExtra("FromLocation", FromLocation);
-			mainIntent.putExtra("ToLocation", ToLocation);
-
-			mainIntent.putExtra("FromShortName", fromshortname);
-			mainIntent.putExtra("ToShortName", toshortname);
-
-			mainIntent.putExtra("TravelDate", TravelDate);
-			mainIntent.putExtra("TravelTime", TravelTime);
-			mainIntent.putExtra("Seats", Seats);
-			mainIntent.putExtra("RemainingSeats", Seats);
-			mainIntent.putExtra("Seat_Status", "0/" + Seats);
-			mainIntent.putExtra("Distance", distancetext);
-			mainIntent.putExtra("OpenTime", "");
-			mainIntent.putExtra("CabStatus", "A");
+			rideDetailsModel.setImagename(imgname);
+			rideDetailsModel.setFromLocation(FromLocation);
+			rideDetailsModel.setToLocation(ToLocation);
+			rideDetailsModel.setFromShortName(fromshortname);
+			rideDetailsModel.setToShortName(toshortname);
+			rideDetailsModel.setTravelDate(TravelDate);
+			rideDetailsModel.setTravelTime(TravelTime);
+			rideDetailsModel.setSeats(Seats);
+			rideDetailsModel.setRemainingSeats(Seats);
+			rideDetailsModel.setSeat_Status("0/" + Seats);
+			rideDetailsModel.setDistance(distancetext);
+			rideDetailsModel.setOpenTime("");
+			rideDetailsModel.setCabStatus("A");
 			mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+			rideDetailsModel.setBookingRefNo("");
+			rideDetailsModel.setDriverName("");
+			rideDetailsModel.setDriverNumber("");
+			rideDetailsModel.setCarNumber("");
+			rideDetailsModel.setCabName("");
 
-			mainIntent.putExtra("BookingRefNo", "");
-			mainIntent.putExtra("DriverName", "");
-			mainIntent.putExtra("DriverNumber", "");
-			mainIntent.putExtra("CarNumber", "");
+			mainIntent.putExtra("RideDetailsModel",
+					(new Gson()).toJson(rideDetailsModel));
+
+			// mainIntent.putExtra("CabId", CabId);
+			// mainIntent.putExtra("MobileNumber", MobileNumberstr);
+			// mainIntent.putExtra("OwnerName", OwnerName);
+			// SharedPreferences mPrefs111 = getSharedPreferences("userimage",
+			// 0);
+			// String imgname = mPrefs111.getString("imgname", "");
+			// mainIntent.putExtra("OwnerImage", imgname);
+			// mainIntent.putExtra("FromLocation", FromLocation);
+			// mainIntent.putExtra("ToLocation", ToLocation);
+			//
+			// mainIntent.putExtra("FromShortName", fromshortname);
+			// mainIntent.putExtra("ToShortName", toshortname);
+			//
+			// mainIntent.putExtra("TravelDate", TravelDate);
+			// mainIntent.putExtra("TravelTime", TravelTime);
+			// mainIntent.putExtra("Seats", Seats);
+			// mainIntent.putExtra("RemainingSeats", Seats);
+			// mainIntent.putExtra("Seat_Status", "0/" + Seats);
+			// mainIntent.putExtra("Distance", distancetext);
+			// mainIntent.putExtra("OpenTime", "");
+			// mainIntent.putExtra("CabStatus", "A");
+			// mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+			//
+			// mainIntent.putExtra("BookingRefNo", "");
+			// mainIntent.putExtra("DriverName", "");
+			// mainIntent.putExtra("DriverNumber", "");
+			// mainIntent.putExtra("CarNumber", "");
+			// mainIntent.putExtra("CabName", "");
+
+			// mainIntent.putExtra("ExpTripDuration",
+			// ExpTripDuration.get(arg2));
 
 			startActivityForResult(mainIntent, 500);
 			overridePendingTransition(R.anim.slide_in_right,
@@ -2290,7 +2259,8 @@ public class ContactsToInviteActivity extends Activity {
 
 	private class ConnectionTaskForReferfriends extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(ContactsToInviteActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				ContactsToInviteActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -2376,7 +2346,8 @@ public class ContactsToInviteActivity extends Activity {
 	// /////////////////////////
 	private class ConnectionTaskForOwnerInviteFriends extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(ContactsToInviteActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				ContactsToInviteActivity.this);
 
 		@Override
 		protected void onPreExecute() {

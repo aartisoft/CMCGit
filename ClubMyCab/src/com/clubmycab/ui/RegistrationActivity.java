@@ -30,6 +30,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -47,10 +48,12 @@ public class RegistrationActivity extends Activity {
 	TextView registerheadertxt;
 	TextView fullnametxt;
 	TextView passwordtxt;
+	TextView emailtxt;
 	TextView confirmpasswordtxt;
-	TextView mobiletxt;
+	TextView mobiletxt, textViewTNCLink;
 
 	EditText fullnameedittext;
+	EditText emailedittext;
 	EditText passwordedittext;
 	EditText confirmpasswordedittext;
 	EditText mobileedittext;
@@ -63,8 +66,7 @@ public class RegistrationActivity extends Activity {
 	String FullName;
 
 	String result;
-
-	
+	private String mobNo = "";
 	boolean exceptioncheck = false;
 
 	@Override
@@ -97,21 +99,33 @@ public class RegistrationActivity extends Activity {
 			return;
 		}
 
-		
+		try {
+
+			mobNo = getIntent().getExtras().getString("mob");
+
+		} catch (Exception e) {
+			mobNo = "";
+
+		}
 
 		registerheadertxt = (TextView) findViewById(R.id.registerheadertxt);
 		fullnametxt = (TextView) findViewById(R.id.fullnametxt);
+		emailtxt = (TextView) findViewById(R.id.emailtxt);
 		passwordtxt = (TextView) findViewById(R.id.passwordtxt);
 		confirmpasswordtxt = (TextView) findViewById(R.id.confirmpasswordtxt);
 		mobiletxt = (TextView) findViewById(R.id.mobiletxt);
 
 		fullnameedittext = (EditText) findViewById(R.id.fullnameedittext);
+		emailedittext = (EditText) findViewById(R.id.emailedittext);
 		passwordedittext = (EditText) findViewById(R.id.passwordedittext);
 		confirmpasswordedittext = (EditText) findViewById(R.id.confirmpasswordedittext);
 		mobileedittext = (EditText) findViewById(R.id.mobileedittext);
+		mobileedittext.setText(mobNo);
 		countrycode = (EditText) findViewById(R.id.countrycode);
 
 		registerbtn = (Button) findViewById(R.id.registerbtn);
+		textViewTNCLink = (TextView) findViewById(R.id.textViewTNCLink);
+		textViewTNCLink.setMovementMethod(LinkMovementMethod.getInstance());
 
 		registerheadertxt.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
@@ -124,6 +138,11 @@ public class RegistrationActivity extends Activity {
 		passwordtxt.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
 		passwordedittext.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		emailtxt.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Bold.ttf"));
+		emailedittext.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		confirmpasswordtxt.setTypeface(Typeface.createFromAsset(getAssets(),
@@ -206,58 +225,90 @@ public class RegistrationActivity extends Activity {
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
 
+				} else if (emailedittext.getText().toString().trim().isEmpty()) {
+
+					emailedittext.requestFocus();
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							RegistrationActivity.this);
+					builder.setMessage("Please enter e-mail address");
+					builder.setPositiveButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
+
+				} else if (!emailedittext.getText().toString().trim()
+						.contains("@")
+						|| !emailedittext.getText().toString().trim()
+								.contains(".")) {
+
+					emailedittext.requestFocus();
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							RegistrationActivity.this);
+					builder.setMessage("Please enter a valid e-mail address");
+					builder.setPositiveButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
 				}
 
-				else if (passwordedittext.getText().toString().trim().isEmpty()) {
-
-					passwordedittext.requestFocus();
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							RegistrationActivity.this);
-
-					builder.setMessage("Please enter Password");
-					builder.setPositiveButton("OK", null);
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
-
-				}
-
-				else if (confirmpasswordedittext.getText().toString().trim()
-						.isEmpty()) {
-
-					confirmpasswordedittext.requestFocus();
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							RegistrationActivity.this);
-
-					builder.setMessage("Please re-type the Password");
-					builder.setPositiveButton("OK", null);
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
-
-				} else if (!(passwordedittext.getText().toString().trim()
-						.equals(confirmpasswordedittext.getText().toString()))) {
-
-					confirmpasswordedittext.requestFocus();
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							RegistrationActivity.this);
-
-					builder.setMessage("Password Mismatch");
-					builder.setPositiveButton("OK", null);
-					AlertDialog dialog = builder.show();
-					TextView messageText = (TextView) dialog
-							.findViewById(android.R.id.message);
-					messageText.setGravity(Gravity.CENTER);
-					dialog.show();
-
-				} else {
+				// } else if (passwordedittext.getText().toString().trim()
+				// .isEmpty()) {
+				//
+				// passwordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// RegistrationActivity.this);
+				//
+				// builder.setMessage("Please enter Password");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// }
+				//
+				// else if (confirmpasswordedittext.getText().toString().trim()
+				// .isEmpty()) {
+				//
+				// confirmpasswordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// RegistrationActivity.this);
+				//
+				// builder.setMessage("Please re-type the Password");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// } else if (!(passwordedittext.getText().toString().trim()
+				// .equals(confirmpasswordedittext.getText().toString()))) {
+				//
+				// confirmpasswordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// RegistrationActivity.this);
+				//
+				// builder.setMessage("Password Mismatch");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// }
+				else {
 					// successfull for all
 					if (!isOnline()) {
 
@@ -305,7 +356,8 @@ public class RegistrationActivity extends Activity {
 
 	private class ConnectionTaskForRegister extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(RegistrationActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				RegistrationActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -364,11 +416,21 @@ public class RegistrationActivity extends Activity {
 				editor.putString("MobileNumber", countrycode.getText()
 						.toString().trim()
 						+ mobileedittext.getText().toString().trim());
+				editor.putString("Email", emailedittext.getText().toString().trim());
 				editor.putString("verifyotp", "false");
 				editor.putString("LastRegisteredAppVersion", version);
 				editor.commit();
 
-				Intent i = new Intent(RegistrationActivity.this, OTPActivity.class);
+				Intent i = new Intent(RegistrationActivity.this,
+						OTPActivity.class);
+				i.putExtra("from", "reg");
+				i.putExtra("mobnum", countrycode.getText().toString().trim()
+						+ mobileedittext.getText().toString().trim());
+
+				i.putExtra("fullname", fullnameedittext.getText().toString()
+						.trim());
+				i.putExtra("regid", "");
+
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(i);
@@ -378,7 +440,7 @@ public class RegistrationActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						RegistrationActivity.this);
 
-				builder.setMessage("Mobile Number Already Exists. Please try with different Mobile Number");
+				builder.setMessage("Mobile number already exists. Please try to login or register with a different mobile number");
 				builder.setPositiveButton("OK", null);
 				AlertDialog dialog = builder.show();
 				TextView messageText = (TextView) dialog
@@ -400,7 +462,7 @@ public class RegistrationActivity extends Activity {
 
 			GoogleCloudMessaging gcm = null;
 			String regid = null;
-			String PROJECT_NUMBER = "145246375713";
+			String PROJECT_NUMBER = GlobalVariables.GCMProjectKey;
 
 			try {
 				if (gcm == null) {
@@ -415,26 +477,38 @@ public class RegistrationActivity extends Activity {
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl + "/userregister.php";
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/userregister.php";
 
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair FullNameBasicNameValuePair = new BasicNameValuePair(
 					"FullName", fullnameedittext.getText().toString().trim());
+			// BasicNameValuePair PasswordBasicNameValuePair = new
+			// BasicNameValuePair(
+			// "Password", passwordedittext.getText().toString().trim());
 			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
-					"Password", passwordedittext.getText().toString().trim());
+					"Password", "");
+
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", countrycode.getText().toString().trim()
 							+ mobileedittext.getText().toString().trim());
 			BasicNameValuePair DeviceTokenBasicNameValuePair = new BasicNameValuePair(
 					"DeviceToken", regid);
 			BasicNameValuePair EmailBasicNameValuePair = new BasicNameValuePair(
-					"Email", "");
+					"Email", emailedittext.getText().toString().trim());
 			BasicNameValuePair GenderBasicNameValuePair = new BasicNameValuePair(
 					"Gender", "");
 			BasicNameValuePair DOBBasicNameValuePair = new BasicNameValuePair(
 					"DOB", "");
 			BasicNameValuePair platformBasicNameValuePair = new BasicNameValuePair(
 					"Platform", "A");
+
+			Log.d("MobileNumber", countrycode.getText().toString().trim()
+					+ mobileedittext.getText().toString().trim());
+
+			Log.d("DeviceToken", regid);
+
+			Log.d("Email", emailedittext.getText().toString().trim());
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(FullNameBasicNameValuePair);

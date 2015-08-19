@@ -171,12 +171,14 @@
                                 android:layout_height="wrap_content" >
 
                                 <AutoCompleteTextView
-                                    android:id="@+id/from_places"
+                                    android:id="@+id/from_places1"
                                     android:layout_width="fill_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_toLeftOf="@+id/clearedittextimg"
                                     android:ellipsize="start"
                                     android:singleLine="true"
+                                    android:editable="false"
+                        android:focusable="false"
                                     android:textSize="15sp" />
 
                                 <ImageView

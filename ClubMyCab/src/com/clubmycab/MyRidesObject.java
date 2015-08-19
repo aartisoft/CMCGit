@@ -184,5 +184,33 @@ public class MyRidesObject {
 	private String DriverName;
 	private String DriverNumber;
 	private String CarNumber;
+	
+	private String CabName;
+	private String status;
+	private String ExpTripDuration;
+
+	public String getCabName() {
+		return CabName;
+	}
+
+	public void setCabName(String cabName) {
+		CabName = cabName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getExpTripDuration() {
+		return ExpTripDuration;
+	}
+
+	public void setExpTripDuration(String expTripDuration) {
+		ExpTripDuration = expTripDuration;
+	}
 
 }

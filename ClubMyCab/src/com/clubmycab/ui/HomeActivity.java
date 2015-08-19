@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -18,9 +19,13 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +40,11 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -44,12 +54,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Base64;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -58,44 +74,80 @@ import android.widget.Toast;
 
 import com.clubmycab.BookaCabFragmentActivity;
 import com.clubmycab.CircularImageView;
-import com.clubmycab.InviteFragmentActivity;
 import com.clubmycab.R;
-import com.clubmycab.ShareLocationFragmentActivity;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
+import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
+import com.clubmycab.xmlhandler.FetchUnreadNotificationCountHandler;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.navdrawer.SimpleSideDrawer;
+import com.viewpagerindicator.CirclePageIndicator;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends FragmentActivity implements
+		AsyncTaskResultListener, LocationListener, OnClickListener {
 
-	CircularImageView profilepic;
-	TextView username;
-	ImageView notificationimg;
+	private CircularImageView profilepic;
+	private TextView username;
+	private ImageView notificationimg;
 
-	LinearLayout homeclubmycabll;
-	LinearLayout homebookacabll;
-	LinearLayout homehereiamll;
+	private LinearLayout homeclubmycabll;
+	private LinearLayout homebookacabll;
+	// LinearLayout homehereiamll;
+	private LinearLayout homebtnsll, officetohomell, hometoofficell;
 
-	ImageView sidemenu;
+	private ImageView sidemenu;
 	private SimpleSideDrawer mNav;
 
-	CircularImageView drawerprofilepic;
-	TextView drawerusername;
+	private CircularImageView drawerprofilepic;
+	private TextView drawerusername;
 
-	TextView myprofile;
-	TextView myrides;
-	TextView bookacab;
-	TextView sharemylocation;
-	TextView myclubs;
-	TextView sharethisapp;
-	TextView mypreferences;
-	TextView about;
+	private TextView myprofile;
+	private TextView myrides;
+	private TextView bookacab;
+	private TextView sharemylocation;
+	private TextView myclubs;
+	private TextView sharethisapp;
+	private TextView mypreferences;
+	private TextView about;
+
+	AutoCompleteTextView from_places;
+	AutoCompleteTextView to_places;
+	private Button threedotsfrom;
+	private Button threedotsto;
+	private ImageView clearedittextimgfrom;
+	private ImageView clearedittextimgto;
+	private RelativeLayout fromrelative;
+	private RelativeLayout contentrelativehomepage;
+	private TextView fromlocation;
+	private Button fromdone;
+	private Button cancel;
+	private GoogleMap myMap;
+	String whichdotclick;
+	LocationManager locationManager;
+	Location mycurrentlocationobject;
+
+	Address fAddress, tAddress;
 
 	String FullName;
-	String MobileNumber;
+	public static String MobileNumber;
 
 	Bitmap mainbmp = null;
 
@@ -121,15 +173,78 @@ public class HomeActivity extends Activity {
 	AppEventsLogger logger;
 	boolean exceptioncheck = false;
 
+	// flag for refresh page in onresume
+	boolean isCallresetIntentParams = false;
+	boolean isRunning = false;
+	boolean playAnimation = true;
+	float FromToMinDestance = 2000;
+
+	// String StartAddLatLngIntent;
+	// String EndAddLatLngIntent;
+	// String StartAddShortNameIntent;
+	// String EndAddShortNameIntent;
+
+	AddressModel addressModelFrom, addressModelTo, home, work;
+
+	Boolean flagchk;
+	String fromshortname;
+	String toshortname;
+	LatLng invitemapcenter;
+	private Context mcontext;
+	private String poolresponse, rideInvitationsResponse = "";
+	// public ArrayList<String> CabId = new ArrayList<String>();
+	// public ArrayList<String> MobileNumberList = new ArrayList<String>();
+	// public ArrayList<String> OwnerName = new ArrayList<String>();
+	// public ArrayList<String> FromLocation = new ArrayList<String>();
+	// public ArrayList<String> ToLocation = new ArrayList<String>();
+	// public ArrayList<String> FromShortName = new ArrayList<String>();
+	// public ArrayList<String> ToShortName = new ArrayList<String>();
+	// public ArrayList<String> TravelDate = new ArrayList<String>();
+	// public ArrayList<String> TravelTime = new ArrayList<String>();
+	// public ArrayList<String> Seats = new ArrayList<String>();
+	// public ArrayList<String> RemainingSeats = new ArrayList<String>();
+	// public ArrayList<String> Seat_Status = new ArrayList<String>();
+	// public ArrayList<String> Distance = new ArrayList<String>();
+	// public ArrayList<String> OpenTime = new ArrayList<String>();
+	// public ArrayList<String> CabStatus = new ArrayList<String>();
+	// public ArrayList<String> imagename = new ArrayList<String>();
+	// public ArrayList<String> BookingRefNo = new ArrayList<String>();
+	// public ArrayList<String> DriverName = new ArrayList<String>();
+	// public ArrayList<String> DriverNumber = new ArrayList<String>();
+	// public ArrayList<String> CarNumber = new ArrayList<String>();
+	// public ArrayList<String> CabName = new ArrayList<String>();
+	// public ArrayList<String> ExpTripDuration = new ArrayList<String>();
+	// public ArrayList<String> status = new ArrayList<String>();
+	public static ArrayList<RideDetailsModel> arrayRideDetailsModels = new ArrayList<RideDetailsModel>();
+
+	public static ViewPager viewPagerHome;
+	private FragmentStatePagerAdapter mFragmentStatePagerAdapter;
+	private TextView tvViewpagerHeading;
+	private CirclePageIndicator circlePageIndicator;
+	private View viewHome;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_page);
+		mcontext = this;
+		isCallresetIntentParams = false;
+		SharedPreferences mPrefs1 = getSharedPreferences("QuitApplication", 0);
+		boolean shouldQuitApp = mPrefs1.getBoolean("quitapplication", false);
+		if (shouldQuitApp) {
+
+			SharedPreferences.Editor editor = mPrefs1.edit();
+			editor.putBoolean("quitapplication", false);
+			editor.commit();
+
+			finish();
+		}
 
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					HomeActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -151,9 +266,10 @@ public class HomeActivity extends Activity {
 		}
 
 		// ////////////////////
-
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(HomeActivity.this);
-		tracker = analytics.newTracker("UA-63477985-1");
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(HomeActivity.this);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("HomePage");
@@ -170,7 +286,7 @@ public class HomeActivity extends Activity {
 		// .setScreenName("help popup dialog").build());
 
 		// ///////////////////
-
+		tvViewpagerHeading = (TextView) findViewById(R.id.tvViewpagerHeading);
 		homepagerl = (RelativeLayout) findViewById(R.id.homepagerl);
 		homepagerl.setOnClickListener(new OnClickListener() {
 
@@ -182,203 +298,18 @@ public class HomeActivity extends Activity {
 			}
 		});
 
-		
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
+		drawer.createDrawer();
+		GlobalVariables.ActivityName = "HomeActivity";
 
-		mNav = new SimpleSideDrawer(this);
-		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-
-		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				mNav.toggleLeftDrawer();
-
-			}
-		});
-
-		myprofile = (TextView) findViewById(R.id.myprofile);
-		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myrides = (TextView) findViewById(R.id.myrides);
-		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		bookacab = (TextView) findViewById(R.id.bookacab);
-		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myclubs = (TextView) findViewById(R.id.myclubs);
-		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		mypreferences = (TextView) findViewById(R.id.mypreferences);
-		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		about = (TextView) findViewById(R.id.about);
-		about.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-
-		myprofile.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyProfile Click")
-						.setAction("MyProfile Click")
-						.setLabel("MyProfile Click").build());
-
-				Intent mainIntent = new Intent(HomeActivity.this, MyProfileActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myrides.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyRides Click")
-						.setAction("MyRides Click").setLabel("MyRides Click")
-						.build());
-
-				Intent mainIntent = new Intent(HomeActivity.this, MyRidesActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		bookacab.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("BookaCab Click")
-						.setAction("BookaCab Click").setLabel("BookaCab Click")
-						.build());
-
-				Intent mainIntent = new Intent(HomeActivity.this, BookaCabFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharemylocation.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareLocation Click")
-						.setAction("ShareLocation Click")
-						.setLabel("ShareLocation Click").build());
-
-				Intent mainIntent = new Intent(HomeActivity.this,
-						ShareLocationFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myclubs.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyClubs Click")
-						.setAction("MyClubs Click").setLabel("MyClubs Click")
-						.build());
-
-				Intent mainIntent = new Intent(HomeActivity.this, MyClubsActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharethisapp.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareApp Click")
-						.setAction("ShareApp Click").setLabel("ShareApp Click")
-						.build());
-
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent
-						.putExtra(
-								Intent.EXTRA_TEXT,
-								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-
-			}
-		});
-
-		mypreferences.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("Settings Click")
-						.setAction("Settings Click").setLabel("Settings Click")
-						.build());
-
-				Intent mainIntent = new Intent(HomeActivity.this,
-						SettingActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		about.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("About Click").setAction("About Click")
-						.setLabel("About Click").build());
-
-				Intent mainIntent = new Intent(HomeActivity.this,
-						AboutPagerFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		homeclubmycabll = (LinearLayout) findViewById(R.id.homeclubmycabll);
-		homebookacabll = (LinearLayout) findViewById(R.id.homebookacabll);
-		homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
+		// homeclubmycabll = (LinearLayout) findViewById(R.id.homeclubmycabll);
+		// homebookacabll = (LinearLayout) findViewById(R.id.homebookacabll);
+		// homehereiamll = (LinearLayout) findViewById(R.id.homehereiamll);
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
 		drawerprofilepic = (CircularImageView) findViewById(R.id.drawerprofilepic);
+		viewHome = findViewById(R.id.viewHome);
 
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
@@ -396,104 +327,149 @@ public class HomeActivity extends Activity {
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
 
-		homeclubmycabll.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
+		// homeclubmycabll.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// Animation animScale = AnimationUtils.loadAnimation(
+		// HomeActivity.this, R.anim.button_click_anim);
+		// homeclubmycabll.startAnimation(animScale);
+		//
+		// Handler mHandler2 = new Handler();
+		// Runnable mRunnable2 = new Runnable() {
+		// @Override
+		// public void run() {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ClubMyCab Click")
+		// .setAction("ClubMyCab Click")
+		// .setLabel("ClubMyCab Click").build());
+		//
+		// logger.logEvent("HomePage ClubMyCab Click");
+		//
+		// Log.d("HomeActivity",
+		// "homeclubmycabll click StartAddLatLngIntent : "
+		// + StartAddLatLngIntent
+		// + " EndAddLatLngIntent : "
+		// + EndAddLatLngIntent);
+		//
+		// Intent mainIntent = new Intent(HomeActivity.this,
+		// InviteFragmentActivity.class);
+		// if (!StartAddLatLngIntent.isEmpty()
+		// && !EndAddLatLngIntent.isEmpty()) {
+		// mainIntent.putExtra("StartAddLatLng",
+		// StartAddLatLngIntent);
+		// mainIntent.putExtra("EndAddLatLng",
+		// EndAddLatLngIntent);
+		// mainIntent.putExtra("FromShortName",
+		// StartAddShortNameIntent);
+		// mainIntent.putExtra("ToShortName",
+		// EndAddShortNameIntent);
+		// StartAddLatLngIntent = "";
+		// EndAddLatLngIntent = "";
+		// StartAddShortNameIntent = "";
+		// EndAddShortNameIntent = "";
+		//
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// } else {
+		// Toast.makeText(HomeActivity.this,
+		// "Please enter both from & to locations",
+		// Toast.LENGTH_LONG).show();
+		// }
+		//
+		// }
+		// };
+		// mHandler2.postDelayed(mRunnable2, 500);
+		//
+		// }
+		// });
+		//
+		// homebookacabll.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// Animation animScale = AnimationUtils.loadAnimation(
+		// HomeActivity.this, R.anim.button_click_anim);
+		// homebookacabll.startAnimation(animScale);
+		//
+		// Handler mHandler2 = new Handler();
+		// Runnable mRunnable2 = new Runnable() {
+		// @Override
+		// public void run() {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("Book A Cab (HomePage)")
+		// .setAction("BookaCab Click")
+		// .setLabel("BookaCab Click").build());
+		//
+		// logger.logEvent("HomePage BookaCab Click");
+		//
+		// Intent mainIntent = new Intent(HomeActivity.this,
+		// BookaCabFragmentActivity.class);
+		// if (!StartAddLatLngIntent.isEmpty()
+		// && !EndAddLatLngIntent.isEmpty()) {
+		// mainIntent.putExtra("StartAddLatLng",
+		// StartAddLatLngIntent);
+		// mainIntent.putExtra("EndAddLatLng",
+		// EndAddLatLngIntent);
+		// mainIntent.putExtra("FromShortName",
+		// StartAddShortNameIntent);
+		// mainIntent.putExtra("ToShortName",
+		// EndAddShortNameIntent);
+		// StartAddLatLngIntent = "";
+		// EndAddLatLngIntent = "";
+		// StartAddShortNameIntent = "";
+		// EndAddShortNameIntent = "";
+		//
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		// } else {
+		// Toast.makeText(HomeActivity.this,
+		// "Please enter both from & to locations",
+		// Toast.LENGTH_LONG).show();
+		// }
+		// }
+		// };
+		// mHandler2.postDelayed(mRunnable2, 500);
+		//
+		// }
+		// });
 
-				Animation animScale = AnimationUtils.loadAnimation(
-						HomeActivity.this, R.anim.button_click_anim);
-				homeclubmycabll.startAnimation(animScale);
-
-				Handler mHandler2 = new Handler();
-				Runnable mRunnable2 = new Runnable() {
-					@Override
-					public void run() {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("ClubMyCab Click")
-								.setAction("ClubMyCab Click")
-								.setLabel("ClubMyCab Click").build());
-
-						logger.logEvent("HomePage ClubMyCab Click");
-
-						Intent mainIntent = new Intent(HomeActivity.this,
-								InviteFragmentActivity.class);
-						startActivityForResult(mainIntent, 500);
-						overridePendingTransition(R.anim.slide_in_right,
-								R.anim.slide_out_left);
-
-					}
-				};
-				mHandler2.postDelayed(mRunnable2, 500);
-
-			}
-		});
-
-		homebookacabll.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-
-				Animation animScale = AnimationUtils.loadAnimation(
-						HomeActivity.this, R.anim.button_click_anim);
-				homebookacabll.startAnimation(animScale);
-
-				Handler mHandler2 = new Handler();
-				Runnable mRunnable2 = new Runnable() {
-					@Override
-					public void run() {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("Book A Cab (HomePage)")
-								.setAction("BookaCab Click")
-								.setLabel("BookaCab Click").build());
-
-						logger.logEvent("HomePage BookaCab Click");
-
-						Intent mainIntent = new Intent(HomeActivity.this,
-								BookaCabFragmentActivity.class);
-						startActivityForResult(mainIntent, 500);
-						overridePendingTransition(R.anim.slide_in_right,
-								R.anim.slide_out_left);
-
-					}
-				};
-				mHandler2.postDelayed(mRunnable2, 500);
-
-			}
-		});
-
-		homehereiamll.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-
-				Animation animScale = AnimationUtils.loadAnimation(
-						HomeActivity.this, R.anim.button_click_anim);
-				homehereiamll.startAnimation(animScale);
-
-				Handler mHandler2 = new Handler();
-				Runnable mRunnable2 = new Runnable() {
-					@Override
-					public void run() {
-
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("ShareLocation (HomePage)")
-								.setAction("ShareLocation (HomePage)")
-								.setLabel("ShareLocation (HomePage)").build());
-
-						logger.logEvent("HomePage ShareLocation Click");
-
-						Intent mainIntent = new Intent(HomeActivity.this,
-								ShareLocationFragmentActivity.class);
-						startActivityForResult(mainIntent, 500);
-						overridePendingTransition(R.anim.slide_in_right,
-								R.anim.slide_out_left);
-
-					}
-				};
-				mHandler2.postDelayed(mRunnable2, 500);
-
-			}
-		});
+		// homehereiamll.setOnClickListener(new View.OnClickListener() {
+		// @Override
+		// public void onClick(View arg0) {
+		//
+		// Animation animScale = AnimationUtils.loadAnimation(
+		// HomeActivity.this, R.anim.button_click_anim);
+		// homehereiamll.startAnimation(animScale);
+		//
+		// Handler mHandler2 = new Handler();
+		// Runnable mRunnable2 = new Runnable() {
+		// @Override
+		// public void run() {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareLocation (HomePage)")
+		// .setAction("ShareLocation (HomePage)")
+		// .setLabel("ShareLocation (HomePage)").build());
+		//
+		// logger.logEvent("HomePage ShareLocation Click");
+		//
+		// Intent mainIntent = new Intent(HomeActivity.this,
+		// ShareLocationFragmentActivity.class);
+		// startActivityForResult(mainIntent, 500);
+		// overridePendingTransition(R.anim.slide_in_right,
+		// R.anim.slide_out_left);
+		//
+		// }
+		// };
+		// mHandler2.postDelayed(mRunnable2, 500);
+		//
+		// }
+		// });
 
 		profilepic.setOnClickListener(new View.OnClickListener() {
 
@@ -518,12 +494,27 @@ public class HomeActivity extends Activity {
 			}
 		});
 
-		// ///////////////
+		// // ///////////////
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
+
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/FetchUnreadNotificationCount.php";
+		;
+		String params = "MobileNumber=" + MobileNumber;
+		new GlobalAsyncTask(this, endpoint, params,
+				new FetchUnreadNotificationCountHandler(), this, false,
+				"FetchUnreadNotificationCount", false);
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForreadunreadnotification()
+			new ConnectionTaskForFetchClubs()
 					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} else {
-			new ConnectionTaskForreadunreadnotification().execute();
+			new ConnectionTaskForFetchClubs().execute();
 		}
 
 		// ///////////////
@@ -567,12 +558,910 @@ public class HomeActivity extends Activity {
 			}
 		}
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForFetchMyClubs()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// homebtnsll = (LinearLayout) findViewById(R.id.homebtnsll);
+		// homebtnsll.setVisibility(View.GONE);
+
+		hometoofficell = (LinearLayout) findViewById(R.id.hometoofficell);
+		hometoofficell.setOnClickListener(new View.OnClickListener() {
+
+			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+			@Override
+			public void onClick(View v) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Home to office homepage")
+						.setAction("Home to office homepage")
+						.setLabel("Home to office homepage").build());
+
+				// Flag set for refresh address field
+				isCallresetIntentParams = false;
+				Log.d("HomeActivity", "home : " + home + " work : " + work);
+
+				if (home != null && work != null) {
+					resetIntentParams(true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+						hometoofficell.setBackground(getResources()
+								.getDrawable(R.drawable.border_selected));
+						officetohomell.setBackground(getResources()
+								.getDrawable(R.drawable.border));
+					} else {
+						hometoofficell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border_selected));
+						officetohomell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border));
+					}
+
+					addressModelFrom = home;
+					addressModelTo = work;
+
+					// homebtnsll.setVisibility(View.VISIBLE);
+					showButtonsDialog();
+				} else {
+					showNoFavoritesDialog();
+				}
+			}
+		});
+
+		officetohomell = (LinearLayout) findViewById(R.id.officetohomell);
+		officetohomell.setOnClickListener(new View.OnClickListener() {
+
+			@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+			@Override
+			public void onClick(View v) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Office to home homepage")
+						.setAction("Office to home homepage")
+						.setLabel("Office to home homepage").build());
+
+				// Flag set for refresh address field
+				isCallresetIntentParams = false;
+				if (home != null && work != null) {
+					resetIntentParams(true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+						officetohomell.setBackground(getResources()
+								.getDrawable(R.drawable.border_selected));
+						hometoofficell.setBackground(getResources()
+								.getDrawable(R.drawable.border));
+					} else {
+						officetohomell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border_selected));
+						hometoofficell.setBackgroundDrawable(getResources()
+								.getDrawable(R.drawable.border));
+					}
+
+					addressModelFrom = work;
+					addressModelTo = home;
+
+					// homebtnsll.setVisibility(View.VISIBLE);
+					showButtonsDialog();
+				} else {
+					showNoFavoritesDialog();
+				}
+			}
+		});
+
+		from_places = (AutoCompleteTextView) findViewById(R.id.from_places);
+		from_places.setOnClickListener(this);
+		// Commented for show list favorites on other page
+
+		/*
+		 * from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+		 * R.layout.list_item));
+		 * 
+		 * 
+		 * from_places.setOnTouchListener(new View.OnTouchListener() { public
+		 * boolean onTouch(View view, MotionEvent motionEvent) {
+		 * 
+		 * resetIntentParams(false);
+		 * 
+		 * addressModelFrom = null;
+		 * 
+		 * if (to_places.getText().toString().isEmpty() && tAddress == null) {
+		 * addressModelTo = null; }
+		 * 
+		 * return false; } });
+		 * 
+		 * from_places .setOnEditorActionListener(new
+		 * TextView.OnEditorActionListener() {
+		 * 
+		 * @Override public boolean onEditorAction(TextView v, int actionId,
+		 * KeyEvent event) { if (event != null && (event.getKeyCode() ==
+		 * KeyEvent.KEYCODE_ENTER)) { dismissKeyboard(); }
+		 * 
+		 * return false; } });
+		 * 
+		 * from_places .setOnItemClickListener(new
+		 * AdapterView.OnItemClickListener() {
+		 * 
+		 * @Override public void onItemClick(AdapterView<?> parent, View view,
+		 * int position, long id) { fAddress = null; // reset previous
+		 * 
+		 * dismissKeyboard();
+		 * 
+		 * fAddress = geocodeAddress(from_places.getText() .toString()); if
+		 * (fAddress == null) { Toast.makeText( HomeActivity.this,
+		 * "Could not locate the address, please try using the map or a different address"
+		 * , Toast.LENGTH_LONG).show(); } else { addressModelFrom = new
+		 * AddressModel(); addressModelFrom.setAddress(fAddress);
+		 * addressModelFrom.setShortname(fromshortname);
+		 * addressModelFrom.setLongname(from_places.getText() .toString());
+		 * 
+		 * if (fAddress != null && tAddress != null) { //
+		 * homebtnsll.setVisibility(View.VISIBLE); showButtonsDialog(); } } }
+		 * });
+		 */
+
+		clearedittextimgfrom = (ImageView) findViewById(R.id.clearedittextimgfrom);
+		clearedittextimgfrom.setVisibility(View.GONE);
+
+		to_places = (AutoCompleteTextView) findViewById(R.id.to_places);
+		to_places.setOnClickListener(this);
+		// to_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+		// R.layout.list_item));
+		//
+		// to_places.setOnTouchListener(new View.OnTouchListener() {
+		// public boolean onTouch(View view, MotionEvent motionEvent) {
+		//
+		// resetIntentParams(false);
+		//
+		// addressModelTo = null;
+		//
+		// if (from_places.getText().toString().isEmpty()
+		// && fAddress == null) {
+		// addressModelFrom = null;
+		// }
+		//
+		// return false;
+		// }
+		// });
+		// to_places
+		// .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		//
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId,
+		// KeyEvent event) {
+		// if (event != null
+		// && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+		// dismissKeyboard();
+		// }
+		//
+		// return false;
+		// }
+		// });
+		// to_places.setOnItemClickListener(new
+		// AdapterView.OnItemClickListener() {
+		//
+		// @Override
+		// public void onItemClick(AdapterView<?> parent, View view,
+		// int position, long id) {
+		// // Log.d(TAG, "mAutoFrom onItemClick");
+		// tAddress = null; // reset previous
+		//
+		// dismissKeyboard();
+		//
+		// tAddress = geocodeAddress(to_places.getText().toString());
+		// if (tAddress == null) {
+		// Toast.makeText(
+		// HomeActivity.this,
+		// "Could not locate the address, please try using the map or a different address",
+		// Toast.LENGTH_LONG).show();
+		// } else {
+		// addressModelTo = new AddressModel();
+		// addressModelTo.setAddress(tAddress);
+		// addressModelTo.setShortname(toshortname);
+		// addressModelTo.setLongname(to_places.getText().toString());
+		//
+		// if (fAddress != null && tAddress != null) {
+		// // homebtnsll.setVisibility(View.VISIBLE);
+		// showButtonsDialog();
+		// }
+		// }
+		//
+		// }
+		// });
+
+		clearedittextimgto = (ImageView) findViewById(R.id.clearedittextimgto);
+		clearedittextimgto.setVisibility(View.GONE);
+
+		// from_places.addTextChangedListener(new TextWatcher() {
+		//
+		// @Override
+		// public void onTextChanged(CharSequence cs, int arg1, int arg2,
+		// int arg3) {
+		// // When user changed the Text
+		//
+		// String text = from_places.getText().toString().trim();
+		// if (text.isEmpty() || text.equalsIgnoreCase("")) {
+		// clearedittextimgfrom.setVisibility(View.GONE);
+		// } else {
+		// clearedittextimgfrom.setVisibility(View.VISIBLE);
+		// }
+		//
+		// Log.d("from onTextChanged", "from onTextChanged");
+		//
+		// if (flagchk) {
+		// flagchk = false;
+		// } else {
+		// fromshortname = MapUtilityMethods.getaddressfromautoplace(
+		// HomeActivity.this, from_places.getText().toString()
+		// .trim());
+		// }
+		// }
+		//
+		// @Override
+		// public void beforeTextChanged(CharSequence arg0, int arg1,
+		// int arg2, int arg3) {
+		// // TODO Auto-generated method stub
+		// }
+		//
+		// @Override
+		// public void afterTextChanged(Editable arg0) {
+		// // TODO Auto-generated method stub
+		// }
+		// });
+		//
+		// to_places.addTextChangedListener(new TextWatcher() {
+		//
+		// @Override
+		// public void onTextChanged(CharSequence cs, int arg1, int arg2,
+		// int arg3) {
+		// // When user changed the Text
+		//
+		// String text = to_places.getText().toString().trim();
+		// if (text.isEmpty() || text.equalsIgnoreCase("")) {
+		// clearedittextimgto.setVisibility(View.GONE);
+		// } else {
+		// clearedittextimgto.setVisibility(View.VISIBLE);
+		// }
+		//
+		// Log.d("to onTextChanged", "to onTextChanged");
+		//
+		// if (flagchk) {
+		// flagchk = false;
+		// } else {
+		// toshortname = MapUtilityMethods.getaddressfromautoplace(
+		// HomeActivity.this, to_places.getText().toString()
+		// .trim());
+		// }
+		// }
+		//
+		// @Override
+		// public void beforeTextChanged(CharSequence arg0, int arg1,
+		// int arg2, int arg3) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		//
+		// @Override
+		// public void afterTextChanged(Editable arg0) {
+		// // TODO Auto-generated method stub
+		// }
+		// });
+
+		clearedittextimgfrom.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				// from_places.setText("");
+				fAddress = null;
+				fromshortname = "";
+			}
+		});
+
+		// clearedittextimgto.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		//
+		// //to_places.setText("");
+		// // tAddress = null;
+		// toshortname = "";
+		// }
+		// });
+
+		flagchk = true;
+
+		threedotsfrom = (Button) findViewById(R.id.threedotsfrom);
+		threedotsfrom.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		threedotsto = (Button) findViewById(R.id.threedotsto);
+		threedotsto.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		fromrelative = (RelativeLayout) findViewById(R.id.fromrelative);
+		contentrelativehomepage = (RelativeLayout) findViewById(R.id.contentrelativehomepage);
+
+		fromlocation = (TextView) findViewById(R.id.fromlocation);
+		fromdone = (Button) findViewById(R.id.fromdone);
+
+		fromlocation.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Bold.ttf"));
+		fromdone.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		cancel = (Button) findViewById(R.id.cancel);
+		cancel.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		// Getting Google Play availability status
+		int status = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getBaseContext());
+
+		// Showing status
+		if (status != ConnectionResult.SUCCESS) { // Google Play Services are
+													// not available
+
+			int requestCode = 10;
+			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(status, this,
+					requestCode);
+			dialog.show();
+
 		} else {
-			new ConnectionTaskForFetchMyClubs().execute();
+			myMap = ((SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.frommap)).getMap();
+
+			myMap.setMyLocationEnabled(true);
+
+			myMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+				@Override
+				public void onCameraChange(CameraPosition cameraPosition) {
+
+					invitemapcenter = cameraPosition.target;
+
+					String address = MapUtilityMethods.getAddress(
+							HomeActivity.this, invitemapcenter.latitude,
+							invitemapcenter.longitude);
+					Log.d("address", "" + address);
+
+					fromlocation.setText(address);
+
+				}
+			});
 		}
+		// from_places.setText("Select Source");
+		fromdone.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (locationManager != null)
+					locationManager.removeUpdates(HomeActivity.this);
+				fromrelative.setVisibility(View.GONE);
+				contentrelativehomepage.setVisibility(View.VISIBLE);
+				String fromlocationname = fromlocation.getText().toString()
+						.trim();
+				flagchk = true;
+				if (whichdotclick.equalsIgnoreCase("fromdot")) {
+
+					LatLng mapfromlatlng = invitemapcenter;
+					fromshortname = MapUtilityMethods.getAddressshort(
+							HomeActivity.this, mapfromlatlng.latitude,
+							mapfromlatlng.longitude);
+
+					fAddress = null; // reset previous
+
+					from_places.setText(fromlocationname);
+
+					String jnd = from_places.getText().toString().trim();
+
+					Geocoder fcoder = new Geocoder(HomeActivity.this);
+					try {
+						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
+								.getFromLocationName(jnd, 50);
+
+						for (Address add : adresses) {
+							// flongitude = (float) add.getLongitude();
+							// flatitude = (float) add.getLatitude();
+							fAddress = add;
+						}
+
+						addressModelFrom = new AddressModel();
+						addressModelFrom.setAddress(fAddress);
+						addressModelFrom.setShortname(fromshortname);
+						addressModelFrom.setLongname(from_places.getText()
+								.toString());
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+
+				else if (whichdotclick.equalsIgnoreCase("todot")) {
+
+					LatLng maptolatlng = invitemapcenter;
+					toshortname = MapUtilityMethods.getAddressshort(
+							HomeActivity.this, maptolatlng.latitude,
+							maptolatlng.longitude);
+
+					tAddress = null; // reset previous
+
+					to_places.setText(fromlocationname);
+
+					String jnd2 = to_places.getText().toString().trim();
+
+					Geocoder tcoder = new Geocoder(HomeActivity.this);
+					try {
+						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
+								.getFromLocationName(jnd2, 50);
+
+						for (Address add : adresses) {
+							// tlongitude = (float) add.getLongitude();
+							// tlatitude = (float) add.getLatitude();
+							tAddress = add;
+						}
+
+						addressModelTo = new AddressModel();
+						addressModelTo.setAddress(tAddress);
+						addressModelTo.setShortname(toshortname);
+						addressModelTo.setLongname(to_places.getText()
+								.toString());
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+
+				if (fAddress != null && tAddress != null) {
+					// homebtnsll.setVisibility(View.VISIBLE);
+					showButtonsDialog();
+				}
+			}
+		});
+
+		cancel.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				fromrelative.setVisibility(View.GONE);
+				contentrelativehomepage.setVisibility(View.VISIBLE);
+			}
+		});
+
+		threedotsfrom.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				// dismissKeyboard();
+
+				if (mycurrentlocationobject == null)
+					mycurrentlocationobject = getLocation();
+
+				// if (mycurrentlocationobject != null) {
+				// onLocationChanged(mycurrentlocationobject);
+				// }
+
+				if (mycurrentlocationobject != null) {
+					whichdotclick = "fromdot";
+
+					double latitude, longitude;
+					if (!from_places.getText().toString().trim().isEmpty()
+							&& fAddress != null) {
+						// Getting latitude of the current location
+						latitude = fAddress.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = fAddress.getLongitude();
+					} else {
+						// Getting latitude of the current location
+						latitude = mycurrentlocationobject.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = mycurrentlocationobject.getLongitude();
+					}
+
+					// Creating a LatLng object for the current location
+					LatLng currentlatLng = new LatLng(latitude, longitude);
+
+					// Showing the current location in Google Map
+					myMap.moveCamera(CameraUpdateFactory
+							.newLatLng(currentlatLng));
+
+					// Zoom in the Google Map
+					myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+					String address = MapUtilityMethods.getAddress(
+							HomeActivity.this, latitude, longitude);
+
+					fromlocation.setText(address);
+
+					fromrelative.setVisibility(View.VISIBLE);
+					contentrelativehomepage.setVisibility(View.GONE);
+				}
+			}
+		});
+
+		threedotsto.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (mycurrentlocationobject == null)
+					mycurrentlocationobject = getLocation();
+
+				// TODO Auto-generated method stub
+				// dismissKeyboard();
+
+				if (mycurrentlocationobject != null) {
+					whichdotclick = "todot";
+
+					double latitude, longitude;
+					if (!to_places.getText().toString().trim().isEmpty()
+							&& tAddress != null) {
+						// Getting latitude of the current location
+						latitude = tAddress.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = tAddress.getLongitude();
+					} else {
+						// Getting latitude of the current location
+						latitude = mycurrentlocationobject.getLatitude();
+
+						// Getting longitude of the current location
+						longitude = mycurrentlocationobject.getLongitude();
+					}
+
+					// Creating a LatLng object for the current location
+					LatLng currentlatLng = new LatLng(latitude, longitude);
+
+					// Showing the current location in Google Map
+					myMap.moveCamera(CameraUpdateFactory
+							.newLatLng(currentlatLng));
+
+					// Zoom in the Google Map
+					myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+					String address = MapUtilityMethods.getAddress(
+							HomeActivity.this, latitude, longitude);
+
+					fromlocation.setText(address);
+
+					fromrelative.setVisibility(View.VISIBLE);
+					contentrelativehomepage.setVisibility(View.GONE);
+
+				}
+			}
+		});
+		setPagger();
+	}
+
+	// Set ViewPagger Adapter
+	private void setPagger() {
+		viewPagerHome = (ViewPager) findViewById(R.id.viewPagerHome);
+
+		// Get Rides
+		mFragmentStatePagerAdapter = new FragmentStatePagerAdapter(
+				getSupportFragmentManager()) {
+
+			@Override
+			public int getCount() {
+				return arrayRideDetailsModels.size();
+			}
+
+			@Override
+			public Fragment getItem(int position) {
+
+				return HomeRidePageFragment.newInstance(arrayRideDetailsModels
+						.get(position));
+
+			}
+
+			@Override
+			public int getItemPosition(Object object) {
+				return PagerAdapter.POSITION_NONE;
+			}
+
+		};
+
+		viewPagerHome.setAdapter(mFragmentStatePagerAdapter);
+
+		String comefrom = getIntent().getStringExtra("comefrom");
+
+		Log.d("MyRidesActivity", "comefrom : " + comefrom);
+		circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicatorHome);
+		circlePageIndicator.setViewPager(viewPagerHome, 0);
+		circlePageIndicator
+				.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+					@Override
+					public void onPageSelected(int position) {
+						// Log.d(TAG,
+						// "circlePageIndicator onPageSelected : " +
+						// position);
+						// mCurrentIndex = position;
+					}
+
+					@Override
+					public void onPageScrolled(int position,
+							float positionOffset, int positionOffsetPixels) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onPageScrollStateChanged(int state) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
+	}
+
+	private void swipeAutomaticViewPagger() {
+
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				int index = viewPagerHome.getCurrentItem();
+
+				if (index < (arrayRideDetailsModels.size() - 1)) {
+					viewPagerHome.setCurrentItem(index + 1);
+
+				} else
+					viewPagerHome.setCurrentItem(0);
+				if (playAnimation)
+
+					swipeAutomaticViewPagger();
+
+			}
+		}, 4000);
+	}
+
+	private void showButtonsDialog() {
+
+		if (addressModelFrom != null && addressModelTo != null) {
+			Location locationA = new Location("Start point");
+
+			locationA.setLatitude(addressModelFrom.getAddress().getLatitude());
+			locationA
+					.setLongitude(addressModelFrom.getAddress().getLongitude());
+
+			Location locationB = new Location("End point");
+
+			locationB.setLatitude(addressModelTo.getAddress().getLatitude());
+			locationB.setLongitude(addressModelTo.getAddress().getLongitude());
+
+			float distance = locationA.distanceTo(locationB);
+
+			if (distance < FromToMinDestance) {
+				new AlertDialog.Builder(HomeActivity.this)
+						.setTitle("")
+						.setMessage(
+								"From and To locations for this trip are too close. Please try with diffrent locations")
+						.setPositiveButton(android.R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// continue with delete
+										dialog.cancel();
+
+									}
+								})
+
+						.setIcon(android.R.drawable.ic_dialog_alert).show();
+			}
+
+			else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						HomeActivity.this);
+				View builderView = (View) getLayoutInflater().inflate(
+						R.layout.dialog_home_page, null);
+
+				builder.setView(builderView);
+				final AlertDialog dialog = builder.create();
+
+				LinearLayout linearLayout = (LinearLayout) builderView
+						.findViewById(R.id.homeclubmycabll);
+				linearLayout.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+						isCallresetIntentParams = false;
+						tracker.send(new HitBuilders.EventBuilder()
+								.setCategory("ClubMyCab Click")
+								.setAction("ClubMyCab Click")
+								.setLabel("ClubMyCab Click").build());
+
+						logger.logEvent("HomePage ClubMyCab Click");
+
+						Log.d("HomeActivity",
+								"homeclubmycabll click addressModelFrom : "
+										+ addressModelFrom.getShortname()
+										+ " addressModelTo : "
+										+ addressModelTo.getShortname());
+
+						Intent mainIntent = new Intent(HomeActivity.this,
+								InviteFragmentActivity.class);
+						if (addressModelFrom != null && addressModelTo != null) {
+
+							Gson gson = new Gson();
+
+							mainIntent.putExtra("StartAddressModel", gson
+									.toJson(addressModelFrom).toString());
+							mainIntent.putExtra("EndAddressModel",
+									gson.toJson(addressModelTo).toString());
+
+							addressModelFrom = null;
+							addressModelTo = null;
+							startActivityForResult(mainIntent, 500);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
+						} else {
+							Toast.makeText(HomeActivity.this,
+									"Please enter both from & to locations",
+									Toast.LENGTH_LONG).show();
+						}
+
+						dialog.dismiss();
+					}
+				});
+
+				linearLayout = (LinearLayout) builderView
+						.findViewById(R.id.homebookacabll);
+				linearLayout.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+						isCallresetIntentParams = false;
+						tracker.send(new HitBuilders.EventBuilder()
+								.setCategory("Book A Cab (HomePage)")
+								.setAction("BookaCab Click")
+								.setLabel("BookaCab Click").build());
+
+						logger.logEvent("HomePage BookaCab Click");
+
+						Intent mainIntent = new Intent(HomeActivity.this,
+								BookaCabFragmentActivity.class);
+						if (addressModelFrom != null && addressModelTo != null) {
+
+							Gson gson = new Gson();
+
+							mainIntent.putExtra("StartAddressModel", gson
+									.toJson(addressModelFrom).toString());
+							mainIntent.putExtra("EndAddressModel",
+									gson.toJson(addressModelTo).toString());
+							addressModelFrom = null;
+							addressModelTo = null;
+
+							startActivityForResult(mainIntent, 500);
+							overridePendingTransition(R.anim.slide_in_right,
+									R.anim.slide_out_left);
+						} else {
+							Toast.makeText(HomeActivity.this,
+									"Please enter both from & to locations",
+									Toast.LENGTH_LONG).show();
+						}
+
+						dialog.dismiss();
+					}
+				});
+
+				dialog.show();
+			}
+		} else {
+			Toast.makeText(HomeActivity.this,
+					"Please enter both from & to locations", Toast.LENGTH_LONG)
+					.show();
+		}
+
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void resetIntentParams(boolean clearAutocomplete) {
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			officetohomell.setBackground(getResources().getDrawable(
+					R.drawable.border));
+			hometoofficell.setBackground(getResources().getDrawable(
+					R.drawable.border));
+		} else {
+			officetohomell.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.border));
+			hometoofficell.setBackgroundDrawable(getResources().getDrawable(
+					R.drawable.border));
+		}
+
+		if (clearAutocomplete) {
+			from_places.setText("");
+			fAddress = null;
+			fromshortname = "";
+
+			to_places.setText("");
+			tAddress = null;
+			toshortname = "";
+
+			addressModelFrom = null;
+			addressModelTo = null;
+		}
+		// else
+		// isCallresetIntentParams=false;
+	}
+
+	private void getWorkHomeAddress() {
+		SharedPreferences mPrefs11111 = getSharedPreferences(
+				"FavoriteLocations", 0);
+		final String favoritelocation = mPrefs11111.getString(
+				"favoritelocation", "");
+		Log.d("HomeActivity", "favoritelocation : " + favoritelocation);
+
+		AddressModel homeAddressModel = null, workAddressModel = null;
+
+		if (!favoritelocation.isEmpty()) {
+
+			Gson gson = new Gson();
+			HashMap<String, String> hashMap = gson.fromJson(favoritelocation,
+					HashMap.class);
+
+			if (hashMap.size() > 0) {
+
+				homeAddressModel = (AddressModel) gson.fromJson(
+						hashMap.get(StringTags.TAG_WHERE_LIVE_KEY),
+						AddressModel.class);
+				workAddressModel = (AddressModel) gson.fromJson(
+						hashMap.get(StringTags.TAG_WHERE_WORK_KEY),
+						AddressModel.class);
+
+				Log.d("HomeActivity", "hashMap : " + hashMap);
+				Log.d("HomeActivity", "homeAddressModel : " + homeAddressModel
+						+ " workAddressModel : " + workAddressModel);
+			}
+		}
+
+		home = homeAddressModel;
+		work = workAddressModel;
+	}
+
+	private void showNoFavoritesDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+		builder.setMessage("You have not saved your home and/or office locations. Save them in favorites to activate these options, would you like to do that now?");
+		builder.setCancelable(false);
+
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent(HomeActivity.this,
+						FavoriteLocationsAcivity.class);
+				intent.putExtra("NotFromRegistration", true);
+				startActivity(intent);
+			}
+		});
+
+		builder.setNegativeButton("Later", null);
+
+		builder.show();
+	}
+
+	private Address geocodeAddress(String addressString) {
+		Address addressReturn = null;
+		Geocoder geocoder = new Geocoder(this);
+		try {
+			ArrayList<Address> arrayList = (ArrayList<Address>) geocoder
+					.getFromLocationName(addressString, 1);
+			Log.d("geocodeAddress", "geocodeAddress : " + arrayList.toString());
+			if (arrayList.size() > 0) {
+				addressReturn = arrayList.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return addressReturn;
+	}
+
+	private void dismissKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus()
+				.getWindowToken(), 0);
 	}
 
 	private void selectImage() {
@@ -605,6 +1494,8 @@ public class HomeActivity extends Activity {
 		builder.show();
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -612,7 +1503,11 @@ public class HomeActivity extends Activity {
 		if (resultCode == RESULT_OK) {
 
 			mainbmp = null;
-			if (requestCode == 1) {
+
+			switch (requestCode) {
+			case 1:
+
+			{
 				File f = new File(Environment.getExternalStorageDirectory()
 						.toString());
 				for (File temp : f.listFiles()) {
@@ -674,7 +1569,10 @@ public class HomeActivity extends Activity {
 					 */} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} else if (requestCode == 2) {
+				break;
+			}
+
+			case 2: {
 
 				Uri selectedImage = data.getData();
 				String[] filePath = { MediaStore.Images.Media.DATA };
@@ -706,8 +1604,128 @@ public class HomeActivity extends Activity {
 						new ConnectionTaskForImageUpload().execute(picturePath);
 					}
 				}
+
 			}
-		} else {
+				break;
+			// Called when come back from FavoritePlaceFindActivity from
+			// from_place
+			case 3: {
+
+				String value = (String) data.getExtras().getString("address");
+
+				Log.d("from_place:::", value);
+
+				// from_places.append(value);
+				from_places.setText(value);
+
+				if (value.equalsIgnoreCase("") || value.isEmpty()) {
+
+				} else {
+					fAddress = null; // reset previous
+
+					fAddress = geocodeAddress(from_places.getText().toString());
+					if (fAddress == null) {
+						Toast.makeText(
+								HomeActivity.this,
+								"Could not locate the address, please try using the map or a different address",
+								Toast.LENGTH_LONG).show();
+					} else {
+						addressModelFrom = new AddressModel();
+						addressModelFrom.setAddress(fAddress);
+						fromshortname = MapUtilityMethods.getAddressshort(
+								HomeActivity.this, fAddress.getLatitude(),
+								fAddress.getLongitude());
+						addressModelFrom.setShortname(fromshortname);
+						addressModelFrom.setLongname(from_places.getText()
+								.toString());
+
+						if (fAddress != null && tAddress != null) {
+							// homebtnsll.setVisibility(View.VISIBLE);
+							showButtonsDialog();
+							// isCallresetIntentParams=false;
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+								officetohomell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
+								hometoofficell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
+							} else {
+								officetohomell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
+								hometoofficell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
+							}
+						}
+					}
+				}
+			}
+				break;
+
+			// Called when come back from FavoritePlaceFindActivity from
+			// to_place
+
+			case 4: {
+
+				String value = (String) data.getExtras().getString("address");
+				// Toast.makeText(mcontext, "call back to_place:"+value,
+				// Toast.LENGTH_SHORT).show();
+
+				to_places.setText(value);
+
+				if (value.equalsIgnoreCase("") || value.isEmpty()) {
+
+				} else {
+
+					tAddress = null; // reset previous
+
+					tAddress = geocodeAddress(to_places.getText().toString());
+
+					if (tAddress == null) {
+						Toast.makeText(
+								HomeActivity.this,
+								"Could not locate the address, please try using the map or a different address",
+								Toast.LENGTH_LONG).show();
+					} else {
+						addressModelTo = new AddressModel();
+						addressModelTo.setAddress(tAddress);
+						toshortname = MapUtilityMethods.getAddressshort(
+								HomeActivity.this, tAddress.getLatitude(),
+								tAddress.getLongitude());
+						addressModelTo.setShortname(toshortname);
+						addressModelTo.setLongname(to_places.getText()
+								.toString());
+
+						if (fAddress != null && tAddress != null) {
+							// homebtnsll.setVisibility(View.VISIBLE);
+							showButtonsDialog();
+							// isCallresetIntentParams=false;
+
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+								officetohomell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
+								hometoofficell.setBackground(getResources()
+										.getDrawable(R.drawable.border));
+							} else {
+								officetohomell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
+								hometoofficell
+										.setBackgroundDrawable(getResources()
+												.getDrawable(R.drawable.border));
+							}
+						}
+					}
+				}
+			}
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		else {
 			mainbmp = null;
 			Log.d("Result not ok", "Result not ok");
 		}
@@ -1003,109 +2021,118 @@ public class HomeActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (back_pressed + 2000 > System.currentTimeMillis()) {
-			super.onBackPressed();
+
+		if (fromrelative.getVisibility() == View.VISIBLE) {
+			fromrelative.setVisibility(View.GONE);
+			contentrelativehomepage.setVisibility(View.VISIBLE);
 		} else {
-			Toast.makeText(getBaseContext(), "Press once again to exit!",
-					Toast.LENGTH_SHORT).show();
-			back_pressed = System.currentTimeMillis();
-		}
-	}
-
-	// ///////
-	private class ConnectionTaskForreadunreadnotification extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(HomeActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
+			if (back_pressed + 2000 > System.currentTimeMillis()) {
+				super.onBackPressed();
 			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount.setText(readunreadnotiresp);
+				Toast.makeText(getBaseContext(), "Press once again to exit!",
+						Toast.LENGTH_SHORT).show();
+				back_pressed = System.currentTimeMillis();
 			}
 		}
 
 	}
 
-	public class AuthenticateConnectionreadunreadnotification {
-
-		public AuthenticateConnectionreadunreadnotification() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/FetchUnreadNotificationCount.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumber);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-
-		}
-	}
+	// // ///////
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(HomeActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	//
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumber);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	// ////////////////////////
 	// ///////
@@ -1320,9 +2347,8 @@ public class HomeActivity extends Activity {
 		}
 	}
 
-	// ////////////////////
 	// ///////
-	private class ConnectionTaskForFetchMyClubs extends
+	private class ConnectionTaskForFetchClubs extends
 			AsyncTask<String, Void, Void> {
 
 		@Override
@@ -1352,83 +2378,7 @@ public class HomeActivity extends Activity {
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-
-			if (myclubsresp.equalsIgnoreCase("No Users of your Club")) {
-
-				SharedPreferences mPrefs11111 = getSharedPreferences(
-						"NoClubsAlert", 0);
-				String AlertPreference = mPrefs11111.getString(
-						"AlertPreference", "");
-				Log.d("HomePage", "AlertPreference : " + AlertPreference);
-
-				if (AlertPreference.isEmpty()) {
-					showNoClubDialog();
-				} else if (AlertPreference.contains("Remind")) {
-					String[] string = AlertPreference.split("\\|");
-					long diff = System.currentTimeMillis()
-							- Long.parseLong(string[1]);
-					Log.d("HomePage", "AlertPreference Remind current : "
-							+ System.currentTimeMillis() + " last : "
-							+ string[1] + " diff : " + diff);
-					if (diff > (12 * 60 * 1000)) {
-						showNoClubDialog();
-					}
-				}
-
-			}
-
 		}
-	}
-
-	private void showNoClubDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-
-		builder.setMessage("You are not a member of any clubs yet! Let's start by creating your first.");
-		builder.setPositiveButton("OK\r\n",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						Intent mainIntent = new Intent(HomeActivity.this,
-								MyClubsActivity.class);
-						startActivity(mainIntent);
-					}
-				});
-		builder.setNeutralButton("Remind me later",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences sharedPreferences1 = getSharedPreferences(
-								"NoClubsAlert", 0);
-						SharedPreferences.Editor editor1 = sharedPreferences1
-								.edit();
-						editor1.putString(
-								"AlertPreference",
-								"Remind|"
-										+ Long.toString(System
-												.currentTimeMillis()));
-						editor1.commit();
-					}
-				});
-		builder.setNegativeButton("Don't show this again",
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences sharedPreferences1 = getSharedPreferences(
-								"NoClubsAlert", 0);
-						SharedPreferences.Editor editor1 = sharedPreferences1
-								.edit();
-						editor1.putString("AlertPreference", "Don't");
-						editor1.commit();
-					}
-				});
-		AlertDialog dialog = builder.show();
-		TextView messageText = (TextView) dialog
-				.findViewById(android.R.id.message);
-		messageText.setGravity(Gravity.CENTER);
-		dialog.show();
 	}
 
 	public class AuthenticateConnectionFetchMyClubs {
@@ -1444,7 +2394,7 @@ public class HomeActivity extends Activity {
 			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber.toString().trim());
+					"OwnerNumber", MobileNumber);
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(UserNumberBasicNameValuePair);
@@ -1466,18 +2416,19 @@ public class HomeActivity extends Activity {
 			StringBuilder stringBuilder = new StringBuilder();
 
 			String bufferedStrChunk = null;
-			myclubsresp = null;
+			String myprofileresp = null;
 
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				myclubsresp = stringBuilder.append(bufferedStrChunk).toString();
+				myprofileresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
 			}
 
-			Log.d("myclubsresp", "" + myclubsresp);
+			Log.d("myclubsresp", "" + myprofileresp);
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
 			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-			editor1.putString("clubs", myclubsresp.toString().trim());
+			editor1.putString("clubs", myprofileresp.toString().trim());
 			editor1.commit();
 
 			// ///////////////
@@ -1494,14 +2445,454 @@ public class HomeActivity extends Activity {
 	}
 
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		Log.d("onStart", "onStart");
+
+		// Check if Internet present
+		if (!isOnline()) {
+			return;
+		}
+		// Shift this code in location map click
+		// Location location = getLocation();
+		//
+		// if (location != null) {
+		// onLocationChanged(location);
+		// }
+
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		Log.d("onStop", "onStop");
+
+		super.onStop();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		AppEventsLogger.activateApp(this);
+
+		getWorkHomeAddress();
+
+		String PoolResponseSplash = getIntent().getStringExtra(
+				"PoolResponseSplash");
+
+		Log.d("HomeActivity", "onResume PoolResponseSplash : "
+				+ PoolResponseSplash);
+
+		if (PoolResponseSplash == null || PoolResponseSplash.isEmpty()
+				|| PoolResponseSplash.equalsIgnoreCase("null")
+				|| PoolResponseSplash.equalsIgnoreCase("No Pool Created Yet!!")
+				|| PoolResponseSplash.equalsIgnoreCase("[]")) {
+			if (!isCallresetIntentParams)
+				resetIntentParams(true);
+		} else {
+
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					"HomeActivityDisplayRides", 0);
+			boolean shouldDisplay = sharedPreferences.getBoolean(
+					"DisplayRides", false);
+
+			if (shouldDisplay) {
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putBoolean("DisplayRides", false);
+				editor.commit();
+
+				Intent mainIntent = new Intent(HomeActivity.this,
+						MyRidesActivity.class);
+				mainIntent.putExtra("PoolResponseSplash", PoolResponseSplash);
+				startActivity(mainIntent);
+
+				finish(); // to ensure when there are active rides to display,
+							// the user simply exits the app rather than
+							// returning to this page
+
+			} else {
+				if (!isCallresetIntentParams)
+					resetIntentParams(true);
+			}
+
+		}
+		playAnimation = true;
+		if (!isRunning) {
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForFetchPool()
+						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				new ConnectionTaskForFetchPool().execute();
+			}
+		}
+
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		AppEventsLogger.deactivateApp(this);
+		playAnimation = false;
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		mycurrentlocationobject = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public Location getLocation() {
+		Location location = null;
+		try {
+			locationManager = (LocationManager) this
+					.getSystemService(LOCATION_SERVICE);
+
+			// getting GPS status
+			boolean isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			// getting network status
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				// no network provider is enabled
+				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				dialog.setMessage("Please check your location services");
+				dialog.setPositiveButton("Retry",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent intent = getIntent();
+								intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+								finish();
+
+								startActivity(intent);
+
+							}
+						});
+				dialog.setNegativeButton("Settings",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent myIntent = new Intent(
+										Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								startActivity(myIntent);
+								// get gps
+
+							}
+						});
+				dialog.show();
+				return null;
+			} else {
+
+				double lat = 0;
+				double lng = 0;
+				// get the location by gps
+				if (isGPSEnabled) {
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 20000, 1, this);
+						Log.d("GPS Enabled", "GPS Enabled");
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							if (location != null) {
+								lat = location.getLatitude();
+								lng = location.getLongitude();
+							}
+						}
+					}
+				}
+
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 20000, 1, this);
+					Log.d("Network", "Network");
+					if (locationManager != null) {
+						location = locationManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						if (location != null) {
+							lat = location.getLatitude();
+							lng = location.getLongitude();
+						}
+					}
+				}
+
+				Log.d("lat", "" + lat);
+				Log.d("lng", "" + lng);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return location;
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		if (uniqueID.equals("FetchUnreadNotificationCount")) {
+			if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+				unreadnoticountrl.setVisibility(View.GONE);
+
+			} else {
+
+				unreadnoticountrl.setVisibility(View.VISIBLE);
+				unreadnoticount
+						.setText(GlobalVariables.UnreadNotificationCount);
+			}
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		switch (v.getId()) {
+		case R.id.from_places:
+			// Open get places list activity
+			isCallresetIntentParams = true;
+			Intent intent = new Intent(HomeActivity.this,
+					FavoritePlaceFindActivity.class);
+
+			startActivityForResult(intent, 3);
+			// overridePendingTransition(R.anim.slide_in_right,
+			// R.anim.slide_out_left);
+
+			break;
+		case R.id.to_places:
+			isCallresetIntentParams = true;
+
+			intent = new Intent(HomeActivity.this,
+					FavoritePlaceFindActivity.class);
+
+			startActivityForResult(intent, 4);
+
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
+	private void ConnectionTaskForFetchPoolPostExecute() {
+		String response = "";
+		String msg = "";
+		JSONObject obj = null;
+		try {
+			obj = new JSONObject(rideInvitationsResponse);
+			response = obj.getString("status");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// 07-30 16:42:37.665: D/poolresponse(13451): {status:"fail",
+		// message:"No Records Found"}
+
+		if (response.equalsIgnoreCase("fail")) {
+			// Toast.makeText(HomeActivity.this, ""+msg,
+			// Toast.LENGTH_LONG).show();
+			tvViewpagerHeading.setVisibility(View.GONE);
+			circlePageIndicator.setVisibility(View.GONE);
+			viewHome.setVisibility(View.GONE);
+			arrayRideDetailsModels.clear();
+
+			mFragmentStatePagerAdapter.notifyDataSetChanged();
+
+		}
+
+		else {
+
+			if (response.equalsIgnoreCase("success")) {
+				tvViewpagerHeading.setVisibility(View.VISIBLE);
+
+				circlePageIndicator.setVisibility(View.VISIBLE);
+				viewHome.setVisibility(View.VISIBLE);
+
+				try {
+					arrayRideDetailsModels.clear();
+					Gson gson = new Gson();
+
+					ArrayList<RideDetailsModel> arrayRideLocal = gson.fromJson(
+							obj.getJSONArray("data").toString(),
+							new TypeToken<ArrayList<RideDetailsModel>>() {
+							}.getType());
+
+					if (arrayRideLocal.size() > 0) {
+
+						for (int i = 0; i < arrayRideLocal.size(); i++) {
+
+							arrayRideDetailsModels.add(arrayRideLocal.get(i));
+
+						}
+					}
+
+					// if(arrayRideDetailsModels.size()>0){
+					// for (int i = 0; i < arrayRideDetailsModels.size(); i++) {
+					//
+					//
+					// OwnerName.add(arrayRideDetailsModels.get(i).getOwnerName());
+					// FromShortName.add(arrayRideDetailsModels.get(i)
+					// .getFromShortName());
+					// ToShortName.add(arrayRideDetailsModels.get(i)
+					// .getToShortName());
+					// TravelDate.add(arrayRideDetailsModels.get(i)
+					// .getTravelDate());
+					// TravelTime.add(arrayRideDetailsModels.get(i)
+					// .getTravelTime());
+					// Seat_Status.add(arrayRideDetailsModels.get(i)
+					// .getSeat_Status());
+					// imagename.add(arrayRideDetailsModels.get(i).getImagename());
+					// }
+					// }
+					Log.d("MyRidesActivity",
+							"GSON pools : "
+									+ gson.toJson(arrayRideDetailsModels)
+											.toString());
+
+					mFragmentStatePagerAdapter.notifyDataSetChanged();
+
+					viewPagerHome.setCurrentItem(0);
+
+					if (arrayRideDetailsModels.size() > 1) {
+
+						swipeAutomaticViewPagger();
+
+					}
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+
+	}
+
+	// ///////
+
+	private class ConnectionTaskForFetchPool extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionFetchPool mAuth1 = new AuthenticateConnectionFetchPool();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(HomeActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			ConnectionTaskForFetchPoolPostExecute();
+			isRunning = false;
+
+			// clearBookedOrCarPreference();
+
+			String comefrom = getIntent().getStringExtra("comefrom");
+
+			if (comefrom != null && !comefrom.isEmpty()
+					&& !comefrom.equalsIgnoreCase("null")) {
+
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionFetchPool {
+
+		public AuthenticateConnectionFetchPool() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select11 = GlobalVariables.ServiceUrl
+					+ "/rideInvitations.php";
+			HttpPost httpPost = new HttpPost(url_select11);
+			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+					"mobileNumber", MobileNumber);
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(MobileNumberBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse rideInvitations", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				rideInvitationsResponse = stringBuilder
+						.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("poolresponse", "" + stringBuilder.toString()
+					+ " mobileNumber : " + MobileNumber);
+		}
 	}
 }

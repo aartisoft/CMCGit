@@ -29,7 +29,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:text="Manoj Kabdal"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
     </LinearLayout>
@@ -104,17 +103,47 @@
             android:textSize="13sp" >
         </TextView>
 
-        <TextView
-            android:id="@+id/seatstext"
-            android:layout_width="wrap_content"
+<!--         <TextView -->
+<!--             android:id="@+id/seatstext" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_alignBaseline="@+id/timetext" -->
+<!--             android:layout_alignBottom="@+id/timetext" -->
+<!--             android:layout_alignParentRight="true" -->
+<!--             android:text="3/3 Seats" -->
+<!--             android:textColor="#000000" -->
+<!--             android:textSize="13sp" /> -->
+        
+           <LinearLayout 
+           android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:text="3/3 Seats"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            >
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/seatstext1"
+            android:text="total"
+            android:gravity="right"
             android:textColor="#000000"
             android:textSize="13sp" >
         </TextView>
+         <TextView
+                android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/tvAvSeats1"
+                        android:gravity="right"
+            
+            android:text="Remaining seats"
+            android:textColor="#000000"
+            android:textSize="13sp" >
+        </TextView>
+        </LinearLayout>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -168,9 +197,7 @@
             android:singleLine="true"
             android:text="Cab details"
             android:textColor="#FFFFFF"
-            android:textSize="13sp" >
-
-        </TextView>
+            android:textSize="13sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -186,7 +213,7 @@
                 android:text="Driver Name"
                 android:textColor="#000000"
                 android:textSize="13sp" />
-            
+
             <TextView
                 android:id="@+id/cabbookingdriverphone"
                 android:layout_width="wrap_content"
@@ -197,35 +224,99 @@
                 android:text="@string/underline_text_call_driver"
                 android:textColor="#000000"
                 android:textSize="13sp" />
-
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/cabbookingvehicle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Driver Name"
-            android:textColor="#000000"
-            android:textSize="13sp" >
-        </TextView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="70"
+                android:orientation="vertical" >
 
+                <TextView
+                    android:id="@+id/cabbookingvehicle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Driver Name"
+                    android:textColor="#000000"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/cabbookingrefno"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="Driver Name"
+                    android:textColor="#000000"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/cancelBooking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="30"
+                android:background="@drawable/bookacab_booknowbtn"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/faredetailsll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        
         <TextView
-            android:id="@+id/cabbookingrefno"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_height="25dp"
+            android:background="#000000"
             android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
             android:singleLine="true"
-            android:text="Driver Name"
-            android:textColor="#000000"
-            android:textSize="13sp" >
-        </TextView>
+            android:text="Fare details"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+        
+        <TextView
+            android:id="@+id/faredetailstotal"
+            android:layout_width="fill_parent"
+            android:layout_height="25dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:text="Cab details"
+            android:textColor="@android:color/black"
+            android:textSize="13sp" />
+        
+        <TextView
+            android:id="@+id/faredetailsshare"
+            android:layout_width="fill_parent"
+            android:layout_height="25dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:text="Cab details"
+            android:textColor="@android:color/black"
+            android:textSize="13sp" />
     </LinearLayout>
 
 </LinearLayout>

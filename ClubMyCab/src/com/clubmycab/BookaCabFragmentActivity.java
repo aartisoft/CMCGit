@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -74,7 +73,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -101,21 +99,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.R;
-import com.clubmycab.R.anim;
-import com.clubmycab.R.drawable;
-import com.clubmycab.R.id;
-import com.clubmycab.R.layout;
-import com.clubmycab.R.string;
-import com.clubmycab.ui.AboutPagerFragmentActivity;
+import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.AddressModel;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
-import com.clubmycab.ui.MyClubsActivity;
-import com.clubmycab.ui.MyProfileActivity;
 import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
-import com.clubmycab.ui.SettingActivity;
+import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -127,9 +121,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
-public class BookaCabFragmentActivity extends FragmentActivity implements LocationListener {
+public class BookaCabFragmentActivity extends FragmentActivity implements
+		LocationListener {
 
 	// private static ProgressDialog progressDialog;
 	RelativeLayout fromrelative;
@@ -152,6 +148,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 	final int RQS_GooglePlayServices = 1;
 	private GoogleMap myMap;
+	Tracker tracker;
 
 	Location myLocation;
 	String FullName, MobileNumberstr;
@@ -205,7 +202,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 	private JSONArray mCabSearchArray;
 	private GridView mGridViewCabSearch;
 	private String mUberBookingInputParams, mUberUsername, mUberPassword;
-	private int cabBookUberMegaPosition;
+	private int cabBookingPosition;
 
 	private ProgressDialog dialog12;
 
@@ -215,7 +212,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 	String[] Imag = { "R.drawable.olacab", "R.drawable.mreucab",
 			"R.drawable.easycab" };
 
-	private static final String API_KEY = "AIzaSyBqd05mV8c2VTIAKhYP1mFKF7TRueU2-Z0";
 	private static final String LOG_TAG = "ExampleApp";
 	Location mycurrentlocationobject;
 
@@ -251,8 +247,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 	String readunreadnotiresp;
 	String imagenameresp;
 	Bitmap mIcon11;
-
-	
 
 	private Button mButtonSearch;
 
@@ -300,7 +294,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				double latitude = mycurrentlocationobject.getLatitude();
 				double longitude = mycurrentlocationobject.getLongitude();
 
-				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
+				String address = MapUtilityMethods.getAddress(
+						BookaCabFragmentActivity.this, latitude, longitude);
 				from_places.setText(address);
 				fAddress = geocodeAddress(address);
 				Log.d("AutoSearchCabAsync", "AutoSearchCabAsync address : "
@@ -328,7 +323,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		// Check if Internet present
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
@@ -360,151 +356,16 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			}
 		});
 
-		
+		GoogleAnalytics analytics = GoogleAnalytics
+				.getInstance(BookaCabFragmentActivity.this);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
-		mNav = new SimpleSideDrawer(this);
-		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
+		// All subsequent hits will be send with screen name = "main screen"
+		tracker.setScreenName("BookACab");
 
-		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				mNav.toggleLeftDrawer();
-
-			}
-		});
-
-		myprofile = (TextView) findViewById(R.id.myprofile);
-		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myrides = (TextView) findViewById(R.id.myrides);
-		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		bookacab = (TextView) findViewById(R.id.bookacab);
-		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myclubs = (TextView) findViewById(R.id.myclubs);
-		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		mypreferences = (TextView) findViewById(R.id.mypreferences);
-		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		about = (TextView) findViewById(R.id.about);
-		about.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-
-		myprofile.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyProfileActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myrides.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyRidesActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		bookacab.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-			}
-		});
-
-		sharemylocation.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
-						ShareLocationFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myclubs.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this, MyClubsActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharethisapp.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent
-						.putExtra(
-								Intent.EXTRA_TEXT,
-								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-
-			}
-		});
-
-		mypreferences.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
-						SettingActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		about.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				Intent mainIntent = new Intent(BookaCabFragmentActivity.this,
-						AboutPagerFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
+		drawer.createDrawer();
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
@@ -526,7 +387,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		drawerusername.setText(FullName);
 
 		if (!isOnline()) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 
 			builder.setMessage("No Network Available");
 			builder.setPositiveButton("OK", null);
@@ -542,6 +404,16 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
 
+		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+			unreadnoticountrl.setVisibility(View.GONE);
+
+		} else {
+
+			unreadnoticountrl.setVisibility(View.VISIBLE);
+			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
+		}
+
 		profilepic.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -552,12 +424,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		});
 
 		// ///////////////
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForreadunreadnotification()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForreadunreadnotification().execute();
-		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		notificationimg.setOnClickListener(new View.OnClickListener() {
 
@@ -1021,8 +893,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					invitemapcenter = cameraPosition.target;
 
-					String address = getAddress(BookaCabFragmentActivity.this,
-							invitemapcenter.latitude, invitemapcenter.longitude);
+					String address = MapUtilityMethods
+							.getAddress(BookaCabFragmentActivity.this,
+									invitemapcenter.latitude,
+									invitemapcenter.longitude);
 					Log.d("address", "" + address);
 
 					fromlocation.setText(address);
@@ -1044,7 +918,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				if (whichdotclick.equalsIgnoreCase("fromdot")) {
 
 					LatLng mapfromlatlng = invitemapcenter;
-					fromshortname = getAddressshort(BookaCabFragmentActivity.this,
+					fromshortname = MapUtilityMethods.getAddressshort(
+							BookaCabFragmentActivity.this,
 							mapfromlatlng.latitude, mapfromlatlng.longitude);
 
 					fAddress = null; // reset previous
@@ -1053,7 +928,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder fcoder = new Geocoder(BookaCabFragmentActivity.this);
+					Geocoder fcoder = new Geocoder(
+							BookaCabFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) fcoder
 								.getFromLocationName(jnd, 50);
@@ -1073,7 +949,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				else if (whichdotclick.equalsIgnoreCase("todot")) {
 
 					LatLng maptolatlng = invitemapcenter;
-					toshortname = getAddressshort(BookaCabFragmentActivity.this,
+					toshortname = MapUtilityMethods.getAddressshort(
+							BookaCabFragmentActivity.this,
 							maptolatlng.latitude, maptolatlng.longitude);
 
 					tAddress = null; // reset previous
@@ -1082,7 +959,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					String jnd2 = to_places.getText().toString().trim();
 
-					Geocoder tcoder = new Geocoder(BookaCabFragmentActivity.this);
+					Geocoder tcoder = new Geocoder(
+							BookaCabFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) tcoder
 								.getFromLocationName(jnd2, 50);
@@ -1144,7 +1022,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
+				String address = MapUtilityMethods.getAddress(
+						BookaCabFragmentActivity.this, latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1186,7 +1065,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				// Zoom in the Google Map
 				myMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-				String address = getAddress(BookaCabFragmentActivity.this, latitude, longitude);
+				String address = MapUtilityMethods.getAddress(
+						BookaCabFragmentActivity.this, latitude, longitude);
 
 				fromlocation.setText(address);
 
@@ -1214,8 +1094,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					fromshortname = getaddressfromautoplace(BookaCabFragmentActivity.this,
-							from_places.getText().toString().trim());
+					fromshortname = MapUtilityMethods.getaddressfromautoplace(
+							BookaCabFragmentActivity.this, from_places
+									.getText().toString().trim());
 				}
 			}
 
@@ -1250,8 +1131,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				if (flagchk) {
 					flagchk = false;
 				} else {
-					toshortname = getaddressfromautoplace(BookaCabFragmentActivity.this,
-							to_places.getText().toString().trim());
+					toshortname = MapUtilityMethods.getaddressfromautoplace(
+							BookaCabFragmentActivity.this, to_places.getText()
+									.toString().trim());
 				}
 			}
 
@@ -1320,11 +1202,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Saved!", Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Error saving!", Toast.LENGTH_LONG).show();
 						}
 						Log.d("BookaCab", "onClick mTextViewSetHomeFav : "
 								+ favoritesLocationReadWrite.readFromFile());
@@ -1370,10 +1252,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 										BookaCabFragmentActivity.this);
 								if (favoritesLocationReadWrite
 										.saveToFile(jsonObject.toString())) {
-									Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-											Toast.LENGTH_LONG).show();
+									Toast.makeText(
+											BookaCabFragmentActivity.this,
+											"Saved!", Toast.LENGTH_LONG).show();
 								} else {
-									Toast.makeText(BookaCabFragmentActivity.this,
+									Toast.makeText(
+											BookaCabFragmentActivity.this,
 											"Error saving!", Toast.LENGTH_LONG)
 											.show();
 								}
@@ -1422,11 +1306,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 								BookaCabFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Saved!", Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Error saving!", Toast.LENGTH_LONG).show();
 						}
 
 						Log.d("BookaCab", "onClick mTextViewSetHomeFavTo : "
@@ -1471,11 +1355,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 								BookaCabFragmentActivity.this);
 						if (favoritesLocationReadWrite.saveToFile(jsonObject
 								.toString())) {
-							Toast.makeText(BookaCabFragmentActivity.this, "Saved!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Saved!", Toast.LENGTH_LONG).show();
 						} else {
-							Toast.makeText(BookaCabFragmentActivity.this, "Error saving!",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(BookaCabFragmentActivity.this,
+									"Error saving!", Toast.LENGTH_LONG).show();
 						}
 
 						Log.d("BookaCab", "onClick mTextViewSetOfficeFavTo : "
@@ -1505,8 +1389,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		rideObject = null;
 
 		Intent fromToIntent = getIntent();
-		if (fromToIntent.getStringExtra("StartAddLatLng") == null
-				&& fromToIntent.getStringExtra("EndAddLatLng") == null) {
+		String startString = fromToIntent.getStringExtra("StartAddressModel");
+		String endString = fromToIntent.getStringExtra("EndAddressModel");
+
+		if (startString == null && endString == null) {
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchPool()
@@ -1517,32 +1403,57 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		} else {
 
-			Log.d("BookaCab",
-					"StartAddLatLng : "
-							+ fromToIntent.getStringExtra("StartAddLatLng")
-							+ " EndAddLatLng : "
-							+ fromToIntent.getStringExtra("EndAddLatLng"));
-			String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
-					.toString().split(",");
+			Log.d("BookaCab", "StartAddressModel : " + startString
+					+ " EndAddressModel : " + endString);
 
-			Double startLat = Double.parseDouble(RowData[0]);
-			Double startLng = Double.parseDouble(RowData[1]);
+			Gson gson = new Gson();
+			AddressModel startAddressModel = (AddressModel) gson.fromJson(
+					startString, AddressModel.class);
+			fAddress = startAddressModel.getAddress();
+			fromshortname = startAddressModel.getShortname();
+			from_places.setText(startAddressModel.getLongname());
 
-			String address = getAddress(BookaCabFragmentActivity.this, startLat.doubleValue(),
-					startLng.doubleValue());
-			from_places.setText(address);
-			fAddress = geocodeAddress(address);
+			AddressModel endAddressModel = (AddressModel) gson.fromJson(
+					endString, AddressModel.class);
+			tAddress = endAddressModel.getAddress();
+			toshortname = endAddressModel.getShortname();
+			to_places.setText(endAddressModel.getLongname());
 
-			RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
-					.split(",");
+			from_places.setEnabled(false);
+			to_places.setEnabled(false);
+			threedotsfrom.setEnabled(false);
+			threedotsto.setEnabled(false);
+			clearedittextimgfrom.setVisibility(View.GONE);
+			clearedittextimgto.setVisibility(View.GONE);
 
-			Double endLat = Double.parseDouble(RowData[0]);
-			Double endLng = Double.parseDouble(RowData[1]);
-
-			address = getAddress(BookaCabFragmentActivity.this, endLat.doubleValue(),
-					endLng.doubleValue());
-			to_places.setText(address);
-			tAddress = geocodeAddress(address);
+			// Log.d("BookaCab",
+			// "StartAddLatLng : "
+			// + fromToIntent.getStringExtra("StartAddLatLng")
+			// + " EndAddLatLng : "
+			// + fromToIntent.getStringExtra("EndAddLatLng"));
+			// String[] RowData = fromToIntent.getStringExtra("StartAddLatLng")
+			// .toString().split(",");
+			//
+			// Double startLat = Double.parseDouble(RowData[0]);
+			// Double startLng = Double.parseDouble(RowData[1]);
+			//
+			// String address = MapUtilityMethods.getAddress(
+			// BookaCabFragmentActivity.this, startLat.doubleValue(),
+			// startLng.doubleValue());
+			// from_places.setText(address);
+			// fAddress = geocodeAddress(address);
+			//
+			// RowData = fromToIntent.getStringExtra("EndAddLatLng").toString()
+			// .split(",");
+			//
+			// Double endLat = Double.parseDouble(RowData[0]);
+			// Double endLng = Double.parseDouble(RowData[1]);
+			//
+			// address = MapUtilityMethods.getAddress(
+			// BookaCabFragmentActivity.this, endLat.doubleValue(),
+			// endLng.doubleValue());
+			// to_places.setText(address);
+			// tAddress = geocodeAddress(address);
 
 			from_places.setEnabled(false);
 			to_places.setEnabled(false);
@@ -1554,10 +1465,10 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			rideObject = new RideObject(fromToIntent.getStringExtra("CabId"),
 					fromToIntent.getStringExtra("TravelDate"),
 					fromToIntent.getStringExtra("TravelTime"),
-					fromToIntent.getStringExtra("FromShortName"),
-					fromToIntent.getStringExtra("ToShortName"), from_places
-							.getText().toString(), to_places.getText()
-							.toString());
+					startAddressModel.getShortname(),
+					endAddressModel.getShortname(),
+					startAddressModel.getLongname(),
+					endAddressModel.getLongname());
 
 			performCabSearch();
 		}
@@ -1594,7 +1505,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 	private class ConnectionTaskForFetchPool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(BookaCabFragmentActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(
+				BookaCabFragmentActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -1743,8 +1655,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 						final AlertDialog dialog = builder.create();
 
 						listView.setAdapter(new CustomListViewAdapter(
-								BookaCabFragmentActivity.this, arrayListTrip, arrayListDate,
-								arrayListTime, arrayListSeat));
+								BookaCabFragmentActivity.this, arrayListTrip,
+								arrayListDate, arrayListTime, arrayListSeat));
 						listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 							@Override
@@ -1896,12 +1808,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 	private void performCabSearch() {
 
-		if (from_places.getText().toString().trim().isEmpty()
-				|| fAddress == null) {
+		if (fAddress == null) {
 
 			from_places.requestFocus();
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 
 			builder.setMessage("Please Enter From Location. If you have already selected a location on map please try again by selecting a nearby location");
 			builder.setPositiveButton("OK", null);
@@ -1929,8 +1841,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				return;
 			} else {
 				Log.d("BookaCab", "performCabSearch");
-				if (to_places.getText().toString().trim().isEmpty()
-						|| tAddress == null) {
+				if (tAddress == null) {
 					PerformCabSearchTimeAsync performCabSearchTimeAsync = new PerformCabSearchTimeAsync();
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						performCabSearchTimeAsync
@@ -1963,7 +1874,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			Log.d("PerformCabSearchTimeAsync", "onPreExecute");
 			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
-			dialog12.setMessage("Please Wait...");
+			dialog12.setMessage("Please wait while we fetch cabs");
 			dialog12.setCancelable(false);
 			dialog12.setCanceledOnTouchOutside(false);
 			dialog12.show();
@@ -1971,12 +1882,11 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		@Override
 		protected String doInBackground(String... args) {
-			Log.d("PerformCabSearchTimeAsync",
-					"doInBackground : " + GlobalVariables.ServiceUrl
-							+ "/fetchCabDetailsNew.php?" + "FromCity="
-							+ fAddress.getLocality().toString() + "&slat="
-							+ String.valueOf(fAddress.getLatitude()) + "&slon="
-							+ String.valueOf(fAddress.getLongitude()));
+			Log.d("PerformCabSearchTimeAsync", "doInBackground : "
+					+ GlobalVariables.ServiceUrl + "/fetchCabDetailsNew.php?"
+					+ "FromCity=" + fAddress.getLocality().toString()
+					+ "&slat=" + String.valueOf(fAddress.getLatitude())
+					+ "&slon=" + String.valueOf(fAddress.getLongitude()));
 
 			try {
 				URL url = new URL(GlobalVariables.ServiceUrl
@@ -2127,7 +2037,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		protected void onPreExecute() {
 			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
 
-			dialog12.setMessage("Please Wait...");
+			dialog12.setMessage("Please wait while we fetch cabs");
 			dialog12.setCancelable(false);
 			dialog12.setCanceledOnTouchOutside(false);
 			dialog12.show();
@@ -2149,7 +2059,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 								+ Double.toString(tAddress.getLatitude())
 								+ ","
 								+ Double.toString(tAddress.getLongitude())
-								+ "&sensor=false&units=metric&alternatives=false&mode=driving");
+								+ "&sensor=false&units=metric&alternatives=false&mode=driving&key="
+								+ GlobalVariables.GoogleMapsAPIKey);
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -2531,27 +2442,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 	 * fromlocation.setText(address); }
 	 */
 
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
-	}
-
 	@Override
 	public void onLocationChanged(Location location) {
 
@@ -2618,7 +2508,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		try {
 			StringBuilder sb = new StringBuilder(PLACES_API_BASE
 					+ TYPE_AUTOCOMPLETE + OUT_JSON);
-			sb.append("?sensor=false&key=" + API_KEY);
+			sb.append("?sensor=false&key=" + GlobalVariables.GoogleMapsAPIKey);
 			sb.append("&components=country:ind");
 			sb.append("&input=" + URLEncoder.encode(input, "utf8"));
 
@@ -2682,8 +2572,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		mypoollist = (ListView) dialog.findViewById(R.id.mypoollist);
 
-		adapter = new ListViewAdapter(BookaCabFragmentActivity.this, FromLocation, ToLocation,
-				TravelDate, TravelTime, Seat_Status, OwnerName, imagename);
+		adapter = new ListViewAdapter(BookaCabFragmentActivity.this,
+				FromLocation, ToLocation, TravelDate, TravelTime, Seat_Status,
+				OwnerName, imagename);
 		mypoollist.setAdapter(adapter);
 
 		mypoollist.setOnItemClickListener(new OnItemClickListener() {
@@ -2905,7 +2796,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 					+ source
 					+ "&destination="
 					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key=AIzaSyDOEO_G29Qu7VM6_veLVJCoiNUtSJ26Fl0";
+					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+					+ GlobalVariables.GoogleMapsAPIKey;
 
 			Log.d("url", "" + url);
 
@@ -3233,6 +3125,518 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		}
 	}
 
+	private void bookNowButtonPress(int position, String userName,
+			String password) {
+		try {
+
+			if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("uber")) {
+
+				// if (editTextUserName.getText()
+				// .toString().isEmpty()
+				// || editTextPassword.getText()
+				// .toString().isEmpty()) {
+				// Toast.makeText(
+				// BookaCab.this,
+				// "Please enter Username/Password",
+				// Toast.LENGTH_LONG).show();
+				// } else {
+				// JSONObject jsonObject = new
+				// JSONObject();
+				// jsonObject
+				// .put("CabName",
+				// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER);
+				// jsonObject.put("Username",
+				// editTextUserName.getText()
+				// .toString());
+				// jsonObject.put("Password",
+				// editTextPassword.getText()
+				// .toString());
+				//
+				// CabUserCredentialsReadWrite
+				// cabUserCredentialsReadWrite = new
+				// CabUserCredentialsReadWrite(
+				// BookaCab.this);
+				// cabUserCredentialsReadWrite
+				// .saveToFile(jsonObject
+				// .toString());
+				//
+				// mUberUsername = editTextUserName
+				// .getText().toString();
+				// mUberPassword = editTextPassword
+				// .getText().toString();
+				// }
+				cabBookingPosition = position;
+				bookUberCab(
+						mCabSearchArray.getJSONObject(position).get("CabName")
+								.toString(),
+						mCabSearchArray.getJSONObject(position)
+								.get("productId").toString(), fAddress,
+						tAddress);
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("mega")) {
+
+				// if (editTextUserName.getText()
+				// .toString().isEmpty()
+				// || editTextPassword.getText()
+				// .toString().isEmpty()) {
+				// Toast.makeText(
+				// BookaCab.this,
+				// "Please enter Username/Password",
+				// Toast.LENGTH_LONG).show();
+				// } else {
+				// JSONObject jsonObject = new
+				// JSONObject();
+				// jsonObject
+				// .put("CabName",
+				// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA);
+				// jsonObject.put("Username",
+				// editTextUserName.getText()
+				// .toString());
+				// jsonObject.put("Password",
+				// editTextPassword.getText()
+				// .toString());
+				//
+				// CabUserCredentialsReadWrite
+				// cabUserCredentialsReadWrite = new
+				// CabUserCredentialsReadWrite(
+				// BookaCab.this);
+				// cabUserCredentialsReadWrite
+				// .saveToFile(jsonObject
+				// .toString());
+				//
+				//
+				// }
+				cabBookingPosition = position;
+				bookMegaCab(fAddress, tAddress);
+
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("taxiforsure")) {
+
+				if (userName.isEmpty() || password.isEmpty()) {
+					Toast.makeText(BookaCabFragmentActivity.this,
+							"Please enter Username/Password", Toast.LENGTH_LONG)
+							.show();
+				} else {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("CabName",
+							CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS);
+					jsonObject.put("Username", userName);
+					jsonObject.put("Password", password);
+
+					CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
+							BookaCabFragmentActivity.this);
+					cabUserCredentialsReadWrite.saveToFile(jsonObject
+							.toString());
+
+					cabBookingPosition = position;
+
+					String carType = mCabSearchArray.getJSONObject(position)
+							.get("carType").toString().trim();
+					String etaApp = Long.toString(Math.round(Double
+							.valueOf(mCabSearchArray.getJSONObject(position)
+									.get("timeEstimate").toString()) / 60));
+
+					bookTFSCab(fAddress, userName, password, carType, etaApp);
+				}
+
+			} else {
+
+				updateCMCRecords(
+						mCabSearchArray.getJSONObject(position)
+								.get("CabNameID").toString(),
+						mCabSearchArray.getJSONObject(position).get("CarType")
+								.toString(),
+						"2",
+						fAddress,
+						tAddress,
+						"",
+						"",
+						false,
+						true,
+						"",
+						"http://"
+								+ mCabSearchArray.getJSONObject(position)
+										.get("CabMobileSite").toString(),
+						mCabSearchArray.getJSONObject(position)
+								.get("CabPackageName").toString(), false);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+	private void gridviewItemClick(final int position) {
+		// Log.d("BookaCab",
+		// "mGridViewCabSearch onItemClick position : " +
+		// position);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
+		View builderView = (View) getLayoutInflater().inflate(
+				R.layout.book_cab_detail_dialog, null);
+
+		final EditText editTextUserName = (EditText) builderView
+				.findViewById(R.id.editTextBookCabUserName);
+		final EditText editTextPassword = (EditText) builderView
+				.findViewById(R.id.editTextBookCabPassword);
+		final TextView messageTextView = (TextView) builderView
+				.findViewById(R.id.messageUserCredentials);
+
+		String jsonString = "";
+		TextView textView = (TextView) builderView
+				.findViewById(R.id.textViewCabName);
+		try {
+			jsonString = mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString();
+			textView.setText((jsonString.isEmpty() || jsonString
+					.equalsIgnoreCase("null")) ? "-" : jsonString);
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView.findViewById(R.id.textViewCabType);
+		try {
+			jsonString = mCabSearchArray.getJSONObject(position).get("CarType")
+					.toString();
+			textView.setText((jsonString.isEmpty() || jsonString
+					.equalsIgnoreCase("null")) ? "-" : jsonString);
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView.findViewById(R.id.textViewEstTime);
+		try {
+			textView.setText("Est. time: "
+					+ String.format(
+							"%d%n",
+							Math.round(Double.parseDouble(mCabSearchArray
+									.getJSONObject(position)
+									.get("timeEstimate").toString()) / 60))
+					+ "mins");
+		} catch (Exception e) {
+			textView.setText("Est. time: -");
+		}
+		textView = (TextView) builderView.findViewById(R.id.textViewEstPrice);
+		try {
+			String lowString = mCabSearchArray.getJSONObject(position)
+					.get("low_estimate").toString();
+			String highString = mCabSearchArray.getJSONObject(position)
+					.get("high_estimate").toString();
+			if (lowString.isEmpty() || highString.isEmpty()
+					|| lowString.equalsIgnoreCase("na")
+					|| lowString.equalsIgnoreCase("null")
+					|| highString.equalsIgnoreCase("na")
+					|| highString.equalsIgnoreCase("null")) {
+				textView.setText("Est. price: " + "-");
+			} else {
+				textView.setText("Est. price: \u20B9"
+						+ mCabSearchArray.getJSONObject(position)
+								.get("low_estimate").toString()
+						+ "-"
+						+ mCabSearchArray.getJSONObject(position)
+								.get("high_estimate").toString());
+			}
+
+		} catch (Exception e) {
+			textView.setText("Est. price: " + "-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabBaseFare);
+		try {
+			String baseFareString = mCabSearchArray.getJSONObject(position)
+					.get("BaseFare").toString();
+			String baseKmString = mCabSearchArray.getJSONObject(position)
+					.get("BaseFareKM").toString();
+			if (baseFareString.isEmpty()
+					|| baseFareString.equalsIgnoreCase("na")
+					|| baseFareString.equalsIgnoreCase("null")
+					|| baseKmString.isEmpty()
+					|| baseKmString.equalsIgnoreCase("na")
+					|| baseKmString.equalsIgnoreCase("null")) {
+				textView.setText("-");
+			} else {
+				textView.setText("\u20B9"
+						+ mCabSearchArray.getJSONObject(position)
+								.get("BaseFare").toString()
+						+ " for first "
+						+ mCabSearchArray.getJSONObject(position)
+								.get("BaseFareKM").toString() + "Kms");
+			}
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabRatePerKM);
+		try {
+			jsonString = mCabSearchArray.getJSONObject(position)
+					.get("RatePerKMAfterBaseFare").toString();
+			if (jsonString.isEmpty() || jsonString.equalsIgnoreCase("na")
+					|| jsonString.equalsIgnoreCase("null")) {
+				textView.setText("-");
+			} else {
+				textView.setText("\u20B9" + jsonString + " per Km");
+			}
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabNightBase);
+		try {
+			Double multiplier = Double.parseDouble(mCabSearchArray
+					.getJSONObject(position).get("NightTimeRateMultiplier")
+					.toString());
+			Long nightRate = Math
+					.round(multiplier
+							* Double.parseDouble(mCabSearchArray
+									.getJSONObject(position).get("BaseFare")
+									.toString()));
+
+			textView.setText("\u20B9"
+					+ Long.toString(nightRate)
+					+ " for first "
+					+ mCabSearchArray.getJSONObject(position).get("BaseFareKM")
+							.toString() + "Kms");
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabNightPer);
+		try {
+			Double multiplier = Double.parseDouble(mCabSearchArray
+					.getJSONObject(position).get("NightTimeRateMultiplier")
+					.toString());
+			Long nightRate = Math.round(multiplier
+					* Double.parseDouble(mCabSearchArray
+							.getJSONObject(position)
+							.get("RatePerKMAfterBaseFare").toString()));
+
+			textView.setText("\u20B9" + Long.toString(nightRate) + " per Km");
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewBookCabNightTime);
+		try {
+			String startString = mCabSearchArray.getJSONObject(position)
+					.get("NightTimeStartHours").toString();
+			String endString = mCabSearchArray.getJSONObject(position)
+					.get("NightTimeEndHours").toString();
+			if (startString.isEmpty() || startString.equalsIgnoreCase("na")
+					|| startString.equalsIgnoreCase("null")
+					|| endString.isEmpty() || endString.equalsIgnoreCase("na")
+					|| endString.equalsIgnoreCase("null")) {
+				textView.setText("-");
+			} else {
+				textView.setText(mCabSearchArray.getJSONObject(position)
+						.get("NightTimeStartHours").toString()
+						+ " hrs - "
+						+ mCabSearchArray.getJSONObject(position)
+								.get("NightTimeEndHours").toString() + " hrs");
+			}
+		} catch (Exception e) {
+			textView.setText("-");
+		}
+
+		RatingBar ratingBar = (RatingBar) builderView
+				.findViewById(R.id.ratingBarBookCab);
+		try {
+
+			ratingBar.setRating(Float.parseFloat(mCabSearchArray
+					.getJSONObject(position).get("Rating").toString()));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		textView = (TextView) builderView
+				.findViewById(R.id.textViewNumberOfRatings);
+
+		try {
+			if (mCabSearchArray.getJSONObject(position).get("NoofReviews")
+					.toString().equals("0")) {
+				textView.setText("");
+			} else {
+				textView.setText("("
+						+ mCabSearchArray.getJSONObject(position)
+								.get("NoofReviews").toString() + ")");
+			}
+		} catch (Exception e) {
+			textView.setText("");
+		}
+
+		ImageView imageView = (ImageView) builderView
+				.findViewById(R.id.imageButtonCallNow);
+		imageView.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				try {
+					String phoneString = mCabSearchArray
+							.getJSONObject(position).get("CabContactNo")
+							.toString();
+					if (phoneString.isEmpty()
+							|| phoneString.equalsIgnoreCase("null")
+							|| phoneString.equalsIgnoreCase("na")) {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Phone number could not be retrieved",
+								Toast.LENGTH_LONG).show();
+					} else {
+						updateCMCRecords(
+								mCabSearchArray.getJSONObject(position)
+										.get("CabNameID").toString(),
+								mCabSearchArray.getJSONObject(position)
+										.get("CarType").toString(), "3",
+								fAddress, tAddress, "", "", true, false,
+								phoneString, "", "", false);
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					Toast.makeText(BookaCabFragmentActivity.this,
+							"Phone number could not be retrieved",
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		try {
+			CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
+					BookaCabFragmentActivity.this);
+			JSONArray jsonArray = cabUserCredentialsReadWrite
+					.readArrayFromFile();
+			JSONObject jsonObject = new JSONObject();
+
+			if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("uber")) {
+				// editTextUserName.setVisibility(View.VISIBLE);
+				// editTextPassword.setVisibility(View.VISIBLE);
+				// messageTextView.setVisibility(View.VISIBLE);
+				//
+				// Log.d("BookaCab", "contains(uber) : " +
+				// cabUserCredentialsReadWrite.readArrayFromFile());
+				//
+				// try {
+				// for (int i = 0; i < jsonArray.length(); i++)
+				// {
+				// if (jsonArray
+				// .getJSONObject(i)
+				// .get("CabName")
+				// .toString()
+				// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER))
+				// {
+				// jsonObject = jsonArray
+				// .getJSONObject(i);
+				// editTextUserName
+				// .setText(jsonObject.get(
+				// "Username")
+				// .toString());
+				// editTextPassword
+				// .setText(jsonObject.get(
+				// "Password")
+				// .toString());
+				// }
+				// }
+				// } catch (Exception e) {
+				// // TODO: handle exception
+				// }
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("mega")) {
+				// editTextUserName.setVisibility(View.VISIBLE);
+				// editTextPassword.setVisibility(View.VISIBLE);
+				// messageTextView.setVisibility(View.VISIBLE);
+				//
+				// // Log.d("BookaCab", "contains(mega) : " +
+				// //
+				// cabUserCredentialsReadWrite.readArrayFromFile());
+				//
+				// try {
+				// for (int i = 0; i < jsonArray.length(); i++)
+				// {
+				// if (jsonArray
+				// .getJSONObject(i)
+				// .get("CabName")
+				// .toString()
+				// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA))
+				// {
+				// jsonObject = jsonArray
+				// .getJSONObject(i);
+				// editTextUserName
+				// .setText(jsonObject.get(
+				// "Username")
+				// .toString());
+				// editTextPassword
+				// .setText(jsonObject.get(
+				// "Password")
+				// .toString());
+				// }
+				// }
+				// } catch (Exception e) {
+				// // TODO: handle exception
+				// }
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("taxiforsure")) {
+				editTextUserName.setVisibility(View.VISIBLE);
+				editTextPassword.setVisibility(View.VISIBLE);
+				messageTextView.setVisibility(View.VISIBLE);
+
+				editTextUserName.setHint("Taxi For Sure username");
+				editTextPassword.setHint("Taxi For Sure password");
+
+				Log.d("BookaCab", "contains(taxiforsure) : "
+						+ cabUserCredentialsReadWrite.readArrayFromFile());
+
+				try {
+					for (int i = 0; i < jsonArray.length(); i++) {
+						if (jsonArray
+								.getJSONObject(i)
+								.get("CabName")
+								.toString()
+								.equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_TFS)) {
+							jsonObject = jsonArray.getJSONObject(i);
+							editTextUserName.setText(jsonObject.get("Username")
+									.toString());
+							editTextPassword.setText(jsonObject.get("Password")
+									.toString());
+						}
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		} catch (Exception e) {
+
+		}
+		Button button = (Button) builderView.findViewById(R.id.buttonBookNow);
+		button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+
+				dismissKeyboard();
+
+				bookNowButtonPress(position, editTextUserName.getText()
+						.toString(), editTextPassword.getText().toString());
+			}
+		});
+
+		builder.setView(builderView);
+		AlertDialog dialog = builder.create();
+
+		dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				Log.d("BookaCab", "dialog onDismiss");
+				mGridViewCabSearch.setFocusableInTouchMode(true);
+				mGridViewCabSearch.requestFocus();
+				dismissKeyboard();
+			}
+		});
+
+		dialog.show();
+	}
+
 	private void updateGridView() {
 
 		if (mCabSearchArray.length() > 0
@@ -3247,521 +3651,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
-							final int position, long id) {
-						// Log.d("BookaCab",
-						// "mGridViewCabSearch onItemClick position : " +
-						// position);
-
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								BookaCabFragmentActivity.this);
-						View builderView = (View) getLayoutInflater().inflate(
-								R.layout.book_cab_detail_dialog, null);
-
-						final EditText editTextUserName = (EditText) builderView
-								.findViewById(R.id.editTextBookCabUserName);
-						final EditText editTextPassword = (EditText) builderView
-								.findViewById(R.id.editTextBookCabPassword);
-
-						String jsonString = "";
-						TextView textView = (TextView) builderView
-								.findViewById(R.id.textViewCabName);
-						try {
-							jsonString = mCabSearchArray
-									.getJSONObject(position).get("CabName")
-									.toString();
-							textView.setText((jsonString.isEmpty() || jsonString
-									.equalsIgnoreCase("null")) ? "-"
-									: jsonString);
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewCabType);
-						try {
-							jsonString = mCabSearchArray
-									.getJSONObject(position).get("CarType")
-									.toString();
-							textView.setText((jsonString.isEmpty() || jsonString
-									.equalsIgnoreCase("null")) ? "-"
-									: jsonString);
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewEstTime);
-						try {
-							textView.setText("Est. time: "
-									+ String.format("%d%n", Math.round(Double
-											.parseDouble(mCabSearchArray
-													.getJSONObject(position)
-													.get("timeEstimate")
-													.toString()) / 60))
-									+ "mins");
-						} catch (Exception e) {
-							textView.setText("Est. time: -");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewEstPrice);
-						try {
-							String lowString = mCabSearchArray
-									.getJSONObject(position)
-									.get("low_estimate").toString();
-							String highString = mCabSearchArray
-									.getJSONObject(position)
-									.get("high_estimate").toString();
-							if (lowString.isEmpty() || highString.isEmpty()
-									|| lowString.equalsIgnoreCase("na")
-									|| lowString.equalsIgnoreCase("null")
-									|| highString.equalsIgnoreCase("na")
-									|| highString.equalsIgnoreCase("null")) {
-								textView.setText("Est. price: " + "-");
-							} else {
-								textView.setText("Est. price: \u20B9"
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("low_estimate").toString()
-										+ "-"
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("high_estimate")
-												.toString());
-							}
-
-						} catch (Exception e) {
-							textView.setText("Est. price: " + "-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabBaseFare);
-						try {
-							String baseFareString = mCabSearchArray
-									.getJSONObject(position).get("BaseFare")
-									.toString();
-							String baseKmString = mCabSearchArray
-									.getJSONObject(position).get("BaseFareKM")
-									.toString();
-							if (baseFareString.isEmpty()
-									|| baseFareString.equalsIgnoreCase("na")
-									|| baseFareString.equalsIgnoreCase("null")
-									|| baseKmString.isEmpty()
-									|| baseKmString.equalsIgnoreCase("na")
-									|| baseKmString.equalsIgnoreCase("null")) {
-								textView.setText("-");
-							} else {
-								textView.setText("\u20B9"
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("BaseFare").toString()
-										+ " for first "
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("BaseFareKM").toString()
-										+ "Kms");
-							}
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabRatePerKM);
-						try {
-							jsonString = mCabSearchArray
-									.getJSONObject(position)
-									.get("RatePerKMAfterBaseFare").toString();
-							if (jsonString.isEmpty()
-									|| jsonString.equalsIgnoreCase("na")
-									|| jsonString.equalsIgnoreCase("null")) {
-								textView.setText("-");
-							} else {
-								textView.setText("\u20B9" + jsonString
-										+ " per Km");
-							}
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabNightBase);
-						try {
-							Double multiplier = Double
-									.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("NightTimeRateMultiplier")
-											.toString());
-							Long nightRate = Math.round(multiplier
-									* Double.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("BaseFare").toString()));
-
-							textView.setText("\u20B9"
-									+ Long.toString(nightRate)
-									+ " for first "
-									+ mCabSearchArray.getJSONObject(position)
-											.get("BaseFareKM").toString()
-									+ "Kms");
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabNightPer);
-						try {
-							Double multiplier = Double
-									.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("NightTimeRateMultiplier")
-											.toString());
-							Long nightRate = Math.round(multiplier
-									* Double.parseDouble(mCabSearchArray
-											.getJSONObject(position)
-											.get("RatePerKMAfterBaseFare")
-											.toString()));
-
-							textView.setText("\u20B9"
-									+ Long.toString(nightRate) + " per Km");
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewBookCabNightTime);
-						try {
-							String startString = mCabSearchArray
-									.getJSONObject(position)
-									.get("NightTimeStartHours").toString();
-							String endString = mCabSearchArray
-									.getJSONObject(position)
-									.get("NightTimeEndHours").toString();
-							if (startString.isEmpty()
-									|| startString.equalsIgnoreCase("na")
-									|| startString.equalsIgnoreCase("null")
-									|| endString.isEmpty()
-									|| endString.equalsIgnoreCase("na")
-									|| endString.equalsIgnoreCase("null")) {
-								textView.setText("-");
-							} else {
-								textView.setText(mCabSearchArray
-										.getJSONObject(position)
-										.get("NightTimeStartHours").toString()
-										+ " hrs - "
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("NightTimeEndHours")
-												.toString() + " hrs");
-							}
-						} catch (Exception e) {
-							textView.setText("-");
-						}
-
-						RatingBar ratingBar = (RatingBar) builderView
-								.findViewById(R.id.ratingBarBookCab);
-						try {
-
-							ratingBar.setRating(Float
-									.parseFloat(mCabSearchArray
-											.getJSONObject(position)
-											.get("Rating").toString()));
-
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-						textView = (TextView) builderView
-								.findViewById(R.id.textViewNumberOfRatings);
-
-						try {
-							if (mCabSearchArray.getJSONObject(position)
-									.get("NoofReviews").toString().equals("0")) {
-								textView.setText("");
-							} else {
-								textView.setText("("
-										+ mCabSearchArray
-												.getJSONObject(position)
-												.get("NoofReviews").toString()
-										+ ")");
-							}
-						} catch (Exception e) {
-							textView.setText("");
-						}
-
-						ImageView imageView = (ImageView) builderView
-								.findViewById(R.id.imageButtonCallNow);
-						imageView
-								.setOnClickListener(new View.OnClickListener() {
-
-									@Override
-									public void onClick(View view) {
-										try {
-											String phoneString = mCabSearchArray
-													.getJSONObject(position)
-													.get("CabContactNo")
-													.toString();
-											if (phoneString.isEmpty()
-													|| phoneString
-															.equalsIgnoreCase("null")
-													|| phoneString
-															.equalsIgnoreCase("na")) {
-												Toast.makeText(
-														BookaCabFragmentActivity.this,
-														"Phone number could not be retrieved",
-														Toast.LENGTH_LONG)
-														.show();
-											} else {
-												updateCMCRecords(
-														mCabSearchArray
-																.getJSONObject(
-																		position)
-																.get("CabNameID")
-																.toString(),
-														mCabSearchArray
-																.getJSONObject(
-																		position)
-																.get("CarType")
-																.toString(),
-														"3", fAddress,
-														tAddress, "", "", true,
-														false, phoneString, "",
-														"", false);
-											}
-										} catch (Exception e) {
-											// TODO: handle exception
-											e.printStackTrace();
-											Toast.makeText(
-													BookaCabFragmentActivity.this,
-													"Phone number could not be retrieved",
-													Toast.LENGTH_LONG).show();
-										}
-									}
-								});
-
-						try {
-							CabUserCredentialsReadWrite cabUserCredentialsReadWrite = new CabUserCredentialsReadWrite(
-									BookaCabFragmentActivity.this);
-							JSONArray jsonArray = cabUserCredentialsReadWrite
-									.readArrayFromFile();
-							JSONObject jsonObject = new JSONObject();
-
-							if (mCabSearchArray.getJSONObject(position)
-									.get("CabName").toString().toLowerCase()
-									.contains("uber")) {
-								// editTextUserName.setVisibility(View.VISIBLE);
-								// editTextPassword.setVisibility(View.VISIBLE);
-
-								// Log.d("BookaCab", "contains(uber) : " +
-								// cabUserCredentialsReadWrite.readArrayFromFile());
-
-								// try {
-								// for (int i = 0; i < jsonArray.length(); i++)
-								// {
-								// if (jsonArray
-								// .getJSONObject(i)
-								// .get("CabName")
-								// .toString()
-								// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER))
-								// {
-								// jsonObject = jsonArray
-								// .getJSONObject(i);
-								// editTextUserName
-								// .setText(jsonObject.get(
-								// "Username")
-								// .toString());
-								// editTextPassword
-								// .setText(jsonObject.get(
-								// "Password")
-								// .toString());
-								// }
-								// }
-								// } catch (Exception e) {
-								// // TODO: handle exception
-								// }
-							} else if (mCabSearchArray.getJSONObject(position)
-									.get("CabName").toString().toLowerCase()
-									.contains("mega")) {
-								// editTextUserName.setVisibility(View.VISIBLE);
-								// editTextPassword.setVisibility(View.VISIBLE);
-								//
-								// // Log.d("BookaCab", "contains(uber) : " +
-								// //
-								// cabUserCredentialsReadWrite.readArrayFromFile());
-								//
-								// try {
-								// for (int i = 0; i < jsonArray.length(); i++)
-								// {
-								// if (jsonArray
-								// .getJSONObject(i)
-								// .get("CabName")
-								// .toString()
-								// .equals(CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA))
-								// {
-								// jsonObject = jsonArray
-								// .getJSONObject(i);
-								// editTextUserName
-								// .setText(jsonObject.get(
-								// "Username")
-								// .toString());
-								// editTextPassword
-								// .setText(jsonObject.get(
-								// "Password")
-								// .toString());
-								// }
-								// }
-								// } catch (Exception e) {
-								// // TODO: handle exception
-								// }
-							}
-						} catch (Exception e) {
-
-						}
-						Button button = (Button) builderView
-								.findViewById(R.id.buttonBookNow);
-						button.setOnClickListener(new View.OnClickListener() {
-
-							@Override
-							public void onClick(View view) {
-
-								dismissKeyboard();
-
-								try {
-
-									if (mCabSearchArray.getJSONObject(position)
-											.get("CabName").toString()
-											.toLowerCase().contains("uber")) {
-
-										// if (editTextUserName.getText()
-										// .toString().isEmpty()
-										// || editTextPassword.getText()
-										// .toString().isEmpty()) {
-										// Toast.makeText(
-										// BookaCab.this,
-										// "Please enter Username/Password",
-										// Toast.LENGTH_LONG).show();
-										// } else {
-										// JSONObject jsonObject = new
-										// JSONObject();
-										// jsonObject
-										// .put("CabName",
-										// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_UBER);
-										// jsonObject.put("Username",
-										// editTextUserName.getText()
-										// .toString());
-										// jsonObject.put("Password",
-										// editTextPassword.getText()
-										// .toString());
-										//
-										// CabUserCredentialsReadWrite
-										// cabUserCredentialsReadWrite = new
-										// CabUserCredentialsReadWrite(
-										// BookaCab.this);
-										// cabUserCredentialsReadWrite
-										// .saveToFile(jsonObject
-										// .toString());
-										//
-										// mUberUsername = editTextUserName
-										// .getText().toString();
-										// mUberPassword = editTextPassword
-										// .getText().toString();
-										// }
-
-										cabBookUberMegaPosition = position;
-										bookUberCab(
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CabName")
-														.toString(),
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("productId")
-														.toString(), fAddress,
-												tAddress);
-
-									} else if (mCabSearchArray
-											.getJSONObject(position)
-											.get("CabName").toString()
-											.toLowerCase().contains("mega")) {
-
-										// if (editTextUserName.getText()
-										// .toString().isEmpty()
-										// || editTextPassword.getText()
-										// .toString().isEmpty()) {
-										// Toast.makeText(
-										// BookaCab.this,
-										// "Please enter Username/Password",
-										// Toast.LENGTH_LONG).show();
-										// } else {
-										// JSONObject jsonObject = new
-										// JSONObject();
-										// jsonObject
-										// .put("CabName",
-										// CabUserCredentialsReadWrite.KEY_JSON_CAB_NAME_MEGA);
-										// jsonObject.put("Username",
-										// editTextUserName.getText()
-										// .toString());
-										// jsonObject.put("Password",
-										// editTextPassword.getText()
-										// .toString());
-										//
-										// CabUserCredentialsReadWrite
-										// cabUserCredentialsReadWrite = new
-										// CabUserCredentialsReadWrite(
-										// BookaCab.this);
-										// cabUserCredentialsReadWrite
-										// .saveToFile(jsonObject
-										// .toString());
-										//
-										//
-										// }
-										cabBookUberMegaPosition = position;
-										bookMegaCab(fAddress, tAddress);
-
-									} else {
-
-										updateCMCRecords(
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CabNameID")
-														.toString(),
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CarType")
-														.toString(),
-												"2",
-												fAddress,
-												tAddress,
-												"",
-												"",
-												false,
-												true,
-												"",
-												"http://"
-														+ mCabSearchArray
-																.getJSONObject(
-																		position)
-																.get("CabMobileSite")
-																.toString(),
-												mCabSearchArray
-														.getJSONObject(position)
-														.get("CabPackageName")
-														.toString(), false);
-									}
-
-								} catch (Exception e) {
-									// TODO: handle exception
-									e.printStackTrace();
-								}
-							}
-						});
-
-						builder.setView(builderView);
-						AlertDialog dialog = builder.create();
-
-						dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
-
-							@Override
-							public void onDismiss(DialogInterface dialog) {
-								Log.d("BookaCab", "dialog onDismiss");
-								mGridViewCabSearch
-										.setFocusableInTouchMode(true);
-								mGridViewCabSearch.requestFocus();
-								dismissKeyboard();
-							}
-						});
-
-						dialog.show();
+							int position, long id) {
+						gridviewItemClick(position);
 					}
 				});
 
@@ -3895,45 +3786,60 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 					textView.setText("");
 				}
 
-				// Button button = (Button) convertView
-				// .findViewById(R.id.buttonBookNow);
-				// button.setTag("BookNowButton" + position);
-				// button.setOnClickListener(new View.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(View view) {
-				// int pos = Integer.parseInt(view.getTag().toString()
-				// .replace("BookNowButton", ""));
-				// try {
-				//
-				// if (mEntries.getJSONObject(pos).get("CabName")
-				// .toString().toLowerCase().contains("uber")) {
-				// // Log.d("BookaCab",
-				// // "BookNowButton fAddress : " +
-				// // fAddress.toString() + " tAddress : " +
-				// // tAddress.toString());
-				// bookUberCab(
-				// mEntries.getJSONObject(pos)
-				// .get("CabName").toString(),
-				// mEntries.getJSONObject(pos)
-				// .get("productId").toString(),
-				// fAddress, tAddress);
-				// } else {
-				// openAppOrMSite(
-				// mEntries.getJSONObject(pos)
-				// .get("CabPackageName")
-				// .toString(), "http://"
-				// + mEntries.getJSONObject(pos)
-				// .get("CabMobileSite")
-				// .toString());
-				// }
-				//
-				// } catch (Exception e) {
-				// // TODO: handle exception
-				// e.printStackTrace();
-				// }
-				// }
-				// });
+				Button button = (Button) convertView
+						.findViewById(R.id.buttonBookNow);
+				button.setTag("BookNowButton" + position);
+				button.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+
+						int pos = Integer.parseInt(view.getTag().toString()
+								.replace("BookNowButton", ""));
+						Log.d("BookaCab", "buttonBookNow onClick pos : " + pos);
+
+						try {
+							if (mCabSearchArray.getJSONObject(pos)
+									.get("CabName").toString().toLowerCase()
+									.contains("taxiforsure")) {
+								gridviewItemClick(pos);
+							} else {
+								bookNowButtonPress(pos, "", "");
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						// try {
+						//
+						// if (mEntries.getJSONObject(pos).get("CabName")
+						// .toString().toLowerCase().contains("uber")) {
+						// // Log.d("BookaCab",
+						// // "BookNowButton fAddress : " +
+						// // fAddress.toString() + " tAddress : " +
+						// // tAddress.toString());
+						// bookUberCab(
+						// mEntries.getJSONObject(pos)
+						// .get("CabName").toString(),
+						// mEntries.getJSONObject(pos)
+						// .get("productId").toString(),
+						// fAddress, tAddress);
+						// } else {
+						// openAppOrMSite(
+						// mEntries.getJSONObject(pos)
+						// .get("CabPackageName")
+						// .toString(), "http://"
+						// + mEntries.getJSONObject(pos)
+						// .get("CabMobileSite")
+						// .toString());
+						// }
+						//
+						// } catch (Exception e) {
+						// // TODO: handle exception
+						// e.printStackTrace();
+						// }
+					}
+				});
 				//
 				// ImageView imageButton = (ImageView) convertView
 				// .findViewById(R.id.imageButtonCallNow);
@@ -4157,7 +4063,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
 			builder.setMessage("ClubMyCab requires Internet connection");
 			builder.setPositiveButton("OK", null);
@@ -4169,7 +4076,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 			return;
 		} else if (startAddress == null || endAddress == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("");
 			builder.setMessage("Please provide both From & To locations to make a booking.");
 			builder.setPositiveButton("OK", null);
@@ -4182,25 +4090,38 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 			return;
 		}
 
-		GetUberRequestIDAsync getUberRequestIDAsync = new GetUberRequestIDAsync();
-		String param = "cabType=" + cabType + "&productid=" + productID
-				+ "&lat=" + String.valueOf(startAddress.getLatitude())
-				+ "&lon=" + String.valueOf(startAddress.getLongitude())
-				+ "&elat=" + String.valueOf(endAddress.getLatitude())
-				+ "&elon=" + String.valueOf(endAddress.getLongitude())
-				+ "&cabID=";
-		mUberBookingInputParams = "&productid=" + productID + "&lat="
-				+ String.valueOf(startAddress.getLatitude()) + "&lon="
-				+ String.valueOf(startAddress.getLongitude()) + "&elat="
-				+ String.valueOf(endAddress.getLatitude()) + "&elon="
-				+ String.valueOf(endAddress.getLongitude());
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getUberRequestIDAsync.executeOnExecutor(
-					AsyncTask.THREAD_POOL_EXECUTOR, param);
-		} else {
-			getUberRequestIDAsync.execute(param);
-		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
+		builder.setMessage("Please provide us with your Uber account information on the next page, you need to do this only once");
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				GetUberRequestIDAsync getUberRequestIDAsync = new GetUberRequestIDAsync();
+				String param = "cabType=" + cabType + "&productid=" + productID
+						+ "&lat=" + String.valueOf(startAddress.getLatitude())
+						+ "&lon=" + String.valueOf(startAddress.getLongitude())
+						+ "&elat=" + String.valueOf(endAddress.getLatitude())
+						+ "&elon=" + String.valueOf(endAddress.getLongitude())
+						+ "&cabID=";
+				mUberBookingInputParams = "&productid=" + productID + "&lat="
+						+ String.valueOf(startAddress.getLatitude()) + "&lon="
+						+ String.valueOf(startAddress.getLongitude())
+						+ "&elat=" + String.valueOf(endAddress.getLatitude())
+						+ "&elon=" + String.valueOf(endAddress.getLongitude());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					getUberRequestIDAsync.executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, param);
+				} else {
+					getUberRequestIDAsync.execute(param);
+				}
+			}
+		});
+		AlertDialog dialog = builder.show();
+		TextView messageText = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageText.setGravity(Gravity.CENTER);
+		dialog.show();
 	}
 
 	public class GetUberRequestIDAsync extends AsyncTask<String, Void, String> {
@@ -4257,14 +4178,14 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 				} else {
 					response = "";
-					Log.d("PerformCabSearchTimeAsync",
+					Log.d("GetUberRequestIDAsync",
 							"responseCode != HttpsURLConnection.HTTP_OK : "
 									+ responseCode);
 					result = response;
 				}
 
-				Log.d("PerformCabSearchTimeAsync",
-						"performCabSearchTime response : " + response);
+				Log.d("GetUberRequestIDAsync",
+						"GetUberRequestIDAsync response : " + response);
 				result = response;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -4285,7 +4206,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 					@Override
 					public void run() {
-						Intent intent = new Intent(BookaCabFragmentActivity.this,
+						Intent intent = new Intent(
+								BookaCabFragmentActivity.this,
 								MobileSiteActivity.class);
 						intent.putExtra(
 								MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL,
@@ -4447,7 +4369,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 						String paramString = "type=bookuber"
 								+ mUberBookingInputParams + "&accesstoken="
 								+ jsonObject.get("access_token").toString();
-						getUberBookingStatus(paramString);
+						getUberBookingStatus(paramString, args[0].toString());
 					}
 					// Log.d("GetUberAccessTokenAsync",
 					// "GetUberAccessTokenAsync access_token : " + jsonArray);
@@ -4489,15 +4411,15 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		}
 	}
 
-	private void getUberBookingStatus(String params) {
+	private void getUberBookingStatus(String params,
+			final String requestIDInTable) {
 
 		try {
 			URL url = new URL(GlobalVariables.ServiceUrl + "/uberConnect.php?"
 					+ params);
 			String response = "";
-			Log.d("BookaCab",
-					"getUberBookingStatus : " + GlobalVariables.ServiceUrl
-							+ "/uberConnect.php?" + params);
+			Log.d("BookaCab", "getUberBookingStatus : "
+					+ GlobalVariables.ServiceUrl + "/uberConnect.php?" + params);
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
 			urlConnection.setReadTimeout(30000);
@@ -4629,12 +4551,14 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 														updateCMCRecords(
 																mCabSearchArray
 																		.getJSONObject(
-																				cabBookUberMegaPosition)
+																				cabBookingPosition)
 																		.get("CabNameID")
-																		.toString(),
+																		.toString()
+																		+ "~"
+																		+ requestIDInTable,
 																mCabSearchArray
 																		.getJSONObject(
-																				cabBookUberMegaPosition)
+																				cabBookingPosition)
 																		.get("CarType")
 																		.toString(),
 																"1", fAddress,
@@ -4813,12 +4737,307 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 	}
 
+	private void bookTFSCab(final Address startAddress, String username,
+			String password, String carType, String etaApp) {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		} else if (startAddress == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
+			builder.setTitle("");
+			builder.setMessage("Please provide From location to make a booking.");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		BookTFSAsync bookTFSAsync = new BookTFSAsync();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm");
+		Date date = Calendar.getInstance().getTime();
+		String dateString, timeString;
+		try {
+			dateString = simpleDateFormat.format(date);
+			timeString = simpleTimeFormat.format(date);
+			// Log.d("BookaCab", "updateCMCRecords dateString : " + dateString
+			// + " timeString : " + timeString);
+		} catch (Exception e) {
+			e.printStackTrace();
+			dateString = "";
+			timeString = "";
+		}
+
+		String param = "type=booking" + "&username=" + username + "&password="
+				+ password + "&car_type=" + carType + "&source=app"
+				+ "&pickup_time=" + timeString + "&pickup_date=" + dateString
+				+ "&city=" + startAddress.getLocality() + "&pickup_area="
+				+ from_places.getText().toString().trim() + "&landmark="
+				+ from_places.getText().toString().trim() + "&pickup_latitude="
+				+ String.valueOf(startAddress.getLatitude())
+				+ "&pickup_longitude="
+				+ String.valueOf(startAddress.getLongitude())
+				+ "&eta_from_app=" + etaApp;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			bookTFSAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					param);
+		} else {
+			bookTFSAsync.execute(param);
+		}
+	}
+
+	public class BookTFSAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		@Override
+		protected void onPreExecute() {
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
+
+			dialog12.setMessage("Please Wait...");
+			dialog12.setCancelable(false);
+			dialog12.setCanceledOnTouchOutside(false);
+			dialog12.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("BookTFSAsync", "BookTFSAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl + "/tfs.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("BookTFSAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("BookTFSAsync", "BookTFSAsync response : " + response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (!result.isEmpty()) {
+
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					String status = jsonObject.get("status").toString();
+					if (status.equalsIgnoreCase("SUCCESS")) {
+
+						JSONObject jsonObjectData = new JSONObject(jsonObject
+								.get("response_data").toString());
+						String driverName = "", driverPhone = "", vehicleLicense = "", requestID = "";
+						try {
+							driverName = jsonObjectData.get("driver_name")
+									.toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							driverPhone = jsonObjectData.get("driver_number")
+									.toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							vehicleLicense = jsonObjectData.get(
+									"vehicle_number").toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							requestID = jsonObjectData.get("booking_id")
+									.toString();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						if (rideObject != null) {
+							rideObject.driverName = driverName;
+							rideObject.driverPhone = driverPhone;
+							rideObject.vehicle = vehicleLicense;
+						} else {
+							rideObject.driverName = driverName;
+							rideObject.driverPhone = driverPhone;
+							rideObject.vehicle = vehicleLicense;
+						}
+
+						final String driverNameFinal = driverName, driverPhoneFinal = driverPhone, vehicleLicenseFinal = vehicleLicense, requestIDFinal = requestID;
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										BookaCabFragmentActivity.this);
+								builder.setTitle("Success");
+								builder.setMessage("Cab booked succesfully!\r\n"
+										+ "Driver : "
+										+ driverNameFinal
+										+ " ("
+										+ driverPhoneFinal
+										+ ")\r\n"
+										+ "Vehicle : " + vehicleLicenseFinal);
+								builder.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+
+												try {
+													updateCMCRecords(
+															mCabSearchArray
+																	.getJSONObject(
+																			cabBookingPosition)
+																	.get("CabNameID")
+																	.toString(),
+															mCabSearchArray
+																	.getJSONObject(
+																			cabBookingPosition)
+																	.get("CarType")
+																	.toString(),
+															"1", fAddress,
+															tAddress, "",
+															requestIDFinal,
+															false, false, "",
+															"", "", true);
+												} catch (Exception e) {
+													e.printStackTrace();
+												}
+											}
+										});
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+
+							}
+						});
+
+					} else {
+						final String reason = jsonObject.get("error_desc")
+								.toString();
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										BookaCabFragmentActivity.this);
+								builder.setTitle("Cab could not be booked");
+								builder.setMessage(reason);
+								builder.setPositiveButton("OK", null);
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog12.isShowing()) {
+				dialog12.dismiss();
+			}
+		}
+	}
+
 	private void bookMegaCab(final Address startAddress,
 			final Address endAddress) {
 
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
 			builder.setMessage("ClubMyCab requires Internet connection");
 			builder.setPositiveButton("OK", null);
@@ -4830,7 +5049,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 
 			return;
 		} else if (startAddress == null || endAddress == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
 			builder.setTitle("");
 			builder.setMessage("Please provide both From & To locations to make a booking.");
 			builder.setPositiveButton("OK", null);
@@ -5011,12 +5231,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 													updateCMCRecords(
 															mCabSearchArray
 																	.getJSONObject(
-																			cabBookUberMegaPosition)
+																			cabBookingPosition)
 																	.get("CabNameID")
 																	.toString(),
 															mCabSearchArray
 																	.getJSONObject(
-																			cabBookUberMegaPosition)
+																			cabBookingPosition)
 																	.get("CarType")
 																	.toString(),
 															"1", fAddress,
@@ -5168,7 +5388,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 				+ ((rideObject != null) ? rideObject.vehicle : "")
 				+ "&CarType=";
 
-		// Log.d("BookaCab", "updateCMCRecords param : " + param);
+		Log.d("BookaCab", "updateCMCRecords param : " + param);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			updateCMCRecordsAsync.executeOnExecutor(
@@ -5213,7 +5433,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 							+ " boolean site : " + shouldOpenSite);
 
 			try {
-				URL url = new URL(GlobalVariables.ServiceUrl + "/cmcRecords.php");
+				URL url = new URL(GlobalVariables.ServiceUrl
+						+ "/cmcRecords.php");
 				String response = "";
 
 				HttpURLConnection urlConnection = (HttpURLConnection) url
@@ -5295,7 +5516,9 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 					}
 
 					if (shouldOpenBookedCabPage) {
-						Intent intent = new Intent(BookaCabFragmentActivity.this, MyRidesActivity.class);
+						Intent intent = new Intent(
+								BookaCabFragmentActivity.this,
+								MyRidesActivity.class);
 						startActivity(intent);
 					}
 				}
@@ -5331,8 +5554,17 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 					// logString2 += (jsonObject.get("CabName").toString() +
 					// " ");
 				} else {
-					hashMap.put(Double.parseDouble(jsonObject.get(sortString)
-							.toString()), jsonObject);
+					Double key = Double.parseDouble(jsonObject.get(sortString)
+							.toString());
+					if (hashMap.get(key) != null) {
+						// in case of same timeEstimate values for 2 cabs, one
+						// value gets over-written, adding small constant to
+						// differentiate keys
+						hashMap.put((key + 0.01), jsonObject);
+					} else {
+						hashMap.put(key, jsonObject);
+					}
+
 					// logString += (jsonObject.get("CabName").toString() +
 					// " ");
 				}
@@ -5431,7 +5663,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		final CharSequence[] options = { "Take Photo", "Choose from Gallery",
 				"Cancel" };
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(BookaCabFragmentActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
 		builder.setTitle("Add Photo!");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
 			@Override
@@ -5456,99 +5689,101 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		builder.show();
 	}
 
-	private class ConnectionTaskForreadunreadnotification extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(BookaCabFragmentActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
-			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount.setText(readunreadnotiresp);
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionreadunreadnotification {
-
-		public AuthenticateConnectionreadunreadnotification() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/FetchUnreadNotificationCount.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumberstr);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-
-		}
-	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(BookaCabFragmentActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	//
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumberstr);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	private class ConnectionTaskForfetchimagename extends
 			AsyncTask<String, Void, Void> {
@@ -5757,89 +5992,5 @@ public class BookaCabFragmentActivity extends FragmentActivity implements Locati
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(CompressFormat.JPEG, 70, stream);
 		return stream.toByteArray();
-	}
-
-	public String getaddressfromautoplace(Context ctx, String str) {
-		StringBuilder result = new StringBuilder();
-		StringBuilder result1 = new StringBuilder();
-		String totext = str;
-
-		if (totext.contains(",")) {
-			String[] arr = totext.split(",");
-
-			if (arr.length <= 2) {
-				result.append(totext + ", ");
-			} else {
-				for (int i = 0; i < arr.length; i++) {
-
-					if (i == arr.length - 1 || i == arr.length - 2) {
-
-					} else {
-						result.append(arr[i].toString().trim() + ", ");
-					}
-				}
-			}
-
-			result = result.deleteCharAt(result.length() - 2);
-
-			String[] arr1 = result.toString().split(",");
-
-			result1 = new StringBuilder();
-			for (int i1 = 0; i1 < arr1.length; i1++) {
-
-				if (i1 == arr1.length - 1 || i1 == arr1.length - 2) {
-
-					result1.append(arr1[i1].toString().trim() + ", ");
-				}
-			}
-
-			result1 = result1.deleteCharAt(result1.length() - 2);
-		} else {
-			result1.append(totext);
-		}
-		return result1.toString();
-	}
-
-	public String getAddressshort(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-
-					if (i == 1) {
-						if (address.getAddressLine(i) == null
-								|| address.getAddressLine(i).isEmpty()) {
-
-							result.append(address.getLocality().toString()
-									.trim());
-
-						} else {
-
-							if (address.getAddressLine(i).contains(",")) {
-								String[] arr = address.getAddressLine(i).split(
-										",");
-								result.append(arr[arr.length - 1] + ", "
-										+ address.getLocality());
-							} else {
-
-								result.append(address.getAddressLine(i)
-										.toString().trim()
-										+ ", " + address.getLocality());
-							}
-						}
-					}
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString().trim();
 	}
 }

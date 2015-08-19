@@ -11,7 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         android:background="@drawable/bookacab_rowbanner"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textViewCabName"
@@ -67,7 +68,8 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="35dp"
-        android:background="@drawable/bookacab_bluerectangle" >
+        android:background="@drawable/bookacab_bluerectangle"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textViewEstTime"
@@ -120,6 +122,17 @@
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/messageUserCredentials"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="(You need to fill out this information only once)"
+        android:textColor="#9e9e9e"
+        android:textSize="13sp"
+        android:textStyle="italic"
         android:visibility="gone" />
 
     <RelativeLayout

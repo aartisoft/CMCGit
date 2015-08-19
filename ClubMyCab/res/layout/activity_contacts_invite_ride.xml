@@ -1,0 +1,204 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contactsmyclubrl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDEDED" >
+
+    <include
+        android:id="@+id/header1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        layout="@layout/header" />
+    
+
+    <LinearLayout
+        android:id="@+id/contactsmyclubll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header1"
+        android:layout_marginTop="1dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/contactsbtn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#4279bd"
+            android:text="Contacts"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:background="#ffffff" />
+
+        <Button
+            android:id="@+id/myclubbtn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#4279bd"
+            android:text="Clubs"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/searchfromlist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contactsmyclubll"
+        android:layout_margin="5dp"
+        android:hint="Search"
+        android:visibility="gone"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/validmobiletxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchfromlist"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="(Please select contacts with valid Indian mobile numbers)"
+        android:textColor="#9e9e9e"
+        android:visibility="gone"
+        android:textSize="11sp" />
+     <LinearLayout
+        android:id="@+id/newclubsendll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+          <TextView 
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        
+        android:text="@string/selectclub"
+        android:gravity="center"
+        android:textColor="#000"
+        />
+         <TextView 
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="10sp"
+        android:text="@string/memberexcludingmsg"
+        android:gravity="center"
+        android:textColor="#000"
+        />
+
+        <Button
+            android:id="@+id/sendbtn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#4279bd"
+            android:text="Send"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contactsearchll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/validmobiletxt"
+        android:background="#EDEDED"
+        android:layout_above="@id/newclubsendll"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/clubcontactslistll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ListView
+                android:id="@+id/contactslist"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mainclublistll"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            
+            android:weightSum="2" >
+
+            <LinearLayout
+                android:id="@+id/ownclubsll"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/createnewclubbtn"
+                    android:gravity="center"
+                    android:text="My Clubs"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <ListView
+                    android:id="@+id/listMyclubs"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    
+                    android:background="#FFFFFF" >
+                </ListView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/memberclubsll"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF"
+                
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/createnewclubbtn"
+                    android:gravity="center"
+                    android:text="Clubs I&apos;m Member of"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp" />
+
+                <ListView
+                    android:id="@+id/listMembersclubs"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#FFFFFF" >
+                </ListView>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+   
+
+</RelativeLayout>

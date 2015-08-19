@@ -1,10 +1,11 @@
 package com.clubmycab;
 
-import com.clubmycab.utility.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.clubmycab.utility.Log;
 
 public class Helper {
 	public static void getListViewSize(ListView myListView) {

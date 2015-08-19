@@ -101,6 +101,32 @@
                 android:layout_marginTop="10dp" >
 
                 <TextView
+                    android:id="@+id/emailtxt"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="E-mail:" />
+
+                <EditText
+                    android:id="@+id/emailedittext"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:hint="Enter e-mail address"
+                    android:inputType="textEmailAddress"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" >
+
+                <TextView
                     android:id="@+id/passwordtxt"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
@@ -123,7 +149,8 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" >
+                android:layout_marginTop="10dp"
+                android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/confirmpasswordtxt"
@@ -145,6 +172,23 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" >
+
+                <!-- <Button -->
+                <!-- android:id="@+id/buttonTNCReject" -->
+                <!-- android:layout_width="wrap_content" -->
+                <!-- android:layout_height="wrap_content" -->
+                <!-- android:layout_margin="5dp" -->
+                <!-- android:layout_weight="1" -->
+                <!-- android:background="@drawable/createnewclubbtn" -->
+                <!-- android:text="Reject" -->
+                <!-- android:textColor="@android:color/white" /> -->
+
+            </LinearLayout>
+
             <Button
                 android:id="@+id/registerbtn"
                 android:layout_width="match_parent"
@@ -154,6 +198,26 @@
                 android:text="Submit"
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/str_text_termandcondition"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewTNCLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/text_label_tnc_website"
+                android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
 

@@ -2,10 +2,6 @@ package com.clubmycab.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.clubmycab.R;
 
@@ -18,20 +14,23 @@ public class TermsAndConditionsActivity extends Activity {
 		
 		setContentView(R.layout.activity_tnc);
 		
-		setResult(Activity.RESULT_CANCELED);
+	//	setResult(Activity.RESULT_CANCELED);
 		
-		TextView textView = (TextView)findViewById(R.id.textViewTNCLink);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		
-		Button button = (Button)findViewById(R.id.buttonTNCAccept);
-		button.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				setResult(Activity.RESULT_OK);
-				finish();
-			}
-		});
+//		TextView textView = (TextView)findViewById(R.id.textViewTNCLink);
+//		textView.setMovementMethod(LinkMovementMethod.getInstance());
+//		
+//		Button button = (Button)findViewById(R.id.buttonTNCAccept);
+//		button.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Intent mainIntent = new Intent(TermsAndConditionsActivity.this,
+//						RegistrationActivity.class);
+//				mainIntent.putExtra("source", "phonenumber");
+//				startActivity(mainIntent);
+//				finish();
+//			}
+//		});
 	}
 	
 

@@ -56,8 +56,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -78,13 +76,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.ui.AboutPagerFragmentActivity;
+import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.ui.ContactsInviteForRideActivity;
+import com.clubmycab.ui.FavoritePlaceFindActivity;
 import com.clubmycab.ui.HomeActivity;
-import com.clubmycab.ui.MyClubsActivity;
-import com.clubmycab.ui.MyProfileActivity;
-import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
-import com.clubmycab.ui.SettingActivity;
+import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -99,7 +96,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.navdrawer.SimpleSideDrawer;
 
-public class ShareLocationFragmentActivity extends FragmentActivity implements LocationListener {
+public class ShareLocationFragmentActivity extends FragmentActivity implements
+		LocationListener {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -179,7 +177,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 	int flag = 1;
 	Button donebtn;
-
+	private TextView validmobiletxt1;
 	String appusers;
 
 	ArrayList<String> selectednames = new ArrayList<String>();
@@ -203,7 +201,6 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 	GoogleMap frommap;
 	String imagenameresp;
 
-	
 	RelativeLayout sharelocationrl;
 
 	LinearLayout homeofficellvalues;
@@ -257,7 +254,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 		GoogleAnalytics analytics = GoogleAnalytics
 				.getInstance(ShareLocationFragmentActivity.this);
-		tracker = analytics.newTracker("UA-63477985-1");
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("Share Location");
@@ -273,188 +271,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 			}
 		});
 
-		
-
-		mNav = new SimpleSideDrawer(this);
-		mNav.setLeftBehindContentView(R.layout.activity_behind_left_simple);
-
-		findViewById(R.id.sidemenu).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// mainhomepagerl.setAlpha((float) 0.3);
-				mNav.toggleLeftDrawer();
-
-			}
-		});
-
-		myprofile = (TextView) findViewById(R.id.myprofile);
-		myprofile.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myrides = (TextView) findViewById(R.id.myrides);
-		myrides.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		bookacab = (TextView) findViewById(R.id.bookacab);
-		bookacab.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharemylocation = (TextView) findViewById(R.id.sharemylocation);
-		sharemylocation.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		myclubs = (TextView) findViewById(R.id.myclubs);
-		myclubs.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		sharethisapp = (TextView) findViewById(R.id.sharethisapp);
-		sharethisapp.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		mypreferences = (TextView) findViewById(R.id.mypreferences);
-		mypreferences.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		about = (TextView) findViewById(R.id.about);
-		about.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-
-		myprofile.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyProfile Click")
-						.setAction("MyProfile Click")
-						.setLabel("MyProfile Click").build());
-
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-						MyProfileActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		myrides.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyRides Click")
-						.setAction("MyRides Click").setLabel("MyRides Click")
-						.build());
-
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this, MyRidesActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		bookacab.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("BookaCab Click")
-						.setAction("BookaCab Click").setLabel("BookaCab Click")
-						.build());
-
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-						BookaCabFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharemylocation.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-			}
-		});
-
-		myclubs.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("MyClubs Click")
-						.setAction("MyClubs Click").setLabel("MyClubs Click")
-						.build());
-
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-						MyClubsActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		sharethisapp.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareApp Click")
-						.setAction("ShareApp Click").setLabel("ShareApp Click")
-						.build());
-
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent
-						.putExtra(
-								Intent.EXTRA_TEXT,
-								"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ http://tinyurl.com/n7j6chq");
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share Via"));
-
-			}
-		});
-
-		mypreferences.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("Settings Click")
-						.setAction("Settings Click").setLabel("Settings Click")
-						.build());
-
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-						SettingActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
-
-		about.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("About Click").setAction("About Click")
-						.setLabel("About Click").build());
-
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-						AboutPagerFragmentActivity.class);
-				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
-						R.anim.slide_out_left);
-			}
-		});
+		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
+		drawer.createDrawer();
 
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
@@ -480,7 +298,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+				Intent mainIntent = new Intent(
+						ShareLocationFragmentActivity.this,
 						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
 				overridePendingTransition(R.anim.slide_in_right,
@@ -505,6 +324,16 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
 		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
+
+		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+			unreadnoticountrl.setVisibility(View.GONE);
+
+		} else {
+
+			unreadnoticountrl.setVisibility(View.VISIBLE);
+			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
+		}
 
 		selectrecprll = (RelativeLayout) findViewById(R.id.selectrecprll);
 		selectrecprll.setOnClickListener(new View.OnClickListener() {
@@ -550,7 +379,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 		selectrecipientsvalue = (TextView) findViewById(R.id.selectrecipientsvalue);
 		watchmeforvalue = (TextView) findViewById(R.id.watchmeforvalue);
-		from_places = (AutoCompleteTextView) findViewById(R.id.from_places);
+		from_places = (AutoCompleteTextView) findViewById(R.id.from_places1);
 		clearedittextimg = (ImageView) findViewById(R.id.clearedittextimg);
 		clearedittextimg.setVisibility(View.GONE);
 
@@ -560,53 +389,68 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 				R.layout.list_item);
 		adapter.setNotifyOnChange(true);
 
-		from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
-				R.layout.list_item));
+		from_places.setOnClickListener(new OnClickListener() {
 
-		from_places
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (event != null
-								&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-							InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-							in.hideSoftInputFromWindow(
-									from_places.getApplicationWindowToken(),
-									InputMethodManager.HIDE_NOT_ALWAYS);
-						}
-
-						return false;
-					}
-				});
-
-		from_places
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						fAddress = null; // reset previous
-						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						in.hideSoftInputFromWindow(
-								from_places.getApplicationWindowToken(),
-								InputMethodManager.HIDE_NOT_ALWAYS);
-
-						fAddress = geocodeAddress(from_places.getText()
-								.toString());
-					}
-				});
-
-		from_places.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-
+			@Override
+			public void onClick(View v) {
+				// isCallresetIntentParams = true;
 				watchmeforvalue.setText("Select Time");
-				return false;
+				Intent intent = new Intent(ShareLocationFragmentActivity.this,
+						FavoritePlaceFindActivity.class);
 
+				startActivityForResult(intent, 5);
 			}
 		});
-
+		//
+		// from_places.setAdapter(new PlacesAutoCompleteAdapter(this,
+		// R.layout.list_item));
+		//
+		// from_places
+		// .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		//
+		// @Override
+		// public boolean onEditorAction(TextView v, int actionId,
+		// KeyEvent event) {
+		// if (event != null
+		// && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+		// InputMethodManager in = (InputMethodManager)
+		// getSystemService(Context.INPUT_METHOD_SERVICE);
+		// in.hideSoftInputFromWindow(
+		// from_places.getApplicationWindowToken(),
+		// InputMethodManager.HIDE_NOT_ALWAYS);
+		// }
+		//
+		// return false;
+		// }
+		// });
+		//
+		// from_places
+		// .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		//
+		// @Override
+		// public void onItemClick(AdapterView<?> parent, View view,
+		// int position, long id) {
+		// fAddress = null; // reset previous
+		// InputMethodManager in = (InputMethodManager)
+		// getSystemService(Context.INPUT_METHOD_SERVICE);
+		// in.hideSoftInputFromWindow(
+		// from_places.getApplicationWindowToken(),
+		// InputMethodManager.HIDE_NOT_ALWAYS);
+		//
+		// fAddress = geocodeAddress(from_places.getText()
+		// .toString());
+		// }
+		// });
+		//
+		// from_places.setOnTouchListener(new View.OnTouchListener() {
+		// public boolean onTouch(View view, MotionEvent motionEvent) {
+		//
+		// watchmeforvalue.setText("Select Time");
+		// return false;
+		//
+		// }
+		// });
+		//
 		from_places.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -675,8 +519,9 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 						// Zoom in the Google Map
 						frommap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-						String address = getAddress(ShareLocationFragmentActivity.this,
-								latitude, longitude);
+						String address = MapUtilityMethods.getAddress(
+								ShareLocationFragmentActivity.this, latitude,
+								longitude);
 
 						fromlocation.setText(address);
 						fromrelative.setVisibility(View.VISIBLE);
@@ -724,7 +569,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 					String jnd = from_places.getText().toString().trim();
 
-					Geocoder coder = new Geocoder(ShareLocationFragmentActivity.this);
+					Geocoder coder = new Geocoder(
+							ShareLocationFragmentActivity.this);
 					try {
 						ArrayList<Address> adresses = (ArrayList<Address>) coder
 								.getFromLocationName(jnd, 50);
@@ -932,7 +778,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						ShareLocationFragmentActivity.this, R.anim.button_click_anim);
+						ShareLocationFragmentActivity.this,
+						R.anim.button_click_anim);
 				shartsharing.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -1309,8 +1156,9 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 				LatLng mapcenter = cameraPosition.target;
 
-				String address = getAddress(ShareLocationFragmentActivity.this,
-						mapcenter.latitude, mapcenter.longitude);
+				String address = MapUtilityMethods.getAddress(
+						ShareLocationFragmentActivity.this, mapcenter.latitude,
+						mapcenter.longitude);
 				Log.d("address", "" + address);
 
 				fromlocation.setText(address);
@@ -1348,8 +1196,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 		Cursor cursor = null;
 		try {
-			cursor = ShareLocationFragmentActivity.this.getContentResolver().query(
-					Phone.CONTENT_URI, null, null, null, null);
+			cursor = ShareLocationFragmentActivity.this.getContentResolver()
+					.query(Phone.CONTENT_URI, null, null, null, null);
 			int nameIdx = cursor.getColumnIndex(Phone.DISPLAY_NAME);
 			int phoneNumberIdx = cursor.getColumnIndex(Phone.NUMBER);
 			int imageIdx = cursor.getColumnIndex(Phone.CONTACT_ID);
@@ -1407,12 +1255,12 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 		}
 
 		// ///////////////
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForreadunreadnotification()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForreadunreadnotification().execute();
-		}
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		// new ConnectionTaskForreadunreadnotification()
+		// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// } else {
+		// new ConnectionTaskForreadunreadnotification().execute();
+		// }
 
 		// ///////////////
 		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
@@ -1459,99 +1307,144 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_OK) {
+
+			if (requestCode == 5) {
+
+				String value = (String) data.getExtras().getString("address");
+
+				Log.d("from_place:::", value);
+
+				// from_places.append(value);
+				from_places.setText(value);
+
+				if (value.equalsIgnoreCase("") || value.isEmpty()) {
+
+				} else {
+					fAddress = null; // reset previous
+
+					fAddress = geocodeAddress(from_places.getText().toString());
+					if (fAddress == null) {
+						Toast.makeText(
+								ShareLocationFragmentActivity.this,
+								"Could not locate the address, please try using the map or a different address",
+								Toast.LENGTH_LONG).show();
+					} else {
+						// fAddress = null; // reset previous
+						InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						in.hideSoftInputFromWindow(
+								from_places.getApplicationWindowToken(),
+								InputMethodManager.HIDE_NOT_ALWAYS);
+
+						// fAddress = geocodeAddress(from_places.getText()
+						// .toString());
+					}
+				}
+
+			}
+		}
+	}
+
 	// ///////
-	private class ConnectionTaskForreadunreadnotification extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionreadunreadnotification mAuth1 = new AuthenticateConnectionreadunreadnotification();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(ShareLocationFragmentActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (readunreadnotiresp.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
-			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount.setText(readunreadnotiresp);
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionreadunreadnotification {
-
-		public AuthenticateConnectionreadunreadnotification() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/FetchUnreadNotificationCount.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumber);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-
-		}
-	}
+	// private class ConnectionTaskForreadunreadnotification extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionreadunreadnotification mAuth1 = new
+	// AuthenticateConnectionreadunreadnotification();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(ShareLocationFragmentActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
+	//
+	// unreadnoticountrl.setVisibility(View.GONE);
+	//
+	// } else {
+	//
+	// unreadnoticountrl.setVisibility(View.VISIBLE);
+	// unreadnoticount.setText(readunreadnotiresp);
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionreadunreadnotification {
+	//
+	// public AuthenticateConnectionreadunreadnotification() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/FetchUnreadNotificationCount.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumber);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
+	//
+	// }
+	// }
 
 	// ////////////////////////
 	// ///////
@@ -1994,22 +1887,23 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 		// //////////////////
 
-		contactsbtn = (Button) dialog.findViewById(R.id.contactsbtn);
-		appFrends = (Button) dialog.findViewById(R.id.appFrends);
-		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn);
+		contactsbtn = (Button) dialog.findViewById(R.id.contactsbtn1);
+		appFrends = (Button) dialog.findViewById(R.id.appFrends1);
+		myclubbtn = (Button) dialog.findViewById(R.id.myclubbtn1);
 		donebtn = (Button) dialog.findViewById(R.id.donebtn);
+		validmobiletxt1 = (TextView) dialog.findViewById(R.id.validmobiletxt1);
 
 		clubcontactslistll = (LinearLayout) dialog
-				.findViewById(R.id.clubcontactslistll);
-		contactslist = (ListView) dialog.findViewById(R.id.contactslist);
+				.findViewById(R.id.clubcontactslistll1);
+		contactslist = (ListView) dialog.findViewById(R.id.contactslist1);
 
 		mainclublistll = (LinearLayout) dialog
-				.findViewById(R.id.mainclublistll);
-		listMyclubs = (ListView) dialog.findViewById(R.id.listMyclubs);
+				.findViewById(R.id.mainclublistll1);
+		listMyclubs = (ListView) dialog.findViewById(R.id.listMyclubs1);
 		listMembersclubs = (ListView) dialog
-				.findViewById(R.id.listMembersclubs);
+				.findViewById(R.id.listMembersclubs1);
 
-		searchfromlist = (EditText) dialog.findViewById(R.id.searchfromlist);
+		searchfromlist = (EditText) dialog.findViewById(R.id.searchfromlist1);
 
 		contactsbtn.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
@@ -2023,6 +1917,9 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 		contactsbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+
+				validmobiletxt1
+						.setText("(Please select contacts with valid Indian mobile numbers)");
 
 				flag = 1;
 
@@ -2062,7 +1959,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 							}
 						});
 
-				objAdapter = new ContactsAdapter(ShareLocationFragmentActivity.this,
+				objAdapter = new ContactsAdapter(
+						ShareLocationFragmentActivity.this,
 						ContactsListClass.phoneList);
 				contactslist.setAdapter(objAdapter);
 				contactslist.setOnItemClickListener(new OnItemClickListener() {
@@ -2118,7 +2016,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 			public void onClick(View arg0) {
 
 				flag = 0;
-
+				validmobiletxt1.setText("(Select a club from below)");
 				contactsbtn.setBackgroundColor(Color.parseColor("#4279bd"));
 				contactsbtn.setTextColor(Color.WHITE);
 
@@ -2169,8 +2067,17 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 										.getString("PoolId").toString());
 								MyClubPoolName.add(subArray.getJSONObject(i)
 										.getString("PoolName").toString());
-								MyClubNoofMembers.add(subArray.getJSONObject(i)
-										.getString("NoofMembers").toString());
+
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MyClubNoofMembers.add("1");
+								else
+									MyClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
+
 								MyClubOwnerName.add(subArray.getJSONObject(i)
 										.getString("OwnerName").toString());
 								MyClubMembers.add(subArray.getJSONObject(i)
@@ -2181,9 +2088,15 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 								MemberClubPoolName.add(subArray
 										.getJSONObject(i).getString("PoolName")
 										.toString());
-								MemberClubNoofMembers.add(subArray
-										.getJSONObject(i)
-										.getString("NoofMembers").toString());
+								if (subArray.getJSONObject(i)
+										.getString("NoofMembers").toString()
+										.equalsIgnoreCase("null"))
+									MemberClubNoofMembers.add("1");
+								else
+									MemberClubNoofMembers.add(subArray
+											.getJSONObject(i)
+											.getString("NoofMembers")
+											.toString());
 								MemberClubOwnerName.add(subArray
 										.getJSONObject(i)
 										.getString("OwnerName").toString());
@@ -2223,34 +2136,94 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 								ClubListClass.ClubList.add(cp);
 							}
-
-							ClubsAdaptor adapter = new ClubsAdaptor(
-									ShareLocationFragmentActivity.this, ClubListClass.ClubList);
-							listMyclubs.setAdapter(adapter);
-							listMyclubs
-									.setOnItemClickListener(new OnItemClickListener() {
-
-										@Override
-										public void onItemClick(
-												AdapterView<?> parent, View v,
-												int position, long id) {
-											// TODO Auto-generated method stub
-											CheckBox chk = (CheckBox) v
-													.findViewById(R.id.myclubcheckBox);
-											ClubObject bean = ClubListClass.ClubList
-													.get(position);
-
-											if (bean.isSelected()) {
-												bean.setSelected(false);
-												chk.setChecked(false);
-											} else {
-												bean.setSelected(true);
-												chk.setChecked(true);
-											}
-
-										}
-									});
 						}
+
+						// ClubsAdaptor adapter = new ClubsAdaptor(
+						// ShareLocationFragmentActivity.this,
+						// ClubListClass.ClubList);
+						// listMyclubs.setAdapter(adapter);
+						// listMyclubs
+						// .setOnItemClickListener(new OnItemClickListener() {
+						//
+						// @Override
+						// public void onItemClick(
+						// AdapterView<?> parent, View v,
+						// int position, long id) {
+						// // TODO Auto-generated method stub
+						// CheckBox chk = (CheckBox) v
+						// .findViewById(R.id.myclubcheckBox);
+						// ClubObject bean = ClubListClass.ClubList
+						// .get(position);
+						//
+						// if (bean.isSelected()) {
+						// bean.setSelected(false);
+						// chk.setChecked(false);
+						// } else {
+						// bean.setSelected(true);
+						// chk.setChecked(true);
+						// }
+						//
+						// }
+						// });
+
+						// Pawan
+						ContactsInviteForRideActivity.adapterClubMy = new ClubsAdaptor(
+								ShareLocationFragmentActivity.this,
+								ClubListClass.ClubList, false);
+						listMyclubs
+								.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
+						// listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+						listMyclubs
+								.setOnItemClickListener(new OnItemClickListener() {
+
+									@Override
+									public void onItemClick(
+											AdapterView<?> parent, View v,
+											int position, long id) {
+										// TODO Auto-generated method stub
+
+										ClubObject bean = ClubListClass.ClubList
+												.get(position);
+										bean.setSelected(true);
+
+										for (int i = 0; i < ClubListClass.ClubList
+												.size(); i++) {
+
+											if (i == position)
+												continue;
+
+											bean = ClubListClass.ClubList
+													.get(i);
+											bean.setSelected(false);
+										}
+										// Remove all memberclib list selection
+										for (int i = 0; i < ClubListClass.MemberClubList
+												.size(); i++) {
+
+											bean = ClubListClass.MemberClubList
+													.get(i);
+											bean.setSelected(false);
+										}
+
+										ContactsInviteForRideActivity.adapterClubMember
+												.setSelectedIndex(-1);
+										ContactsInviteForRideActivity.adapterClubMember
+												.notifyDataSetChanged();
+
+										// if (bean.isSelected()) {
+										// bean.setSelected(false);
+										// chk.setChecked(false);
+										// } else {
+										// bean.setSelected(true);
+										// chk.setChecked(true);
+										// }
+										ContactsInviteForRideActivity.adapterClubMy
+												.setSelectedIndex(position);
+										ContactsInviteForRideActivity.adapterClubMy
+												.notifyDataSetChanged();
+
+									}
+								});
 
 						if (MemberClubPoolName.size() > 0) {
 
@@ -2272,11 +2245,42 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 								ClubListClass.MemberClubList.add(cp);
 							}
 
-							ClubsAdaptor adapter = new ClubsAdaptor(
-									ShareLocationFragmentActivity.this,
-									ClubListClass.MemberClubList);
+							// ClubsAdaptor adapter = new ClubsAdaptor(
+							// ShareLocationFragmentActivity.this,
+							// ClubListClass.MemberClubList);
+							//
+							// listMembersclubs.setAdapter(adapter);
+							// listMembersclubs
+							// .setOnItemClickListener(new OnItemClickListener()
+							// {
+							//
+							// @Override
+							// public void onItemClick(
+							// AdapterView<?> parent, View v,
+							// int position, long id) {
+							// // TODO Auto-generated method stub
+							// CheckBox chk = (CheckBox) v
+							// .findViewById(R.id.myclubcheckBox);
+							// ClubObject bean = ClubListClass.MemberClubList
+							// .get(position);
+							//
+							// if (bean.isSelected()) {
+							// bean.setSelected(false);
+							// chk.setChecked(false);
+							// } else {
+							// bean.setSelected(true);
+							// chk.setChecked(true);
+							// }
+							//
+							// }
+							// });
 
-							listMembersclubs.setAdapter(adapter);
+							ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
+									ShareLocationFragmentActivity.this,
+									ClubListClass.MemberClubList, false);
+
+							listMembersclubs
+									.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
 							listMembersclubs
 									.setOnItemClickListener(new OnItemClickListener() {
 
@@ -2285,22 +2289,54 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 												AdapterView<?> parent, View v,
 												int position, long id) {
 											// TODO Auto-generated method stub
-											CheckBox chk = (CheckBox) v
-													.findViewById(R.id.myclubcheckBox);
+
 											ClubObject bean = ClubListClass.MemberClubList
 													.get(position);
+											bean.setSelected(true);
 
-											if (bean.isSelected()) {
+											for (int i = 0; i < ClubListClass.MemberClubList
+													.size(); i++) {
+
+												if (i == position)
+													continue;
+
+												bean = ClubListClass.MemberClubList
+														.get(i);
 												bean.setSelected(false);
-												chk.setChecked(false);
-											} else {
-												bean.setSelected(true);
-												chk.setChecked(true);
 											}
+
+											// Unselect all MyClub
+											for (int i = 0; i < ClubListClass.ClubList
+													.size(); i++) {
+
+												bean = ClubListClass.ClubList
+														.get(i);
+												bean.setSelected(false);
+
+											}
+
+											ContactsInviteForRideActivity.adapterClubMy
+													.setSelectedIndex(-1);
+											ContactsInviteForRideActivity.adapterClubMy
+													.notifyDataSetChanged();
+											// if (bean.isSelected()) {
+											// bean.setSelected(false);
+											// chk.setChecked(false);
+											// } else {
+											// bean.setSelected(true);
+											// chk.setChecked(true);
+											// }
+
+											ContactsInviteForRideActivity.adapterClubMember
+													.setSelectedIndex(position);
+											ContactsInviteForRideActivity.adapterClubMember
+													.notifyDataSetChanged();
 
 										}
 									});
+
 						}
+
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2315,7 +2351,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 			public void onClick(View arg0) {
 
 				Animation animScale = AnimationUtils.loadAnimation(
-						ShareLocationFragmentActivity.this, R.anim.button_click_anim);
+						ShareLocationFragmentActivity.this,
+						R.anim.button_click_anim);
 				donebtn.startAnimation(animScale);
 
 				Handler mHandler2 = new Handler();
@@ -2502,8 +2539,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 			String clubs1 = mPrefs111111.getString("clubs", "");
 
 			if (clubs1.equalsIgnoreCase("No Users of your Club")) {
-				Toast.makeText(ShareLocationFragmentActivity.this, "No clubs created yet!",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(ShareLocationFragmentActivity.this,
+						"No clubs created yet!", Toast.LENGTH_LONG).show();
 			} else {
 
 				try {
@@ -2530,8 +2567,14 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 									.getString("PoolId").toString());
 							MyClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							MyClubNoofMembers.add(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString());
+							if (subArray.getJSONObject(i)
+									.getString("NoofMembers").toString()
+									.equalsIgnoreCase("null"))
+								MyClubNoofMembers.add("1");
+							else
+								MyClubNoofMembers.add(subArray.getJSONObject(i)
+										.getString("NoofMembers").toString());
+
 							MyClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
 							MyClubMembers.add(subArray.getJSONObject(i)
@@ -2541,8 +2584,14 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 									.getString("PoolId").toString());
 							MemberClubPoolName.add(subArray.getJSONObject(i)
 									.getString("PoolName").toString());
-							MemberClubNoofMembers.add(subArray.getJSONObject(i)
-									.getString("NoofMembers").toString());
+							if (subArray.getJSONObject(i)
+									.getString("NoofMembers").toString()
+									.equalsIgnoreCase("null"))
+								MemberClubNoofMembers.add("1");
+							else
+								MemberClubNoofMembers.add(subArray
+										.getJSONObject(i)
+										.getString("NoofMembers").toString());
 							MemberClubOwnerName.add(subArray.getJSONObject(i)
 									.getString("OwnerName").toString());
 							MemberClubMembers.add(subArray.getJSONObject(i)
@@ -2580,9 +2629,41 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 							ClubListClass.ClubList.add(cp);
 						}
 
-						ClubsAdaptor adapter = new ClubsAdaptor(
-								ShareLocationFragmentActivity.this, ClubListClass.ClubList);
-						listMyclubs.setAdapter(adapter);
+						// ClubsAdaptor adapter = new ClubsAdaptor(
+						// ShareLocationFragmentActivity.this,
+						// ClubListClass.ClubList);
+						// listMyclubs.setAdapter(adapter);
+						// listMyclubs
+						// .setOnItemClickListener(new OnItemClickListener() {
+						//
+						// @Override
+						// public void onItemClick(
+						// AdapterView<?> parent, View v,
+						// int position, long id) {
+						// // TODO Auto-generated method stub
+						// CheckBox chk = (CheckBox) v
+						// .findViewById(R.id.myclubcheckBox);
+						// ClubObject bean = ClubListClass.ClubList
+						// .get(position);
+						//
+						// if (bean.isSelected()) {
+						// bean.setSelected(false);
+						// chk.setChecked(false);
+						// } else {
+						// bean.setSelected(true);
+						// chk.setChecked(true);
+						// }
+						//
+						// }
+						// });
+
+						// Pawan
+						ContactsInviteForRideActivity.adapterClubMy = new ClubsAdaptor(
+								ShareLocationFragmentActivity.this,
+								ClubListClass.ClubList, false);
+						listMyclubs
+								.setAdapter(ContactsInviteForRideActivity.adapterClubMy);
+						// listMyclubs.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 						listMyclubs
 								.setOnItemClickListener(new OnItemClickListener() {
 
@@ -2591,18 +2672,46 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 											AdapterView<?> parent, View v,
 											int position, long id) {
 										// TODO Auto-generated method stub
-										CheckBox chk = (CheckBox) v
-												.findViewById(R.id.myclubcheckBox);
+
 										ClubObject bean = ClubListClass.ClubList
 												.get(position);
+										bean.setSelected(true);
 
-										if (bean.isSelected()) {
+										for (int i = 0; i < ClubListClass.ClubList
+												.size(); i++) {
+
+											if (i == position)
+												continue;
+
+											bean = ClubListClass.ClubList
+													.get(i);
 											bean.setSelected(false);
-											chk.setChecked(false);
-										} else {
-											bean.setSelected(true);
-											chk.setChecked(true);
 										}
+										// Remove all memberclib list selection
+										for (int i = 0; i < ClubListClass.MemberClubList
+												.size(); i++) {
+
+											bean = ClubListClass.MemberClubList
+													.get(i);
+											bean.setSelected(false);
+										}
+
+										ContactsInviteForRideActivity.adapterClubMember
+												.setSelectedIndex(-1);
+										ContactsInviteForRideActivity.adapterClubMember
+												.notifyDataSetChanged();
+
+										// if (bean.isSelected()) {
+										// bean.setSelected(false);
+										// chk.setChecked(false);
+										// } else {
+										// bean.setSelected(true);
+										// chk.setChecked(true);
+										// }
+										ContactsInviteForRideActivity.adapterClubMy
+												.setSelectedIndex(position);
+										ContactsInviteForRideActivity.adapterClubMy
+												.notifyDataSetChanged();
 
 									}
 								});
@@ -2628,11 +2737,41 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 							ClubListClass.MemberClubList.add(cp);
 						}
 
-						ClubsAdaptor adapter = new ClubsAdaptor(
-								ShareLocationFragmentActivity.this,
-								ClubListClass.MemberClubList);
+						// ClubsAdaptor adapter = new ClubsAdaptor(
+						// ShareLocationFragmentActivity.this,
+						// ClubListClass.MemberClubList);
 
-						listMembersclubs.setAdapter(adapter);
+						// listMembersclubs.setAdapter(adapter);
+						// listMembersclubs
+						// .setOnItemClickListener(new OnItemClickListener() {
+						//
+						// @Override
+						// public void onItemClick(
+						// AdapterView<?> parent, View v,
+						// int position, long id) {
+						// // TODO Auto-generated method stub
+						// CheckBox chk = (CheckBox) v
+						// .findViewById(R.id.myclubcheckBox);
+						// ClubObject bean = ClubListClass.MemberClubList
+						// .get(position);
+						//
+						// if (bean.isSelected()) {
+						// bean.setSelected(false);
+						// chk.setChecked(false);
+						// } else {
+						// bean.setSelected(true);
+						// chk.setChecked(true);
+						// }
+						//
+						// }
+						// });
+
+						ContactsInviteForRideActivity.adapterClubMember = new ClubMemberAdapter(
+								ShareLocationFragmentActivity.this,
+								ClubListClass.MemberClubList, false);
+
+						listMembersclubs
+								.setAdapter(ContactsInviteForRideActivity.adapterClubMember);
 						listMembersclubs
 								.setOnItemClickListener(new OnItemClickListener() {
 
@@ -2641,21 +2780,52 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 											AdapterView<?> parent, View v,
 											int position, long id) {
 										// TODO Auto-generated method stub
-										CheckBox chk = (CheckBox) v
-												.findViewById(R.id.myclubcheckBox);
+
 										ClubObject bean = ClubListClass.MemberClubList
 												.get(position);
+										bean.setSelected(true);
 
-										if (bean.isSelected()) {
+										for (int i = 0; i < ClubListClass.MemberClubList
+												.size(); i++) {
+
+											if (i == position)
+												continue;
+
+											bean = ClubListClass.MemberClubList
+													.get(i);
 											bean.setSelected(false);
-											chk.setChecked(false);
-										} else {
-											bean.setSelected(true);
-											chk.setChecked(true);
 										}
+
+										// Unselect all MyClub
+										for (int i = 0; i < ClubListClass.ClubList
+												.size(); i++) {
+
+											bean = ClubListClass.ClubList
+													.get(i);
+											bean.setSelected(false);
+
+										}
+
+										ContactsInviteForRideActivity.adapterClubMy
+												.setSelectedIndex(-1);
+										ContactsInviteForRideActivity.adapterClubMy
+												.notifyDataSetChanged();
+										// if (bean.isSelected()) {
+										// bean.setSelected(false);
+										// chk.setChecked(false);
+										// } else {
+										// bean.setSelected(true);
+										// chk.setChecked(true);
+										// }
+
+										ContactsInviteForRideActivity.adapterClubMember
+												.setSelectedIndex(position);
+										ContactsInviteForRideActivity.adapterClubMember
+												.notifyDataSetChanged();
 
 									}
 								});
+
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -2704,7 +2874,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 						}
 					});
 
-			objAdapter = new ContactsAdapter(ShareLocationFragmentActivity.this,
+			objAdapter = new ContactsAdapter(
+					ShareLocationFragmentActivity.this,
 					ContactsListClass.phoneList);
 			contactslist.setAdapter(objAdapter);
 			contactslist.setOnItemClickListener(new OnItemClickListener() {
@@ -2779,27 +2950,6 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 	}
 
-	public String getAddress(Context ctx, double latitude, double longitude) {
-		StringBuilder result = new StringBuilder();
-		try {
-			Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-			List<Address> addresses = geocoder.getFromLocation(latitude,
-					longitude, 1);
-
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-
-				for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-					result.append(address.getAddressLine(i) + " ");
-				}
-			}
-		} catch (IOException e) {
-			Log.e("tag", e.getMessage());
-		}
-
-		return result.toString();
-	}
-
 	public boolean checkuserexist(String name, String number) {
 		for (int j = 0; j < AppUsersmobilenumberarr.size(); j++) {
 
@@ -2818,7 +2968,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements L
 
 		if (!fromrelative.isShown()) {
 
-			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this, HomeActivity.class);
+			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
+					HomeActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

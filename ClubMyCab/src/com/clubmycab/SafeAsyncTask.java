@@ -1,9 +1,5 @@
 package com.clubmycab;
 
-import android.os.Handler;
-import android.os.Looper;
-import com.clubmycab.utility.Log;
-
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +8,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
+import android.os.Handler;
+import android.os.Looper;
+
+import com.clubmycab.utility.Log;
 
 
 /**

@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.ContactsContract.Contacts;
-import com.clubmycab.utility.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
 
 public class ContactsAdapter extends BaseAdapter {
 

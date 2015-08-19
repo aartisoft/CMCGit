@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDEDED"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/walletMobikwikLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/ivWalletMobikwik"
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="@drawable/mobikwik_logo" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/otphardtext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/mobikwik_already_account"
+        android:textColor="#9e9e9e"
+        android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/couponcodemobikwik"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Coupon code : "
+        android:textColor="#9e9e9e"
+        android:textSize="15sp"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/couponcodemobikwiktnc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/str_text_termandcondition_mobikwik_coupon"
+        android:textColor="#9e9e9e"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/walletFLLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/editTextWalletMobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:editable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="Mobile" />
+
+        <EditText
+            android:id="@+id/editTextWalletEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="e-mail"
+            android:inputType="textEmailAddress"
+            android:visibility="gone" >
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <EditText
+                android:id="@+id/otpedittext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:hint="Enter OTP" />
+
+            <Button
+                android:id="@+id/buttonSendOTP"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".8"
+                android:background="#4279bd"
+                android:gravity="center"
+                android:text="Send OTP"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/continuewithotp"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="#4279bd"
+            android:text="Continue"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/str_text_termandcondition_mobikwik"
+            android:textColor="#9e9e9e"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewTNCMobikwik"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:text="@string/underline_text_mobikwik_tnc"
+            android:textSize="15sp" />
+
+        <!-- <TextView -->
+        <!-- android:id="@+id/otphardtexttnc" -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_marginTop="10dp" -->
+        <!-- android:gravity="center" -->
+        <!-- android:text="@string/mobikwik_signup_tnc" -->
+        <!-- android:textColor="#9e9e9e" -->
+        <!-- android:textSize="12sp" /> -->
+
+        <Button
+            android:id="@+id/maybelaterbutton"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="#4279bd"
+            android:text="Maybe later"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

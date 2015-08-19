@@ -10,49 +10,65 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
         android:orientation="vertical" >
-<!--         android:background="@drawable/bookacab_rowbanner" -->
 
-		<LinearLayout
-            android:id="@+id/LinearLayout2"
+        <!-- android:background="@drawable/bookacab_rowbanner" -->
+
+        <LinearLayout
+            android:id="@+id/LinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textViewCabName"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="75"
-            android:gravity="left"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" >
 
-<!--             android:layout_marginTop="5dp" -->
+            <TextView
+                android:id="@+id/textViewCabName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="80"
+                android:gravity="left"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
-<!-- 		<Button -->
-<!--             android:id="@+id/buttonBookNow" -->
-<!--             android:layout_width="30dp" -->
-<!--             android:layout_height="25dp" -->
-<!--             android:layout_weight="25" -->
-<!--             android:layout_alignParentRight="true" -->
-<!--             android:layout_centerVertical="true" -->
-<!--             android:layout_margin="5dp" -->
-<!--             android:gravity="center" -->
-<!--             android:background="@drawable/bookacab_booknowbtn" -->
-            
-<!--             android:text="BOOK NOW" -->
-<!--             android:textColor="#FFFFFF" -->
-<!--             android:textSize="13sp" /> -->
+            <Button
+                android:id="@+id/buttonBookNow"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/bookacab_booknowbtn"
+                android:focusable="false"
+                android:padding="5dp"
+                android:text="BOOK NOW"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp" />
 
-		</LinearLayout>
-		
+            <!-- android:layout_marginTop="5dp" -->
+
+
+            <!-- <Button -->
+            <!-- android:id="@+id/buttonBookNow" -->
+            <!-- android:layout_width="30dp" -->
+            <!-- android:layout_height="25dp" -->
+            <!-- android:layout_weight="25" -->
+            <!-- android:layout_alignParentRight="true" -->
+            <!-- android:layout_centerVertical="true" -->
+            <!-- android:layout_margin="5dp" -->
+            <!-- android:gravity="center" -->
+            <!-- android:background="@drawable/bookacab_booknowbtn" -->
+
+
+            <!-- android:text="BOOK NOW" -->
+            <!-- android:textColor="#FFFFFF" -->
+            <!-- android:textSize="13sp" /> -->
+
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/LinearLayout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp" >
 
             <TextView
                 android:id="@+id/textViewCabType"
@@ -75,7 +91,7 @@
                 android:numStars="5"
                 android:rating="0"
                 android:stepSize="0.1" />
-            
+
             <TextView
                 android:id="@+id/textViewNumberOfRatings"
                 android:layout_width="wrap_content"
@@ -85,7 +101,6 @@
                 android:text="()"
                 android:textColor="@android:color/black"
                 android:textSize="13sp" />
-
         </LinearLayout>
     </LinearLayout>
 
@@ -100,7 +115,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#FFFFFF"
@@ -113,7 +130,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#FFFFFF"
@@ -121,45 +140,48 @@
         </TextView>
     </RelativeLayout>
 
-<!--     <RelativeLayout -->
-<!--         android:layout_width="fill_parent" -->
-<!--         android:layout_height="45dp" -->
-<!--         android:background="#FFFFFF" > -->
+    <!-- <RelativeLayout -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_height="45dp" -->
+    <!-- android:background="#FFFFFF" > -->
 
-<!--         <ImageView -->
-<!--             android:id="@+id/imageButtonCallNow" -->
-<!--             android:layout_width="30dp" -->
-<!--             android:layout_height="30dp" -->
-<!--             android:layout_centerVertical="true" -->
-<!--             android:layout_marginLeft="10dp" -->
-<!--             android:adjustViewBounds="true" -->
-<!--             android:src="@drawable/bookacab_mobileicon" -->
-<!--             tools:ignore="ContentDescription" /> -->
 
-<!--         <ImageView -->
-<!--             android:id="@+id/imageButtonFareChart" -->
-<!--             android:layout_width="30dp" -->
-<!--             android:layout_height="30dp" -->
-<!--             android:layout_centerVertical="true" -->
-<!--             android:layout_marginLeft="15dp" -->
-<!--             android:layout_toRightOf="@+id/imageButtonCallNow" -->
-<!--             android:adjustViewBounds="true" -->
-<!--             android:src="@drawable/bookacab_rupeeicon" -->
-<!--             tools:ignore="ContentDescription" /> -->
+    <!-- <ImageView -->
+    <!-- android:id="@+id/imageButtonCallNow" -->
+    <!-- android:layout_width="30dp" -->
+    <!-- android:layout_height="30dp" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:layout_marginLeft="10dp" -->
+    <!-- android:adjustViewBounds="true" -->
+    <!-- android:src="@drawable/bookacab_mobileicon" -->
+    <!-- tools:ignore="ContentDescription" /> -->
 
-<!--         <Button -->
-<!--             android:id="@+id/buttonBookNow" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="30dp" -->
-<!--             android:layout_alignParentRight="true" -->
-<!--             android:layout_centerVertical="true" -->
-<!--             android:layout_marginRight="10dp" -->
-<!--             android:background="@drawable/bookacab_booknowbtn" -->
-<!--             android:padding="5dp" -->
-<!--             android:text="BOOK NOW" -->
-<!--             android:textColor="#FFFFFF" -->
-<!--             android:textSize="13sp" /> -->
-<!--     </RelativeLayout> -->
+
+    <!-- <ImageView -->
+    <!-- android:id="@+id/imageButtonFareChart" -->
+    <!-- android:layout_width="30dp" -->
+    <!-- android:layout_height="30dp" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:layout_marginLeft="15dp" -->
+    <!-- android:layout_toRightOf="@+id/imageButtonCallNow" -->
+    <!-- android:adjustViewBounds="true" -->
+    <!-- android:src="@drawable/bookacab_rupeeicon" -->
+    <!-- tools:ignore="ContentDescription" /> -->
+
+
+    <!-- <Button -->
+    <!-- android:id="@+id/buttonBookNow" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="30dp" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:layout_marginRight="10dp" -->
+    <!-- android:background="@drawable/bookacab_booknowbtn" -->
+    <!-- android:padding="5dp" -->
+    <!-- android:text="BOOK NOW" -->
+    <!-- android:textColor="#FFFFFF" -->
+    <!-- android:textSize="13sp" /> -->
+    <!-- </RelativeLayout> -->
 
     <LinearLayout
         android:id="@+id/linearLayoutFareChart"

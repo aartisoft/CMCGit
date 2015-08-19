@@ -23,7 +23,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-import com.clubmycab.utility.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +35,8 @@ import android.widget.Toast;
 
 import com.clubmycab.ui.MyClubsActivity;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.Log;
+import com.clubmycab.utility.StringTags;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -43,12 +44,12 @@ import com.google.android.gms.analytics.Tracker;
 public class MembersClubsShowAdaptor extends BaseAdapter {
 
 	// Declare Variables
-	Context context;
-	ArrayList<String> MemberClubPoolId;
-	ArrayList<String> MemberClubPoolName;
-	ArrayList<String> MemberClubNoofMembers;
-	ArrayList<String> MemberClubOwnerName;
-	LayoutInflater inflater;
+	private Context context;
+	private ArrayList<String> MemberClubPoolId;
+	private ArrayList<String> MemberClubPoolName;
+	private ArrayList<String> MemberClubNoofMembers;
+	private ArrayList<String> MemberClubOwnerName;
+	private LayoutInflater inflater;
 
 	
 	Tracker tracker;
@@ -67,7 +68,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 		
 
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-		tracker = analytics.newTracker("UA-63477985-1");
+		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("MyClubs");
@@ -90,31 +91,68 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 	@SuppressLint("ViewHolder")
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View itemView, ViewGroup parent) {
+		
+		
+		ViewHolder viewholder;
+		if(itemView==null){
+			
+			viewholder=new ViewHolder();
 
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View itemView = inflater.inflate(R.layout.membersclubs_listrow, parent,
-				false);
+			 itemView = inflater.inflate(R.layout.membersclubs_listrow, parent,
+					false);
 
-		// Locate the TextViews in listview_item.xml
+			// Locate the TextViews in listview_item.xml
 
-		TextView Mname = (TextView) itemView.findViewById(R.id.nameofclub);
-		TextView noofmembers = (TextView) itemView
-				.findViewById(R.id.noofmembers);
-		TextView clubownername = (TextView) itemView
-				.findViewById(R.id.clubownername);
-		ImageView removeclub = (ImageView) itemView
-				.findViewById(R.id.removeclub);
+			viewholder. Mname = (TextView) itemView.findViewById(R.id.nameofclub);
+			viewholder. noofmembers = (TextView) itemView
+					.findViewById(R.id.noofmembers);
+			viewholder. clubownername = (TextView) itemView
+					.findViewById(R.id.clubownername);
+			viewholder. removeclub = (ImageView) itemView
+					.findViewById(R.id.removeclub);
+			viewholder. ivWarnning1=(ImageView)itemView.findViewById(R.id.ivWarnning2);
+			itemView.setTag(viewholder);
 
-		Mname.setText(MemberClubPoolName.get(position).toString().trim());
-		clubownername.setText("("
+			
+		}
+		else{
+			viewholder=(ViewHolder)itemView.getTag();
+		}
+
+		viewholder.Mname.setText(MemberClubPoolName.get(position).toString().trim());
+		viewholder.clubownername.setText("("
 				+ MemberClubOwnerName.get(position).toString().trim() + ")");
-		noofmembers.setText("("
+		viewholder.noofmembers.setText("("
 				+ MemberClubNoofMembers.get(position).toString().trim() + ")");
+		
+		viewholder.ivWarnning1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Toast.makeText(context,StringTags.TAG_LOW_MEMBER, Toast.LENGTH_LONG).show();
+				
+			}
+		});
+		try{
+			int count=Integer.parseInt(MemberClubNoofMembers.get(position).toString().trim());
+			if(count<=10)
+				viewholder.ivWarnning1.setVisibility(View.VISIBLE);
+			else
+				viewholder.ivWarnning1.setVisibility(View.GONE);
 
-		removeclub.setOnClickListener(new OnClickListener() {
+		}
+		catch(Exception e){
+			viewholder.ivWarnning1.setVisibility(View.GONE);
+
+			
+		}
+
+		viewholder.removeclub.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -156,6 +194,14 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 		return itemView;
 	}
+	
+	public class ViewHolder{
+		public ImageView ivWarnning1;
+		public TextView Mname,clubownername;
+		public TextView noofmembers;
+		public ImageView removeclub ;
+		
+	}
 
 	// ///////
 
@@ -179,7 +225,6 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 				mAuth1.poolid = args[0];
 				mAuth1.connection();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				exceptioncheck = true;
 				e.printStackTrace();
 			}
@@ -204,7 +249,6 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			try {
 				((MyClubsActivity) context).showclub();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -311,7 +355,6 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			editor1.putString("clubs", myclubsresp.toString().trim());
 			editor1.commit();
 
-			// ///////////////
 		}
 	}
 }

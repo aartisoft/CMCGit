@@ -24,15 +24,25 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/tripinfo_icon" />
 
+<!--         <ImageView -->
+<!--             android:id="@+id/mycalculatorbtn" -->
+<!--             android:layout_width="35dp" -->
+<!--             android:layout_height="35dp" -->
+<!--             android:layout_marginLeft="10dp" -->
+<!--             android:layout_marginTop="10dp" -->
+<!--             android:layout_toRightOf="@id/mydetailbtn" -->
+<!--             android:src="@drawable/tripcalculator_icon" -->
+<!--             android:visibility="gone" /> -->
+        
         <ImageView
-            android:id="@+id/mycalculatorbtn"
+            android:id="@+id/refreshlocationbtn"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/mydetailbtn"
-            android:src="@drawable/tripcalculator_icon"
-            android:visibility="gone" />
+            android:src="@drawable/owner_location"
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/locationmarker"
@@ -156,6 +166,7 @@
                     android:src="@drawable/myrides_icon" />
 
                 <TextView
+                    android:id="@+id/tvJoinRide"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"

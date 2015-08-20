@@ -14,6 +14,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -51,6 +52,7 @@ public class RegistrationActivity extends Activity {
 	TextView emailtxt;
 	TextView confirmpasswordtxt;
 	TextView mobiletxt, textViewTNCLink;
+	TextView referralcodetxt;
 
 	EditText fullnameedittext;
 	EditText emailedittext;
@@ -58,6 +60,7 @@ public class RegistrationActivity extends Activity {
 	EditText confirmpasswordedittext;
 	EditText mobileedittext;
 	EditText countrycode;
+	EditText referralcodeedittext;
 
 	Button registerbtn;
 
@@ -114,6 +117,7 @@ public class RegistrationActivity extends Activity {
 		passwordtxt = (TextView) findViewById(R.id.passwordtxt);
 		confirmpasswordtxt = (TextView) findViewById(R.id.confirmpasswordtxt);
 		mobiletxt = (TextView) findViewById(R.id.mobiletxt);
+		referralcodetxt = (TextView) findViewById(R.id.referralcodetxt);
 
 		fullnameedittext = (EditText) findViewById(R.id.fullnameedittext);
 		emailedittext = (EditText) findViewById(R.id.emailedittext);
@@ -122,6 +126,7 @@ public class RegistrationActivity extends Activity {
 		mobileedittext = (EditText) findViewById(R.id.mobileedittext);
 		mobileedittext.setText(mobNo);
 		countrycode = (EditText) findViewById(R.id.countrycode);
+		referralcodeedittext = (EditText) findViewById(R.id.referralcodeedittext);
 
 		registerbtn = (Button) findViewById(R.id.registerbtn);
 		textViewTNCLink = (TextView) findViewById(R.id.textViewTNCLink);
@@ -158,6 +163,11 @@ public class RegistrationActivity extends Activity {
 				"NeutraText-Light.ttf"));
 
 		registerbtn.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Light.ttf"));
+
+		referralcodetxt.setTypeface(Typeface.createFromAsset(getAssets(),
+				"NeutraText-Bold.ttf"));
+		referralcodeedittext.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
 		registerbtn.setOnClickListener(new View.OnClickListener() {
@@ -396,57 +406,84 @@ public class RegistrationActivity extends Activity {
 				return;
 			}
 
-			if (result.toString().trim().equalsIgnoreCase("SUCCESS")) {
+			try {
+				if (result != null && !result.isEmpty()) {
+					JSONObject jsonObject = new JSONObject(result);
 
-				PackageInfo pInfo = null;
-				try {
-					pInfo = getPackageManager().getPackageInfo(
-							getPackageName(), 0);
-				} catch (NameNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (jsonObject.get("status").toString()
+							.equalsIgnoreCase("SUCCESS")) {
+
+						if (!referralcodeedittext.getText().toString().trim()
+								.isEmpty()) {
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+								new ConnectionTaskForTopUp()
+										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							} else {
+								new ConnectionTaskForTopUp().execute();
+							}
+						}
+
+						PackageInfo pInfo = null;
+						try {
+							pInfo = getPackageManager().getPackageInfo(
+									getPackageName(), 0);
+						} catch (NameNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						String version = pInfo.versionName;
+
+						SharedPreferences sharedPreferences = getSharedPreferences(
+								"FacebookData", 0);
+						SharedPreferences.Editor editor = sharedPreferences
+								.edit();
+						editor.putString("FullName", fullnameedittext.getText()
+								.toString().trim());
+						editor.putString("MobileNumber", countrycode.getText()
+								.toString().trim()
+								+ mobileedittext.getText().toString().trim());
+						editor.putString("Email", emailedittext.getText()
+								.toString().trim());
+						editor.putString("verifyotp", "false");
+						editor.putString("LastRegisteredAppVersion", version);
+						editor.commit();
+
+						Intent i = new Intent(RegistrationActivity.this,
+								OTPActivity.class);
+						i.putExtra("from", "reg");
+						i.putExtra("mobnum", countrycode.getText().toString()
+								.trim()
+								+ mobileedittext.getText().toString().trim());
+
+						i.putExtra("fullname", fullnameedittext.getText()
+								.toString().trim());
+						i.putExtra("regid", "");
+
+						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+								| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+						startActivity(i);
+
+					} else {
+
+						Toast.makeText(RegistrationActivity.this,
+								jsonObject.get("message").toString(),
+								Toast.LENGTH_LONG).show();
+
+						// AlertDialog.Builder builder = new
+						// AlertDialog.Builder(
+						// RegistrationActivity.this);
+						//
+						// builder.setMessage("Mobile number already exists. Please try to login or register with a different mobile number");
+						// builder.setPositiveButton("OK", null);
+						// AlertDialog dialog = builder.show();
+						// TextView messageText = (TextView) dialog
+						// .findViewById(android.R.id.message);
+						// messageText.setGravity(Gravity.CENTER);
+						// dialog.show();
+					}
 				}
-				String version = pInfo.versionName;
-
-				SharedPreferences sharedPreferences = getSharedPreferences(
-						"FacebookData", 0);
-				SharedPreferences.Editor editor = sharedPreferences.edit();
-				editor.putString("FullName", fullnameedittext.getText()
-						.toString().trim());
-				editor.putString("MobileNumber", countrycode.getText()
-						.toString().trim()
-						+ mobileedittext.getText().toString().trim());
-				editor.putString("Email", emailedittext.getText().toString().trim());
-				editor.putString("verifyotp", "false");
-				editor.putString("LastRegisteredAppVersion", version);
-				editor.commit();
-
-				Intent i = new Intent(RegistrationActivity.this,
-						OTPActivity.class);
-				i.putExtra("from", "reg");
-				i.putExtra("mobnum", countrycode.getText().toString().trim()
-						+ mobileedittext.getText().toString().trim());
-
-				i.putExtra("fullname", fullnameedittext.getText().toString()
-						.trim());
-				i.putExtra("regid", "");
-
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				startActivity(i);
-
-			} else {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						RegistrationActivity.this);
-
-				builder.setMessage("Mobile number already exists. Please try to login or register with a different mobile number");
-				builder.setPositiveButton("OK", null);
-				AlertDialog dialog = builder.show();
-				TextView messageText = (TextView) dialog
-						.findViewById(android.R.id.message);
-				messageText.setGravity(Gravity.CENTER);
-				dialog.show();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -519,6 +556,12 @@ public class RegistrationActivity extends Activity {
 			nameValuePairList.add(GenderBasicNameValuePair);
 			nameValuePairList.add(DOBBasicNameValuePair);
 			nameValuePairList.add(platformBasicNameValuePair);
+			if (!referralcodeedittext.getText().toString().trim().isEmpty()) {
+				BasicNameValuePair referralCodeBasicNameValuePair = new BasicNameValuePair(
+						"referralCode", referralcodeedittext.getText()
+								.toString().trim());
+				nameValuePairList.add(referralCodeBasicNameValuePair);
+			}
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -526,6 +569,90 @@ public class RegistrationActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("result", "" + stringBuilder.toString());
+		}
+	}
+
+	private class ConnectionTaskForTopUp extends AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionTopup mAuth1 = new AuthenticateConnectionTopup();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+		}
+
+	}
+
+	public class AuthenticateConnectionTopup {
+
+		public AuthenticateConnectionTopup() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/referralCode.php";
+
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair ActBasicNameValuePair = new BasicNameValuePair(
+					"act", "topup");
+			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
+					"senderNumber", countrycode.getText().toString().trim()
+							+ mobileedittext.getText().toString().trim());
+			BasicNameValuePair referralCodeBasicNameValuePair = new BasicNameValuePair(
+					"referralCode", referralcodeedittext.getText().toString()
+							.trim());
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(ActBasicNameValuePair);
+			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(referralCodeBasicNameValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "referralCode : " + httpResponse
+					+ " senderNumber : "
+					+ countrycode.getText().toString().trim()
+					+ mobileedittext.getText().toString().trim()
+					+ " referralCode : "
+					+ referralcodeedittext.getText().toString().trim());
 
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			InputStreamReader inputStreamReader = new InputStreamReader(

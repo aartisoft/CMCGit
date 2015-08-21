@@ -313,7 +313,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:text="Share this App"
+                android:text="Share this App &amp; Earn"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>

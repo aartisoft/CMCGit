@@ -72,11 +72,9 @@
         <meta-data
             android:name="af_TrackerURL"
             android:value="@string/Affle_TRACKER_URL" />
-        
         <meta-data
-android:name="af_SessionTimeOut"
-android:value="3600" />
-        
+            android:name="af_SessionTimeOut"
+            android:value="3600" />
         <meta-data
             android:name="ClubMyCab"
             android:value="" />
@@ -354,8 +352,14 @@ android:value="3600" />
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan|adjustResize" >
         </activity>
-         <activity
+        <activity
             android:name="com.clubmycab.ui.NeedSupportFragmentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
+        </activity>
+        <activity
+            android:name="com.clubmycab.ui.ShareThisAppActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan|adjustResize" >

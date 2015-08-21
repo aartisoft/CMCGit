@@ -236,40 +236,20 @@ public class UniversalDrawer {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				// Intent mainIntent = new Intent(context,
-				// FirstLoginWalletsActivity.class);
-				// mainIntent.putExtra("from", "reg");
-				// context.startActivity(mainIntent);
-				// ((Activity) context).overridePendingTransition(
-				// R.anim.slide_in_right, R.anim.slide_out_left);
+				if (!GlobalVariables.ActivityName
+						.equals("ShareThisAppActivity")) {
 
-				tracker.send(new HitBuilders.EventBuilder()
-						.setCategory("ShareApp Click")
-						.setAction("ShareApp Click").setLabel("ShareApp Click")
-						.build());
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("ShareApp Click")
+							.setAction("ShareApp Click")
+							.setLabel("ShareApp Click").build());
 
-				SharedPreferences mPrefs = context.getSharedPreferences(
-						"ReferralCode", 0);
-				String referralCode = mPrefs.getString("code", "");
-
-				if (referralCode != null && referralCode.length() > 0) {
-					Intent sendIntent = new Intent();
-					sendIntent.setAction(Intent.ACTION_SEND);
-					sendIntent
-							.putExtra(
-									Intent.EXTRA_TEXT,
-									"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab. Use my referral code  "
-											+ referralCode);
-					sendIntent.setType("text/plain");
-					context.startActivity(Intent.createChooser(sendIntent,
-							"Share Via"));
-				} else {
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						new ConnectionTaskForReferralCode()
-								.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-					} else {
-						new ConnectionTaskForReferralCode().execute();
-					}
+					Intent mainIntent = new Intent(context,
+							ShareThisAppActivity.class);
+					context.startActivity(mainIntent);
+					((Activity) context).overridePendingTransition(
+							R.anim.slide_in_right, R.anim.slide_out_left);
+					GlobalVariables.ActivityName = "ShareThisAppActivity";
 				}
 
 			}
@@ -414,138 +394,6 @@ public class UniversalDrawer {
 			}
 		});
 
-	}
-
-	private class ConnectionTaskForReferralCode extends
-			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(context);
-
-		@Override
-		protected void onPreExecute() {
-			dialog.setMessage("Please Wait...");
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionReferralCode mAuth1 = new AuthenticateConnectionReferralCode();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (dialog.isShowing()) {
-				dialog.dismiss();
-			}
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(
-						context,
-						context.getResources().getString(
-								R.string.exceptionstring), Toast.LENGTH_LONG)
-						.show();
-				return;
-			}
-
-			try {
-				if (result != null && !result.isEmpty()) {
-					JSONObject jsonObject = new JSONObject(result);
-
-					if (jsonObject.get("status").toString()
-							.equalsIgnoreCase("success")) {
-
-						JSONObject jsonObject2 = new JSONObject(jsonObject.get(
-								"data").toString());
-						String referral = jsonObject2.get("referralCode")
-								.toString();
-
-						SharedPreferences sharedPreferences = context
-								.getSharedPreferences("ReferralCode", 0);
-						SharedPreferences.Editor editor = sharedPreferences
-								.edit();
-						editor.putString("code", referral);
-						editor.commit();
-
-						Intent sendIntent = new Intent();
-						sendIntent.setAction(Intent.ACTION_SEND);
-						sendIntent
-								.putExtra(
-										Intent.EXTRA_TEXT,
-										"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab. Use my referral code "
-												+ referral);
-						sendIntent.setType("text/plain");
-						context.startActivity(Intent.createChooser(sendIntent,
-								"Share Via"));
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionReferralCode {
-
-		public AuthenticateConnectionReferralCode() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/referralCode.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-
-			SharedPreferences mPrefs = context.getSharedPreferences(
-					"FacebookData", 0);
-			String MemberNumberstr = mPrefs.getString("MobileNumber", "");
-
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"mobileNumber", MemberNumberstr);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				result = stringBuilder.append(bufferedStrChunk).toString();
-			}
-
-			Log.d("result", "" + stringBuilder.toString());
-		}
 	}
 
 }

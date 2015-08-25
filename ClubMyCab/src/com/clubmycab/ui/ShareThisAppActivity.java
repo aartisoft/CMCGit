@@ -38,12 +38,16 @@ import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
+import com.clubmycab.asynctasks.GlobalAsyncTask;
+import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
-public class ShareThisAppActivity extends Activity {
+public class ShareThisAppActivity extends Activity implements
+		AsyncTaskResultListener {
 
 	CircularImageView profilepic;
 	TextView username;
@@ -56,6 +60,8 @@ public class ShareThisAppActivity extends Activity {
 	Tracker tracker;
 
 	private String result;
+
+	private String referral, amount;
 
 	private boolean exceptioncheck;
 
@@ -238,10 +244,8 @@ public class ShareThisAppActivity extends Activity {
 
 						JSONObject jsonObject2 = new JSONObject(jsonObject.get(
 								"data").toString());
-						final String referral = jsonObject2.get("referralCode")
-								.toString();
-						final String amount = jsonObject2.get("amount")
-								.toString();
+						referral = jsonObject2.get("referralCode").toString();
+						amount = jsonObject2.get("amount").toString();
 
 						TextView textView = (TextView) findViewById(R.id.offershareapptext);
 						textView.setVisibility(View.VISIBLE);
@@ -256,16 +260,13 @@ public class ShareThisAppActivity extends Activity {
 
 							@Override
 							public void onClick(View v) {
-								Intent sendIntent = new Intent();
-								sendIntent.setAction(Intent.ACTION_SEND);
-								sendIntent
-										.putExtra(
-												Intent.EXTRA_TEXT,
-												"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab. Use my referral code "
-														+ referral);
-								sendIntent.setType("text/plain");
-								startActivity(Intent.createChooser(sendIntent,
-										"Share Via"));
+
+								SharedPreferences mPrefs = getSharedPreferences(
+										"FacebookData", 0);
+								String MemberNumberstr = mPrefs.getString(
+										"MobileNumber", "");
+
+								querywallet(MemberNumberstr.substring(4));
 							}
 						});
 					}
@@ -325,6 +326,108 @@ public class ShareThisAppActivity extends Activity {
 
 			Log.d("result", "" + stringBuilder.toString());
 		}
+	}
+
+	private void querywallet(String mobilenumber) {
+
+		String msgcode = "500";
+		String action = "existingusercheck";
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ action + "''" + mobilenumber + "''"
+				+ GlobalVariables.Mobikwik_MerchantName + "''"
+				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
+				GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
+		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
+				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
+				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
+				+ "&checksum=" + checksumstring;
+		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"querywallet", true);
+
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+
+		if (uniqueID.equals("querywallet")) {
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				Log.d("ShareThisAppActivity", "querywallet jsonObject :"
+						+ jsonObject);
+				if (!GlobalMethods.checkResponseChecksum(response)) {
+					checksumInvalidToast();
+					return;
+				}
+
+				if (jsonObject.getString("status").equals("SUCCESS")) {
+					Intent sendIntent = new Intent();
+					sendIntent.setAction(Intent.ACTION_SEND);
+					sendIntent
+							.putExtra(
+									Intent.EXTRA_TEXT,
+									"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab. Use my referral code "
+											+ referral
+											+ " and earn Rs."
+											+ amount);
+					sendIntent.setType("text/plain");
+					startActivity(Intent.createChooser(sendIntent, "Share Via"));
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							ShareThisAppActivity.this);
+					builder.setMessage("You do not have a Mobikwik wallet yet, you'll need it to receive the cashback. Would you like to create one now?");
+					builder.setCancelable(false);
+
+					builder.setPositiveButton("YES",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent mainIntent = new Intent(
+											ShareThisAppActivity.this,
+											FirstLoginWalletsActivity.class);
+									mainIntent.putExtra("from", "wallet");
+									startActivity(mainIntent);
+								}
+							});
+
+					builder.setNegativeButton("NO",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									Intent sendIntent = new Intent();
+									sendIntent.setAction(Intent.ACTION_SEND);
+									sendIntent
+											.putExtra(
+													Intent.EXTRA_TEXT,
+													"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab.");
+									sendIntent.setType("text/plain");
+									startActivity(Intent.createChooser(
+											sendIntent, "Share Via"));
+								}
+							});
+
+					builder.show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private void checksumInvalidToast() {
+		Log.e("ShareThisAppActivity", "Response checksum does not match!!");
+		Toast.makeText(ShareThisAppActivity.this,
+				"Something went wrong, please try again", Toast.LENGTH_LONG)
+				.show();
 	}
 
 }

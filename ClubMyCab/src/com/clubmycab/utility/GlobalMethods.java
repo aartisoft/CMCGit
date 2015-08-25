@@ -1,7 +1,16 @@
 package com.clubmycab.utility;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.json.JSONObject;
 
 public class GlobalMethods {
 
@@ -36,6 +45,64 @@ public class GlobalMethods {
 		} catch (Exception e) {
 			Log.e("", "Error");
 			return null;
+		}
+	}
+
+	public static boolean checkResponseChecksum(String response) {
+
+		try {
+			JSONObject jsonObject = new JSONObject(response);
+
+			Iterator<String> iterator = jsonObject.keys();
+			String responseValues = "";
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+
+			while (iterator.hasNext()) {
+				String key = iterator.next();
+				String value = jsonObject.get(key).toString();
+
+				if (!value.isEmpty() && value.length() > 0
+						&& !key.equalsIgnoreCase("checksum")) {
+					hashMap.put(key, value);
+				}
+
+				// if (!value.isEmpty() && value.length() > 0 &&
+				// !key.equalsIgnoreCase("checksum")) {
+				// responseValues += (value + "''");
+				// }
+			}
+			// Log.d("checkResponseChecksum", "hashMap : " + hashMap);
+			Map<String, String> map = new TreeMap<String, String>(hashMap);
+			List<String> list = new ArrayList<String>(map.keySet());
+			Log.d("checkResponseChecksum",
+					"map : " + map + " keySet : " + map.keySet() + " list : "
+							+ list);
+
+			for (int i = 0; i < list.size(); i++) {
+				responseValues += (map.get(list.get(i)) + "''");
+			}
+
+			responseValues = responseValues.substring(0,
+					responseValues.length() - 2);
+			String responseValuesFinal = "'" + responseValues + "'";
+
+			// Log.d("checkResponseChecksum", "responseValuesFinal : "
+			// + responseValuesFinal);
+
+			String checkSumGenerated = GlobalMethods
+					.calculateCheckSumForService(responseValuesFinal,
+							GlobalVariables.Mobikwik_14SecretKey);
+			Log.d("checkResponseChecksum", checkSumGenerated);
+
+			if (checkSumGenerated.equals(jsonObject.get("checksum").toString())) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

@@ -1,12 +1,5 @@
 package com.clubmycab.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -389,64 +382,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 				false);
 	}
 
-	private boolean checkResponseChecksum(String response) {
-
-		try {
-			JSONObject jsonObject = new JSONObject(response);
-
-			Iterator<String> iterator = jsonObject.keys();
-			String responseValues = "";
-
-			HashMap<String, String> hashMap = new HashMap<String, String>();
-
-			while (iterator.hasNext()) {
-				String key = iterator.next();
-				String value = jsonObject.get(key).toString();
-
-				if (!value.isEmpty() && value.length() > 0
-						&& !key.equalsIgnoreCase("checksum")) {
-					hashMap.put(key, value);
-				}
-
-				// if (!value.isEmpty() && value.length() > 0 &&
-				// !key.equalsIgnoreCase("checksum")) {
-				// responseValues += (value + "''");
-				// }
-			}
-			// Log.d("checkResponseChecksum", "hashMap : " + hashMap);
-			Map<String, String> map = new TreeMap<String, String>(hashMap);
-			List<String> list = new ArrayList<String>(map.keySet());
-			Log.d("checkResponseChecksum",
-					"map : " + map + " keySet : " + map.keySet() + " list : "
-							+ list);
-
-			for (int i = 0; i < list.size(); i++) {
-				responseValues += (map.get(list.get(i)) + "''");
-			}
-
-			responseValues = responseValues.substring(0,
-					responseValues.length() - 2);
-			String responseValuesFinal = "'" + responseValues + "'";
-
-			// Log.d("checkResponseChecksum", "responseValuesFinal : "
-			// + responseValuesFinal);
-
-			String checkSumGenerated = GlobalMethods
-					.calculateCheckSumForService(responseValuesFinal,
-							GlobalVariables.Mobikwik_14SecretKey);
-			Log.d("checkResponseChecksum", checkSumGenerated);
-
-			if (checkSumGenerated.equals(jsonObject.get("checksum").toString())) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 	private void checksumInvalidToast() {
 		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
 		Toast.makeText(FirstLoginWalletsActivity.this,
@@ -462,7 +397,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 				JSONObject jsonObject = new JSONObject(response);
 				Log.d("FirstLoginWalletActivity", "querywallet jsonObject :"
 						+ jsonObject);
-				if (!checkResponseChecksum(response)) {
+				if (!GlobalMethods.checkResponseChecksum(response)) {
 					checksumInvalidToast();
 					return;
 				}
@@ -580,7 +515,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("otpgenerate")) {
 			Log.d("FirstLoginWalletActivity", "otpgenerate response : "
 					+ response);
-			if (!checkResponseChecksum(response)) {
+			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
 				return;
 			}
@@ -603,7 +538,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("tokengenerate")) {
 			Log.d("FirstLoginWalletActivity", "tokengenerate response : "
 					+ response);
-			if (!checkResponseChecksum(response)) {
+			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
 				return;
 			}
@@ -659,7 +594,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("createwalletuser")) {
 			Log.d("FirstLoginWalletActivity", "createwalletuser response : "
 					+ response);
-			if (!checkResponseChecksum(response)) {
+			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
 				return;
 			}

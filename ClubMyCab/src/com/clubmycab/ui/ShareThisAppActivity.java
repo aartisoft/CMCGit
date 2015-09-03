@@ -61,7 +61,7 @@ public class ShareThisAppActivity extends Activity implements
 
 	private String result;
 
-	private String referral, amount;
+	private String referral, amount, maxUseLimit, totalReferrals;
 
 	private boolean exceptioncheck;
 
@@ -246,13 +246,26 @@ public class ShareThisAppActivity extends Activity implements
 								"data").toString());
 						referral = jsonObject2.get("referralCode").toString();
 						amount = jsonObject2.get("amount").toString();
+						maxUseLimit = jsonObject2.get("maxUseLimit").toString();
+						totalReferrals = jsonObject2.get("totalReferrals").toString();
 
 						TextView textView = (TextView) findViewById(R.id.offershareapptext);
 						textView.setVisibility(View.VISIBLE);
 						textView.setText("Share this app with your friends and earn Rs."
 								+ amount
 								+ "! Ask them to register using referral code : "
-								+ referral);
+								+ referral
+								+ ". Offer valid upto a maximum of Rs."
+								+ (String.format(
+										"%1.0f",
+										Float.parseFloat(amount)
+												* Float.parseFloat(maxUseLimit)))
+								+ ", you have earned Rs."
+								+ (String.format(
+										"%1.0f",
+										Float.parseFloat(amount)
+												* Float.parseFloat(totalReferrals)))
+								+ " so far");
 
 						Button button = (Button) findViewById(R.id.shareappbutton);
 						button.setVisibility(View.VISIBLE);
@@ -267,6 +280,20 @@ public class ShareThisAppActivity extends Activity implements
 										"MobileNumber", "");
 
 								querywallet(MemberNumberstr.substring(4));
+							}
+						});
+					} else {
+						TextView textView = (TextView) findViewById(R.id.offershareapptext);
+						textView.setVisibility(View.VISIBLE);
+						textView.setText("Share this app with your friends");
+
+						Button button = (Button) findViewById(R.id.shareappbutton);
+						button.setVisibility(View.VISIBLE);
+						button.setOnClickListener(new View.OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								shareAppWithoutReferralCode();
 							}
 						});
 					}
@@ -345,7 +372,7 @@ public class ShareThisAppActivity extends Activity implements
 				+ "&checksum=" + checksumstring;
 		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
 				+ " params : " + params);
-		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+		new GlobalAsyncTask(this, endpoint, params, null, this, false,
 				"querywallet", true);
 
 	}
@@ -402,15 +429,7 @@ public class ShareThisAppActivity extends Activity implements
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
-									Intent sendIntent = new Intent();
-									sendIntent.setAction(Intent.ACTION_SEND);
-									sendIntent
-											.putExtra(
-													Intent.EXTRA_TEXT,
-													"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab.");
-									sendIntent.setType("text/plain");
-									startActivity(Intent.createChooser(
-											sendIntent, "Share Via"));
+									shareAppWithoutReferralCode();
 								}
 							});
 
@@ -428,6 +447,17 @@ public class ShareThisAppActivity extends Activity implements
 		Toast.makeText(ShareThisAppActivity.this,
 				"Something went wrong, please try again", Toast.LENGTH_LONG)
 				.show();
+	}
+
+	private void shareAppWithoutReferralCode() {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent
+				.putExtra(
+						Intent.EXTRA_TEXT,
+						"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab.");
+		sendIntent.setType("text/plain");
+		startActivity(Intent.createChooser(sendIntent, "Share Via"));
 	}
 
 }

@@ -49,6 +49,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 	Tracker tracker;
 
+	private boolean isPaymentStatusFail = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -229,22 +231,9 @@ public class FirstLoginWalletsActivity extends Activity implements
 		});
 
 		if (from.equalsIgnoreCase("reg")) {
-			querywallet();
+			isPaymentStatusFail = false;
 
-			Button button = (Button) findViewById(R.id.maybelaterbutton);
-			button.setVisibility(View.VISIBLE);
-			button.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent mainIntent = new Intent(
-							FirstLoginWalletsActivity.this,
-							FirstLoginClubsActivity.class);
-					startActivity(mainIntent);
-					finish();
-				}
-			});
-
+			checkPaymentStatus();
 		} else {
 			SharedPreferences sharedPreferences = getSharedPreferences(
 					"MobikwikToken", 0);
@@ -382,6 +371,31 @@ public class FirstLoginWalletsActivity extends Activity implements
 				false);
 	}
 
+	private void checkPaymentStatus() {
+
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/checkPaymentStatus.php";
+		String params = "mobileNumber=" + MobileNumber;
+		Log.d("checkPaymentStatus", "checkPaymentStatus endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, false,
+				"checkPaymentStatus", false);
+	}
+
+	private void processPendingTransactions() {
+
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/processPendingTransactions.php";
+		String params = "mobileNumber=" + MobileNumber;
+		Log.d("processPendingTransactions",
+				"processPendingTransactions endpoint : " + endpoint
+						+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, false,
+				"processPendingTransactions", false);
+	}
+
 	private void checksumInvalidToast() {
 		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
 		Toast.makeText(FirstLoginWalletsActivity.this,
@@ -414,45 +428,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"Press the 'Send OTP' button to proceed",
 							Toast.LENGTH_LONG).show();
-					// AlertDialog.Builder builder = new AlertDialog.Builder(
-					// FirstLoginWalletsActivity.this);
-					// builder.setMessage("You already have a Mobikwik wallet registered with your number, would you like to link it with the app?");
-					// builder.setCancelable(false);
-					//
-					// builder.setPositiveButton("Yes",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// walletLinearLayout
-					// .setVisibility(View.VISIBLE);
-					// emailEditText.setVisibility(View.GONE);
-					//
-					// walletAction = LINK_WALLET;
-					// continuewithotp.setText("Link Wallet");
-					// Toast.makeText(
-					// FirstLoginWalletsActivity.this,
-					// "Press the 'Send OTP' button to proceed",
-					// Toast.LENGTH_LONG).show();
-					// }
-					// });
-					//
-					// builder.setNegativeButton("Maybe later",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// Intent mainIntent = new Intent(
-					// FirstLoginWalletsActivity.this,
-					// FirstLoginClubsActivity.class);
-					// startActivity(mainIntent);
-					// finish();
-					// }
-					// });
-					//
-					// builder.show();
 				} else {
 
 					otphardtext.setText(getResources().getString(
@@ -468,46 +443,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"Press the 'Send OTP' button to proceed",
 							Toast.LENGTH_LONG).show();
-					// AlertDialog.Builder builder = new AlertDialog.Builder(
-					// FirstLoginWalletsActivity.this);
-					// builder.setMessage("You do not have a Mobikwik wallet registered with your number, would you like to create one?");
-					// builder.setCancelable(false);
-					//
-					// builder.setPositiveButton("Yes",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// walletLinearLayout
-					// .setVisibility(View.VISIBLE);
-					// emailEditText.setVisibility(View.VISIBLE);
-					//
-					// walletAction = CREATE_WALLET;
-					//
-					// continuewithotp.setText("Create Wallet");
-					// Toast.makeText(
-					// FirstLoginWalletsActivity.this,
-					// "Press the 'Send OTP' button to proceed",
-					// Toast.LENGTH_LONG).show();
-					// }
-					// });
-					//
-					// builder.setNegativeButton("Maybe later",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// Intent mainIntent = new Intent(
-					// FirstLoginWalletsActivity.this,
-					// FirstLoginClubsActivity.class);
-					// startActivity(mainIntent);
-					// finish();
-					// }
-					// });
-					//
-					// builder.show();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -602,6 +537,11 @@ public class FirstLoginWalletsActivity extends Activity implements
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
+
+					if (isPaymentStatusFail) {
+						processPendingTransactions();
+					}
+
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"User created succesfully!", Toast.LENGTH_LONG)
 							.show();
@@ -610,7 +550,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 					// linkWallet(); moved to getCoupons
 
 					getCoupons();
-
 				} else {
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							jsonObject.getString("statusdescription"),
@@ -646,6 +585,76 @@ public class FirstLoginWalletsActivity extends Activity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else if (uniqueID.equals("checkPaymentStatus")) {
+			Log.d("FirstLoginWalletActivity", "checkPaymentStatus response : "
+					+ response);
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("success")) {
+					isPaymentStatusFail = false;
+				} else {
+					isPaymentStatusFail = true;
+				}
+
+				querywallet();
+
+				Button button = (Button) findViewById(R.id.maybelaterbutton);
+				button.setVisibility(View.VISIBLE);
+				button.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						if (isPaymentStatusFail) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									FirstLoginWalletsActivity.this);
+							builder.setMessage("We noticed you used a referral code but do not have a Mobikwik wallet. You'll not receive your cashback reward without a wallet, we recommend that you create one now!");
+							builder.setCancelable(false);
+
+							builder.setPositiveButton("Create Wallet",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											generateOTP();
+										}
+									});
+
+							builder.setNegativeButton("Maybe later",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											Intent mainIntent = new Intent(
+													FirstLoginWalletsActivity.this,
+													FirstLoginClubsActivity.class);
+											startActivity(mainIntent);
+											finish();
+										}
+									});
+
+							builder.show();
+						} else {
+							Intent mainIntent = new Intent(
+									FirstLoginWalletsActivity.this,
+									FirstLoginClubsActivity.class);
+							startActivity(mainIntent);
+							finish();
+						}
+					}
+				});
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("processPendingTransactions")) {
+			Log.d("FirstLoginWalletActivity",
+					"processPendingTransactions response : " + response);
 		}
 	}
 

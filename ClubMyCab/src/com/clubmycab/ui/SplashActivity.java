@@ -55,7 +55,7 @@ public class SplashActivity extends Activity {
 	boolean exceptioncheck = false;
 	private ArrayList<String> ans1;
 	private long timeStart;
-	int delay = 3;
+	int delay = 0;		// 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

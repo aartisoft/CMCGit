@@ -427,7 +427,7 @@ public class RegistrationActivity extends Activity implements
 							if (!walletExists) {
 								AlertDialog.Builder builder = new AlertDialog.Builder(
 										RegistrationActivity.this);
-								builder.setMessage("You do not have a Mobikwik wallet yet, you'll need it to receive the referral code cashback. Please create it on the Wallets page.");
+								builder.setMessage("You do not have a Mobikwik wallet yet, you'll need it to receive the cashback. Please create it on the Wallets page.");
 								builder.setCancelable(false);
 
 								builder.setPositiveButton("OK",

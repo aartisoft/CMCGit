@@ -119,6 +119,30 @@
                     android:inputType="textEmailAddress"
                     android:textSize="15sp" />
             </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/referralcodetxt"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="Referral code:" />
+
+                <EditText
+                    android:id="@+id/referralcodeedittext"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:hint="Enter referral code (optional)"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -204,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="@string/str_text_termandcondition"
                 android:textColor="@android:color/black"
@@ -214,7 +238,7 @@
                 android:id="@+id/textViewTNCLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:text="@string/text_label_tnc_website"
                 android:textSize="15sp" />

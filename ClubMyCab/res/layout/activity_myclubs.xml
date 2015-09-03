@@ -12,62 +12,78 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         layout="@layout/header" />
-    
-    
-      <LinearLayout
+
+    <LinearLayout
+        android:id="@+id/llMyClubOffer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewMyClubOffer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="#000"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/llMyClub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        
         android:layout_alignParentBottom="true"
         android:orientation="vertical" >
 
-          <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="10dp"
-              android:layout_marginRight="10dp"
-              android:gravity="center"
-              android:visibility="gone"
-              android:text="@string/selectclub"
-              android:textColor="#000" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="@string/selectclub"
+            android:textColor="#000"
+            android:visibility="gone" />
 
-     <TextView 
-         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:textSize="10sp"
-        android:text="@string/memberexcludingmsg"
-        android:gravity="center"
-        android:textColor="#000"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="@string/memberexcludingmsg"
+            android:textColor="#000"
+            android:textSize="10sp" />
 
-       <Button
-        android:id="@+id/butmakenewclubs"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/createnewclubbtn"
-        android:text="Create New Club"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        <Button
+            android:id="@+id/butmakenewclubs"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/createnewclubbtn"
+            android:text="Create New Club"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
     </LinearLayout>
-    
-    
-     
-     
 
     <LinearLayout
         android:id="@+id/mainclublistll"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/llMyClub"
-        android:layout_below="@+id/header1"
-        android:layout_margin="10dp"
+        android:layout_below="@+id/llMyClubOffer"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="vertical"
         android:weightSum="2" >
 
@@ -124,9 +140,5 @@
             </ListView>
         </LinearLayout>
     </LinearLayout>
-    
-   
-
-  
 
 </RelativeLayout>

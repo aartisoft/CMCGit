@@ -27,11 +27,15 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.ui.FirstLoginWalletsActivity;
 import com.clubmycab.ui.LocationInMapFragmentActivity;
 import com.clubmycab.ui.MyClubsActivity;
+import com.clubmycab.ui.MyProfileActivity;
 import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.RateCabActivity;
+import com.clubmycab.ui.SettingActivity;
+import com.clubmycab.ui.ShareThisAppActivity;
 import com.clubmycab.ui.SplashActivity;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -98,14 +102,17 @@ public class GCMIntentService extends GCMBaseIntentService {
 		} else if (pushfrom != null
 				&& pushfrom.equalsIgnoreCase("genericnotification")) {
 			generateGenericnotification(context, message);
+		} else if (pushfrom != null
+				&& pushfrom.toLowerCase().contains("genericnotification")) {
+			generateGenericnotificationForScreen(context, message, pushfrom);
 		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("TripStart")) {
-			generateTripNotification(context, CabId, message,NotificationId);
+			generateTripNotification(context, CabId, message, NotificationId);
 		} else if (pushfrom != null
 				&& pushfrom.equalsIgnoreCase("ownerTripCompleted")) {
-			generateTripNotification(context, CabId, message,NotificationId);
+			generateTripNotification(context, CabId, message, NotificationId);
 		} else if (pushfrom != null
 				&& pushfrom.equalsIgnoreCase("tripcompleted")) {
-			generateTripNotification(context, CabId, message,NotificationId);
+			generateTripNotification(context, CabId, message, NotificationId);
 		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("CabId_")) {
 
 			SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
@@ -125,17 +132,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 			generateSharedLocationNotificaiton(context, message, latLong,
 					NotificationId);
 
-		}
-
-		else if (pushfrom != null && pushfrom.equalsIgnoreCase("PoolId_")) {
+		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("PoolId_")) {
 			genrateMyClubNotificaton(context, message, NotificationId);
 		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("Cab_Rating")) {
-			
+
 			genrateCabRating(CabId, message, NotificationId);
 
-		}
-
-		else {
+		} else {
 			generateNewMsgNotification(context, message);
 		}
 	}
@@ -254,27 +257,27 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	}
 
-//	public void opneNotificationListActivity(String message) {
-//		String[] arr = message.split("-");
-//		Log.d("arr", "" + arr[1].toString().trim());
-//
-//		String address = arr[1].toString().trim();
-//		String latlongmap = "";
-//
-//		Intent mainIntent = new Intent(mcontext,
-//				LocationInMapFragmentActivity.class);
-//		mainIntent.putExtra("address", address);
-//		mainIntent.putExtra("latlongmap", latlongmap);
-//		mcontext.startActivity(mainIntent);
-//	}
+	// public void opneNotificationListActivity(String message) {
+	// String[] arr = message.split("-");
+	// Log.d("arr", "" + arr[1].toString().trim());
+	//
+	// String address = arr[1].toString().trim();
+	// String latlongmap = "";
+	//
+	// Intent mainIntent = new Intent(mcontext,
+	// LocationInMapFragmentActivity.class);
+	// mainIntent.putExtra("address", address);
+	// mainIntent.putExtra("latlongmap", latlongmap);
+	// mcontext.startActivity(mainIntent);
+	// }
 
-//	public void openNotificationMyclubActivity(String message) {
-//
-//		Intent mainIntent = new Intent(mcontext, MyClubsActivity.class);
-//		mainIntent.putExtra("comefrom", "comefrom");
-//		mcontext.startActivity(mainIntent);
-//
-//	}
+	// public void openNotificationMyclubActivity(String message) {
+	//
+	// Intent mainIntent = new Intent(mcontext, MyClubsActivity.class);
+	// mainIntent.putExtra("comefrom", "comefrom");
+	// mcontext.startActivity(mainIntent);
+	//
+	// }
 
 	public void genrateCabRating(String cabId, String message,
 			String NotificationId) {
@@ -341,6 +344,58 @@ public class GCMIntentService extends GCMBaseIntentService {
 		notificationID++;
 
 		Intent intent = new Intent(this, SplashActivity.class);
+		PendingIntent pIntent = PendingIntent.getActivity(this, notificationID,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				context);
+		Notification notification = mBuilder
+				.setSmallIcon(icon)
+				.setTicker("ClubMyCab")
+				.setWhen(System.currentTimeMillis())
+				.setAutoCancel(true)
+				.setContentTitle("ClubMyCab")
+				.setStyle(
+						new NotificationCompat.BigTextStyle().bigText(message))
+				.setContentIntent(pIntent)
+				.setSound(
+						RingtoneManager
+								.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+				.setContentText(message).build();
+
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(notificationID, notification);
+
+	}
+
+	public void generateGenericnotificationForScreen(Context context,
+			String message, String pushFrom) {
+
+		int icon = R.drawable.cabappicon;
+		notificationID++;
+
+		Intent intent;
+
+		if (pushFrom.equalsIgnoreCase("genericnotificationclub")) {
+			intent = new Intent(this, MyClubsActivity.class);
+		} else if (pushFrom.equalsIgnoreCase("genericnotificationrides")) {
+			intent = new Intent(this, MyRidesActivity.class);
+		} else if (pushFrom.equalsIgnoreCase("genericnotificationwallet")) {
+			intent = new Intent(this, FirstLoginWalletsActivity.class);
+		} else if (pushFrom
+				.equalsIgnoreCase("genericnotificationsharelocation")) {
+			intent = new Intent(this, ShareLocationFragmentActivity.class);
+		} else if (pushFrom.equalsIgnoreCase("genericnotificationprofile")) {
+			intent = new Intent(this, MyProfileActivity.class);
+		} else if (pushFrom.equalsIgnoreCase("genericnotificationsettings")) {
+			intent = new Intent(this, SettingActivity.class);
+		} else if (pushFrom.equalsIgnoreCase("genericnotificationsharethisapp")) {
+			intent = new Intent(this, ShareThisAppActivity.class);
+		} else {
+			intent = new Intent(this, SplashActivity.class);
+		}
+
 		PendingIntent pIntent = PendingIntent.getActivity(this, notificationID,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -881,7 +936,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	private void generateTripNotification(Context context, String cabID,
-			String message,String NotificationId) {
+			String message, String NotificationId) {
 
 		int icon = R.drawable.cabappicon;
 		notificationID++;
@@ -892,7 +947,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 		intent.putExtra("cabID", cabID);
 		intent.putExtra("nid", NotificationId);
 		Log.d("MyRideNotificationId::", NotificationId);
-
 
 		PendingIntent pIntent = PendingIntent.getActivity(context,
 				notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);

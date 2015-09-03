@@ -1,12 +1,5 @@
 package com.clubmycab.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -55,6 +48,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 	private String token = "";
 
 	Tracker tracker;
+
+	private boolean isPaymentStatusFail = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -236,22 +231,9 @@ public class FirstLoginWalletsActivity extends Activity implements
 		});
 
 		if (from.equalsIgnoreCase("reg")) {
-			querywallet();
+			isPaymentStatusFail = false;
 
-			Button button = (Button) findViewById(R.id.maybelaterbutton);
-			button.setVisibility(View.VISIBLE);
-			button.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Intent mainIntent = new Intent(
-							FirstLoginWalletsActivity.this,
-							FirstLoginClubsActivity.class);
-					startActivity(mainIntent);
-					finish();
-				}
-			});
-
+			checkPaymentStatus();
 		} else {
 			SharedPreferences sharedPreferences = getSharedPreferences(
 					"MobikwikToken", 0);
@@ -389,62 +371,29 @@ public class FirstLoginWalletsActivity extends Activity implements
 				false);
 	}
 
-	private boolean checkResponseChecksum(String response) {
+	private void checkPaymentStatus() {
 
-		try {
-			JSONObject jsonObject = new JSONObject(response);
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/checkPaymentStatus.php";
+		String params = "mobileNumber=" + MobileNumber;
+		Log.d("checkPaymentStatus", "checkPaymentStatus endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, false,
+				"checkPaymentStatus", false);
+	}
 
-			Iterator<String> iterator = jsonObject.keys();
-			String responseValues = "";
+	private void processPendingTransactions() {
 
-			HashMap<String, String> hashMap = new HashMap<String, String>();
-
-			while (iterator.hasNext()) {
-				String key = iterator.next();
-				String value = jsonObject.get(key).toString();
-
-				if (!value.isEmpty() && value.length() > 0
-						&& !key.equalsIgnoreCase("checksum")) {
-					hashMap.put(key, value);
-				}
-
-				// if (!value.isEmpty() && value.length() > 0 &&
-				// !key.equalsIgnoreCase("checksum")) {
-				// responseValues += (value + "''");
-				// }
-			}
-			// Log.d("checkResponseChecksum", "hashMap : " + hashMap);
-			Map<String, String> map = new TreeMap<String, String>(hashMap);
-			List<String> list = new ArrayList<String>(map.keySet());
-			Log.d("checkResponseChecksum",
-					"map : " + map + " keySet : " + map.keySet() + " list : "
-							+ list);
-
-			for (int i = 0; i < list.size(); i++) {
-				responseValues += (map.get(list.get(i)) + "''");
-			}
-
-			responseValues = responseValues.substring(0,
-					responseValues.length() - 2);
-			String responseValuesFinal = "'" + responseValues + "'";
-
-			// Log.d("checkResponseChecksum", "responseValuesFinal : "
-			// + responseValuesFinal);
-
-			String checkSumGenerated = GlobalMethods
-					.calculateCheckSumForService(responseValuesFinal,
-							GlobalVariables.Mobikwik_14SecretKey);
-			Log.d("checkResponseChecksum", checkSumGenerated);
-
-			if (checkSumGenerated.equals(jsonObject.get("checksum").toString())) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/processPendingTransactions.php";
+		String params = "mobileNumber=" + MobileNumber;
+		Log.d("processPendingTransactions",
+				"processPendingTransactions endpoint : " + endpoint
+						+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, false,
+				"processPendingTransactions", false);
 	}
 
 	private void checksumInvalidToast() {
@@ -462,7 +411,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 				JSONObject jsonObject = new JSONObject(response);
 				Log.d("FirstLoginWalletActivity", "querywallet jsonObject :"
 						+ jsonObject);
-				if (!checkResponseChecksum(response)) {
+				if (!GlobalMethods.checkResponseChecksum(response)) {
 					checksumInvalidToast();
 					return;
 				}
@@ -479,45 +428,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"Press the 'Send OTP' button to proceed",
 							Toast.LENGTH_LONG).show();
-					// AlertDialog.Builder builder = new AlertDialog.Builder(
-					// FirstLoginWalletsActivity.this);
-					// builder.setMessage("You already have a Mobikwik wallet registered with your number, would you like to link it with the app?");
-					// builder.setCancelable(false);
-					//
-					// builder.setPositiveButton("Yes",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// walletLinearLayout
-					// .setVisibility(View.VISIBLE);
-					// emailEditText.setVisibility(View.GONE);
-					//
-					// walletAction = LINK_WALLET;
-					// continuewithotp.setText("Link Wallet");
-					// Toast.makeText(
-					// FirstLoginWalletsActivity.this,
-					// "Press the 'Send OTP' button to proceed",
-					// Toast.LENGTH_LONG).show();
-					// }
-					// });
-					//
-					// builder.setNegativeButton("Maybe later",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// Intent mainIntent = new Intent(
-					// FirstLoginWalletsActivity.this,
-					// FirstLoginClubsActivity.class);
-					// startActivity(mainIntent);
-					// finish();
-					// }
-					// });
-					//
-					// builder.show();
 				} else {
 
 					otphardtext.setText(getResources().getString(
@@ -533,46 +443,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"Press the 'Send OTP' button to proceed",
 							Toast.LENGTH_LONG).show();
-					// AlertDialog.Builder builder = new AlertDialog.Builder(
-					// FirstLoginWalletsActivity.this);
-					// builder.setMessage("You do not have a Mobikwik wallet registered with your number, would you like to create one?");
-					// builder.setCancelable(false);
-					//
-					// builder.setPositiveButton("Yes",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// walletLinearLayout
-					// .setVisibility(View.VISIBLE);
-					// emailEditText.setVisibility(View.VISIBLE);
-					//
-					// walletAction = CREATE_WALLET;
-					//
-					// continuewithotp.setText("Create Wallet");
-					// Toast.makeText(
-					// FirstLoginWalletsActivity.this,
-					// "Press the 'Send OTP' button to proceed",
-					// Toast.LENGTH_LONG).show();
-					// }
-					// });
-					//
-					// builder.setNegativeButton("Maybe later",
-					// new DialogInterface.OnClickListener() {
-					//
-					// @Override
-					// public void onClick(DialogInterface dialog,
-					// int which) {
-					// Intent mainIntent = new Intent(
-					// FirstLoginWalletsActivity.this,
-					// FirstLoginClubsActivity.class);
-					// startActivity(mainIntent);
-					// finish();
-					// }
-					// });
-					//
-					// builder.show();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -580,7 +450,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("otpgenerate")) {
 			Log.d("FirstLoginWalletActivity", "otpgenerate response : "
 					+ response);
-			if (!checkResponseChecksum(response)) {
+			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
 				return;
 			}
@@ -603,7 +473,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("tokengenerate")) {
 			Log.d("FirstLoginWalletActivity", "tokengenerate response : "
 					+ response);
-			if (!checkResponseChecksum(response)) {
+			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
 				return;
 			}
@@ -659,7 +529,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("createwalletuser")) {
 			Log.d("FirstLoginWalletActivity", "createwalletuser response : "
 					+ response);
-			if (!checkResponseChecksum(response)) {
+			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
 				return;
 			}
@@ -667,6 +537,11 @@ public class FirstLoginWalletsActivity extends Activity implements
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
+
+					if (isPaymentStatusFail) {
+						processPendingTransactions();
+					}
+
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"User created succesfully!", Toast.LENGTH_LONG)
 							.show();
@@ -675,7 +550,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 					// linkWallet(); moved to getCoupons
 
 					getCoupons();
-
 				} else {
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							jsonObject.getString("statusdescription"),
@@ -711,6 +585,76 @@ public class FirstLoginWalletsActivity extends Activity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else if (uniqueID.equals("checkPaymentStatus")) {
+			Log.d("FirstLoginWalletActivity", "checkPaymentStatus response : "
+					+ response);
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equals("success")) {
+					isPaymentStatusFail = false;
+				} else {
+					isPaymentStatusFail = true;
+				}
+
+				querywallet();
+
+				Button button = (Button) findViewById(R.id.maybelaterbutton);
+				button.setVisibility(View.VISIBLE);
+				button.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						if (isPaymentStatusFail) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									FirstLoginWalletsActivity.this);
+							builder.setMessage("We noticed you used a referral code but do not have a Mobikwik wallet. You'll not receive your cashback reward without a wallet, we recommend that you create one now!");
+							builder.setCancelable(false);
+
+							builder.setPositiveButton("Create Wallet",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											generateOTP();
+										}
+									});
+
+							builder.setNegativeButton("Maybe later",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											Intent mainIntent = new Intent(
+													FirstLoginWalletsActivity.this,
+													FirstLoginClubsActivity.class);
+											startActivity(mainIntent);
+											finish();
+										}
+									});
+
+							builder.show();
+						} else {
+							Intent mainIntent = new Intent(
+									FirstLoginWalletsActivity.this,
+									FirstLoginClubsActivity.class);
+							startActivity(mainIntent);
+							finish();
+						}
+					}
+				});
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("processPendingTransactions")) {
+			Log.d("FirstLoginWalletActivity",
+					"processPendingTransactions response : " + response);
 		}
 	}
 

@@ -59,7 +59,7 @@
     <string name="title_activity_wallets_acitivity">WalletsAcitivity</string>
     <string name="title_activity_favorite_locations_acivity">FavoriteLocationsAcivity</string>
     <string name="text_firstloginclubs_member">Congratulations! You are already member of the following clubs and can start sharing rides immediately!</string>
-    <string name="text_firstloginclubs_notmember">You are not yet a member of any club, create one and invite your friends!</string>
+    <string name="text_firstloginclubs_notmember">You are not yet a member of any club, create one and invite your friends! When your friend(s) join ClubMyCab, they receive an instant cashback and so do you!</string>
     <string name="button_flc_create_club">Create more clubs</string>
     <string name="button_flc_continue">Continue</string>
     <string name="button_flc_create_club_notmember">Create clubs</string>

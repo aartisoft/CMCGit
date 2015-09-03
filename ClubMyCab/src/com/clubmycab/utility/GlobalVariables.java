@@ -19,7 +19,7 @@ public class GlobalVariables {
 	// "http://180.179.208.23/cmc/cmcservice"; // UAT
 	// public static final String IpAddress = "180.179.208.23"; // UAT
 	// public static final String ServerNameForChat = "@p2p-vm2"; // UAT
-	
+
 	// Mobikwik
 	// public static final String Mobikwik_ServerURL =
 	// "https://test.mobikwik.com/mobikwik"; // UAT
@@ -38,7 +38,7 @@ public class GlobalVariables {
 	// public static final String ServerNameForChat = "@p2p-vm2";
 	// // GoogleCloudUAT
 
-	public static final boolean LOGGING_ENABLED = true;
+	public static final boolean LOGGING_ENABLED = false;
 
 	public static final double GEOFENCING_RADIUS = 0.003;
 

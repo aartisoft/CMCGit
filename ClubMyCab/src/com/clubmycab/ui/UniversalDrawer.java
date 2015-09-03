@@ -1,13 +1,33 @@
 package com.clubmycab.ui;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
@@ -36,7 +56,7 @@ public class UniversalDrawer {
 	TextView wallets;
 	TextView mypreferences;
 	// TextView about;
-	private TextView faq,tvaskforquery;
+	private TextView faq, tvaskforquery;
 
 	LinearLayout myclubslayout;
 	LinearLayout myrideslayout;
@@ -51,6 +71,10 @@ public class UniversalDrawer {
 	LinearLayout sharelocationlayout;
 
 	Context context;
+
+	private boolean exceptioncheck;
+
+	private String result;
 
 	public UniversalDrawer(Context context, Tracker tracker) {
 		// TODO Auto-generated constructor stub
@@ -91,7 +115,7 @@ public class UniversalDrawer {
 		// .findViewById(R.id.aboutlayout);
 		faqlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.faqlayout);
-		llaskforquery=(LinearLayout)((Activity) context)
+		llaskforquery = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.llaskforquery);
 		sharelocationlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.sharelocationlayout);
@@ -132,7 +156,8 @@ public class UniversalDrawer {
 		faq = (TextView) ((Activity) context).findViewById(R.id.faq);
 		faq.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
-		tvaskforquery = (TextView) ((Activity) context).findViewById(R.id.tvaskforquery);
+		tvaskforquery = (TextView) ((Activity) context)
+				.findViewById(R.id.tvaskforquery);
 		tvaskforquery.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
 
@@ -211,27 +236,21 @@ public class UniversalDrawer {
 			public void onClick(View arg0) {
 				mNav.toggleDrawer();
 
-				// Intent mainIntent = new Intent(context,
-				// FirstLoginWalletsActivity.class);
-				// mainIntent.putExtra("from", "reg");
-				// context.startActivity(mainIntent);
-				// ((Activity) context).overridePendingTransition(
-				// R.anim.slide_in_right, R.anim.slide_out_left);
+				if (!GlobalVariables.ActivityName
+						.equals("ShareThisAppActivity")) {
 
-				 tracker.send(new HitBuilders.EventBuilder()
-				 .setCategory("ShareApp Click")
-				 .setAction("ShareApp Click").setLabel("ShareApp Click")
-				 .build());
-				
-				 Intent sendIntent = new Intent();
-				 sendIntent.setAction(Intent.ACTION_SEND);
-				 sendIntent
-				 .putExtra(
-				 Intent.EXTRA_TEXT,
-				 "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
-				 sendIntent.setType("text/plain");
-				 context.startActivity(Intent.createChooser(sendIntent,
-				 "Share Via"));
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("ShareApp Click")
+							.setAction("ShareApp Click")
+							.setLabel("ShareApp Click").build());
+
+					Intent mainIntent = new Intent(context,
+							ShareThisAppActivity.class);
+					context.startActivity(mainIntent);
+					((Activity) context).overridePendingTransition(
+							R.anim.slide_in_right, R.anim.slide_out_left);
+					GlobalVariables.ActivityName = "ShareThisAppActivity";
+				}
 
 			}
 		});
@@ -251,7 +270,7 @@ public class UniversalDrawer {
 							FirstLoginWalletsActivity.class);
 					mainIntent.putExtra("from", "wallet");
 					context.startActivity(mainIntent);
-					
+
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);
 					GlobalVariables.ActivityName = "WalletsAcitivity";
@@ -357,13 +376,16 @@ public class UniversalDrawer {
 
 				mNav.toggleDrawer();
 
-				if (!GlobalVariables.ActivityName.equals("ReportAProblemActivity")) {
+				if (!GlobalVariables.ActivityName
+						.equals("ReportAProblemActivity")) {
 
 					tracker.send(new HitBuilders.EventBuilder()
-							.setCategory("ReportAProblem Click").setAction("ReportAProblem Click")
+							.setCategory("ReportAProblem Click")
+							.setAction("ReportAProblem Click")
 							.setLabel("ReportAProblem Click").build());
 
-					Intent mainIntent = new Intent(context, NeedSupportFragmentActivity.class);
+					Intent mainIntent = new Intent(context,
+							NeedSupportFragmentActivity.class);
 					context.startActivity(mainIntent);
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);

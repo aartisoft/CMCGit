@@ -235,6 +235,14 @@ public class ShareThisAppActivity extends Activity implements
 				return;
 			}
 
+			if (result.contains("Unauthorized Access")) {
+				Log.e("ShareThisAppActivity", "result Unauthorized Access");
+				Toast.makeText(ShareThisAppActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				if (result != null && !result.isEmpty()) {
 					JSONObject jsonObject = new JSONObject(result);
@@ -247,7 +255,8 @@ public class ShareThisAppActivity extends Activity implements
 						referral = jsonObject2.get("referralCode").toString();
 						amount = jsonObject2.get("amount").toString();
 						maxUseLimit = jsonObject2.get("maxUseLimit").toString();
-						totalReferrals = jsonObject2.get("totalReferrals").toString();
+						totalReferrals = jsonObject2.get("totalReferrals")
+								.toString();
 
 						TextView textView = (TextView) findViewById(R.id.offershareapptext);
 						textView.setVisibility(View.VISIBLE);
@@ -326,8 +335,13 @@ public class ShareThisAppActivity extends Activity implements
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"mobileNumber", MemberNumberstr);
 
+			String authString = MemberNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

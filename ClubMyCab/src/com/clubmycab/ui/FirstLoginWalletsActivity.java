@@ -362,8 +362,10 @@ public class FirstLoginWalletsActivity extends Activity implements
 	private void getCoupons() {
 
 		String endpoint = GlobalVariables.ServiceUrl + "/getCoupons.php";
+		String authString = MobileNumber + "mobikwik" + "newWallet";
 		String params = "type=newWallet&provider=mobikwik&mobileNumber="
-				+ MobileNumber;
+				+ MobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 		Log.d("getCoupons", "getCoupons endpoint : " + endpoint + " params : "
 				+ params);
 		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
@@ -375,7 +377,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 		String endpoint = GlobalVariables.ServiceUrl
 				+ "/checkPaymentStatus.php";
-		String params = "mobileNumber=" + MobileNumber;
+		String params = "mobileNumber=" + MobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(MobileNumber);
 		Log.d("checkPaymentStatus", "checkPaymentStatus endpoint : " + endpoint
 				+ " params : " + params);
 		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
@@ -387,7 +390,8 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 		String endpoint = GlobalVariables.ServiceUrl
 				+ "/processPendingTransactions.php";
-		String params = "mobileNumber=" + MobileNumber;
+		String params = "mobileNumber=" + MobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(MobileNumber);;
 		Log.d("processPendingTransactions",
 				"processPendingTransactions endpoint : " + endpoint
 						+ " params : " + params);
@@ -564,6 +568,16 @@ public class FirstLoginWalletsActivity extends Activity implements
 			Log.d("FirstLoginWalletActivity", "getCoupons response : "
 					+ response);
 
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("FirstLoginWalletsActivity",
+						"getCoupons Unauthorized Access");
+				Toast.makeText(FirstLoginWalletsActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("success")) {
@@ -588,6 +602,16 @@ public class FirstLoginWalletsActivity extends Activity implements
 		} else if (uniqueID.equals("checkPaymentStatus")) {
 			Log.d("FirstLoginWalletActivity", "checkPaymentStatus response : "
 					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("FirstLoginWalletsActivity",
+						"checkPaymentStatus Unauthorized Access");
+				Toast.makeText(FirstLoginWalletsActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			try {
 				JSONObject jsonObject = new JSONObject(response);

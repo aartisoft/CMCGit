@@ -1,7 +1,9 @@
 package com.clubmycab.ui;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +35,11 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -491,7 +495,14 @@ public class SettingActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void v) {
-
+			
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(SettingActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 
 	}
@@ -516,15 +527,51 @@ public class SettingActivity extends Activity {
 					"MobileNumber", MobileNumber.trim());
 			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
 					"PushStatus", status);
+			
+			String authString = MobileNumber.trim() + status;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
 			nameValuePairList.add(PasswordBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
 			HttpResponse httpResponse = httpClient.execute(httpPost);
+			
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+			
+			String updatepushresponse = "";
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				updatepushresponse = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("updatepushresponse", "" + stringBuilder.toString());
+			
+			if (updatepushresponse != null && updatepushresponse.length() > 0 && updatepushresponse.contains("Unauthorized Access")) {
+				Log.e("SettingActivity", "updatepushresponse Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(SettingActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 

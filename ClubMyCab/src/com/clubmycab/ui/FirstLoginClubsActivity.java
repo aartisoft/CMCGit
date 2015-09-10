@@ -18,10 +18,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 
@@ -66,7 +68,9 @@ public class FirstLoginClubsActivity extends Activity implements
 		MobileNumber = mPrefs.getString("MobileNumber", "");
 
 		String endpoint = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
-		String params = "OwnerNumber=" + MobileNumber;
+		String authString = MobileNumber;
+		String params = "OwnerNumber=" + MobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		// move this call to wallets page
 		new GlobalAsyncTask(this, endpoint, params, null, this, true,
@@ -163,6 +167,12 @@ public class FirstLoginClubsActivity extends Activity implements
 					R.string.button_flc_create_club_notmember));
 			buttonContinue.setText(getResources().getString(
 					R.string.button_flc_continue_notmember));
+		} else if (response.contains("Unauthorized Access")) {
+			Log.e("FirstLoginClubsActivity", "Unauthorized Access");
+			Toast.makeText(FirstLoginClubsActivity.this,
+					getResources().getString(R.string.exceptionstring),
+					Toast.LENGTH_LONG).show();
+			return;
 		} else {
 			textViewMessage.setText(getResources().getString(
 					R.string.text_firstloginclubs_member));
@@ -194,16 +204,16 @@ public class FirstLoginClubsActivity extends Activity implements
 								.getString("PoolId").toString());
 						MyClubPoolName.add(subArray.getJSONObject(i)
 								.getString("PoolName").toString());
-						
-						//Pawan cheks NoofMember value for null
-						if(subArray.getJSONObject(i)
-								.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+
+						// Pawan cheks NoofMember value for null
+						if (subArray.getJSONObject(i).getString("NoofMembers")
+								.toString().equalsIgnoreCase("null"))
 							MyClubNoofMembers.add("1");
-						
+
 						else
-						MyClubNoofMembers.add(subArray.getJSONObject(i)
-								.getString("NoofMembers").toString());
-						
+							MyClubNoofMembers.add(subArray.getJSONObject(i)
+									.getString("NoofMembers").toString());
+
 						MyClubOwnerName.add(subArray.getJSONObject(i)
 								.getString("OwnerName").toString());
 						MyClubMembers.add(subArray.getJSONObject(i)
@@ -213,17 +223,16 @@ public class FirstLoginClubsActivity extends Activity implements
 								.getString("PoolId").toString());
 						MemberClubPoolName.add(subArray.getJSONObject(i)
 								.getString("PoolName").toString());
-						
-						//Pawan cheks NoofMember value for null
-						if(subArray.getJSONObject(i)
-								.getString("NoofMembers").toString().equalsIgnoreCase("null"))
+
+						// Pawan cheks NoofMember value for null
+						if (subArray.getJSONObject(i).getString("NoofMembers")
+								.toString().equalsIgnoreCase("null"))
 							MemberClubNoofMembers.add("1");
-						
+
 						else
 							MemberClubNoofMembers.add(subArray.getJSONObject(i)
-						.getString("NoofMembers").toString());
-						
-						
+									.getString("NoofMembers").toString());
+
 						MemberClubOwnerName.add(subArray.getJSONObject(i)
 								.getString("OwnerName").toString());
 						MemberClubMembers.add(subArray.getJSONObject(i)

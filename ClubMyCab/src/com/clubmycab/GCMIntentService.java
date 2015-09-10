@@ -37,6 +37,7 @@ import com.clubmycab.ui.RateCabActivity;
 import com.clubmycab.ui.SettingActivity;
 import com.clubmycab.ui.ShareThisAppActivity;
 import com.clubmycab.ui.SplashActivity;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gcm.GCMBaseIntentService;
@@ -436,6 +437,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 		try {
 			gotopoolresp = val.get();
 
+			if (gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("GCMIntentService", "gotopoolresp Unauthorized Access");
+				// Toast.makeText(SplashActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (gotopoolresp.equalsIgnoreCase("This Ride no longer exist")) {
 				int icon = R.drawable.cabappicon;
 				notificationID++;
@@ -664,6 +673,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 		try {
 			gotopoolresp = val.get();
 
+			if (gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("GCMIntentService", "gotopoolresp Unauthorized Access");
+				// Toast.makeText(SplashActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (gotopoolresp.equalsIgnoreCase("This Ride no longer exist")) {
 				int icon = R.drawable.cabappicon;
 				notificationID++;
@@ -842,9 +859,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", MobileNumber.toString().trim());
+			String authString = MobileNumber.toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(UserNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -869,12 +890,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 				myclubsresp = stringBuilder.append(bufferedStrChunk).toString();
 			}
 
-			SharedPreferences sharedPreferences1 = getSharedPreferences(
-					"MyClubs", 0);
-			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-			editor1.putString("clubs", myclubsresp.toString().trim());
-			editor1.commit();
-
+			if (!myclubsresp.contains("Unauthorized Access")) {
+				SharedPreferences sharedPreferences1 = getSharedPreferences(
+						"MyClubs", 0);
+				SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+				editor1.putString("clubs", myclubsresp.toString().trim());
+				editor1.commit();
+			}
 			// ///////////////
 		}
 	}
@@ -900,8 +922,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 				BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 						"CabId", args[0].toString().trim());
 
+				String authString = args[0].toString().trim();
+				BasicNameValuePair authValuePair = new BasicNameValuePair(
+						"auth",
+						GlobalMethods.calculateCMCAuthString(authString));
+
 				List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 				nameValuePairList.add(CabIdBasicNameValuePair);
+				nameValuePairList.add(authValuePair);
 
 				UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 						nameValuePairList);
@@ -1011,6 +1039,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 				Toast.makeText(mcontext,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			if (gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("GCMIntentService", "gotopoolresp Unauthorized Access");
+//				Toast.makeText(SplashActivity.this,
+//						getResources().getString(R.string.exceptionstring),
+//						Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -1159,9 +1195,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", cid);
+			
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1235,6 +1276,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 				Toast.makeText(mcontext,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			if (cabratingresp != null && cabratingresp.length() > 0 && cabratingresp.contains("Unauthorized Access")) {
+				Log.e("GCMIntentService", "cabratingresp Unauthorized Access");
+				// Toast.makeText(SplashActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -1312,11 +1361,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIDNameValuePair = new BasicNameValuePair(
 					"CabID", cabID);
-			// Log.d("AllNotificationRequest",
-			// "AuthenticateConnectionCabRating cabID : " + cabID);
+			
+			String authString = cabID;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIDNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

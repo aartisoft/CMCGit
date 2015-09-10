@@ -29,10 +29,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -75,7 +73,6 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -106,6 +103,7 @@ import com.clubmycab.ui.MobileSiteFragment;
 import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.UniversalDrawer;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -1394,12 +1392,12 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 		if (startString == null && endString == null) {
 
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForFetchPool()
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				new ConnectionTaskForFetchPool().execute();
-			}
+			// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			// new ConnectionTaskForFetchPool()
+			// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			// } else {
+			// new ConnectionTaskForFetchPool().execute();
+			// }
 
 		} else {
 
@@ -1503,308 +1501,310 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 		}
 	}
 
-	private class ConnectionTaskForFetchPool extends
-			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(
-				BookaCabFragmentActivity.this);
-
-		@Override
-		protected void onPreExecute() {
-			dialog.setMessage("Please Wait...");
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionFetchPool mAuth1 = new AuthenticateConnectionFetchPool();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (dialog.isShowing()) {
-				dialog.dismiss();
-			}
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(BookaCabFragmentActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (poolresponse.equalsIgnoreCase("No Pool Created Yet!!")
-					|| poolresponse.equalsIgnoreCase("[]")) {
-				// Toast.makeText(BookaCab.this, "No active rides!",
-				// Toast.LENGTH_LONG).show();
-			} else {
-
-				CabId.clear();
-				MobileNumber.clear();
-				OwnerName.clear();
-				FromLocation.clear();
-				ToLocation.clear();
-
-				FromShortName.clear();
-				ToShortName.clear();
-
-				TravelDate.clear();
-				TravelTime.clear();
-				Seats.clear();
-				RemainingSeats.clear();
-				Seat_Status.clear();
-				Distance.clear();
-				OpenTime.clear();
-				imagename.clear();
-
-				BookingRefNo.clear();
-
-				try {
-					JSONArray subArray = new JSONArray(poolresponse);
-					String allcabids = "s";
-					for (int i = 0; i < subArray.length(); i++) {
-						try {
-							CabId.add(subArray.getJSONObject(i)
-									.getString("CabId").toString());
-
-							allcabids += "'"
-									+ subArray.getJSONObject(i)
-											.getString("CabId").toString()
-											.trim() + "',";
-
-							MobileNumber.add(subArray.getJSONObject(i)
-									.getString("MobileNumber").toString());
-							OwnerName.add(subArray.getJSONObject(i)
-									.getString("OwnerName").toString());
-							FromLocation.add(subArray.getJSONObject(i)
-									.getString("FromLocation").toString());
-							ToLocation.add(subArray.getJSONObject(i)
-									.getString("ToLocation").toString());
-
-							FromShortName.add(subArray.getJSONObject(i)
-									.getString("FromShortName").toString());
-							ToShortName.add(subArray.getJSONObject(i)
-									.getString("ToShortName").toString());
-
-							TravelDate.add(subArray.getJSONObject(i)
-									.getString("TravelDate").toString());
-							TravelTime.add(subArray.getJSONObject(i)
-									.getString("TravelTime").toString());
-							Seats.add(subArray.getJSONObject(i)
-									.getString("Seats").toString());
-							RemainingSeats.add(subArray.getJSONObject(i)
-									.getString("RemainingSeats").toString());
-							Seat_Status.add(subArray.getJSONObject(i)
-									.getString("Seat_Status").toString());
-							Distance.add(subArray.getJSONObject(i)
-									.getString("Distance").toString());
-							OpenTime.add(subArray.getJSONObject(i)
-									.getString("OpenTime").toString());
-							imagename.add(subArray.getJSONObject(i)
-									.getString("imagename").toString());
-
-							BookingRefNo.add(subArray.getJSONObject(i)
-									.getString("BookingRefNo").toString());
-
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-
-					ArrayList<String> arrayListTrip = new ArrayList<String>();
-					ArrayList<String> arrayListDate = new ArrayList<String>();
-					ArrayList<String> arrayListTime = new ArrayList<String>();
-					ArrayList<String> arrayListSeat = new ArrayList<String>();
-					for (int j = 0; j < FromShortName.size(); j++) {
-
-						if (BookingRefNo.get(j).isEmpty()
-								|| BookingRefNo.get(j).equalsIgnoreCase("null")) {
-							arrayListTrip.add(FromShortName.get(j) + " > "
-									+ ToShortName.get(j));
-							arrayListDate.add(TravelDate.get(j));
-							arrayListTime.add(TravelTime.get(j));
-							arrayListSeat.add(Seat_Status.get(j) + " Seats");
-						}
-					}
-					if (arrayListTrip.size() > 0) {
-
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								BookaCabFragmentActivity.this);
-						View builderView = (View) getLayoutInflater().inflate(
-								R.layout.exisiting_rides_dialog, null);
-
-						ListView listView = (ListView) builderView
-								.findViewById(R.id.listViewExistingRides);
-
-						Button button = (Button) builderView
-								.findViewById(R.id.buttonExistingRides);
-
-						builder.setView(builderView);
-						final AlertDialog dialog = builder.create();
-
-						listView.setAdapter(new CustomListViewAdapter(
-								BookaCabFragmentActivity.this, arrayListTrip,
-								arrayListDate, arrayListTime, arrayListSeat));
-						listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-							@Override
-							public void onItemClick(AdapterView<?> parent,
-									View view, int position, long id) {
-
-								String address = FromLocation.get(position);
-								from_places.setText(address);
-								fAddress = geocodeAddress(address);
-
-								address = ToLocation.get(position);
-								to_places.setText(address);
-								tAddress = geocodeAddress(address);
-
-								from_places.setEnabled(false);
-								to_places.setEnabled(false);
-								threedotsfrom.setEnabled(false);
-								threedotsto.setEnabled(false);
-								clearedittextimgfrom.setVisibility(View.GONE);
-								clearedittextimgto.setVisibility(View.GONE);
-
-								rideObject = new RideObject(
-										CabId.get(position), TravelDate
-												.get(position), TravelTime
-												.get(position), FromShortName
-												.get(position), ToShortName
-												.get(position), from_places
-												.getText().toString(),
-										to_places.getText().toString());
-
-								performCabSearch();
-
-								dialog.dismiss();
-							}
-						});
-
-						button.setOnClickListener(new View.OnClickListener() {
-
-							@Override
-							public void onClick(View view) {
-								dialog.dismiss();
-							}
-						});
-
-						dialog.show();
-
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-	}
-
-	private class CustomListViewAdapter extends ArrayAdapter<String> {
-
-		private final Activity context;
-		private ArrayList<String> mDataSourceTripNames;
-		private ArrayList<String> mDataSourceDates;
-		private ArrayList<String> mDataSourceTimes;
-		private ArrayList<String> mDataSourceSeats;
-
-		public CustomListViewAdapter(Activity context,
-				ArrayList<String> listDataSourceTripNames,
-				ArrayList<String> listDataSourceDates,
-				ArrayList<String> listDataSourceTimes,
-				ArrayList<String> listDataSourceSeats) {
-
-			super(context, 0, listDataSourceTripNames);
-
-			this.context = context;
-			this.mDataSourceTripNames = listDataSourceTripNames;
-			this.mDataSourceDates = listDataSourceDates;
-			this.mDataSourceTimes = listDataSourceTimes;
-			this.mDataSourceSeats = listDataSourceSeats;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			if (convertView == null) {
-				convertView = (View) context.getLayoutInflater().inflate(
-						R.layout.list_row_existing_rides, null);
-			}
-
-			TextView textView = (TextView) convertView
-					.findViewById(R.id.textViewRowExistingRides);
-			textView.setText(mDataSourceTripNames.get(position));
-			textView = (TextView) convertView.findViewById(R.id.datetext);
-			textView.setText(mDataSourceDates.get(position));
-			textView = (TextView) convertView.findViewById(R.id.timetext);
-			textView.setText(mDataSourceTimes.get(position));
-			textView = (TextView) convertView.findViewById(R.id.seatstext);
-			textView.setText(mDataSourceSeats.get(position));
-
-			return convertView;
-		}
-
-	}
-
-	public class AuthenticateConnectionFetchPool {
-
-		public AuthenticateConnectionFetchPool() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/FetchMyPools.php";
-			HttpPost httpPost = new HttpPost(url_select11);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumberstr);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse FetchMyPools", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				poolresponse = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("poolresponse", "" + stringBuilder.toString());
-		}
-	}
+	// private class ConnectionTaskForFetchPool extends
+	// AsyncTask<String, Void, Void> {
+	// private ProgressDialog dialog = new ProgressDialog(
+	// BookaCabFragmentActivity.this);
+	//
+	// @Override
+	// protected void onPreExecute() {
+	// dialog.setMessage("Please Wait...");
+	// dialog.setCancelable(false);
+	// dialog.setCanceledOnTouchOutside(false);
+	// dialog.show();
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionFetchPool mAuth1 = new
+	// AuthenticateConnectionFetchPool();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (dialog.isShowing()) {
+	// dialog.dismiss();
+	// }
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(BookaCabFragmentActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (poolresponse.equalsIgnoreCase("No Pool Created Yet!!")
+	// || poolresponse.equalsIgnoreCase("[]")) {
+	// // Toast.makeText(BookaCab.this, "No active rides!",
+	// // Toast.LENGTH_LONG).show();
+	// } else {
+	//
+	// CabId.clear();
+	// MobileNumber.clear();
+	// OwnerName.clear();
+	// FromLocation.clear();
+	// ToLocation.clear();
+	//
+	// FromShortName.clear();
+	// ToShortName.clear();
+	//
+	// TravelDate.clear();
+	// TravelTime.clear();
+	// Seats.clear();
+	// RemainingSeats.clear();
+	// Seat_Status.clear();
+	// Distance.clear();
+	// OpenTime.clear();
+	// imagename.clear();
+	//
+	// BookingRefNo.clear();
+	//
+	// try {
+	// JSONArray subArray = new JSONArray(poolresponse);
+	// String allcabids = "s";
+	// for (int i = 0; i < subArray.length(); i++) {
+	// try {
+	// CabId.add(subArray.getJSONObject(i)
+	// .getString("CabId").toString());
+	//
+	// allcabids += "'"
+	// + subArray.getJSONObject(i)
+	// .getString("CabId").toString()
+	// .trim() + "',";
+	//
+	// MobileNumber.add(subArray.getJSONObject(i)
+	// .getString("MobileNumber").toString());
+	// OwnerName.add(subArray.getJSONObject(i)
+	// .getString("OwnerName").toString());
+	// FromLocation.add(subArray.getJSONObject(i)
+	// .getString("FromLocation").toString());
+	// ToLocation.add(subArray.getJSONObject(i)
+	// .getString("ToLocation").toString());
+	//
+	// FromShortName.add(subArray.getJSONObject(i)
+	// .getString("FromShortName").toString());
+	// ToShortName.add(subArray.getJSONObject(i)
+	// .getString("ToShortName").toString());
+	//
+	// TravelDate.add(subArray.getJSONObject(i)
+	// .getString("TravelDate").toString());
+	// TravelTime.add(subArray.getJSONObject(i)
+	// .getString("TravelTime").toString());
+	// Seats.add(subArray.getJSONObject(i)
+	// .getString("Seats").toString());
+	// RemainingSeats.add(subArray.getJSONObject(i)
+	// .getString("RemainingSeats").toString());
+	// Seat_Status.add(subArray.getJSONObject(i)
+	// .getString("Seat_Status").toString());
+	// Distance.add(subArray.getJSONObject(i)
+	// .getString("Distance").toString());
+	// OpenTime.add(subArray.getJSONObject(i)
+	// .getString("OpenTime").toString());
+	// imagename.add(subArray.getJSONObject(i)
+	// .getString("imagename").toString());
+	//
+	// BookingRefNo.add(subArray.getJSONObject(i)
+	// .getString("BookingRefNo").toString());
+	//
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// ArrayList<String> arrayListTrip = new ArrayList<String>();
+	// ArrayList<String> arrayListDate = new ArrayList<String>();
+	// ArrayList<String> arrayListTime = new ArrayList<String>();
+	// ArrayList<String> arrayListSeat = new ArrayList<String>();
+	// for (int j = 0; j < FromShortName.size(); j++) {
+	//
+	// if (BookingRefNo.get(j).isEmpty()
+	// || BookingRefNo.get(j).equalsIgnoreCase("null")) {
+	// arrayListTrip.add(FromShortName.get(j) + " > "
+	// + ToShortName.get(j));
+	// arrayListDate.add(TravelDate.get(j));
+	// arrayListTime.add(TravelTime.get(j));
+	// arrayListSeat.add(Seat_Status.get(j) + " Seats");
+	// }
+	// }
+	// if (arrayListTrip.size() > 0) {
+	//
+	// AlertDialog.Builder builder = new AlertDialog.Builder(
+	// BookaCabFragmentActivity.this);
+	// View builderView = (View) getLayoutInflater().inflate(
+	// R.layout.exisiting_rides_dialog, null);
+	//
+	// ListView listView = (ListView) builderView
+	// .findViewById(R.id.listViewExistingRides);
+	//
+	// Button button = (Button) builderView
+	// .findViewById(R.id.buttonExistingRides);
+	//
+	// builder.setView(builderView);
+	// final AlertDialog dialog = builder.create();
+	//
+	// listView.setAdapter(new CustomListViewAdapter(
+	// BookaCabFragmentActivity.this, arrayListTrip,
+	// arrayListDate, arrayListTime, arrayListSeat));
+	// listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	//
+	// @Override
+	// public void onItemClick(AdapterView<?> parent,
+	// View view, int position, long id) {
+	//
+	// String address = FromLocation.get(position);
+	// from_places.setText(address);
+	// fAddress = geocodeAddress(address);
+	//
+	// address = ToLocation.get(position);
+	// to_places.setText(address);
+	// tAddress = geocodeAddress(address);
+	//
+	// from_places.setEnabled(false);
+	// to_places.setEnabled(false);
+	// threedotsfrom.setEnabled(false);
+	// threedotsto.setEnabled(false);
+	// clearedittextimgfrom.setVisibility(View.GONE);
+	// clearedittextimgto.setVisibility(View.GONE);
+	//
+	// rideObject = new RideObject(
+	// CabId.get(position), TravelDate
+	// .get(position), TravelTime
+	// .get(position), FromShortName
+	// .get(position), ToShortName
+	// .get(position), from_places
+	// .getText().toString(),
+	// to_places.getText().toString());
+	//
+	// performCabSearch();
+	//
+	// dialog.dismiss();
+	// }
+	// });
+	//
+	// button.setOnClickListener(new View.OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View view) {
+	// dialog.dismiss();
+	// }
+	// });
+	//
+	// dialog.show();
+	//
+	// }
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	// }
+	//
+	// }
+	//
+	// private class CustomListViewAdapter extends ArrayAdapter<String> {
+	//
+	// private final Activity context;
+	// private ArrayList<String> mDataSourceTripNames;
+	// private ArrayList<String> mDataSourceDates;
+	// private ArrayList<String> mDataSourceTimes;
+	// private ArrayList<String> mDataSourceSeats;
+	//
+	// public CustomListViewAdapter(Activity context,
+	// ArrayList<String> listDataSourceTripNames,
+	// ArrayList<String> listDataSourceDates,
+	// ArrayList<String> listDataSourceTimes,
+	// ArrayList<String> listDataSourceSeats) {
+	//
+	// super(context, 0, listDataSourceTripNames);
+	//
+	// this.context = context;
+	// this.mDataSourceTripNames = listDataSourceTripNames;
+	// this.mDataSourceDates = listDataSourceDates;
+	// this.mDataSourceTimes = listDataSourceTimes;
+	// this.mDataSourceSeats = listDataSourceSeats;
+	// }
+	//
+	// @Override
+	// public View getView(int position, View convertView, ViewGroup parent) {
+	//
+	// if (convertView == null) {
+	// convertView = (View) context.getLayoutInflater().inflate(
+	// R.layout.list_row_existing_rides, null);
+	// }
+	//
+	// TextView textView = (TextView) convertView
+	// .findViewById(R.id.textViewRowExistingRides);
+	// textView.setText(mDataSourceTripNames.get(position));
+	// textView = (TextView) convertView.findViewById(R.id.datetext);
+	// textView.setText(mDataSourceDates.get(position));
+	// textView = (TextView) convertView.findViewById(R.id.timetext);
+	// textView.setText(mDataSourceTimes.get(position));
+	// textView = (TextView) convertView.findViewById(R.id.seatstext);
+	// textView.setText(mDataSourceSeats.get(position));
+	//
+	// return convertView;
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionFetchPool {
+	//
+	// public AuthenticateConnectionFetchPool() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select11 = GlobalVariables.ServiceUrl
+	// + "/FetchMyPools.php";
+	// HttpPost httpPost = new HttpPost(url_select11);
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumberstr);
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse FetchMyPools", "" + httpResponse);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// poolresponse = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	//
+	// Log.d("poolresponse", "" + stringBuilder.toString());
+	// }
+	// }
 
 	private void performCabSearch() {
 
@@ -1901,13 +1901,18 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				urlConnection.setDoInput(true);
 				urlConnection.setDoOutput(true);
 
+				String authString = fAddress.getLocality().toString()
+						+ String.valueOf(fAddress.getLatitude())
+						+ String.valueOf(fAddress.getLongitude());
+
 				OutputStream outputStream = urlConnection.getOutputStream();
 				BufferedWriter bufferedWriter = new BufferedWriter(
 						new OutputStreamWriter(outputStream, "UTF-8"));
 				bufferedWriter.write("FromCity="
 						+ fAddress.getLocality().toString() + "&slat="
 						+ String.valueOf(fAddress.getLatitude()) + "&slon="
-						+ String.valueOf(fAddress.getLongitude()));
+						+ String.valueOf(fAddress.getLongitude()) + "&auth="
+						+ GlobalMethods.calculateCMCAuthString(authString));
 				bufferedWriter.flush();
 				bufferedWriter.close();
 				outputStream.close();
@@ -1954,6 +1959,15 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 		@Override
 		protected void onPostExecute(String result) {
+
+			if (result.contains("Unauthorized Access")) {
+				Log.e("BookaCabFragmentActivity",
+						"PerformCabSearchTimeAsync Unauthorized Access");
+				Toast.makeText(BookaCabFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			if (!result.toLowerCase().contains("error")) {
 
@@ -2170,6 +2184,17 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					new OutputStreamWriter(outputStream, "UTF-8"));
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 					"dd/MM/yyyy kk:mm:ss");
+
+			String authString = estDistance.toString()
+					+ String.valueOf(toAddress.getLatitude())
+					+ String.valueOf(toAddress.getLongitude())
+					+ estDuration.toString()
+					+ fromAddress.getLocality().toString()
+					+ String.valueOf(fromAddress.getLatitude())
+					+ String.valueOf(fromAddress.getLongitude())
+					+ simpleDateFormat.format(new Date())
+					+ toAddress.getLocality().toString();
+
 			bufferedWriter.write("FromCity="
 					+ fromAddress.getLocality().toString() + "&ToCity="
 					+ toAddress.getLocality().toString() + "&slat="
@@ -2179,7 +2204,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 					+ String.valueOf(toAddress.getLongitude()) + "&dist="
 					+ estDistance.toString() + "&stime="
 					+ simpleDateFormat.format(new Date()) + "&etime="
-					+ estDuration.toString());
+					+ estDuration.toString() + "&auth="
+					+ GlobalMethods.calculateCMCAuthString(authString));
 			bufferedWriter.flush();
 			bufferedWriter.close();
 			outputStream.close();
@@ -2217,6 +2243,25 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 			Log.d("performCabSearchPrice", "performCabSearchPrice response : "
 					+ response);
+
+			if (response.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("BookaCabFragmentActivity",
+								"performCabSearchPrice Unauthorized Access");
+						Toast.makeText(
+								BookaCabFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return;
+			}
 
 			if (!response.toLowerCase().contains("error")) {
 
@@ -2594,535 +2639,6 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 		dialog.show();
 
-	}
-
-	/*
-	 * public class Listadapters extends BaseAdapter {
-	 * 
-	 * private ArrayList<String> CabName; private ArrayList<String> CabTime;
-	 * private ArrayList<String> CabRate; private ArrayList<String> CabTitle;
-	 * private ArrayList<String> CabContact;
-	 * 
-	 * //private ArrayList<String> CabNRate; // private ArrayList<String>
-	 * Cabcontact;
-	 * 
-	 * // private int[] colors = new int[] { 0x30000000, 0x30FFFFFF };
-	 * 
-	 * public Listadapters(ArrayList<String> Cabname, ArrayList<String> cabRate,
-	 * ArrayList<String> estimateTime,ArrayList<String> CabTitle,
-	 * ArrayList<String> cabcontact) {
-	 * 
-	 * // TODO Auto-generated constructor stub
-	 * 
-	 * this.CabName = Cabname; this.CabTime = estimateTime; this.CabRate =
-	 * cabRate; this.CabTitle = CabTitle; this.CabContact=CabContact;
-	 * //Cabcontact = cabcontact;
-	 * 
-	 * }
-	 * 
-	 * @Override public View getView(final int position, View convertView,
-	 * ViewGroup parent) { // TODO Auto-generated method stub final int pos =
-	 * position; LayoutInflater inflater = (LayoutInflater)
-	 * getSystemService(Context.LAYOUT_INFLATER_SERVICE); View single_row =
-	 * inflater.inflate(R.layout.searchcab_listitem, null, true);
-	 * 
-	 * 
-	 * int colorPos = position % colors.length;
-	 * single_row.setBackgroundColor(colors[colorPos]);
-	 * 
-	 * 
-	 * TextView tCabname = (TextView) single_row.findViewById(R.id.CabName);
-	 * TextView tPrice = (TextView) single_row.findViewById(R.id.Price);
-	 * TextView tcontact = (TextView) single_row.findViewById(R.id.Call);
-	 * TextView ttime = (TextView) single_row.findViewById(R.id.Time); TextView
-	 * tbook = (TextView) single_row.findViewById(R.id.Bookcab); TextView
-	 * cabTitle=(TextView) single_row.findViewById(R.id.CabTitle);
-	 * cabTitle.setText(CabTitle.get(position).toString()+" Cabs");
-	 * tCabname.setText(CabName.get(position));
-	 * tPrice.setText(CabRate.get(position).toString()+" Rs. Approx");
-	 * if(Integer.parseInt(CabTime.get(position).toString())>60) { int
-	 * t=(Integer.parseInt(CabTime.get(position).toString()))/60;
-	 * ttime.setText(t+" Minutes Away ..."); } else { //
-	 * ttime.setText(CabTime.get(position).toString()+" Seconds Away ...");
-	 * ttime.setText("Not Available ...."); }
-	 * 
-	 * // tcontact.setText(Cabcontact.get(position)); Double price; //
-	 * price=Distance*Integer.parseInt(CabRate.get(position).toString());
-	 * 
-	 * String[] Dparts = distancetext.split(" "); String distance = Dparts[0];
-	 * price = Double.parseDouble(distance) * 15; // String sprice =
-	 * Double.toString(price);
-	 * 
-	 * tcontact.setOnClickListener(new OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { // TODO Auto-generated method
-	 * stub Intent intent = new Intent(Intent.ACTION_CALL);
-	 * intent.setData(Uri.parse("tel:" + Cabcontact.get(pos).toString()));
-	 * startActivity(intent); } }); tcontact.setOnClickListener(new
-	 * OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { // TODO Auto-generated method
-	 * stub Intent intent = new Intent(Intent.ACTION_CALL);
-	 * intent.setData(Uri.parse("tel:123456789")); startActivity(intent); } });
-	 * 
-	 * tbook.setOnClickListener(new OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { // TODO Auto-generated method
-	 * stub Intent intent = new Intent(BookaCab.this, WebActivity.class);
-	 * intent.putExtra("POS", CabName.get(position).toString());
-	 * 
-	 * startActivity(intent); } });
-	 * 
-	 * Log.w("MyPool.FriendNamegetview:- ", CabName.get(position)); return
-	 * single_row; }
-	 * 
-	 * @Override public int getCount() { // TODO Auto-generated method stub
-	 * return CabName.size(); }
-	 * 
-	 * @Override public Object getItem(int position) { // TODO Auto-generated
-	 * method stub return null; }
-	 * 
-	 * @Override public long getItemId(int position) { // TODO Auto-generated
-	 * method stub return 0; } }
-	 */
-	/*
-	 * public class ListadaptersTime extends BaseAdapter {
-	 * 
-	 * private ArrayList<String> CabNameT; private ArrayList<String> CabTime;
-	 * 
-	 * 
-	 * // private int[] colors = new int[] { 0x30000000, 0x30FFFFFF };
-	 * 
-	 * public ListadaptersTime(ArrayList<String> Cabname, ArrayList<String>
-	 * cabtime) {
-	 * 
-	 * // TODO Auto-generated constructor stub
-	 * 
-	 * this.CabNameT = Cabname; this.CabTime = cabtime;
-	 * 
-	 * 
-	 * }
-	 * 
-	 * @Override public View getView(final int position, View convertView,
-	 * ViewGroup parent) { // TODO Auto-generated method stub final int pos =
-	 * position; LayoutInflater inflater = (LayoutInflater)
-	 * getSystemService(Context.LAYOUT_INFLATER_SERVICE); View single_row =
-	 * inflater.inflate(R.layout.estimatetime_item, null, true);
-	 * 
-	 * 
-	 * int colorPos = position % colors.length;
-	 * single_row.setBackgroundColor(colors[colorPos]);
-	 * 
-	 * TextView tCabName = (TextView)
-	 * single_row.findViewById(R.id.nameestimatedtime);
-	 * 
-	 * TextView tCabtime = (TextView)
-	 * single_row.findViewById(R.id.textestimatedtime);
-	 * 
-	 * 
-	 * tCabName.setText(CabNameT.get(position)); int
-	 * t=(Integer.parseInt(CabTime.get(position).toString()))/60;
-	 * tCabtime.setText(t+"Minutes Away");
-	 * 
-	 * 
-	 * 
-	 * Log.w("MyPool.FriendNamegetview:- ", CabNameT.get(position)); return
-	 * single_row; }
-	 * 
-	 * @Override public int getCount() { // TODO Auto-generated method stub
-	 * return CabNameT.size(); }
-	 * 
-	 * @Override public Object getItem(int position) { // TODO Auto-generated
-	 * method stub return null; }
-	 * 
-	 * @Override public long getItemId(int position) { // TODO Auto-generated
-	 * method stub return 0; } }
-	 */
-
-	// /////////////
-
-	// ///////
-
-	private class ConnectionTaskForDistanceCalculation extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionSendInvite mAuth1 = new AuthenticateConnectionSendInvite();
-			try {
-				mAuth1.fromloc = args[0];
-				mAuth1.toloc = args[1];
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			/*
-			 * s adapter2 = new Listadapters(CabName, CabCity, CabRate,
-			 * CabNRate, Cabcontact); lv.setAdapter(adapter2);
-			 */
-		}
-
-	}
-
-	public class AuthenticateConnectionSendInvite {
-
-		public String fromloc;
-		public String toloc;
-
-		public AuthenticateConnectionSendInvite() {
-
-		}
-
-		public void connection() throws Exception {
-
-			String source = fromloc.replaceAll(" ", "%20");
-			String dest = toloc.replaceAll(" ", "%20");
-
-			String url = "https://maps.googleapis.com/maps/api/directions/json?"
-					+ "origin="
-					+ source
-					+ "&destination="
-					+ dest
-					+ "&sensor=false&units=metric&mode=driving&alternatives=true&key="
-					+ GlobalVariables.GoogleMapsAPIKey;
-
-			Log.d("url", "" + url);
-
-			String CompletePageResponse = new Communicator()
-					.executeHttpGet(url);
-
-			CompletePageResponse = CompletePageResponse
-					.replaceAll("\\\\/", "/");
-
-			JSONObject jsonObject = new JSONObject(CompletePageResponse);
-
-			String name = jsonObject.getString("routes");
-
-			JSONArray subArray = new JSONArray(name);
-
-			for (int i = 0; i < subArray.length(); i++) {
-
-				String name1 = subArray.getJSONObject(i).getString("legs")
-						.toString();
-
-				JSONArray subArray1 = new JSONArray(name1);
-
-				for (int i1 = 0; i1 < subArray1.length(); i1++) {
-
-					String startadd = subArray1.getJSONObject(i1)
-							.getString("distance").toString();
-
-					JSONObject jsonObject1 = new JSONObject(startadd);
-					distancevalue = jsonObject1.getString("value");
-					distancetext = jsonObject1.getString("text");
-				}
-			}
-
-			Log.d("distancevalue", "" + distancevalue);
-			Log.d("distancetext", "" + distancetext);
-		}
-	}
-
-	/*
-	 * public StringBuilder getLatLongFromGivenAddress(String youraddress) {
-	 * StringBuilder res = null; String uri =
-	 * "http://maps.google.com/maps/api/geocode/json?address=" + youraddress +
-	 * "&sensor=false"; HttpGet httpGet = new HttpGet(uri); HttpClient client =
-	 * new DefaultHttpClient(); HttpResponse response; StringBuilder
-	 * stringBuilder = new StringBuilder();
-	 * 
-	 * try { response = client.execute(httpGet); HttpEntity entity =
-	 * response.getEntity(); InputStream stream = entity.getContent(); int b;
-	 * while ((b = stream.read()) != -1) { stringBuilder.append((char) b); } }
-	 * catch (ClientProtocolException e) { e.printStackTrace(); } catch
-	 * (IOException e) { e.printStackTrace(); }
-	 * 
-	 * JSONObject jsonObject = new JSONObject(); try { jsonObject = new
-	 * JSONObject(stringBuilder.toString());
-	 * 
-	 * Double lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-	 * .getJSONObject("geometry").getJSONObject("location") .getDouble("lng");
-	 * 
-	 * Double lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-	 * .getJSONObject("geometry").getJSONObject("location") .getDouble("lat");
-	 * 
-	 * Log.d("latitude", String.valueOf(lng)); Log.d("longitude",
-	 * String.valueOf(lat));
-	 * 
-	 * res.append(lat); res.append('|'); res.append(lng); }
-	 * 
-	 * catch (JSONException e) { e.printStackTrace(); } return res; }
-	 */
-
-	public class Fetch_EstimatePrice extends AsyncTask<String, Void, String> {
-
-		String result;
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected String doInBackground(String... args) {
-
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-
-			Log.d("FLT", "" + tlatitude);
-			String url = GlobalVariables.ServiceUrl
-					+ "/uberConnect.php?type=priceestimates&lat=" + flatitude
-					+ "&lon=" + flongitude + "&elat=" + tlatitude + "&elon="
-					+ tlongitude + "";
-			Log.d("url", url);
-			HttpGet httpget = new HttpGet(GlobalVariables.ServiceUrl
-					+ "/uberConnect.php?type=priceestimates&lat=" + flatitude
-					+ "&lon=" + flongitude + "&elat=" + tlatitude + "&elon="
-					+ tlongitude + "");
-			HttpResponse response = null;
-			BufferedReader in = null;
-			try {
-				response = httpclient.execute(httpget);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				in = new BufferedReader(new InputStreamReader(response
-						.getEntity().getContent()));
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			StringBuffer sb = new StringBuffer("");
-			String line = "";
-			String NL = System.getProperty("line.separator");
-			try {
-				while ((line = in.readLine()) != null) {
-					sb.append(line + NL);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String result = sb.toString();
-			Log.d("My Response :: ", result);
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-
-		}
-	}
-
-	public class Fetch_EstimateTime extends AsyncTask<String, Void, String> {
-
-		String result;
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected String doInBackground(String... args) {
-
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-
-			Log.d("FLT", "" + tlatitude);
-			String url = GlobalVariables.ServiceUrl
-					+ "/uberConnect.php?type=timeestimates&lat=" + flatitude
-					+ "&lon=" + flongitude + "";
-			Log.d("url", url);
-			HttpGet httpget = new HttpGet(GlobalVariables.ServiceUrl
-					+ "/uberConnect.php?type=timeestimates&lat=" + flatitude
-					+ "&lon=" + flongitude + "");
-			HttpResponse response = null;
-			BufferedReader in = null;
-			try {
-				response = httpclient.execute(httpget);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				in = new BufferedReader(new InputStreamReader(response
-						.getEntity().getContent()));
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			StringBuffer sb = new StringBuffer("");
-			String line = "";
-			String NL = System.getProperty("line.separator");
-			try {
-				while ((line = in.readLine()) != null) {
-					sb.append(line + NL);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String result = sb.toString();
-			Log.d("My Response :: ", result);
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-
-		}
-	}
-
-	public class ListadaptersTime extends BaseAdapter {
-
-		private ArrayList<String> CabName;
-		private ArrayList<String> EstimateTime;
-		private ArrayList<String> CabTitle;
-		private ArrayList<String> Cabcontact;
-		private ArrayList<String> ImageId;
-
-		// private ArrayList<String> CabNRate;
-		// private ArrayList<String> Cabcontact;
-
-		// private int[] colors = new int[] { 0x30000000, 0x30FFFFFF };
-
-		public ListadaptersTime(ArrayList<String> Cabname,
-				ArrayList<String> estimateTime, ArrayList<String> CabTitle,
-				ArrayList<String> cabcontact, ArrayList<String> imageId) {
-
-			// TODO Auto-generated constructor stub
-
-			this.CabName = Cabname;
-			this.EstimateTime = estimateTime;
-			this.CabTitle = CabTitle;
-			this.Cabcontact = cabcontact;
-			this.ImageId = imageId;
-
-		}
-
-		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-			// TODO Auto-generated method stub
-			final int pos = position;
-			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View single_row = inflater.inflate(R.layout.searchcab_listitem,
-					null, true);
-
-			/*
-			 * int colorPos = position % colors.length;
-			 * single_row.setBackgroundColor(colors[colorPos]);
-			 */
-
-			TextView tCabname = (TextView) single_row
-					.findViewById(R.id.CabName);
-			// TextView tPrice = (TextView) single_row.findViewById(R.id.Price);
-			TextView tcontact = (TextView) single_row.findViewById(R.id.Call);
-			TextView ttime = (TextView) single_row.findViewById(R.id.Time);
-			TextView tbook = (TextView) single_row.findViewById(R.id.Bookcab);
-			TextView cabTitle = (TextView) single_row
-					.findViewById(R.id.CabTitle);
-			ImageView img = (ImageView) single_row.findViewById(R.id.CabImage);
-			// img.setBackgroundDrawable(ImageId.get(position).toString());
-			cabTitle.setText(CabTitle.get(position).toString() + " Cabs");
-			tCabname.setText(CabName.get(position));
-
-			if (Integer.parseInt(EstimateTime.get(position).toString()) > 60) {
-				int t = (Integer
-						.parseInt(EstimateTime.get(position).toString())) / 60;
-				ttime.setText(t + " Minutes Away ...");
-			} else {
-				int i = 10;
-				// ttime.setText(EstimatePrice.get(position).toString()+" Seconds Away ...");
-				ttime.setText(i + " Minutes Away ...");
-				i = i * 2;
-			}
-
-			tcontact.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = new Intent(Intent.ACTION_CALL);
-					intent.setData(Uri.parse("tel:"
-							+ Cabcontact.get(position).toString()));
-					startActivity(intent);
-				}
-			});
-
-			tbook.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Toast.makeText(
-							getApplicationContext(),
-							"Please Select Detinaton Place Before Book a Cab !!",
-							Toast.LENGTH_LONG).show();
-				}
-			});
-
-			Log.d("MyPool.FriendNamegetview:- ", CabName.get(position));
-			return single_row;
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return CabName.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
 	}
 
 	private void bookNowButtonPress(int position, String userName,
@@ -4097,13 +3613,22 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+
+				String authString = cabType
+						+ String.valueOf(endAddress.getLatitude())
+						+ String.valueOf(endAddress.getLongitude())
+						+ String.valueOf(startAddress.getLatitude())
+						+ String.valueOf(startAddress.getLongitude())
+						+ productID;
+
 				GetUberRequestIDAsync getUberRequestIDAsync = new GetUberRequestIDAsync();
 				String param = "cabType=" + cabType + "&productid=" + productID
 						+ "&lat=" + String.valueOf(startAddress.getLatitude())
 						+ "&lon=" + String.valueOf(startAddress.getLongitude())
 						+ "&elat=" + String.valueOf(endAddress.getLatitude())
 						+ "&elon=" + String.valueOf(endAddress.getLongitude())
-						+ "&cabID=";
+						+ "&cabID=&auth="
+						+ GlobalMethods.calculateCMCAuthString(authString);
 				mUberBookingInputParams = "&productid=" + productID + "&lat="
 						+ String.valueOf(startAddress.getLatitude()) + "&lon="
 						+ String.valueOf(startAddress.getLongitude())
@@ -4206,6 +3731,18 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 
 					@Override
 					public void run() {
+
+						if (result.contains("Unauthorized Access")) {
+							Log.e("BookaCabFragmentActivity",
+									"GetUberRequestIDAsync Unauthorized Access");
+							Toast.makeText(
+									BookaCabFragmentActivity.this,
+									getResources().getString(
+											R.string.exceptionstring),
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+
 						Intent intent = new Intent(
 								BookaCabFragmentActivity.this,
 								MobileSiteActivity.class);
@@ -4785,6 +4322,13 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			timeString = "";
 		}
 
+		String authString = carType + startAddress.getLocality() + etaApp
+				+ from_places.getText().toString().trim() + password
+				+ from_places.getText().toString().trim() + dateString
+				+ String.valueOf(startAddress.getLatitude())
+				+ String.valueOf(startAddress.getLongitude()) + timeString
+				+ "appbooking" + username;
+
 		String param = "type=booking" + "&username=" + username + "&password="
 				+ password + "&car_type=" + carType + "&source=app"
 				+ "&pickup_time=" + timeString + "&pickup_date=" + dateString
@@ -4794,7 +4338,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				+ String.valueOf(startAddress.getLatitude())
 				+ "&pickup_longitude="
 				+ String.valueOf(startAddress.getLongitude())
-				+ "&eta_from_app=" + etaApp;
+				+ "&eta_from_app=" + etaApp + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			bookTFSAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -4876,6 +4421,25 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				});
+			}
+
+			if (result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("BookaCabFragmentActivity",
+								"BookTFSAsync Unauthorized Access");
+						Toast.makeText(
+								BookaCabFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
 			}
 
 			if (!result.isEmpty()) {
@@ -5063,13 +4627,19 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			return;
 		}
 
+		String authString = String.valueOf(endAddress.getLatitude())
+				+ String.valueOf(endAddress.getLongitude()) + MobileNumberstr
+				+ String.valueOf(startAddress.getLatitude())
+				+ String.valueOf(startAddress.getLongitude()) + "CreateBooking";
+
 		BookMegaCabAsync bookMegaCabAsync = new BookMegaCabAsync();
 		String param = "type=CreateBooking" + "&mobile=" + MobileNumberstr
 				+ "&slat=" + String.valueOf(startAddress.getLatitude())
 				+ "&slon=" + String.valueOf(startAddress.getLongitude())
 				+ "&elat=" + String.valueOf(endAddress.getLatitude())
 				+ "&elon=" + String.valueOf(endAddress.getLongitude())
-				+ "&stime=";
+				+ "&stime=&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			bookMegaCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -5153,6 +4723,25 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				});
+			}
+
+			if (result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("BookaCabFragmentActivity",
+								"BookMegaCabAsync Unauthorized Access");
+						Toast.makeText(
+								BookaCabFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
 			}
 
 			if (!result.isEmpty()) {
@@ -5822,6 +5411,13 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				profilepic.setImageResource(R.drawable.cabappicon);
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 
+			} else if (imagenameresp.contains("Unauthorized Access")) {
+				Log.e("BookaCabFragmentActivity",
+						"imagenameresp Unauthorized Access");
+				Toast.makeText(BookaCabFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -5847,8 +5443,13 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
 
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList11 = new ArrayList<NameValuePair>();
 			nameValuePairList11.add(MobileNumberBasicNameValuePair11);
+			nameValuePairList11.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity11 = new UrlEncodedFormEntity(
 					nameValuePairList11);
@@ -5876,6 +5477,8 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
+
+			} else if (imagenameresp.contains("Unauthorized Access")) {
 
 			} else {
 

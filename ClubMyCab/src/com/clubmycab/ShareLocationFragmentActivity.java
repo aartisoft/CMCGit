@@ -82,6 +82,7 @@ import com.clubmycab.ui.FavoritePlaceFindActivity;
 import com.clubmycab.ui.HomeActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.UniversalDrawer;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -1485,6 +1486,13 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 				profilepic.setImageResource(R.drawable.cabappicon);
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 
+			} else if (imagenameresp.contains("Unauthorized Access")) {
+				Log.e("ShareLocationFragmentActivity",
+						"imagenameresp Unauthorized Access");
+				Toast.makeText(ShareLocationFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -1511,8 +1519,13 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", MobileNumber);
 
+			String authString = MobileNumber;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList11 = new ArrayList<NameValuePair>();
 			nameValuePairList11.add(MobileNumberBasicNameValuePair11);
+			nameValuePairList11.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity11 = new UrlEncodedFormEntity(
 					nameValuePairList11);
@@ -1540,6 +1553,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
+
+			} else if (imagenameresp.contains("Unauthorized Access")) {
 
 			} else {
 
@@ -1569,86 +1584,6 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 				editor1.commit();
 			}
 
-		}
-	}
-
-	// ////////////////////
-	// ///////
-	private class ConnectionTaskForFetchMyClubs extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionFetchMyClubs mAuth1 = new AuthenticateConnectionFetchMyClubs();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-		}
-	}
-
-	public class AuthenticateConnectionFetchMyClubs {
-
-		public AuthenticateConnectionFetchMyClubs() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl + "/Fetch_Club.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
-					"OwnerNumber", MobileNumber);
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(UserNumberBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-			String myclubsresp = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				myclubsresp = stringBuilder.append(bufferedStrChunk).toString();
-			}
-
-			Log.d("myclubsresp", "" + myclubsresp);
-
-			SharedPreferences sharedPreferences1 = getSharedPreferences(
-					"MyClubs", 0);
-			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-			editor1.putString("clubs", myclubsresp.toString().trim());
-			editor1.commit();
-
-			// ///////////////
 		}
 	}
 

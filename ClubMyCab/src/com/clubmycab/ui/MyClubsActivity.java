@@ -74,6 +74,7 @@ import com.clubmycab.MyClubsShowAdaptor;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -229,7 +230,8 @@ public class MyClubsActivity extends Activity implements
 			if (comefrom.equalsIgnoreCase("GCM")) {
 
 				String nid = intent.getStringExtra("nid");
-				String params = "rnum=" + "&nid=" + nid;
+				String params = "rnum=" + "&nid=" + nid + "&auth="
+						+ GlobalMethods.calculateCMCAuthString(nid);
 				String endpoint = GlobalVariables.ServiceUrl
 						+ "/UpdateNotificationStatusToRead.php";
 				Log.d("MyClubMyActivity",
@@ -1582,9 +1584,15 @@ public class MyClubsActivity extends Activity implements
 			BasicNameValuePair usernumberBasicNameValuePair = new BasicNameValuePair(
 					"usernumber", usernumber.toString().trim());
 
+			String authString = poolid.toString().trim()
+					+ usernumber.toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(poolidBasicNameValuePair);
 			nameValuePairList.add(usernumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1603,13 +1611,24 @@ public class MyClubsActivity extends Activity implements
 			StringBuilder stringBuilder = new StringBuilder();
 
 			String bufferedStrChunk = null;
+			String poolresponse = "";
 
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				String poolresponse = stringBuilder.append(bufferedStrChunk)
+				poolresponse = stringBuilder.append(bufferedStrChunk)
 						.toString();
 			}
 
 			Log.d("poolresponse", "" + stringBuilder.toString());
+
+			if (poolresponse != null && poolresponse.length() > 0
+					&& poolresponse.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "poolresponse Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			// /////////////
 			// Connect to google.com
@@ -1619,9 +1638,14 @@ public class MyClubsActivity extends Activity implements
 			HttpPost httpPost1 = new HttpPost(url_select1);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", OwnerNumber);
+			authString = OwnerNumber;
+			authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+			nameValuePairList.add(authValuePair);
 
 			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
 			nameValuePairList1.add(UserNumberBasicNameValuePair);
+			nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -1648,6 +1672,16 @@ public class MyClubsActivity extends Activity implements
 			}
 
 			Log.d("myclubsresp", "" + myclubsresp);
+
+			if (myclubsresp != null && myclubsresp.length() > 0
+					&& myclubsresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "myclubsresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -1749,10 +1783,15 @@ public class MyClubsActivity extends Activity implements
 			BasicNameValuePair numbersBasicNameValuePair = new BasicNameValuePair(
 					"ClubMembersNumber", numbers);
 
+			String authString = names + numbers + poolid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(poolidBasicNameValuePair);
 			nameValuePairList.add(namesBasicNameValuePair);
 			nameValuePairList.add(numbersBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1771,13 +1810,24 @@ public class MyClubsActivity extends Activity implements
 			StringBuilder stringBuilder = new StringBuilder();
 
 			String bufferedStrChunk = null;
+			String poolresponse = "";
 
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				String poolresponse = stringBuilder.append(bufferedStrChunk)
+				poolresponse = stringBuilder.append(bufferedStrChunk)
 						.toString();
 			}
 
 			Log.d("poolresponse", "" + stringBuilder.toString());
+
+			if (poolresponse != null && poolresponse.length() > 0
+					&& poolresponse.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "poolresponse Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			// /////////////
 			// Connect to google.com
@@ -1788,9 +1838,13 @@ public class MyClubsActivity extends Activity implements
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", OwnerNumber);
+			authString = OwnerNumber;
+			authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
 			nameValuePairList1.add(UserNumberBasicNameValuePair);
+			nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -1817,6 +1871,16 @@ public class MyClubsActivity extends Activity implements
 			}
 
 			Log.d("myclubsresp", "" + myclubsresp);
+
+			if (myclubsresp != null && myclubsresp.length() > 0
+					&& myclubsresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "myclubsresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -2022,8 +2086,13 @@ public class MyClubsActivity extends Activity implements
 			BasicNameValuePair poolidBasicNameValuePair = new BasicNameValuePair(
 					"poolid", poolid);
 
+			String authString = poolid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(poolidBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2042,13 +2111,24 @@ public class MyClubsActivity extends Activity implements
 			StringBuilder stringBuilder = new StringBuilder();
 
 			String bufferedStrChunk = null;
+			String poolresponse = "";
 
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				String poolresponse = stringBuilder.append(bufferedStrChunk)
+				poolresponse = stringBuilder.append(bufferedStrChunk)
 						.toString();
 			}
 
 			Log.d("poolresponse", "" + stringBuilder.toString());
+
+			if (poolresponse != null && poolresponse.length() > 0
+					&& poolresponse.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "poolresponse Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			// /////////////
 			// Connect to google.com
@@ -2059,9 +2139,13 @@ public class MyClubsActivity extends Activity implements
 			HttpPost httpPost1 = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", OwnerNumber);
+			authString = OwnerNumber;
+			authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
 			nameValuePairList1.add(UserNumberBasicNameValuePair);
+			nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -2088,6 +2172,16 @@ public class MyClubsActivity extends Activity implements
 			}
 
 			Log.d("myclubsresp", "" + myclubsresp);
+
+			if (myclubsresp != null && myclubsresp.length() > 0
+					&& myclubsresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "myclubsresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -2255,6 +2349,12 @@ public class MyClubsActivity extends Activity implements
 				profilepic.setImageResource(R.drawable.cabappicon);
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 
+			} else if (imagenameresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "imagenameresp Unauthorized Access");
+				Toast.makeText(MyClubsActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -2281,8 +2381,13 @@ public class MyClubsActivity extends Activity implements
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", OwnerNumber);
 
+			String authString = OwnerNumber;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList11 = new ArrayList<NameValuePair>();
 			nameValuePairList11.add(MobileNumberBasicNameValuePair11);
+			nameValuePairList11.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity11 = new UrlEncodedFormEntity(
 					nameValuePairList11);
@@ -2310,6 +2415,8 @@ public class MyClubsActivity extends Activity implements
 			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
+
+			} else if (imagenameresp.contains("Unauthorized Access")) {
 
 			} else {
 
@@ -2457,6 +2564,11 @@ public class MyClubsActivity extends Activity implements
 					"ClubMembersNumber", cmemnums);
 			nameValuePairList.add(ClubMembersNumberValuePair);
 
+			String authString = cmemnames + cmemnums + cname + ownname + ownnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+			nameValuePairList.add(authValuePair);
+
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
@@ -2482,6 +2594,16 @@ public class MyClubsActivity extends Activity implements
 
 			Log.d("poolresponse", "" + poolresponse);
 
+			if (poolresponse != null && poolresponse.length() > 0
+					&& poolresponse.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "poolresponse Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			// /////////////
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
@@ -2491,9 +2613,13 @@ public class MyClubsActivity extends Activity implements
 			HttpPost httpPost1 = new HttpPost(url_select111);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", OwnerNumber);
+			authString = OwnerNumber;
+			authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
 			nameValuePairList1.add(UserNumberBasicNameValuePair);
+			nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -2520,6 +2646,16 @@ public class MyClubsActivity extends Activity implements
 			}
 
 			Log.d("myclubsresp", "" + myclubsresp);
+
+			if (myclubsresp != null && myclubsresp.length() > 0
+					&& myclubsresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "myclubsresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -2586,8 +2722,13 @@ public class MyClubsActivity extends Activity implements
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", OwnerNumber);
 
+			String authString = OwnerNumber;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(UserNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2614,6 +2755,16 @@ public class MyClubsActivity extends Activity implements
 			}
 
 			Log.d("myclubsresp", "" + myprofileresp);
+
+			if (myprofileresp != null && myprofileresp.length() > 0
+					&& myprofileresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "myprofileresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			SharedPreferences sharedPreferences1 = getSharedPreferences(
 					"MyClubs", 0);
@@ -2661,6 +2812,14 @@ public class MyClubsActivity extends Activity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(MyClubsActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (referralResult.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "referralResult Unauthorized Access");
 				Toast.makeText(MyClubsActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -2728,8 +2887,13 @@ public class MyClubsActivity extends Activity implements
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"mobileNumber", MemberNumberstr);
 
+			String authString = MemberNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

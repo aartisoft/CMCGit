@@ -35,18 +35,18 @@ import android.widget.Toast;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 
-public class RateCabActivity extends Activity implements AsyncTaskResultListener{
+public class RateCabActivity extends Activity implements
+		AsyncTaskResultListener {
 
 	private JSONArray cabsJSONArray;
 	private JSONObject selectedJsonObject;
 	private String mobileNumber;
 	private String cabIDIntent;
 	private String notificationIDIntent;
-
-	
 
 	private String cabratingresp;
 	private HashMap<String, JSONObject> hashMap;
@@ -71,33 +71,34 @@ public class RateCabActivity extends Activity implements AsyncTaskResultListener
 		imageView = (ImageView) findViewById(R.id.notificationimg);
 		imageView.setVisibility(View.GONE);
 
-		
 		mobileNumber = getIntent().getStringExtra("CabsRatingMobileNumber");
 		cabIDIntent = getIntent().getStringExtra("cabIDIntent");
 		notificationIDIntent = getIntent().getStringExtra(
 				"notificationIDString");
-		
-		
-String comefrom = getIntent().getStringExtra("comefrom");
-		
-		
+
+		String comefrom = getIntent().getStringExtra("comefrom");
+
 		if (comefrom != null) {
 
 			if (comefrom.equalsIgnoreCase("GCM")) {
 
-				String params = "rnum=" + "&nid=" + notificationIDIntent;
+				String params = "rnum="
+						+ "&nid="
+						+ notificationIDIntent
+						+ "&auth="
+						+ GlobalMethods
+								.calculateCMCAuthString(notificationIDIntent);
 				String endpoint = GlobalVariables.ServiceUrl
 						+ "/UpdateNotificationStatusToRead.php";
 				Log.d("RateCabActivity",
 						"UpdateNotificationStatusToRead endpoint : " + endpoint
 								+ " params : " + params);
-				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+				new GlobalAsyncTask(this, endpoint, params, null, this, false,
+						"UpdateNotificationStatusToRead", false);
 
 			}
 
 		}
-		
-		
 
 		hashMap = new HashMap<String, JSONObject>();
 
@@ -289,21 +290,31 @@ String comefrom = getIntent().getStringExtra("comefrom");
 				return;
 			}
 
+			if (cabratingresp != null && cabratingresp.length() > 0
+					&& cabratingresp.contains("Unauthorized Access")) {
+				Log.e("RateCabActivity", "cabratingresp Unauthorized Access");
+				Toast.makeText(RateCabActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (cabratingresp.isEmpty() || cabratingresp == null
 					|| !cabratingresp.toLowerCase().contains("success")) {
 				Toast.makeText(RateCabActivity.this,
 						"Something went wrong, please try again",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(RateCabActivity.this, "Thank you for the feedback!",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(RateCabActivity.this,
+						"Thank you for the feedback!", Toast.LENGTH_SHORT)
+						.show();
 
-				if(notificationIDIntent.equalsIgnoreCase("")){
-					
-				}else{
-				Intent intent = new Intent();
-				intent.putExtra("notificationID", notificationIDIntent);
-				setResult(Activity.RESULT_OK, intent);
+				if (notificationIDIntent.equalsIgnoreCase("")) {
+
+				} else {
+					Intent intent = new Intent();
+					intent.putExtra("notificationID", notificationIDIntent);
+					setResult(Activity.RESULT_OK, intent);
 				}
 
 				finish();
@@ -325,7 +336,8 @@ String comefrom = getIntent().getStringExtra("comefrom");
 
 		public void connection() throws Exception {
 			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl + "/cmcCabRating.php";
+			String url_select = GlobalVariables.ServiceUrl
+					+ "/cmcCabRating.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabDetailIDNameValuePair = new BasicNameValuePair(
 					"CabDetailID", cabDetailID);
@@ -335,14 +347,17 @@ String comefrom = getIntent().getStringExtra("comefrom");
 					"Rating", Rating);
 			BasicNameValuePair MobileNameValuePair = new BasicNameValuePair(
 					"MobileNumber", mobileNumber);
-			// Log.d("AllNotificationRequest",
-			// "AuthenticateConnectionCabRating cabID : " + cabID);
+
+			String authString = cabDetailID + cabID + mobileNumber + Rating;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabDetailIDNameValuePair);
 			nameValuePairList.add(CabIDNameValuePair);
 			nameValuePairList.add(RatingNameValuePair);
 			nameValuePairList.add(MobileNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -374,7 +389,7 @@ String comefrom = getIntent().getStringExtra("comefrom");
 	@Override
 	public void getResult(String response, String uniqueID) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

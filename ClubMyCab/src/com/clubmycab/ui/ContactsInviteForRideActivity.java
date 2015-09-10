@@ -68,6 +68,7 @@ import com.clubmycab.ContactsAdapter;
 import com.clubmycab.ContactsListClass;
 import com.clubmycab.R;
 import com.clubmycab.UpcomingStartTripAlarm;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
@@ -1084,6 +1085,16 @@ public class ContactsInviteForRideActivity extends Activity {
 				return;
 			}
 
+			if (sendres != null && sendres.length() > 0
+					&& sendres.contains("Unauthorized Access")) {
+				Log.e("ContactsInviteForRideActivity",
+						"SendInvite Unauthorized Access");
+				Toast.makeText(ContactsInviteForRideActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					ContactsInviteForRideActivity.this);
 			builder.setMessage("Your friend(s) have been informed about the ride! We will let you know when they join. Sit back & relax!");
@@ -1288,6 +1299,27 @@ public class ContactsInviteForRideActivity extends Activity {
 							+ selectednumbers.toString() + " MembersName : "
 							+ selectednames.toString() + " Message : " + msg);
 
+			String authString = CabId
+					+ distancetext
+					+ durationvalue
+					+ FromLocation
+					+ ((fromshortname == null
+							|| fromshortname.equalsIgnoreCase("") || fromshortname
+								.isEmpty()) ? FromLocation : fromshortname)
+					+ selectednames.toString()
+					+ selectednumbers.toString()
+					+ msg
+					+ MobileNumberstr
+					+ OwnerName
+					+ Seats
+					+ Seats
+					+ ToLocation
+					+ ((toshortname == null || toshortname.equalsIgnoreCase("") || toshortname
+							.isEmpty()) ? ToLocation : toshortname)
+					+ TravelDate + TravelTime;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
@@ -1307,6 +1339,8 @@ public class ContactsInviteForRideActivity extends Activity {
 			nameValuePairList.add(MembersNumberBasicNameValuePair);
 			nameValuePairList.add(MembersNameBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

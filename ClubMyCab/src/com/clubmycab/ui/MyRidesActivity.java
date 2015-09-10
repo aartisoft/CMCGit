@@ -56,6 +56,7 @@ import com.clubmycab.ShowHistoryRidesAdaptor;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -316,7 +317,8 @@ public class MyRidesActivity extends Activity implements
 
 			// Mark notificaiton read call
 			String nid = getIntent().getStringExtra("nid");
-			String params = "rnum=" + "&nid=" + nid;
+			String params = "rnum=" + "&nid=" + nid + "&auth="
+					+ GlobalMethods.calculateCMCAuthString(nid);
 			String endpoint = GlobalVariables.ServiceUrl
 					+ "/UpdateNotificationStatusToRead.php";
 			Log.d("MyRidesActivity",
@@ -396,6 +398,14 @@ public class MyRidesActivity extends Activity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(MyRidesActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (poolresponse.contains("Unauthorized Access")) {
+				Log.e("MyRidesActivity", "poolresponse Unauthorized Access");
 				Toast.makeText(MyRidesActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -973,9 +983,13 @@ public class MyRidesActivity extends Activity implements
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1033,6 +1047,15 @@ public class MyRidesActivity extends Activity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(MyRidesActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (rideshistoryresponse.contains("Unauthorized Access")) {
+				Log.e("MyRidesActivity",
+						"rideshistoryresponse Unauthorized Access");
 				Toast.makeText(MyRidesActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -1243,9 +1266,14 @@ public class MyRidesActivity extends Activity implements
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"LastCabId", cid.toString().trim());
 
+			String authString = cid.toString().trim() + MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
 			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

@@ -38,6 +38,7 @@ import com.affle.affleinapptracker.AffleInAppTracker;
 import com.clubmycab.PhoneListener;
 import com.clubmycab.R;
 import com.clubmycab.SmsReciever;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 
@@ -49,7 +50,7 @@ public class OTPActivity extends Activity {
 	Button resendotp;
 	Button continuewithotp;
 
-//	String FullName;
+	// String FullName;
 	// String MobileNumberstr;
 
 	String verifyotpresp;
@@ -119,9 +120,9 @@ public class OTPActivity extends Activity {
 		continuewithotp.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-//		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
-//		FullName = mPrefs.getString("FullName", "");
-//		mobNum = mPrefs.getString("MobileNumber", "");
+		// SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
+		// FullName = mPrefs.getString("FullName", "");
+		// mobNum = mPrefs.getString("MobileNumber", "");
 
 		resendotp.setOnClickListener(new View.OnClickListener() {
 
@@ -229,8 +230,16 @@ public class OTPActivity extends Activity {
 				return;
 			}
 
+			if (verifyotpresp.contains("Unauthorized Access")) {
+				Log.e("OTPActivity", "verifyotpresp Unauthorized Access");
+				Toast.makeText(OTPActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (verifyotpresp.equalsIgnoreCase("SUCCESS")) {
-				
+
 				SharedPreferences sharedPreferences = getSharedPreferences(
 						"FacebookData", 0);
 				SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -239,10 +248,11 @@ public class OTPActivity extends Activity {
 
 				Hashtable<String, Object> extraParams = new Hashtable<String, Object>();
 				extraParams.put("FullName", fullName);
-				extraParams.put("MobileNumber",mobNum);
-				AffleInAppTracker.inAppTrackerViewName(OTPActivity.this, "OTPActivity", "OTP verified", "User Registered", extraParams);
+				extraParams.put("MobileNumber", mobNum);
+				AffleInAppTracker.inAppTrackerViewName(OTPActivity.this,
+						"OTPActivity", "OTP verified", "User Registered",
+						extraParams);
 
-				
 				editor.putString("FullName", fullName);
 				editor.putString("MobileNumber", mobNum);
 				editor.commit();
@@ -287,9 +297,15 @@ public class OTPActivity extends Activity {
 					"singleusepassword", otpedittext.getText().toString()
 							.trim());
 
+			String authString = mobNum
+					+ otpedittext.getText().toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
 			nameValuePairList.add(singleusepasswordBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -360,9 +376,16 @@ public class OTPActivity extends Activity {
 				return;
 			}
 
+			if (verifyotpresp.contains("Unauthorized Access")) {
+				Log.e("OTPActivity", "verifyotpresp Unauthorized Access");
+				Toast.makeText(OTPActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (verifyotpresp.equalsIgnoreCase("SUCCESS")) {
-				
-				
+
 				SharedPreferences sharedPreferences = getSharedPreferences(
 						"FacebookData", 0);
 				SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -418,6 +441,11 @@ public class OTPActivity extends Activity {
 			BasicNameValuePair platformBasicNameValuePair = new BasicNameValuePair(
 					"Platform", "A");
 
+			String authString = regId + mobNum + "A"
+					+ otpedittext.getText().toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			Log.d("MobileNumber", "mobNum " + mobNum + " signleusepasss "
 					+ otpedittext.getText().toString().trim() + " DeviceToken "
 					+ regId);
@@ -426,6 +454,7 @@ public class OTPActivity extends Activity {
 			nameValuePairList.add(singleusepasswordBasicNameValuePair);
 			nameValuePairList.add(DeviceTokenBasicNameValuePair);
 			nameValuePairList.add(platformBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -497,6 +526,14 @@ public class OTPActivity extends Activity {
 				return;
 			}
 
+			if (resendotpresp.contains("Unauthorized Access")) {
+				Log.e("OTPActivity", "resendotpresp Unauthorized Access");
+				Toast.makeText(OTPActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (resendotpresp.equalsIgnoreCase("FAILURE")) {
 				Toast.makeText(OTPActivity.this,
 						"Something went wrong please try again.",
@@ -521,8 +558,13 @@ public class OTPActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", mobNum);
 
+			String authString = mobNum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

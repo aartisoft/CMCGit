@@ -51,6 +51,7 @@ import com.clubmycab.CircularImageView;
 import com.clubmycab.MemberRideFragmentActivity;
 import com.clubmycab.R;
 import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -368,8 +369,13 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", MobileNumberstr);
 
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -377,6 +383,36 @@ public class NotificationListActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String clearallres = "";
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				clearallres = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("clearallres", "" + stringBuilder.toString());
+
+			if (clearallres != null && clearallres.length() > 0
+					&& clearallres.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"clearallres Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(NotificationListActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -432,8 +468,13 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", MobileNumberstr);
 
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -441,6 +482,36 @@ public class NotificationListActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String markallres = "";
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				markallres = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			Log.d("markallres", "" + stringBuilder.toString());
+
+			if (markallres != null && markallres.length() > 0
+					&& markallres.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"markallres Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(NotificationListActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -483,6 +554,15 @@ public class NotificationListActivity extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(NotificationListActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (allnotificationresp.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"allnotificationresp Unauthorized Access");
 				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -1064,8 +1144,13 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
 
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1151,9 +1236,15 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair NIDBasicNameValuePair = new BasicNameValuePair(
 					"NID", nid.toString().trim());
 
+			String authString = MobileNumberstr.toString().trim()
+					+ nid.toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
 			nameValuePairList.add(NIDBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1161,6 +1252,37 @@ public class NotificationListActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			String swipedeleteres = "";
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				swipedeleteres = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("swipedeleteres", "" + stringBuilder.toString());
+
+			if (swipedeleteres != null && swipedeleteres.length() > 0
+					&& swipedeleteres.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"swipedeleteres Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(NotificationListActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -1204,6 +1326,15 @@ public class NotificationListActivity extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(NotificationListActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"gotopoolresp Unauthorized Access");
 				Toast.makeText(NotificationListActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -1423,8 +1554,13 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", cid);
 
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1506,6 +1642,16 @@ public class NotificationListActivity extends Activity {
 				return;
 			}
 
+			if (gotopoolresp != null && gotopoolresp.length() > 0
+					&& gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"gotopoolresp Unauthorized Access");
+				Toast.makeText(NotificationListActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchAllNotification()
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1543,11 +1689,16 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair AcceptedBasicNameValuePair = new BasicNameValuePair(
 					"Accepted", sts);
 
+			String authString = sts + ownname + ownnum + rfid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(RefIdBasicNameValuePair);
 			nameValuePairList.add(OwnerNameBasicNameValuePair);
 			nameValuePairList.add(OwnerNumberBasicNameValuePair);
 			nameValuePairList.add(AcceptedBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1615,6 +1766,16 @@ public class NotificationListActivity extends Activity {
 				return;
 			}
 
+			if (gotopoolresp != null && gotopoolresp.length() > 0
+					&& gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"gotopoolresp Unauthorized Access");
+				Toast.makeText(NotificationListActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchAllNotification()
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1652,11 +1813,16 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair AcceptedBasicNameValuePair = new BasicNameValuePair(
 					"Accepted", sts);
 
+			String authString = sts + ownname + ownnum + rfid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(RefIdBasicNameValuePair);
 			nameValuePairList.add(OwnerNameBasicNameValuePair);
 			nameValuePairList.add(OwnerNumberBasicNameValuePair);
 			nameValuePairList.add(AcceptedBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1731,6 +1897,16 @@ public class NotificationListActivity extends Activity {
 				return;
 			}
 
+			if (cabratingresp != null && cabratingresp.length() > 0
+					&& cabratingresp.contains("Unauthorized Access")) {
+				Log.e("NotificationListActivity",
+						"cabratingresp Unauthorized Access");
+				Toast.makeText(NotificationListActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (cabratingresp.isEmpty() || cabratingresp == null
 					|| cabratingresp.toLowerCase().contains("no cabs found")) {
 				Toast.makeText(NotificationListActivity.this,
@@ -1766,11 +1942,13 @@ public class NotificationListActivity extends Activity {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIDNameValuePair = new BasicNameValuePair(
 					"CabID", cabID);
-			// Log.d("AllNotificationRequest",
-			// "AuthenticateConnectionCabRating cabID : " + cabID);
+			String authString = cabID;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIDNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1915,9 +2093,14 @@ public class NotificationListActivity extends Activity {
 			BasicNameValuePair nidBasicNameValuePair = new BasicNameValuePair(
 					"nid", nid);
 
+			String authString = nid + rnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(rnumBasicNameValuePair);
 			nameValuePairList.add(nidBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

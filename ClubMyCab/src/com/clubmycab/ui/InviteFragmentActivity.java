@@ -19,7 +19,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -46,8 +45,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -59,11 +56,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
-import com.clubmycab.Helper;
 import com.clubmycab.PlacesAutoCompleteAdapter;
 import com.clubmycab.R;
 import com.clubmycab.TopThreeRidesAdaptor;
 import com.clubmycab.model.AddressModel;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
@@ -1240,6 +1237,12 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				profilepic.setImageResource(R.drawable.cabappicon);
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 
+			} else if (imagenameresp.contains("Unauthorized Access")) {
+				Log.e("InviteFragmentActivity", "imagenameresp Unauthorized Access");
+				Toast.makeText(InviteFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -1265,9 +1268,14 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			HttpPost httpPost11 = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", MobileNumber);
+			
+			String authString = MobileNumber;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList11 = new ArrayList<NameValuePair>();
 			nameValuePairList11.add(MobileNumberBasicNameValuePair11);
+			nameValuePairList11.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity11 = new UrlEncodedFormEntity(
 					nameValuePairList11);
@@ -1295,6 +1303,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
+
+			} else if (imagenameresp.contains("Unauthorized Access")) {
 
 			} else {
 				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
@@ -1428,326 +1438,328 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	// /////////////////////////////
 	// ///////
 
-	private class ConnectionTaskForShowRidesHistory extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionShowRidesHistory mAuth1 = new AuthenticateConnectionShowRidesHistory();
-			try {
-				mAuth1.cid = args[0];
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(InviteFragmentActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (archieveridesresp.equalsIgnoreCase("No Pool Created Yet!!")
-					|| archieveridesresp.equalsIgnoreCase("[]")) {
-
-				if (FromLocation.size() > 0) {
-
-					inviteloadingll.setVisibility(View.GONE);
-					topthreeridesll.setVisibility(View.GONE);
-
-					topthreeadaptor = new TopThreeRidesAdaptor(
-							InviteFragmentActivity.this, FromShortName,
-							ToShortName, TravelDate, TravelTime, Seat_Status);
-					topthreerideslist.setAdapter(topthreeadaptor);
-					Helper.getListViewSize(topthreerideslist);
-
-					topthreerideslist
-							.setOnItemClickListener(new OnItemClickListener() {
-
-								@Override
-								public void onItemClick(AdapterView<?> parent,
-										View view, int position, long id) {
-									// TODO Auto-generated method stub
-
-									from_places.setText(FromLocation
-											.get(position).toString().trim());
-									to_places.setText(ToLocation.get(position)
-											.toString().trim());
-									datetextview.setText("");
-									datetextview2.setText("");
-									datetextview3.setText("");
-
-									timetextview.setText("");
-									timetextview2.setText("");
-									timetextview3.setText("");
-
-									seats.setText(Seats.get(position)
-											.toString().trim()
-											+ seatSuffix);
-
-									fromshortname = FromShortName.get(position)
-											.toString().trim();
-
-									toshortname = ToShortName.get(position)
-											.toString().trim();
-								}
-							});
-
-				} else {
-					inviteloadingll.setVisibility(View.GONE);
-					topthreeridesll.setVisibility(View.GONE);
-				}
-
-			} else {
-
-				try {
-					JSONArray subArray = new JSONArray(archieveridesresp);
-					for (int i = 0; i < subArray.length(); i++) {
-
-						FromLocation.add(subArray.getJSONObject(i)
-								.getString("FromLocation").toString().trim());
-						ToLocation.add(subArray.getJSONObject(i)
-								.getString("ToLocation").toString().trim());
-						FromShortName.add(subArray.getJSONObject(i)
-								.getString("FromShortName").toString().trim());
-						ToShortName.add(subArray.getJSONObject(i)
-								.getString("ToShortName").toString().trim());
-						TravelDate.add(subArray.getJSONObject(i)
-								.getString("TravelDate").toString().trim());
-						TravelTime.add(subArray.getJSONObject(i)
-								.getString("TravelTime").toString().trim());
-						Seats.add(subArray.getJSONObject(i).getString("Seats")
-								.toString().trim());
-						Seat_Status.add(subArray.getJSONObject(i)
-								.getString("Seat_Status").toString().trim());
-					}
-
-					if (FromLocation.size() >= 3) {
-
-						inviteloadingll.setVisibility(View.GONE);
-						topthreeridesll.setVisibility(View.GONE);
-
-						FromLocationNew.clear();
-						ToLocationNew.clear();
-						FromShortNameNew.clear();
-						ToShortNameNew.clear();
-						SeatsNew.clear();
-						TravelDateNew.clear();
-						TravelTimeNew.clear();
-						Seat_StatusNew.clear();
-
-						for (int i = 0; i < 3; i++) {
-							FromLocationNew.add(FromLocation.get(i).toString()
-									.trim());
-							ToLocationNew.add(ToLocation.get(i).toString()
-									.trim());
-							FromShortNameNew.add(FromShortName.get(i)
-									.toString().trim());
-							ToShortNameNew.add(ToShortName.get(i).toString()
-									.trim());
-							SeatsNew.add(Seats.get(i).toString().trim());
-							TravelDateNew.add(TravelDate.get(i).toString()
-									.trim());
-							TravelTimeNew.add(TravelTime.get(i).toString()
-									.trim());
-							Seat_StatusNew.add(Seat_Status.get(i).toString()
-									.trim());
-						}
-
-						topthreeadaptor = new TopThreeRidesAdaptor(
-								InviteFragmentActivity.this, FromShortNameNew,
-								ToShortNameNew, TravelDateNew, TravelTimeNew,
-								Seat_StatusNew);
-						topthreerideslist.setAdapter(topthreeadaptor);
-						Helper.getListViewSize(topthreerideslist);
-
-						topthreerideslist
-								.setOnItemClickListener(new OnItemClickListener() {
-
-									@Override
-									public void onItemClick(
-											AdapterView<?> parent, View view,
-											int position, long id) {
-										// TODO Auto-generated method stub
-
-										from_places.setText(FromLocationNew
-												.get(position).toString()
-												.trim());
-										to_places.setText(ToLocationNew
-												.get(position).toString()
-												.trim());
-										datetextview.setText("");
-										datetextview2.setText("");
-										datetextview3.setText("");
-
-										timetextview.setText("");
-										timetextview2.setText("");
-										timetextview3.setText("");
-
-										seats.setText(SeatsNew.get(position)
-												.toString().trim()
-												+ seatSuffix);
-
-										fromshortname = FromShortNameNew
-												.get(position).toString()
-												.trim();
-
-										toshortname = ToShortNameNew
-												.get(position).toString()
-												.trim();
-									}
-								});
-
-					} else {
-
-						inviteloadingll.setVisibility(View.GONE);
-						topthreeridesll.setVisibility(View.GONE);
-
-						FromLocationNew.clear();
-						ToLocationNew.clear();
-						FromShortNameNew.clear();
-						ToShortNameNew.clear();
-						SeatsNew.clear();
-						TravelDateNew.clear();
-						TravelTimeNew.clear();
-						Seat_StatusNew.clear();
-
-						for (int i = 0; i < FromLocation.size(); i++) {
-							FromLocationNew.add(FromLocation.get(i).toString()
-									.trim());
-							ToLocationNew.add(ToLocation.get(i).toString()
-									.trim());
-							FromShortNameNew.add(FromShortName.get(i)
-									.toString().trim());
-							ToShortNameNew.add(ToShortName.get(i).toString()
-									.trim());
-							SeatsNew.add(Seats.get(i).toString().trim());
-							TravelDateNew.add(TravelDate.get(i).toString()
-									.trim());
-							TravelTimeNew.add(TravelTime.get(i).toString()
-									.trim());
-							Seat_StatusNew.add(Seat_Status.get(i).toString()
-									.trim());
-						}
-
-						topthreeadaptor = new TopThreeRidesAdaptor(
-								InviteFragmentActivity.this, FromShortNameNew,
-								ToShortNameNew, TravelDateNew, TravelTimeNew,
-								Seat_StatusNew);
-						topthreerideslist.setAdapter(topthreeadaptor);
-						Helper.getListViewSize(topthreerideslist);
-
-						topthreerideslist
-								.setOnItemClickListener(new OnItemClickListener() {
-
-									@Override
-									public void onItemClick(
-											AdapterView<?> parent, View view,
-											int position, long id) {
-										// TODO Auto-generated method stub
-
-										from_places.setText(FromLocationNew
-												.get(position).toString()
-												.trim());
-										to_places.setText(ToLocationNew
-												.get(position).toString()
-												.trim());
-										datetextview.setText("");
-										datetextview2.setText("");
-										datetextview3.setText("");
-
-										timetextview.setText("");
-										timetextview2.setText("");
-										timetextview3.setText("");
-
-										seats.setText(SeatsNew.get(position)
-												.toString().trim()
-												+ seatSuffix);
-
-										fromshortname = FromShortNameNew
-												.get(position).toString()
-												.trim();
-
-										toshortname = ToShortNameNew
-												.get(position).toString()
-												.trim();
-									}
-								});
-
-					}
-
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionShowRidesHistory {
-
-		public String cid;
-
-		public AuthenticateConnectionShowRidesHistory() {
-
-		}
-
-		@SuppressWarnings("deprecation")
-		public void connection() throws Exception {
-
-			HttpClient httpclient = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/fetchmypoolshistory.php";
-			HttpPost httpPost = new HttpPost(url_select11);
-
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", MobileNumber);
-			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"LastCabId", cid.toString().trim());
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			nameValuePairList.add(CabIdBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-
-			Log.d("url_select11", "" + url_select11);
-			HttpResponse httpResponse = httpclient.execute(httpPost);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				archieveridesresp = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-		}
-	}
+	// private class ConnectionTaskForShowRidesHistory extends
+	// AsyncTask<String, Void, Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionShowRidesHistory mAuth1 = new
+	// AuthenticateConnectionShowRidesHistory();
+	// try {
+	// mAuth1.cid = args[0];
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// exceptioncheck = true;
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// if (exceptioncheck) {
+	// exceptioncheck = false;
+	// Toast.makeText(InviteFragmentActivity.this,
+	// getResources().getString(R.string.exceptionstring),
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// if (archieveridesresp.equalsIgnoreCase("No Pool Created Yet!!")
+	// || archieveridesresp.equalsIgnoreCase("[]")) {
+	//
+	// if (FromLocation.size() > 0) {
+	//
+	// inviteloadingll.setVisibility(View.GONE);
+	// topthreeridesll.setVisibility(View.GONE);
+	//
+	// topthreeadaptor = new TopThreeRidesAdaptor(
+	// InviteFragmentActivity.this, FromShortName,
+	// ToShortName, TravelDate, TravelTime, Seat_Status);
+	// topthreerideslist.setAdapter(topthreeadaptor);
+	// Helper.getListViewSize(topthreerideslist);
+	//
+	// topthreerideslist
+	// .setOnItemClickListener(new OnItemClickListener() {
+	//
+	// @Override
+	// public void onItemClick(AdapterView<?> parent,
+	// View view, int position, long id) {
+	// // TODO Auto-generated method stub
+	//
+	// from_places.setText(FromLocation
+	// .get(position).toString().trim());
+	// to_places.setText(ToLocation.get(position)
+	// .toString().trim());
+	// datetextview.setText("");
+	// datetextview2.setText("");
+	// datetextview3.setText("");
+	//
+	// timetextview.setText("");
+	// timetextview2.setText("");
+	// timetextview3.setText("");
+	//
+	// seats.setText(Seats.get(position)
+	// .toString().trim()
+	// + seatSuffix);
+	//
+	// fromshortname = FromShortName.get(position)
+	// .toString().trim();
+	//
+	// toshortname = ToShortName.get(position)
+	// .toString().trim();
+	// }
+	// });
+	//
+	// } else {
+	// inviteloadingll.setVisibility(View.GONE);
+	// topthreeridesll.setVisibility(View.GONE);
+	// }
+	//
+	// } else {
+	//
+	// try {
+	// JSONArray subArray = new JSONArray(archieveridesresp);
+	// for (int i = 0; i < subArray.length(); i++) {
+	//
+	// FromLocation.add(subArray.getJSONObject(i)
+	// .getString("FromLocation").toString().trim());
+	// ToLocation.add(subArray.getJSONObject(i)
+	// .getString("ToLocation").toString().trim());
+	// FromShortName.add(subArray.getJSONObject(i)
+	// .getString("FromShortName").toString().trim());
+	// ToShortName.add(subArray.getJSONObject(i)
+	// .getString("ToShortName").toString().trim());
+	// TravelDate.add(subArray.getJSONObject(i)
+	// .getString("TravelDate").toString().trim());
+	// TravelTime.add(subArray.getJSONObject(i)
+	// .getString("TravelTime").toString().trim());
+	// Seats.add(subArray.getJSONObject(i).getString("Seats")
+	// .toString().trim());
+	// Seat_Status.add(subArray.getJSONObject(i)
+	// .getString("Seat_Status").toString().trim());
+	// }
+	//
+	// if (FromLocation.size() >= 3) {
+	//
+	// inviteloadingll.setVisibility(View.GONE);
+	// topthreeridesll.setVisibility(View.GONE);
+	//
+	// FromLocationNew.clear();
+	// ToLocationNew.clear();
+	// FromShortNameNew.clear();
+	// ToShortNameNew.clear();
+	// SeatsNew.clear();
+	// TravelDateNew.clear();
+	// TravelTimeNew.clear();
+	// Seat_StatusNew.clear();
+	//
+	// for (int i = 0; i < 3; i++) {
+	// FromLocationNew.add(FromLocation.get(i).toString()
+	// .trim());
+	// ToLocationNew.add(ToLocation.get(i).toString()
+	// .trim());
+	// FromShortNameNew.add(FromShortName.get(i)
+	// .toString().trim());
+	// ToShortNameNew.add(ToShortName.get(i).toString()
+	// .trim());
+	// SeatsNew.add(Seats.get(i).toString().trim());
+	// TravelDateNew.add(TravelDate.get(i).toString()
+	// .trim());
+	// TravelTimeNew.add(TravelTime.get(i).toString()
+	// .trim());
+	// Seat_StatusNew.add(Seat_Status.get(i).toString()
+	// .trim());
+	// }
+	//
+	// topthreeadaptor = new TopThreeRidesAdaptor(
+	// InviteFragmentActivity.this, FromShortNameNew,
+	// ToShortNameNew, TravelDateNew, TravelTimeNew,
+	// Seat_StatusNew);
+	// topthreerideslist.setAdapter(topthreeadaptor);
+	// Helper.getListViewSize(topthreerideslist);
+	//
+	// topthreerideslist
+	// .setOnItemClickListener(new OnItemClickListener() {
+	//
+	// @Override
+	// public void onItemClick(
+	// AdapterView<?> parent, View view,
+	// int position, long id) {
+	// // TODO Auto-generated method stub
+	//
+	// from_places.setText(FromLocationNew
+	// .get(position).toString()
+	// .trim());
+	// to_places.setText(ToLocationNew
+	// .get(position).toString()
+	// .trim());
+	// datetextview.setText("");
+	// datetextview2.setText("");
+	// datetextview3.setText("");
+	//
+	// timetextview.setText("");
+	// timetextview2.setText("");
+	// timetextview3.setText("");
+	//
+	// seats.setText(SeatsNew.get(position)
+	// .toString().trim()
+	// + seatSuffix);
+	//
+	// fromshortname = FromShortNameNew
+	// .get(position).toString()
+	// .trim();
+	//
+	// toshortname = ToShortNameNew
+	// .get(position).toString()
+	// .trim();
+	// }
+	// });
+	//
+	// } else {
+	//
+	// inviteloadingll.setVisibility(View.GONE);
+	// topthreeridesll.setVisibility(View.GONE);
+	//
+	// FromLocationNew.clear();
+	// ToLocationNew.clear();
+	// FromShortNameNew.clear();
+	// ToShortNameNew.clear();
+	// SeatsNew.clear();
+	// TravelDateNew.clear();
+	// TravelTimeNew.clear();
+	// Seat_StatusNew.clear();
+	//
+	// for (int i = 0; i < FromLocation.size(); i++) {
+	// FromLocationNew.add(FromLocation.get(i).toString()
+	// .trim());
+	// ToLocationNew.add(ToLocation.get(i).toString()
+	// .trim());
+	// FromShortNameNew.add(FromShortName.get(i)
+	// .toString().trim());
+	// ToShortNameNew.add(ToShortName.get(i).toString()
+	// .trim());
+	// SeatsNew.add(Seats.get(i).toString().trim());
+	// TravelDateNew.add(TravelDate.get(i).toString()
+	// .trim());
+	// TravelTimeNew.add(TravelTime.get(i).toString()
+	// .trim());
+	// Seat_StatusNew.add(Seat_Status.get(i).toString()
+	// .trim());
+	// }
+	//
+	// topthreeadaptor = new TopThreeRidesAdaptor(
+	// InviteFragmentActivity.this, FromShortNameNew,
+	// ToShortNameNew, TravelDateNew, TravelTimeNew,
+	// Seat_StatusNew);
+	// topthreerideslist.setAdapter(topthreeadaptor);
+	// Helper.getListViewSize(topthreerideslist);
+	//
+	// topthreerideslist
+	// .setOnItemClickListener(new OnItemClickListener() {
+	//
+	// @Override
+	// public void onItemClick(
+	// AdapterView<?> parent, View view,
+	// int position, long id) {
+	// // TODO Auto-generated method stub
+	//
+	// from_places.setText(FromLocationNew
+	// .get(position).toString()
+	// .trim());
+	// to_places.setText(ToLocationNew
+	// .get(position).toString()
+	// .trim());
+	// datetextview.setText("");
+	// datetextview2.setText("");
+	// datetextview3.setText("");
+	//
+	// timetextview.setText("");
+	// timetextview2.setText("");
+	// timetextview3.setText("");
+	//
+	// seats.setText(SeatsNew.get(position)
+	// .toString().trim()
+	// + seatSuffix);
+	//
+	// fromshortname = FromShortNameNew
+	// .get(position).toString()
+	// .trim();
+	//
+	// toshortname = ToShortNameNew
+	// .get(position).toString()
+	// .trim();
+	// }
+	// });
+	//
+	// }
+	//
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionShowRidesHistory {
+	//
+	// public String cid;
+	//
+	// public AuthenticateConnectionShowRidesHistory() {
+	//
+	// }
+	//
+	// @SuppressWarnings("deprecation")
+	// public void connection() throws Exception {
+	//
+	// HttpClient httpclient = new DefaultHttpClient();
+	// String url_select11 = GlobalVariables.ServiceUrl
+	// + "/fetchmypoolshistory.php";
+	// HttpPost httpPost = new HttpPost(url_select11);
+	//
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "MobileNumber", MobileNumber);
+	// BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+	// "LastCabId", cid.toString().trim());
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	// nameValuePairList.add(CabIdBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	//
+	// Log.d("url_select11", "" + url_select11);
+	// HttpResponse httpResponse = httpclient.execute(httpPost);
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// archieveridesresp = stringBuilder.append(bufferedStrChunk)
+	// .toString();
+	// }
+	// }
+	// }
 
 	// //////////////////////////
 }

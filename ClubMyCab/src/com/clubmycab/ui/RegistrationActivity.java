@@ -408,6 +408,15 @@ public class RegistrationActivity extends Activity implements
 				return;
 			}
 
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+				Log.e("RegistrationActivity", "result Unauthorized Access");
+				Toast.makeText(RegistrationActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				if (result != null && !result.isEmpty()) {
 					JSONObject jsonObject = new JSONObject(result);
@@ -417,12 +426,13 @@ public class RegistrationActivity extends Activity implements
 
 						if (!referralcodeedittext.getText().toString().trim()
 								.isEmpty()) {
-							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-								new ConnectionTaskForTopUp()
-										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-							} else {
-								new ConnectionTaskForTopUp().execute();
-							}
+							// if (Build.VERSION.SDK_INT >=
+							// Build.VERSION_CODES.HONEYCOMB) {
+							// new ConnectionTaskForTopUp()
+							// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							// } else {
+							// new ConnectionTaskForTopUp().execute();
+							// }
 
 							if (!walletExists) {
 								AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -583,6 +593,17 @@ public class RegistrationActivity extends Activity implements
 				nameValuePairList.add(referralCodeBasicNameValuePair);
 			}
 
+			String authString = regid
+					+ emailedittext.getText().toString().trim()
+					+ fullnameedittext.getText().toString().trim()
+					+ countrycode.getText().toString().trim()
+					+ mobileedittext.getText().toString().trim() + "A"
+					+ referralcodeedittext.getText().toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
+			nameValuePairList.add(authValuePair);
+
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
@@ -609,89 +630,92 @@ public class RegistrationActivity extends Activity implements
 		}
 	}
 
-	private class ConnectionTaskForTopUp extends AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionTopup mAuth1 = new AuthenticateConnectionTopup();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-		}
-
-	}
-
-	public class AuthenticateConnectionTopup {
-
-		public AuthenticateConnectionTopup() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/referralCode.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-			BasicNameValuePair ActBasicNameValuePair = new BasicNameValuePair(
-					"act", "topup");
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"senderNumber", countrycode.getText().toString().trim()
-							+ mobileedittext.getText().toString().trim());
-			BasicNameValuePair referralCodeBasicNameValuePair = new BasicNameValuePair(
-					"referralCode", referralcodeedittext.getText().toString()
-							.trim());
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(ActBasicNameValuePair);
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			nameValuePairList.add(referralCodeBasicNameValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "referralCode : " + httpResponse
-					+ " senderNumber : "
-					+ countrycode.getText().toString().trim()
-					+ mobileedittext.getText().toString().trim()
-					+ " referralCode : "
-					+ referralcodeedittext.getText().toString().trim());
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				result = stringBuilder.append(bufferedStrChunk).toString();
-			}
-
-			Log.d("result", "" + stringBuilder.toString());
-		}
-	}
+	// private class ConnectionTaskForTopUp extends AsyncTask<String, Void,
+	// Void> {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	//
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(String... args) {
+	// AuthenticateConnectionTopup mAuth1 = new AuthenticateConnectionTopup();
+	// try {
+	// mAuth1.connection();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Void v) {
+	//
+	// }
+	//
+	// }
+	//
+	// public class AuthenticateConnectionTopup {
+	//
+	// public AuthenticateConnectionTopup() {
+	//
+	// }
+	//
+	// public void connection() throws Exception {
+	//
+	// // Connect to google.com
+	// HttpClient httpClient = new DefaultHttpClient();
+	// String url_select = GlobalVariables.ServiceUrl
+	// + "/referralCode.php";
+	//
+	// HttpPost httpPost = new HttpPost(url_select);
+	// BasicNameValuePair ActBasicNameValuePair = new BasicNameValuePair(
+	// "act", "topup");
+	// BasicNameValuePair MobileNumberBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "senderNumber", countrycode.getText().toString().trim()
+	// + mobileedittext.getText().toString().trim());
+	// BasicNameValuePair referralCodeBasicNameValuePair = new
+	// BasicNameValuePair(
+	// "referralCode", referralcodeedittext.getText().toString()
+	// .trim());
+	//
+	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+	// nameValuePairList.add(ActBasicNameValuePair);
+	// nameValuePairList.add(MobileNumberBasicNameValuePair);
+	// nameValuePairList.add(referralCodeBasicNameValuePair);
+	//
+	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+	// nameValuePairList);
+	// httpPost.setEntity(urlEncodedFormEntity);
+	// HttpResponse httpResponse = httpClient.execute(httpPost);
+	//
+	// Log.d("httpResponse", "referralCode : " + httpResponse
+	// + " senderNumber : "
+	// + countrycode.getText().toString().trim()
+	// + mobileedittext.getText().toString().trim()
+	// + " referralCode : "
+	// + referralcodeedittext.getText().toString().trim());
+	//
+	// InputStream inputStream = httpResponse.getEntity().getContent();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream);
+	//
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	//
+	// StringBuilder stringBuilder = new StringBuilder();
+	//
+	// String bufferedStrChunk = null;
+	//
+	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+	// result = stringBuilder.append(bufferedStrChunk).toString();
+	// }
+	//
+	// Log.d("result", "" + stringBuilder.toString());
+	// }
+	// }
 
 	private void querywallet(String mobilenumber) {
 

@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.ui.MyClubsActivity;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
@@ -51,7 +52,6 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 	private ArrayList<String> MemberClubOwnerName;
 	private LayoutInflater inflater;
 
-	
 	Tracker tracker;
 	boolean exceptioncheck = false;
 
@@ -65,10 +65,9 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 		this.MemberClubNoofMembers = memclubnoofmembers;
 		this.MemberClubOwnerName = memclubownername;
 
-		
-
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(context);
-		tracker = analytics.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
+		tracker = analytics
+				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("MyClubs");
@@ -92,64 +91,64 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(final int position, View itemView, ViewGroup parent) {
-		
-		
+
 		ViewHolder viewholder;
-		if(itemView==null){
-			
-			viewholder=new ViewHolder();
+		if (itemView == null) {
+
+			viewholder = new ViewHolder();
 
 			inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			 itemView = inflater.inflate(R.layout.membersclubs_listrow, parent,
+			itemView = inflater.inflate(R.layout.membersclubs_listrow, parent,
 					false);
 
 			// Locate the TextViews in listview_item.xml
 
-			viewholder. Mname = (TextView) itemView.findViewById(R.id.nameofclub);
-			viewholder. noofmembers = (TextView) itemView
+			viewholder.Mname = (TextView) itemView
+					.findViewById(R.id.nameofclub);
+			viewholder.noofmembers = (TextView) itemView
 					.findViewById(R.id.noofmembers);
-			viewholder. clubownername = (TextView) itemView
+			viewholder.clubownername = (TextView) itemView
 					.findViewById(R.id.clubownername);
-			viewholder. removeclub = (ImageView) itemView
+			viewholder.removeclub = (ImageView) itemView
 					.findViewById(R.id.removeclub);
-			viewholder. ivWarnning1=(ImageView)itemView.findViewById(R.id.ivWarnning2);
+			viewholder.ivWarnning1 = (ImageView) itemView
+					.findViewById(R.id.ivWarnning2);
 			itemView.setTag(viewholder);
 
-			
-		}
-		else{
-			viewholder=(ViewHolder)itemView.getTag();
+		} else {
+			viewholder = (ViewHolder) itemView.getTag();
 		}
 
-		viewholder.Mname.setText(MemberClubPoolName.get(position).toString().trim());
+		viewholder.Mname.setText(MemberClubPoolName.get(position).toString()
+				.trim());
 		viewholder.clubownername.setText("("
 				+ MemberClubOwnerName.get(position).toString().trim() + ")");
 		viewholder.noofmembers.setText("("
 				+ MemberClubNoofMembers.get(position).toString().trim() + ")");
-		
+
 		viewholder.ivWarnning1.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
-				Toast.makeText(context,StringTags.TAG_LOW_MEMBER, Toast.LENGTH_LONG).show();
-				
+
+				Toast.makeText(context, StringTags.TAG_LOW_MEMBER,
+						Toast.LENGTH_LONG).show();
+
 			}
 		});
-		try{
-			int count=Integer.parseInt(MemberClubNoofMembers.get(position).toString().trim());
-			if(count<=10)
+		try {
+			int count = Integer.parseInt(MemberClubNoofMembers.get(position)
+					.toString().trim());
+			if (count <= 10)
 				viewholder.ivWarnning1.setVisibility(View.VISIBLE);
 			else
 				viewholder.ivWarnning1.setVisibility(View.GONE);
 
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			viewholder.ivWarnning1.setVisibility(View.GONE);
 
-			
 		}
 
 		viewholder.removeclub.setOnClickListener(new OnClickListener() {
@@ -194,13 +193,13 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 		return itemView;
 	}
-	
-	public class ViewHolder{
+
+	public class ViewHolder {
 		public ImageView ivWarnning1;
-		public TextView Mname,clubownername;
+		public TextView Mname, clubownername;
 		public TextView noofmembers;
-		public ImageView removeclub ;
-		
+		public ImageView removeclub;
+
 	}
 
 	// ///////
@@ -240,9 +239,11 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(context,
-						context.getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(
+						context,
+						context.getResources().getString(
+								R.string.exceptionstring), Toast.LENGTH_LONG)
+						.show();
 				return;
 			}
 
@@ -283,9 +284,15 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", OwnerNumber.toString().trim());
 
+			String authString = OwnerNumber.toString().trim()
+					+ poolid.toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(poolidBasicNameValuePair);
 			nameValuePairList.add(UserNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -305,12 +312,24 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 			String bufferedStrChunk = null;
 
+			String poolresponse = "";
+
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				String poolresponse = stringBuilder.append(bufferedStrChunk)
+				poolresponse = stringBuilder.append(bufferedStrChunk)
 						.toString();
 			}
 
 			Log.d("poolresponse", "" + stringBuilder.toString());
+
+			if (poolresponse != null && poolresponse.length() > 0
+					&& poolresponse.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "poolresponse Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			// Connect to google.com
 			HttpClient httpClient1 = new DefaultHttpClient();
@@ -319,9 +338,13 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 
 			BasicNameValuePair UserNumberBasicNameValuePair1 = new BasicNameValuePair(
 					"OwnerNumber", OwnerNumber);
+			authString = OwnerNumber;
+			authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
 			nameValuePairList1.add(UserNumberBasicNameValuePair1);
+			nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -348,6 +371,16 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			}
 
 			Log.d("myclubsresp", "" + myclubsresp);
+
+			if (myclubsresp != null && myclubsresp.length() > 0
+					&& myclubsresp.contains("Unauthorized Access")) {
+				Log.e("MyClubsActivity", "myclubsresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MyClubsActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			SharedPreferences sharedPreferences1 = context
 					.getSharedPreferences("MyClubs", 0);

@@ -63,6 +63,7 @@ import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -265,7 +266,7 @@ public class MyProfileActivity extends Activity {
 		mobileedittext = (EditText) findViewById(R.id.mobileedittext);
 		genderedittext = (EditText) findViewById(R.id.genderedittext);
 
-		fullnameedittext.setEnabled(false);
+		// fullnameedittext.setEnabled(false);
 		mobileedittext.setEnabled(false);
 
 		updateprofile = (Button) findViewById(R.id.updateprofile);
@@ -416,6 +417,8 @@ public class MyProfileActivity extends Activity {
 					String eml = emailedittext.getText().toString().trim();
 					String gnd = genderedittext.getText().toString().trim();
 					String dob = dobedittext.getText().toString().trim();
+					String fullname = fullnameedittext.getText().toString()
+							.trim();
 
 					if (!isOnline()) {
 
@@ -439,10 +442,10 @@ public class MyProfileActivity extends Activity {
 							new ConnectionTaskForUpdateMyProfile()
 									.executeOnExecutor(
 											AsyncTask.THREAD_POOL_EXECUTOR,
-											eml, dob, gnd);
+											eml, dob, gnd, fullname);
 						} else {
 							new ConnectionTaskForUpdateMyProfile().execute(eml,
-									dob, gnd);
+									dob, gnd, fullname);
 						}
 					}
 
@@ -587,6 +590,12 @@ public class MyProfileActivity extends Activity {
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 				profilebannerimage.setImageResource(R.drawable.cabappicon);
 
+			} else if (imagenameresp.contains("Unauthorized Access")) {
+				Log.e("MyProfileActivity", "imagenameresp Unauthorized Access");
+				Toast.makeText(MyProfileActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -613,8 +622,13 @@ public class MyProfileActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
 
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList11 = new ArrayList<NameValuePair>();
 			nameValuePairList11.add(MobileNumberBasicNameValuePair11);
+			nameValuePairList11.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity11 = new UrlEncodedFormEntity(
 					nameValuePairList11);
@@ -642,6 +656,8 @@ public class MyProfileActivity extends Activity {
 			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
+
+			} else if (imagenameresp.contains("Unauthorized Access")) {
 
 			} else {
 				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
@@ -818,6 +834,14 @@ public class MyProfileActivity extends Activity {
 				return;
 			}
 
+			if (myprofileresp.contains("Unauthorized Access")) {
+				Log.e("MyProfileActivity", "myprofileresp Unauthorized Access");
+				Toast.makeText(MyProfileActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (myprofileresp.equalsIgnoreCase("No Data")) {
 				Toast.makeText(MyProfileActivity.this, "" + myprofileresp,
 						Toast.LENGTH_LONG).show();
@@ -869,9 +893,13 @@ public class MyProfileActivity extends Activity {
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair UserNumberBasicNameValuePair = new BasicNameValuePair(
 					"UserNumber", MobileNumberstr);
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(UserNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -898,12 +926,13 @@ public class MyProfileActivity extends Activity {
 
 			Log.d("myprofileresp", "" + stringBuilder.toString());
 
-			SharedPreferences sharedPreferences1 = getSharedPreferences(
-					"MyProfile", 0);
-			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-			editor1.putString("myprofile", myprofileresp.toString().trim());
-			editor1.commit();
-
+			if (!myprofileresp.contains("Unauthorized Access")) {
+				SharedPreferences sharedPreferences1 = getSharedPreferences(
+						"MyProfile", 0);
+				SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+				editor1.putString("myprofile", myprofileresp.toString().trim());
+				editor1.commit();
+			}
 			// ///////////////
 		}
 	}
@@ -940,6 +969,7 @@ public class MyProfileActivity extends Activity {
 				mAuth1.email = args[0];
 				mAuth1.dob = args[1];
 				mAuth1.gender = args[2];
+				mAuth1.fullName = args[3];
 				mAuth1.connection();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -973,6 +1003,13 @@ public class MyProfileActivity extends Activity {
 				Toast.makeText(MyProfileActivity.this,
 						"Profile updated successfully", Toast.LENGTH_LONG)
 						.show();
+			} else if (updateprofileresp.contains("Unauthorized Access")) {
+				Log.e("MyProfileActivity",
+						"updateprofileresp Unauthorized Access");
+				Toast.makeText(MyProfileActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				Toast.makeText(MyProfileActivity.this, "" + updateprofileresp,
@@ -986,6 +1023,7 @@ public class MyProfileActivity extends Activity {
 		public String email;
 		public String dob;
 		public String gender;
+		public String fullName;
 
 		public AuthenticateConnectionUpdateMyProfile() {
 
@@ -1006,12 +1044,20 @@ public class MyProfileActivity extends Activity {
 					"Gender", gender);
 			BasicNameValuePair DOBBasicNameValuePair = new BasicNameValuePair(
 					"DOB", dob);
+			BasicNameValuePair NameBasicNameValuePair = new BasicNameValuePair(
+					"fullName", fullName);
+
+			String authString = dob + email + fullName + gender + MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(UserNumberBasicNameValuePair);
 			nameValuePairList.add(EmailBasicNameValuePair);
 			nameValuePairList.add(GenderBasicNameValuePair);
 			nameValuePairList.add(DOBBasicNameValuePair);
+			nameValuePairList.add(NameBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1045,9 +1091,13 @@ public class MyProfileActivity extends Activity {
 			HttpPost httpPost1 = new HttpPost(url_select111);
 			BasicNameValuePair UserNumberBasicNameValuePair1 = new BasicNameValuePair(
 					"UserNumber", MobileNumberstr);
+			authString = MobileNumberstr;
+			authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList1 = new ArrayList<NameValuePair>();
 			nameValuePairList1.add(UserNumberBasicNameValuePair1);
+			nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -1074,11 +1124,13 @@ public class MyProfileActivity extends Activity {
 
 			Log.d("myprofileresp", "" + stringBuilder1.toString());
 
-			SharedPreferences sharedPreferences1 = getSharedPreferences(
-					"MyProfile", 0);
-			SharedPreferences.Editor editor1 = sharedPreferences1.edit();
-			editor1.putString("myprofile", myprofileresp.toString().trim());
-			editor1.commit();
+			if (!myprofileresp.contains("Unauthorized Access")) {
+				SharedPreferences sharedPreferences1 = getSharedPreferences(
+						"MyProfile", 0);
+				SharedPreferences.Editor editor1 = sharedPreferences1.edit();
+				editor1.putString("myprofile", myprofileresp.toString().trim());
+				editor1.commit();
+			}
 		}
 	}
 
@@ -1289,6 +1341,13 @@ public class MyProfileActivity extends Activity {
 						MyProfileActivity.this,
 						"Error uploading Image, Please try again or use a different image",
 						Toast.LENGTH_SHORT).show();
+			} else if (imageuploadresp.contains("Unauthorized Access")) {
+				Log.e("MyProfileActivity",
+						"imageuploadresp Unauthorized Access");
+				Toast.makeText(MyProfileActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -1438,9 +1497,14 @@ public class MyProfileActivity extends Activity {
 			BasicNameValuePair ImageBasicNameValuePair = new BasicNameValuePair(
 					"imagestr", imagestr);
 
+			String authString = imagestr + MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
 			nameValuePairList.add(ImageBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1468,6 +1532,8 @@ public class MyProfileActivity extends Activity {
 			Log.d("imageuploadresp", "" + stringBuilder.toString());
 
 			if (imageuploadresp.equalsIgnoreCase("Error")) {
+
+			} else if (imageuploadresp.contains("Unauthorized Access")) {
 
 			} else {
 

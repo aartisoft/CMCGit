@@ -384,7 +384,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			if (comefrom.equalsIgnoreCase("GCM")) {
 
 				String nid = intent.getStringExtra("nid");
-				String params = "rnum=" + "&nid=" + nid;
+				String params = "rnum=" + "&nid=" + nid + "&auth="
+						+ GlobalMethods.calculateCMCAuthString(nid);
 				String endpoint = GlobalVariables.ServiceUrl
 						+ "/UpdateNotificationStatusToRead.php";
 				Log.d("CheckPoolFragmentActivity",
@@ -1379,10 +1380,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			String cabID) {
 
 		String endpoint = GlobalVariables.ServiceUrl + "/logTransaction.php";
+		String authString = amount + cabID + fee + merchantname + mid
+				+ receivercell + sendercell + token;
 		String params = "amount=" + amount + "&fee=" + fee + "&merchantname="
 				+ merchantname + "&mid=" + mid + "&token=" + token
 				+ "&sendercell=" + sendercell + "&receivercell=" + receivercell
-				+ "&cabId=" + cabID;
+				+ "&cabId=" + cabID + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 		Log.d("CheckPoolFragmentActivity", "logTransaction endpoint : "
 				+ endpoint + " params : " + params);
 		new GlobalAsyncTask(this, endpoint, params, null, this, true,
@@ -1519,6 +1523,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		} else if (uniqueID.equals("logTransaction")) {
 			Log.d("CheckPoolFragmentActivity", "logTransaction response : "
 					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"logTransaction Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.get("status").toString()
@@ -1728,8 +1743,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MobileValuePair = new BasicNameValuePair(
 					"mobileNumber", mnum);
 
+			String authString = cid + mnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MobileValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -1753,6 +1773,18 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("AuthenticateConnectionGetMyFare resp", "" + resp);
+
+			if (resp != null && resp.length() > 0
+					&& resp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"AuthenticateConnectionGetMyFare Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				JSONObject jsonObject = new JSONObject(resp);
 				amountToPay = jsonObject.get("fareToPay").toString();
@@ -2288,7 +2320,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
 					cid);
 
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2312,6 +2349,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("completedresp", "" + startresp);
+
+			if (startresp != null && startresp.length() > 0
+					&& startresp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"AuthenticateConnectionTripCompleted Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -2372,7 +2420,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
 					cid);
 
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2396,6 +2449,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("startresp", "" + startresp);
+
+			if (startresp != null && startresp.length() > 0
+					&& startresp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"AuthenticateConnectionStartTrip Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -2743,6 +2807,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (showmembersresp != null && showmembersresp.length() > 0
+					&& showmembersresp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"showmembersresp Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -3173,8 +3247,13 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", rideDetailsModel.getCabId());
 
+			String authString = rideDetailsModel.getCabId();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -3974,6 +4053,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (ownercancelpoolresp != null && ownercancelpoolresp.length() > 0
+					&& ownercancelpoolresp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"ownercancelpoolresp Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			// Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
 			// HomeActivity.class);
 			// mainIntent.putExtra("from", "normal");
@@ -4015,11 +4104,22 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 							+ rideDetailsModel.getFromShortName() + " to "
 							+ rideDetailsModel.getToShortName());
 
+			String authString = rideDetailsModel.getCabId()
+					+ rideDetailsModel.getOwnerName()
+					+ " cancelled the ride from "
+					+ rideDetailsModel.getFromShortName() + " to "
+					+ rideDetailsModel.getToShortName()
+					+ rideDetailsModel.getOwnerName()
+					+ rideDetailsModel.getMobileNumber();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(OwnerNameBasicNameValuePair);
 			nameValuePairList.add(OwnerNumberBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -4240,6 +4340,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (dropuserfrompopupresp != null
+					&& dropuserfrompopupresp.length() > 0
+					&& dropuserfrompopupresp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"dropuserfrompopupresp Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForDirections()
 						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -4284,6 +4395,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 							+ rideDetailsModel.getFromShortName() + " to "
 							+ rideDetailsModel.getToShortName());
 
+			String authString = rideDetailsModel.getCabId() + memname + memnum
+					+ rideDetailsModel.getOwnerName()
+					+ " has removed you from the ride from "
+					+ rideDetailsModel.getFromShortName() + " to "
+					+ rideDetailsModel.getToShortName()
+					+ rideDetailsModel.getOwnerName()
+					+ rideDetailsModel.getOwnerName();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(OwnerNameBasicNameValuePair);
@@ -4291,6 +4412,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			nameValuePairList.add(MemberNameBasicNameValuePair);
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -4386,6 +4508,18 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (sendcustommessagefrompopupresp != null
+					&& sendcustommessagefrompopupresp.length() > 0
+					&& sendcustommessagefrompopupresp
+							.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"sendcustommessagefrompopupresp Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 		}
 
 	}
@@ -4412,9 +4546,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
 					"Message", mess);
 
+			String authString = memnum + mess;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -4607,7 +4746,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 											.equalsIgnoreCase("Mega")) {
 										cancelMegaCab();
 									} else if (rideDetailsModel.getCabName()
-											.equalsIgnoreCase("Taxi For Sure")) {
+											.equalsIgnoreCase("TaxiForSure")) {
 										cancelTFSCab();
 									}
 								}
@@ -5205,6 +5344,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair ownernumberValuePair = new BasicNameValuePair(
 					"ownernumber", ownermnum);
 
+			String authString = cid + name + mnumstr + memnum + txtmsg
+					+ ownername + ownermnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			Log.d("CheckPoolFragmentActivity",
 					"AuthenticateConnectionsendchatnotification CabId : " + cid
 							+ " MemberNumber : " + mnumstr
@@ -5220,6 +5364,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			nameValuePairList.add(MemberNameValuePair);
 			nameValuePairList.add(ownernameValuePair);
 			nameValuePairList.add(ownernumberValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5243,6 +5388,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("chatresp", "" + chatresp);
+
+			if (chatresp != null && chatresp.length() > 0
+					&& chatresp.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"chatresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -5419,8 +5575,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					cabid);
 			BasicNameValuePair MemberNumberValuePair = new BasicNameValuePair(
 					"MemberNumber", mnum);
+
+			String authString = cabid + mnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MemberNumberValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5441,6 +5603,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			String result = null;
 			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
 				result = stringBuilder.append(bufferedStrChunk).toString();
+			}
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"AuthenticateConnectionTripCompletedtask Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
 			}
 
 			if (result.equalsIgnoreCase("No Members joined yet")) {
@@ -5720,11 +5893,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair OwnerValuePair = new BasicNameValuePair("owner",
 					owner);
 
+			String authString = cabid + numberandfare + owner + paidby
+					+ totalfare;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MemberNumberValuePair);
 			nameValuePairList.add(NumberFairValuePair);
 			nameValuePairList.add(PaidByValuePair);
 			nameValuePairList.add(OwnerValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5750,6 +5929,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			saveCalculatedFare = result;
 
 			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+
+			if (saveCalculatedFare != null && saveCalculatedFare.length() > 0
+					&& saveCalculatedFare.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"saveCalculatedFare Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			final JSONObject jsonObject = new JSONObject(result);
 			if (jsonObject.get("status").toString().equalsIgnoreCase("fail")) {
@@ -5847,8 +6037,20 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				BasicNameValuePair mobileNumberNameValuePair = new BasicNameValuePair(
 						"mobileNumber", mobileNumber);
 
+				String authString = cabid + mobileNumber + owner;
+				BasicNameValuePair authValuePair = new BasicNameValuePair(
+						"auth",
+						GlobalMethods.calculateCMCAuthString(authString));
+
 				nameValuePairList.add(ownerNameValuePair);
 				nameValuePairList.add(mobileNumberNameValuePair);
+				nameValuePairList.add(authValuePair);
+			} else {
+				String authString = cabid;
+				BasicNameValuePair authValuePair = new BasicNameValuePair(
+						"auth",
+						GlobalMethods.calculateCMCAuthString(authString));
+				nameValuePairList.add(authValuePair);
 			}
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
@@ -5873,6 +6075,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("tripCompleted", "tripCompleted : " + result);
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"tripCompleted Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(CheckPoolFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -6709,9 +6922,12 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelMegaCabAsync cancelMegaCabAsync = new CancelMegaCabAsync();
+		String authString = rideDetailsModel.getBookingRefNo()
+				+ rideDetailsModel.getMobileNumber() + "CancelBooking";
 		String param = "type=CancelBooking" + "&mobile="
 				+ rideDetailsModel.getMobileNumber() + "&bookingNo="
-				+ rideDetailsModel.getBookingRefNo();
+				+ rideDetailsModel.getBookingRefNo() + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelMegaCabAsync.executeOnExecutor(
@@ -6796,6 +7012,26 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				});
+			}
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("CheckPoolFragmentActivity",
+								"CancelMegaCabAsync Unauthorized Access");
+						Toast.makeText(
+								CheckPoolFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
 			}
 
 			if (!result.isEmpty()) {
@@ -7093,8 +7329,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelTFSCabAsync cancelTFSCabAsync = new CancelTFSCabAsync();
+		String authString = rideDetailsModel.getBookingRefNo() + "cancellation";
 		String param = "type=cancellation" + "&booking_id="
-				+ rideDetailsModel.getBookingRefNo() + "&cancellation_reason=";
+				+ rideDetailsModel.getBookingRefNo()
+				+ "&cancellation_reason=&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelTFSCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -7179,6 +7418,26 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				});
+			}
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("CheckPoolFragmentActivity",
+								"CancelTFSCabAsync Unauthorized Access");
+						Toast.makeText(
+								CheckPoolFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
 			}
 
 			if (!result.isEmpty()) {

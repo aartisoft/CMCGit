@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.clubmycab.R;
 import com.clubmycab.adapter.SimpleSpinnerAdapter;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 
@@ -209,6 +210,15 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 				return;
 			}
 
+			if (response.contains("Unauthorized Access")) {
+				Log.e("NeedSupportFragmentActivity",
+						"response Unauthorized Access");
+				Toast.makeText(NeedSupportFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			String status = "";
 			try {
 				JSONObject obj = new JSONObject(response);
@@ -271,6 +281,12 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 
 			BasicNameValuePair CallBasicNameValuePair = new BasicNameValuePair(
 					"callback", cbSelected);
+
+			String authString = cbSelected + etDescription.getText().toString()
+					+ MobileNumber + FullName + spinnerStr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 
 			nameValuePairList.add(DescriptionBasicNameValuePair);
@@ -278,6 +294,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 			nameValuePairList.add(FullNameBasicNameValuePair);
 			nameValuePairList.add(TypeBasicNameValuePair);
 			nameValuePairList.add(CallBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

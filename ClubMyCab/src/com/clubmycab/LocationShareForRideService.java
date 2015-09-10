@@ -35,6 +35,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 
 import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
@@ -333,9 +334,14 @@ public class LocationShareForRideService extends Service implements
 		BasicNameValuePair latlongstrBasicNameValuePair = new BasicNameValuePair(
 				"location", latlong);
 
+		String authString = cabID + latlong;
+		BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+				GlobalMethods.calculateCMCAuthString(authString));
+
 		List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 		nameValuePairList.add(CabIDBasicNameValuePair);
 		nameValuePairList.add(latlongstrBasicNameValuePair);
+		nameValuePairList.add(authValuePair);
 
 		UrlEncodedFormEntity urlEncodedFormEntity = null;
 		try {
@@ -381,14 +387,21 @@ public class LocationShareForRideService extends Service implements
 		BasicNameValuePair latlongstrBasicNameValuePair = new BasicNameValuePair(
 				"latlongstr", latlong);
 
+		String authString = FullName.toString().trim() + latlong
+				+ recpnames.toString().trim() + recpnumbers.toString().trim()
+				+ FullName + " is at - " + lcladdress.replaceAll("-", "")
+				+ MobileNumber.toString().trim();
+		BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+				GlobalMethods.calculateCMCAuthString(authString));
+
 		List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 		nameValuePairList.add(MembersNumberBasicNameValuePair);
 		nameValuePairList.add(MembersNameBasicNameValuePair);
 		nameValuePairList.add(FullNameBasicNameValuePair);
 		nameValuePairList.add(MobileNumberBasicNameValuePair);
 		nameValuePairList.add(MessageBasicNameValuePair);
-
 		nameValuePairList.add(latlongstrBasicNameValuePair);
+		nameValuePairList.add(authValuePair);
 
 		UrlEncodedFormEntity urlEncodedFormEntity = null;
 		try {
@@ -437,8 +450,7 @@ public class LocationShareForRideService extends Service implements
 
 		@Override
 		protected void onPostExecute(Void v) {
-			
-		
+
 			// if (exceptioncheck) {
 			// exceptioncheck = false;
 			// Toast.makeText(CheckPoolFragmentActivity.this,
@@ -469,8 +481,13 @@ public class LocationShareForRideService extends Service implements
 
 			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
 					cid);
+			
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

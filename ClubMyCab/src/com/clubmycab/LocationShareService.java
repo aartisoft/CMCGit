@@ -35,6 +35,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 
 import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.model.LatLng;
@@ -50,7 +51,7 @@ public class LocationShareService extends Service implements LocationListener {
 	long timetilvalue;
 	LatLng destinationlatlong;
 	long destinationtimevalue;
-	
+
 	// final Handler handler = new Handler();
 	private LocationManager locationManager;
 	// private LocationListener locListener = new MyLocationListener();
@@ -269,8 +270,8 @@ public class LocationShareService extends Service implements LocationListener {
 			mycurrentlocation = location;
 			// locationManager.removeUpdates(this);
 
-			String lcladdress = MapUtilityMethods.getAddress(getApplicationContext(),
-					mycurrentlocation.getLatitude(),
+			String lcladdress = MapUtilityMethods.getAddress(
+					getApplicationContext(), mycurrentlocation.getLatitude(),
 					mycurrentlocation.getLongitude());
 
 			if (lcladdress.length() == 0 || lcladdress.isEmpty()) {
@@ -312,14 +313,23 @@ public class LocationShareService extends Service implements LocationListener {
 				BasicNameValuePair latlongstrBasicNameValuePair = new BasicNameValuePair(
 						"latlongstr", latlong);
 
+				String authString = FullName.toString().trim() + latlong
+						+ recpnames.toString().trim()
+						+ recpnumbers.toString().trim() + FullName
+						+ " is at - " + lcladdress.replaceAll("-", "")
+						+ MobileNumber.toString().trim();
+				BasicNameValuePair authValuePair = new BasicNameValuePair(
+						"auth",
+						GlobalMethods.calculateCMCAuthString(authString));
+
 				List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 				nameValuePairList.add(MembersNumberBasicNameValuePair);
 				nameValuePairList.add(MembersNameBasicNameValuePair);
 				nameValuePairList.add(FullNameBasicNameValuePair);
 				nameValuePairList.add(MobileNumberBasicNameValuePair);
 				nameValuePairList.add(MessageBasicNameValuePair);
-
 				nameValuePairList.add(latlongstrBasicNameValuePair);
+				nameValuePairList.add(authValuePair);
 
 				UrlEncodedFormEntity urlEncodedFormEntity = null;
 				try {
@@ -499,7 +509,12 @@ public class LocationShareService extends Service implements LocationListener {
 			BasicNameValuePair latlongstrBasicNameValuePair = new BasicNameValuePair(
 					"latlongstr", latlongstr);
 
-			// 9643043894
+			String authString = FullName.toString().trim() + latlongstr
+					+ recpnames.toString().trim()
+					+ recpnumbers.toString().trim() + FullName + " is at - "
+					+ msg.replaceAll("-", "") + MobileNumber.toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
 
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MembersNumberBasicNameValuePair);
@@ -507,8 +522,8 @@ public class LocationShareService extends Service implements LocationListener {
 			nameValuePairList.add(FullNameBasicNameValuePair);
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
-
 			nameValuePairList.add(latlongstrBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

@@ -76,6 +76,7 @@ import com.clubmycab.ContactsAdapter;
 import com.clubmycab.ContactsListClass;
 import com.clubmycab.R;
 import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -155,6 +156,7 @@ public class ContactsToInviteActivity extends Activity {
 
 	String sendres;
 	String appusers;
+	String storeclubres, ownerinviteres, referfriendres;
 
 	ArrayList<String> selectednames = new ArrayList<String>();
 	ArrayList<String> selectednumbers = new ArrayList<String>();
@@ -1572,6 +1574,13 @@ public class ContactsToInviteActivity extends Activity {
 				profilepic.setImageResource(R.drawable.cabappicon);
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 
+			} else if (imagenameresp.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"imagenameresp Unauthorized Access");
+				Toast.makeText(ContactsToInviteActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				profilepic.setImageBitmap(mIcon11);
@@ -1597,8 +1606,13 @@ public class ContactsToInviteActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
 
+			String authString = MobileNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList11 = new ArrayList<NameValuePair>();
 			nameValuePairList11.add(MobileNumberBasicNameValuePair11);
+			nameValuePairList11.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity11 = new UrlEncodedFormEntity(
 					nameValuePairList11);
@@ -1626,6 +1640,8 @@ public class ContactsToInviteActivity extends Activity {
 			Log.d("imagenameresp", "" + imagenameresp);
 
 			if (imagenameresp == null) {
+
+			} else if (imagenameresp.contains("Unauthorized Access")) {
 
 			} else {
 				String url1 = GlobalVariables.ServiceUrl + "/ProfileImages/"
@@ -1701,6 +1717,16 @@ public class ContactsToInviteActivity extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(ContactsToInviteActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (sendres != null && sendres.length() > 0
+					&& sendres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"SendInvite Unauthorized Access");
 				Toast.makeText(ContactsToInviteActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -2060,6 +2086,29 @@ public class ContactsToInviteActivity extends Activity {
 			nameValuePairList.add(MembersNameBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
 
+			String authString = CabId
+					+ distancetext
+					+ durationvalue
+					+ FromLocation
+					+ ((fromshortname == null
+							|| fromshortname.equalsIgnoreCase("") || fromshortname
+								.isEmpty()) ? FromLocation : fromshortname)
+					+ selectednames.toString()
+					+ selectednumbers.toString()
+					+ msg
+					+ MobileNumberstr
+					+ OwnerName
+					+ Seats
+					+ Seats
+					+ ToLocation
+					+ ((toshortname == null || toshortname.equalsIgnoreCase("") || toshortname
+							.isEmpty()) ? ToLocation : toshortname)
+					+ TravelDate + TravelTime;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
+			nameValuePairList.add(authValuePair);
+
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
 			httpPost.setEntity(urlEncodedFormEntity);
@@ -2134,6 +2183,15 @@ public class ContactsToInviteActivity extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(ContactsToInviteActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (storeclubres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"storeclubres Unauthorized Access");
 				Toast.makeText(ContactsToInviteActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -2254,6 +2312,24 @@ public class ContactsToInviteActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				storeclubres = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("storeclubres", "" + stringBuilder.toString());
 		}
 	}
 
@@ -2298,6 +2374,16 @@ public class ContactsToInviteActivity extends Activity {
 				return;
 			}
 
+			if (referfriendres != null && referfriendres.length() > 0
+					&& referfriendres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"referfriendres Unauthorized Access");
+				Toast.makeText(ContactsToInviteActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			ContactsToInviteActivity.this.finish();
 		}
 
@@ -2327,12 +2413,18 @@ public class ContactsToInviteActivity extends Activity {
 			BasicNameValuePair ReferedUserNumberBasicNameValuePair = new BasicNameValuePair(
 					"ReferedUserNumber", selectednumbers.toString());
 
+			String authString = CabId + FullName + MobileNumberstr
+					+ selectednames.toString() + selectednumbers.toString();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MemberNameBasicNameValuePair);
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
 			nameValuePairList.add(ReferedUserNameBasicNameValuePair);
 			nameValuePairList.add(ReferedUserNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2340,6 +2432,24 @@ public class ContactsToInviteActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				referfriendres = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("referfriendres", "" + stringBuilder.toString());
 		}
 	}
 
@@ -2385,6 +2495,16 @@ public class ContactsToInviteActivity extends Activity {
 				return;
 			}
 
+			if (ownerinviteres != null && ownerinviteres.length() > 0
+					&& ownerinviteres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"ownerinviteres Unauthorized Access");
+				Toast.makeText(ContactsToInviteActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			ContactsToInviteActivity.this.finish();
 		}
 
@@ -2414,12 +2534,19 @@ public class ContactsToInviteActivity extends Activity {
 			BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair(
 					"OwnerNumber", OwnerMobileNumber);
 
+			String authString = CabId + selectednames.toString()
+					+ selectednumbers.toString() + OwnerName
+					+ OwnerMobileNumber;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MembersNumberBasicNameValuePair);
 			nameValuePairList.add(MembersNameBasicNameValuePair);
 			nameValuePairList.add(OwnerNameBasicNameValuePair);
 			nameValuePairList.add(OwnerNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2427,6 +2554,25 @@ public class ContactsToInviteActivity extends Activity {
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 
 			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				ownerinviteres = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("ownerinviteres", "" + stringBuilder.toString());
+
 		}
 	}
 

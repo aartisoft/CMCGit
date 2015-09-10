@@ -382,7 +382,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			if (comefrom.equalsIgnoreCase("GCM")) {
 
 				String nid = intent.getStringExtra("nid");
-				String params = "rnum=" + "&nid=" + nid;
+				String params = "rnum=" + "&nid=" + nid + "&auth="
+						+ GlobalMethods.calculateCMCAuthString(nid);
 				String endpoint = GlobalVariables.ServiceUrl
 						+ "/UpdateNotificationStatusToRead.php";
 				Log.d("MemberRideFragment",
@@ -1897,6 +1898,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (checkpoolalreadyjoinresp != null
+					&& checkpoolalreadyjoinresp.length() > 0
+					&& checkpoolalreadyjoinresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"checkpoolalreadyjoinresp Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
 
 				if (rideDetailsModel.getCabStatus().toString().trim()
@@ -1948,9 +1960,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", MemberNumberstr);
 
+			String authString = rideDetailsModel.getCabId() + MemberNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -2732,6 +2749,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (showmembersresp != null && showmembersresp.length() > 0
+					&& showmembersresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"showmembersresp Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			FaredistanceList.clear();
 			FareLocationList.clear();
 			FareMemberDropLocaton.clear();
@@ -3252,9 +3279,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", MemberNumberstr);
 
+			String authString = rideDetailsModel.getCabId() + MemberNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -3317,6 +3349,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (checkpoolalreadyjoinresp != null
+					&& checkpoolalreadyjoinresp.length() > 0
+					&& checkpoolalreadyjoinresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"checkpoolalreadyjoinrespnew Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
 				beforejoinpoolll.setVisibility(View.VISIBLE);
 				afterjoinpoolll.setVisibility(View.GONE);
@@ -3353,9 +3396,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair(
 					"MemberNumber", MemberNumberstr);
 
+			String authString = rideDetailsModel.getCabId() + MemberNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -3448,6 +3496,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (joinpoolresponse != null && joinpoolresponse.length() > 0
+					&& joinpoolresponse.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"joinpoolresponse Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			tracker.send(new HitBuilders.EventBuilder()
 					.setCategory("Join Ride").setAction("Join Ride")
 					.setLabel("Join Ride").build());
@@ -3509,6 +3567,18 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							+ rideDetailsModel.getFromShortName() + " to "
 							+ rideDetailsModel.getToShortName());
 
+			String authString = rideDetailsModel.getCabId()
+					+ memberlocationaddressTo + latlongEnd
+					+ memberlocationaddressFrom + latlong + FullName
+					+ MemberNumberstr + FullName
+					+ " has joined your ride from "
+					+ rideDetailsModel.getFromShortName() + " to "
+					+ rideDetailsModel.getToShortName()
+					+ rideDetailsModel.getOwnerName()
+					+ rideDetailsModel.getMobileNumber() + "Nothing";
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(OwnerNameBasicNameValuePair);
@@ -3521,6 +3591,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			nameValuePairList.add(MessageBasicNameValuePair);
 			nameValuePairList.add(MemberEndLocationAddressBasicNameValuePair);
 			nameValuePairList.add(MemberEndLocationlatlongBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -3594,6 +3665,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (droppoolresp != null && droppoolresp.length() > 0
+					&& droppoolresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"droppoolresp Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
 					HomeActivity.class);
 			mainIntent.putExtra("from", "normal");
@@ -3634,6 +3715,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							+ rideDetailsModel.getFromShortName() + " to "
 							+ rideDetailsModel.getToShortName());
 
+			String authString = rideDetailsModel.getCabId() + FullName
+					+ " left your ride from "
+					+ rideDetailsModel.getFromShortName() + " to "
+					+ rideDetailsModel.getToShortName()
+					+ rideDetailsModel.getOwnerName()
+					+ rideDetailsModel.getMobileNumber() + FullName
+					+ MemberNumberstr;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
 			nameValuePairList.add(SentMemberNameBasicNameValuePair);
@@ -3641,6 +3732,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			nameValuePairList.add(ReceiveMemberNameBasicNameValuePair);
 			nameValuePairList.add(ReceiveMemberNumberBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -3946,7 +4038,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 											.equalsIgnoreCase("Mega")) {
 										cancelMegaCab();
 									} else if (rideDetailsModel.getCabName()
-											.equalsIgnoreCase("Taxi For Sure")) {
+											.equalsIgnoreCase("TaxiForSure")) {
 										cancelTFSCab();
 									}
 								}
@@ -4401,6 +4493,18 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+
+			if (sendcustommessagefrompopupresp != null
+					&& sendcustommessagefrompopupresp.length() > 0
+					&& sendcustommessagefrompopupresp
+							.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"sendcustommessagefrompopupresp Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 
 	}
@@ -4427,9 +4531,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
 					"Message", mess);
 
+			String authString = memnum + mess;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MemberNumberBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5087,6 +5196,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair ownernumberValuePair = new BasicNameValuePair(
 					"ownernumber", ownermnum);
 
+			String authString = cid + name + mnumstr + memnum + txtmsg
+					+ ownername + ownermnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MemberNumberValuePair);
 			nameValuePairList.add(MemberNumberARRValuePair);
@@ -5094,6 +5208,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			nameValuePairList.add(MemberNameValuePair);
 			nameValuePairList.add(ownernameValuePair);
 			nameValuePairList.add(ownernumberValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5117,6 +5232,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("chatresp", "" + chatresp);
+
+			if (chatresp != null && chatresp.length() > 0
+					&& chatresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"chatresp Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -5287,8 +5413,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					cabid);
 			BasicNameValuePair MemberNumberValuePair = new BasicNameValuePair(
 					"MemberNumber", mnum);
+
+			String authString = cabid + mnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MemberNumberValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5312,6 +5444,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("result", "" + result);
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"AuthenticateConnectionTripCompletedtask Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			if (result.equalsIgnoreCase("No Members joined yet")) {
 
@@ -5359,6 +5502,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				// Toast.makeText(MemberRideFragmentActivity.this,
 				// getResources().getString(R.string.exceptionstring),
 				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (ownerlocation != null && ownerlocation.length() > 0
+					&& ownerlocation.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"ownerlocation Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -5434,7 +5587,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
 					cabid);
+
+			String authString = cabid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5845,8 +6004,20 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				BasicNameValuePair mobileNumberNameValuePair = new BasicNameValuePair(
 						"mobileNumber", mobileNumber);
 
+				String authString = cabid + mobileNumber + owner;
+				BasicNameValuePair authValuePair = new BasicNameValuePair(
+						"auth",
+						GlobalMethods.calculateCMCAuthString(authString));
+
 				nameValuePairList.add(ownerNameValuePair);
 				nameValuePairList.add(mobileNumberNameValuePair);
+				nameValuePairList.add(authValuePair);
+			} else {
+				String authString = cabid;
+				BasicNameValuePair authValuePair = new BasicNameValuePair(
+						"auth",
+						GlobalMethods.calculateCMCAuthString(authString));
+				nameValuePairList.add(authValuePair);
 			}
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
@@ -5871,6 +6042,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("tripCompleted", "tripCompleted : " + result);
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"tripCompleted Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -5940,7 +6122,12 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
 					cid);
 
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -5964,6 +6151,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("completedresp", "" + startresp);
+
+			if (startresp != null && startresp.length() > 0
+					&& startresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"AuthenticateConnectionTripCompleted Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 
@@ -6045,11 +6243,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair OwnerValuePair = new BasicNameValuePair("owner",
 					owner);
 
+			String authString = cabid + numberandfare + owner + paidby
+					+ totalfare;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MemberNumberValuePair);
 			nameValuePairList.add(NumberFairValuePair);
 			nameValuePairList.add(PaidByValuePair);
 			nameValuePairList.add(OwnerValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -6075,6 +6279,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			// saveCalculatedFare = result;
 
 			Log.d("saveCalculatedFare", "saveCalculatedFare : " + result);
+
+			if (result != null && result.length() > 0
+					&& result.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"saveCalculatedFare Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 
 			final JSONObject jsonObject = new JSONObject(result);
 			if (jsonObject.get("status").toString().equalsIgnoreCase("fail")) {
@@ -6117,10 +6332,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			String cabID) {
 
 		String endpoint = GlobalVariables.ServiceUrl + "/logTransaction.php";
+		String authString = amount + cabID + fee + merchantname + mid
+				+ receivercell + sendercell + token;
 		String params = "amount=" + amount + "&fee=" + fee + "&merchantname="
 				+ merchantname + "&mid=" + mid + "&token=" + token
 				+ "&sendercell=" + sendercell + "&receivercell=" + receivercell
-				+ "&cabId=" + cabID;
+				+ "&cabId=" + cabID + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 		Log.d("CheckPoolFragmentActivity", "logTransaction endpoint : "
 				+ endpoint + " params : " + params);
 		new GlobalAsyncTask(this, endpoint, params, null, this, true,
@@ -6257,6 +6475,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		} else if (uniqueID.equals("logTransaction")) {
 			Log.d("CheckPoolFragmentActivity", "logTransaction response : "
 					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"logTransaction Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.get("status").toString()
@@ -6465,8 +6694,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair MobileValuePair = new BasicNameValuePair(
 					"mobileNumber", mnum);
 
+			String authString = cid + mnum;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
 			nameValuePairList.add(MobileValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -6490,6 +6724,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			Log.d("AuthenticateConnectionGetMyFare resp", "" + resp);
+
+			if (resp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"AuthenticateConnectionGetMyFare Unauthorized Access");
+				exceptioncheck = true;
+				// Toast.makeText(MemberRideFragmentActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			try {
 				JSONObject jsonObject = new JSONObject(resp);
 				amountToPay = jsonObject.get("fareToPay").toString();
@@ -6642,6 +6887,15 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
+			if (showmembersresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"showmembersresp Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
 			if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
 
 			} else {
@@ -6713,8 +6967,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", rideDetailsModel.getCabId());
 
+			String authString = rideDetailsModel.getCabId();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -6766,8 +7025,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelMegaCabAsync cancelMegaCabAsync = new CancelMegaCabAsync();
+		String authString = rideDetailsModel.getBookingRefNo()
+				+ MemberNumberstr + "CancelBooking";
 		String param = "type=CancelBooking" + "&mobile=" + MemberNumberstr
-				+ "&bookingNo=" + rideDetailsModel.getBookingRefNo();
+				+ "&bookingNo=" + rideDetailsModel.getBookingRefNo() + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelMegaCabAsync.executeOnExecutor(
@@ -6852,6 +7114,25 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				});
+			}
+
+			if (result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("MemberRideFragmentActivity",
+								"CancelMegaCabAsync Unauthorized Access");
+						Toast.makeText(
+								MemberRideFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
 			}
 
 			if (!result.isEmpty()) {
@@ -7149,8 +7430,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		}
 
 		CancelTFSCabAsync cancelTFSCabAsync = new CancelTFSCabAsync();
+		String authString = rideDetailsModel.getBookingRefNo() + "cancellation";
 		String param = "type=cancellation" + "&booking_id="
-				+ rideDetailsModel.getBookingRefNo() + "&cancellation_reason=";
+				+ rideDetailsModel.getBookingRefNo()
+				+ "&cancellation_reason=&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			cancelTFSCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -7235,6 +7519,25 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				});
+			}
+
+			if (result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("MemberRideFragmentActivity",
+								"CancelTFSCabAsync Unauthorized Access");
+						Toast.makeText(
+								MemberRideFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
 			}
 
 			if (!result.isEmpty()) {

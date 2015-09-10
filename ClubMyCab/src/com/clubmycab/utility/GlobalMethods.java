@@ -14,15 +14,31 @@ import org.json.JSONObject;
 
 public class GlobalMethods {
 
-	// public static String calculateCheckSumString(String... checksumstring) {
-	// StringBuilder stb = new StringBuilder();
-	// for (String checkSumInput : checksumstring) {
-	// if (checkSumInput != null && !checkSumInput.equals("")) {
-	// stb.append("'" + checkSumInput + "'");
-	// }
-	// }
-	// return stb.toString();
-	// }
+	public static String calculateCMCAuthString(String input) {
+		String mykey = GlobalVariables.CMC_SecretKey;
+
+		Log.d("calculateCMCAuthString", "Received String :- " + input
+				+ "\t Key " + mykey);
+
+		try {
+			Mac mac = Mac.getInstance("HmacSHA256");
+			SecretKeySpec secret = new SecretKeySpec(mykey.getBytes(),
+					"HmacSHA256");
+			mac.init(secret);
+			byte[] digest = mac.doFinal(input.getBytes());
+			// String enc = new String(digest);
+			String ret = "";
+			for (byte b : digest) {
+				ret = ret + String.format("%02x", b);
+			}
+			Log.d("calculateCMCAuthString", "Auth String :- " + ret);
+			return ret;
+		} catch (Exception e) {
+			Log.e("calculateCMCAuthString", "Error");
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public static String calculateCheckSumForService(String input,
 			String secretkey) {
@@ -44,6 +60,7 @@ public class GlobalMethods {
 			return ret;
 		} catch (Exception e) {
 			Log.e("", "Error");
+			e.printStackTrace();
 			return null;
 		}
 	}

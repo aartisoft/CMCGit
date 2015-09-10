@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.R;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -55,7 +56,7 @@ public class SplashActivity extends Activity {
 	boolean exceptioncheck = false;
 	private ArrayList<String> ans1;
 	private long timeStart;
-	int delay = 0;		// 3;
+	int delay = 0; // 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +213,15 @@ public class SplashActivity extends Activity {
 				return;
 			}
 
+			// if (forceupdateversion.contains("Unauthorized Access")) {
+			// Log.e("SplashActivity",
+			// "forceupdateversion Unauthorized Access");
+			// Toast.makeText(SplashActivity.this,
+			// getResources().getString(R.string.exceptionstring),
+			// Toast.LENGTH_LONG).show();
+			// return;
+			// }
+
 			Double latestappversion = Double.parseDouble(AppVersion.toString()
 					.trim());
 			Double forceappversion = Double.parseDouble(forceupdateversion
@@ -258,6 +268,13 @@ public class SplashActivity extends Activity {
 				if (verifyotp.equalsIgnoreCase("false")) {
 					Intent mainIntent = new Intent(SplashActivity.this,
 							OTPActivity.class);
+
+					mainIntent.putExtra("from", "reg");
+					mainIntent.putExtra("fullname", FullName);
+					mainIntent.putExtra("mobnum", MobileNumber);
+
+					mainIntent.putExtra("regid", "");
+
 					startActivityForResult(mainIntent, 500);
 					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);
@@ -408,10 +425,15 @@ public class SplashActivity extends Activity {
 			BasicNameValuePair IsOwnerValuePair = new BasicNameValuePair(
 					"IsOwner", "");
 
+			// String authString = "offline" + MobileNumber.toString().trim();
+			// BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+			// GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList1.add(CabIdValuePair);
 			nameValuePairList1.add(MemberNumberValuePair);
 			nameValuePairList1.add(chatstatusValuePair);
 			nameValuePairList1.add(IsOwnerValuePair);
+			// nameValuePairList1.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity1 = new UrlEncodedFormEntity(
 					nameValuePairList1);
@@ -470,6 +492,14 @@ public class SplashActivity extends Activity {
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
+				Toast.makeText(SplashActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (poolresponse.contains("Unauthorized Access")) {
+				Log.e("SplashActivity", "poolresponse Unauthorized Access");
 				Toast.makeText(SplashActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -535,8 +565,13 @@ public class SplashActivity extends Activity {
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", MobileNumber.toString().trim());
 
+			String authString = MobileNumber.toString().trim();
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

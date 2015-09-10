@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,7 +24,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class LocationInMapFragmentActivity extends FragmentActivity implements AsyncTaskResultListener{
+public class LocationInMapFragmentActivity extends FragmentActivity implements
+		AsyncTaskResultListener {
 
 	String address;
 	String latlongmap;
@@ -64,26 +66,21 @@ public class LocationInMapFragmentActivity extends FragmentActivity implements A
 		Bundle extras = getIntent().getExtras();
 		address = extras.getString("address");
 		latlongmap = extras.getString("latlongmap");
-		
-		
-		
 
-			//if (comefrom.equalsIgnoreCase("GCM")) {
-//This api Call for mark notification read
-				String nid = extras.getString("nid");
-				String params = "rnum=" + "&nid=" + nid;
-				String endpoint = GlobalVariables.ServiceUrl
-						+ "/UpdateNotificationStatusToRead.php";
-				Log.d("LocationInMapFragment",
-						"UpdateNotificationStatusToRead endpoint : " + endpoint
-								+ " params : " + params);
-				new GlobalAsyncTask(this, endpoint, params, null, this, false, "UpdateNotificationStatusToRead", false);
+		// if (comefrom.equalsIgnoreCase("GCM")) {
+		// This api Call for mark notification read
+		String nid = extras.getString("nid");
+		String params = "rnum=" + "&nid=" + nid + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(nid);
+		String endpoint = GlobalVariables.ServiceUrl
+				+ "/UpdateNotificationStatusToRead.php";
+		Log.d("LocationInMapFragment",
+				"UpdateNotificationStatusToRead endpoint : " + endpoint
+						+ " params : " + params);
+		new GlobalAsyncTask(this, endpoint, params, null, this, false,
+				"UpdateNotificationStatusToRead", false);
 
-		//	}
-
-		
-
-		
+		// }
 
 		sharelocationtext = (TextView) findViewById(R.id.sharelocationtext);
 		sharelocationtext.setTypeface(Typeface.createFromAsset(getAssets(),
@@ -123,6 +120,6 @@ public class LocationInMapFragmentActivity extends FragmentActivity implements A
 	@Override
 	public void getResult(String response, String uniqueID) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

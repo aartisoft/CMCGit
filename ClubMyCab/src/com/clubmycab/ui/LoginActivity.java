@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.R;
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -57,7 +58,6 @@ public class LoginActivity extends Activity {
 	String MobileNumber;
 	String regid = null;
 
-	
 	boolean exceptioncheck = false;
 
 	@Override
@@ -89,8 +89,6 @@ public class LoginActivity extends Activity {
 			builder.show();
 			return;
 		}
-
-		
 
 		countrycodelogin = (EditText) findViewById(R.id.countrycodelogin);
 		numberedittext = (EditText) findViewById(R.id.numberedittext);
@@ -133,9 +131,11 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 
-				Intent mainIntent = new Intent(LoginActivity.this,RegistrationActivity.class);
-						//TermsAndConditionsActivity.class);
-				mainIntent.putExtra("mob",numberedittext.getText().toString().trim());
+				Intent mainIntent = new Intent(LoginActivity.this,
+						RegistrationActivity.class);
+				// TermsAndConditionsActivity.class);
+				mainIntent.putExtra("mob", numberedittext.getText().toString()
+						.trim());
 				LoginActivity.this.startActivity(mainIntent);
 
 			}
@@ -190,22 +190,22 @@ public class LoginActivity extends Activity {
 					dialog.show();
 
 				}// else if (numberpasswordedittext.getText().toString().trim()
-//						.isEmpty()) {
-//
-//					numberpasswordedittext.requestFocus();
-//
-//					AlertDialog.Builder builder = new AlertDialog.Builder(
-//							LoginActivity.this);
-//
-//					builder.setMessage("Please enter password");
-//					builder.setPositiveButton("OK", null);
-//					AlertDialog dialog = builder.show();
-//					TextView messageText = (TextView) dialog
-//							.findViewById(android.R.id.message);
-//					messageText.setGravity(Gravity.CENTER);
-//					dialog.show();
-//
-//				}
+					// .isEmpty()) {
+				//
+				// numberpasswordedittext.requestFocus();
+				//
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// LoginActivity.this);
+				//
+				// builder.setMessage("Please enter password");
+				// builder.setPositiveButton("OK", null);
+				// AlertDialog dialog = builder.show();
+				// TextView messageText = (TextView) dialog
+				// .findViewById(android.R.id.message);
+				// messageText.setGravity(Gravity.CENTER);
+				// dialog.show();
+				//
+				// }
 
 				else {
 					// successfull for all
@@ -253,8 +253,7 @@ public class LoginActivity extends Activity {
 	// ///////
 
 	private class ConnectionTaskForLogin extends AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(
-				LoginActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
 
 		@Override
 		protected void onPreExecute() {
@@ -306,11 +305,17 @@ public class LoginActivity extends Activity {
 				messageText.setGravity(Gravity.CENTER);
 				dialog.show();
 
+			} else if (result.contains("Unauthorized Access")) {
+				Log.e("LoginActivity", "result Unauthorized Access");
+				Toast.makeText(LoginActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
 			} else {
 
 				JSONArray subArray = null;
 				try {
-					
+
 					subArray = new JSONArray(result);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -332,31 +337,30 @@ public class LoginActivity extends Activity {
 
 				Log.d("FullName", "" + FullName);
 				Log.d("MobileNumber", "" + MobileNumber);
-//
-//				SharedPreferences sharedPreferences = getSharedPreferences(
-//						"FacebookData", 0);
-//				SharedPreferences.Editor editor = sharedPreferences.edit();
-//				editor.putString("FullName", FullName);
-//				editor.putString("MobileNumber", MobileNumber);
-//				editor.commit();
+				//
+				// SharedPreferences sharedPreferences = getSharedPreferences(
+				// "FacebookData", 0);
+				// SharedPreferences.Editor editor = sharedPreferences.edit();
+				// editor.putString("FullName", FullName);
+				// editor.putString("MobileNumber", MobileNumber);
+				// editor.commit();
 
-//				Intent mainIntent = new Intent(LoginActivity.this,
-//						HomeActivity.class);
-//				mainIntent.putExtra("from", "normal");
-//				mainIntent.putExtra("message", "null");
-//				startActivityForResult(mainIntent, 500);
-//				overridePendingTransition(R.anim.slide_in_right,
-//						R.anim.slide_out_left);
-//				finish();
-				
+				// Intent mainIntent = new Intent(LoginActivity.this,
+				// HomeActivity.class);
+				// mainIntent.putExtra("from", "normal");
+				// mainIntent.putExtra("message", "null");
+				// startActivityForResult(mainIntent, 500);
+				// overridePendingTransition(R.anim.slide_in_right,
+				// R.anim.slide_out_left);
+				// finish();
+
 				Intent mainIntent = new Intent(LoginActivity.this,
 						OTPActivity.class);
 				mainIntent.putExtra("from", "login");
 				mainIntent.putExtra("fullname", FullName);
 				mainIntent.putExtra("mobnum", MobileNumber);
-				
-				mainIntent.putExtra("regid", regid);
 
+				mainIntent.putExtra("regid", regid);
 
 				startActivity(mainIntent);
 				overridePendingTransition(R.anim.slide_in_right,
@@ -397,22 +401,30 @@ public class LoginActivity extends Activity {
 					"MobileNumber", countrycodelogin.getText().toString()
 							.trim()
 							+ numberedittext.getText().toString().trim());
-			
-//			BasicNameValuePair PasswordBasicNameValuePair = new BasicNameValuePair(
-//					"Password", "");
-//			numberpasswordedittext.getText().toString()
-//							.trim());
+
+			// BasicNameValuePair PasswordBasicNameValuePair = new
+			// BasicNameValuePair(
+			// "Password", "");
+			// numberpasswordedittext.getText().toString()
+			// .trim());
 
 			BasicNameValuePair DeviceTokenBasicNameValuePair = new BasicNameValuePair(
 					"DeviceToken", regid);
 			BasicNameValuePair platformBasicNameValuePair = new BasicNameValuePair(
 					"Platform", "A");
 
+			String authString = regid
+					+ countrycodelogin.getText().toString().trim()
+					+ numberedittext.getText().toString().trim() + "A";
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
 			nameValuePairList.add(MobileNumberBasicNameValuePair);
-		//	nameValuePairList.add(PasswordBasicNameValuePair);
+			// nameValuePairList.add(PasswordBasicNameValuePair);
 			nameValuePairList.add(DeviceTokenBasicNameValuePair);
 			nameValuePairList.add(platformBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);

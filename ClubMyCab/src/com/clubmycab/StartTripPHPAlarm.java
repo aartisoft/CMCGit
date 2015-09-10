@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 
@@ -134,7 +135,12 @@ public class StartTripPHPAlarm extends WakefulBroadcastReceiver {
 			BasicNameValuePair CabIdValuePair = new BasicNameValuePair("cabId",
 					cid);
 
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
 			nameValuePairList.add(CabIdValuePair);
+			nameValuePairList.add(authValuePair);
 
 			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
 					nameValuePairList);
@@ -158,6 +164,15 @@ public class StartTripPHPAlarm extends WakefulBroadcastReceiver {
 			}
 
 			Log.d("startresp", "" + startresp);
+
+			if (startresp != null && startresp.length() > 0
+					&& startresp.contains("Unauthorized Access")) {
+				Log.e("StartTripPHPAlarm", "startresp Unauthorized Access");
+				// Toast.makeText(SplashActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
 		}
 	}
 

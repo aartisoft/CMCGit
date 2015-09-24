@@ -49,8 +49,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 
 	Tracker tracker;
 
-	private boolean isPaymentStatusFail = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -231,9 +229,21 @@ public class FirstLoginWalletsActivity extends Activity implements
 		});
 
 		if (from.equalsIgnoreCase("reg")) {
-			isPaymentStatusFail = false;
 
-			checkPaymentStatus();
+			querywallet();
+
+			Button button = (Button) findViewById(R.id.maybelaterbutton);
+			button.setVisibility(View.VISIBLE);
+			button.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent mainIntent = new Intent(
+							FirstLoginWalletsActivity.this,
+							FirstLoginClubsActivity.class);
+					startActivity(mainIntent);
+					finish();
+				}
+			});
 		} else {
 			SharedPreferences sharedPreferences = getSharedPreferences(
 					"MobikwikToken", 0);
@@ -371,33 +381,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
 				null, FirstLoginWalletsActivity.this, false, "getCoupons",
 				false);
-	}
-
-	private void checkPaymentStatus() {
-
-		String endpoint = GlobalVariables.ServiceUrl
-				+ "/checkPaymentStatus.php";
-		String params = "mobileNumber=" + MobileNumber + "&auth="
-				+ GlobalMethods.calculateCMCAuthString(MobileNumber);
-		Log.d("checkPaymentStatus", "checkPaymentStatus endpoint : " + endpoint
-				+ " params : " + params);
-		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
-				null, FirstLoginWalletsActivity.this, false,
-				"checkPaymentStatus", false);
-	}
-
-	private void processPendingTransactions() {
-
-		String endpoint = GlobalVariables.ServiceUrl
-				+ "/processPendingTransactions.php";
-		String params = "mobileNumber=" + MobileNumber + "&auth="
-				+ GlobalMethods.calculateCMCAuthString(MobileNumber);;
-		Log.d("processPendingTransactions",
-				"processPendingTransactions endpoint : " + endpoint
-						+ " params : " + params);
-		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
-				null, FirstLoginWalletsActivity.this, false,
-				"processPendingTransactions", false);
 	}
 
 	private void checksumInvalidToast() {
@@ -542,10 +525,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 				JSONObject jsonObject = new JSONObject(response);
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 
-					if (isPaymentStatusFail) {
-						processPendingTransactions();
-					}
-
 					Toast.makeText(FirstLoginWalletsActivity.this,
 							"User created succesfully!", Toast.LENGTH_LONG)
 							.show();
@@ -599,86 +578,6 @@ public class FirstLoginWalletsActivity extends Activity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (uniqueID.equals("checkPaymentStatus")) {
-			Log.d("FirstLoginWalletActivity", "checkPaymentStatus response : "
-					+ response);
-
-			if (response != null && response.length() > 0
-					&& response.contains("Unauthorized Access")) {
-				Log.e("FirstLoginWalletsActivity",
-						"checkPaymentStatus Unauthorized Access");
-				Toast.makeText(FirstLoginWalletsActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			try {
-				JSONObject jsonObject = new JSONObject(response);
-				if (jsonObject.getString("status").equals("success")) {
-					isPaymentStatusFail = false;
-				} else {
-					isPaymentStatusFail = true;
-				}
-
-				querywallet();
-
-				Button button = (Button) findViewById(R.id.maybelaterbutton);
-				button.setVisibility(View.VISIBLE);
-				button.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-
-						if (isPaymentStatusFail) {
-							AlertDialog.Builder builder = new AlertDialog.Builder(
-									FirstLoginWalletsActivity.this);
-							builder.setMessage("We noticed you used a referral code but do not have a Mobikwik wallet. You'll not receive your cashback reward without a wallet, we recommend that you create one now!");
-							builder.setCancelable(false);
-
-							builder.setPositiveButton("Create Wallet",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											generateOTP();
-										}
-									});
-
-							builder.setNegativeButton("Maybe later",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											Intent mainIntent = new Intent(
-													FirstLoginWalletsActivity.this,
-													FirstLoginClubsActivity.class);
-											startActivity(mainIntent);
-											finish();
-										}
-									});
-
-							builder.show();
-						} else {
-							Intent mainIntent = new Intent(
-									FirstLoginWalletsActivity.this,
-									FirstLoginClubsActivity.class);
-							startActivity(mainIntent);
-							finish();
-						}
-					}
-				});
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else if (uniqueID.equals("processPendingTransactions")) {
-			Log.d("FirstLoginWalletActivity",
-					"processPendingTransactions response : " + response);
 		}
 	}
 

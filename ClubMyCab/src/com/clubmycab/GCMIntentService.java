@@ -33,9 +33,9 @@ import com.clubmycab.ui.MyClubsActivity;
 import com.clubmycab.ui.MyProfileActivity;
 import com.clubmycab.ui.MyRidesActivity;
 import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.OffersListActivity;
 import com.clubmycab.ui.RateCabActivity;
 import com.clubmycab.ui.SettingActivity;
-import com.clubmycab.ui.ShareThisAppActivity;
 import com.clubmycab.ui.SplashActivity;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
@@ -391,8 +391,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 			intent = new Intent(this, MyProfileActivity.class);
 		} else if (pushFrom.equalsIgnoreCase("genericnotificationsettings")) {
 			intent = new Intent(this, SettingActivity.class);
-		} else if (pushFrom.equalsIgnoreCase("genericnotificationsharethisapp")) {
-			intent = new Intent(this, ShareThisAppActivity.class);
+		} else if (pushFrom.equalsIgnoreCase("genericnotificationoffers")) {
+			intent = new Intent(this, OffersListActivity.class);
 		} else {
 			intent = new Intent(this, SplashActivity.class);
 		}
@@ -1041,12 +1041,12 @@ public class GCMIntentService extends GCMBaseIntentService {
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			
+
 			if (gotopoolresp.contains("Unauthorized Access")) {
 				Log.e("GCMIntentService", "gotopoolresp Unauthorized Access");
-//				Toast.makeText(SplashActivity.this,
-//						getResources().getString(R.string.exceptionstring),
-//						Toast.LENGTH_LONG).show();
+				// Toast.makeText(SplashActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
 				return;
 			}
 
@@ -1195,7 +1195,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
 					"CabId", cid);
-			
+
 			String authString = cid;
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
 					GlobalMethods.calculateCMCAuthString(authString));
@@ -1278,8 +1278,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			
-			if (cabratingresp != null && cabratingresp.length() > 0 && cabratingresp.contains("Unauthorized Access")) {
+
+			if (cabratingresp != null && cabratingresp.length() > 0
+					&& cabratingresp.contains("Unauthorized Access")) {
 				Log.e("GCMIntentService", "cabratingresp Unauthorized Access");
 				// Toast.makeText(SplashActivity.this,
 				// getResources().getString(R.string.exceptionstring),
@@ -1361,7 +1362,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair CabIDNameValuePair = new BasicNameValuePair(
 					"CabID", cabID);
-			
+
 			String authString = cabID;
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
 					GlobalMethods.calculateCMCAuthString(authString));

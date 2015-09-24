@@ -1,33 +1,13 @@
 package com.clubmycab.ui;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.clubmycab.CircularImageView;
 import com.clubmycab.R;
@@ -52,9 +32,10 @@ public class UniversalDrawer {
 	TextView bookacab;
 	TextView sharemylocation;
 	TextView myclubs;
-	TextView sharethisapp;
+	// TextView sharethisapp;
 	TextView wallets;
 	TextView mypreferences;
+	TextView offers;
 	// TextView about;
 	private TextView faq, tvaskforquery;
 
@@ -63,7 +44,8 @@ public class UniversalDrawer {
 	LinearLayout myprofilelayout;
 	LinearLayout mywalletslayout;
 	LinearLayout settingslayout;
-	LinearLayout shareapplayout;
+	// LinearLayout shareapplayout;
+	LinearLayout offerslayout;
 	private LinearLayout llaskforquery;
 	// LinearLayout aboutlayout;
 	LinearLayout faqlayout;
@@ -109,8 +91,8 @@ public class UniversalDrawer {
 				.findViewById(R.id.mywalletslayout);
 		settingslayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.settingslayout);
-		shareapplayout = (LinearLayout) ((Activity) context)
-				.findViewById(R.id.shareapplayout);
+		// shareapplayout = (LinearLayout) ((Activity) context)
+		// .findViewById(R.id.shareapplayout);
 		// aboutlayout = (LinearLayout) ((Activity) context)
 		// .findViewById(R.id.aboutlayout);
 		faqlayout = (LinearLayout) ((Activity) context)
@@ -119,6 +101,8 @@ public class UniversalDrawer {
 				.findViewById(R.id.llaskforquery);
 		sharelocationlayout = (LinearLayout) ((Activity) context)
 				.findViewById(R.id.sharelocationlayout);
+		offerslayout = (LinearLayout) ((Activity) context)
+				.findViewById(R.id.offerslayout);
 
 		myprofile = (TextView) ((Activity) context)
 				.findViewById(R.id.myprofile);
@@ -137,10 +121,10 @@ public class UniversalDrawer {
 		myclubs = (TextView) ((Activity) context).findViewById(R.id.myclubs);
 		myclubs.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
-		sharethisapp = (TextView) ((Activity) context)
-				.findViewById(R.id.sharethisapp);
-		sharethisapp.setTypeface(Typeface.createFromAsset(context.getAssets(),
-				"NeutraText-Light.ttf"));
+		// sharethisapp = (TextView) ((Activity) context)
+		// .findViewById(R.id.sharethisapp);
+		// sharethisapp.setTypeface(Typeface.createFromAsset(context.getAssets(),
+		// "NeutraText-Light.ttf"));
 		wallets = (TextView) ((Activity) context).findViewById(R.id.mywallets);
 		wallets.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
@@ -159,6 +143,10 @@ public class UniversalDrawer {
 		tvaskforquery = (TextView) ((Activity) context)
 				.findViewById(R.id.tvaskforquery);
 		tvaskforquery.setTypeface(Typeface.createFromAsset(context.getAssets(),
+				"NeutraText-Light.ttf"));
+
+		offers = (TextView) ((Activity) context).findViewById(R.id.offers);
+		offers.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"NeutraText-Light.ttf"));
 
 		myprofilelayout.setOnClickListener(new View.OnClickListener() {
@@ -230,30 +218,33 @@ public class UniversalDrawer {
 			}
 		});
 
-		shareapplayout.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View arg0) {
-				mNav.toggleDrawer();
-
-				if (!GlobalVariables.ActivityName
-						.equals("ShareThisAppActivity")) {
-
-					tracker.send(new HitBuilders.EventBuilder()
-							.setCategory("ShareApp Click")
-							.setAction("ShareApp Click")
-							.setLabel("ShareApp Click").build());
-
-					Intent mainIntent = new Intent(context,
-							ShareThisAppActivity.class);
-					context.startActivity(mainIntent);
-					((Activity) context).overridePendingTransition(
-							R.anim.slide_in_right, R.anim.slide_out_left);
-					GlobalVariables.ActivityName = "ShareThisAppActivity";
-				}
-
-			}
-		});
+		// shareapplayout.setOnClickListener(new View.OnClickListener() {
+		// @SuppressWarnings("deprecation")
+		// @Override
+		// public void onClick(View arg0) {
+		// mNav.toggleDrawer();
+		//
+		// if (!GlobalVariables.ActivityName
+		// .equals("ShareThisAppActivity")) {
+		//
+		// tracker.send(new HitBuilders.EventBuilder()
+		// .setCategory("ShareApp Click")
+		// .setAction("ShareApp Click")
+		// .setLabel("ShareApp Click").build());
+		//
+		// Intent sendIntent = new Intent();
+		// sendIntent.setAction(Intent.ACTION_SEND);
+		// sendIntent
+		// .putExtra(
+		// Intent.EXTRA_TEXT,
+		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
+		// sendIntent.setType("text/plain");
+		// context.startActivity(Intent.createChooser(sendIntent,
+		// "Share Via"));
+		// }
+		//
+		// }
+		// });
 
 		mywalletslayout.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
@@ -389,7 +380,31 @@ public class UniversalDrawer {
 					context.startActivity(mainIntent);
 					((Activity) context).overridePendingTransition(
 							R.anim.slide_in_right, R.anim.slide_out_left);
-					GlobalVariables.ActivityName = "FAQActivity";
+					GlobalVariables.ActivityName = "ReportAProblemActivity";
+				}
+			}
+		});
+
+		offerslayout.setOnClickListener(new View.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(View arg0) {
+
+				mNav.toggleDrawer();
+
+				if (!GlobalVariables.ActivityName.equals("OffersListActivity")) {
+
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("Offers Click")
+							.setAction("Offers Click").setLabel("Offers Click")
+							.build());
+
+					Intent mainIntent = new Intent(context,
+							OffersListActivity.class);
+					context.startActivity(mainIntent);
+					((Activity) context).overridePendingTransition(
+							R.anim.slide_in_right, R.anim.slide_out_left);
+					GlobalVariables.ActivityName = "OffersListActivity";
 				}
 			}
 		});

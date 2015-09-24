@@ -42,7 +42,6 @@
         android:id="@+id/ridecompletefarewalletll"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
@@ -56,6 +55,29 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:text="Wallet-to-Wallet transfer"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/ridecompletefareclubcreditsll"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/homepagellshape"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="Settle using Club Points"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" />

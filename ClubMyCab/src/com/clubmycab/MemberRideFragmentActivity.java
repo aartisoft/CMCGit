@@ -293,6 +293,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	String amountToPay;
 	String payToPerson;
 	String totalFare;
+	String totalCredits;
 	private double maxDistace = 5000.0;
 	private TextView tvJoinRide;
 
@@ -1713,8 +1714,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				dialog.dismiss();
 
 				String numberfareString = "";
-				for (int i = 0; i < MemberNumber.size(); i++) {
-					numberfareString += (MemberNumber.get(i).toString() + "~"
+				for (int i = 0; i < ShowMemberNumber.size(); i++) {
+					numberfareString += (ShowMemberNumber.get(i).toString()
+							+ "~"
 							+ String.format("%d%n", Math.round(fareSplit)) + ",");
 				}
 				numberfareString += (OwnerMobileNumber + "~"
@@ -1840,6 +1842,24 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					builder.show();
 				}
 
+			}
+		});
+
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletefareclubcreditsll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare settled in Credits")
+						.setAction("Fare settled in Credits")
+						.setLabel("Fare settled in Credits").build());
+
+				dialog.dismiss();
+
+				userData(MemberNumberstr);
 			}
 		});
 
@@ -6308,6 +6328,48 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		}
 	}
 
+	private void userData(String mobileNumber) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/userData.php";
+		String authString = mobileNumber;
+		String params = "mobileNumber=" + mobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("MemberRideFragmentActivity", "userData endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(MemberRideFragmentActivity.this, endpoint, params,
+				null, MemberRideFragmentActivity.this, true, "userData", false);
+	}
+
+	private void payUsingCredits(String mobileNumber, String sender,
+			String amount) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/payUsingCredits.php";
+		String authString = amount + rideDetailsModel.getCabId() + mobileNumber
+				+ OwnerMobileNumber + sender;
+		String params = "mobileNumber=" + mobileNumber + "&sender=" + sender
+				+ "&amount=" + amount + "&owner=" + OwnerMobileNumber
+				+ "&cabId=" + rideDetailsModel.getCabId() + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("MemberRideFragmentActivity", "payUsingCredits endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(MemberRideFragmentActivity.this, endpoint, params,
+				null, MemberRideFragmentActivity.this, true, "payUsingCredits",
+				false);
+	}
+
+	private void getMyFare(String cabID, String mobileNumber) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/getMyFare.php";
+		String authString = cabID + mobileNumber;
+		String params = "mobileNumber=" + mobileNumber + "&cabId=" + cabID
+				+ "&auth=" + GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("MemberRideFragmentActivity", "getMyFare endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(MemberRideFragmentActivity.this, endpoint, params,
+				null, MemberRideFragmentActivity.this, false, "getMyFare",
+				false);
+	}
+
 	private void checkTransactionLimit(String mobilenumber, String amount) {
 
 		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
@@ -6421,7 +6483,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		// }
 		// } else
 		if (uniqueID.equals("checkTransactionLimit")) {
-			Log.d("CheckPoolFragmentActivity",
+			Log.d("MemberRideFragmentActivity",
 					"checkTransactionLimit response : " + response);
 			if (!GlobalMethods.checkResponseChecksum(response)) {
 				checksumInvalidToast();
@@ -6473,7 +6535,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 		} else if (uniqueID.equals("logTransaction")) {
-			Log.d("CheckPoolFragmentActivity", "logTransaction response : "
+			Log.d("MemberRideFragmentActivity", "logTransaction response : "
 					+ response);
 
 			if (response != null && response.length() > 0
@@ -6509,7 +6571,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 			}
 		} else if (uniqueID.equals("initiatePeerTransfer")) {
-			Log.d("CheckPoolFragmentActivity",
+			Log.d("MemberRideFragmentActivity",
 					"initiatePeerTransfer response : " + response);
 
 			SharedPreferences sharedPreferences = getSharedPreferences(
@@ -6554,7 +6616,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				e.printStackTrace();
 			}
 		} else if (uniqueID.equals("tokenregenerate")) {
-			Log.d("CheckPoolFragmentActivity", "tokenregenerate response : "
+			Log.d("MemberRideFragmentActivity", "tokenregenerate response : "
 					+ response);
 			try {
 
@@ -6571,7 +6633,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 		} else if (uniqueID.equals("tokenRegenerateReTransfer")) {
-			Log.d("CheckPoolFragmentActivity",
+			Log.d("MemberRideFragmentActivity",
 					"tokenRegenerateReTransfer response : " + response);
 			try {
 
@@ -6592,11 +6654,94 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else if (uniqueID.equals("userData")) {
+			Log.d("MemberRideFragmentActivity", "userData response : "
+					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"userData Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString().equals("success")) {
+					JSONObject jsonObject2 = new JSONObject(jsonObject.get(
+							"data").toString());
+					totalCredits = jsonObject2.get("totalCredits").toString();
+
+					getMyFare(rideDetailsModel.getCabId(), MemberNumberstr);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("getMyFare")) {
+			Log.d("MemberRideFragmentActivity", "getMyFare response : "
+					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"getMyFare Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				amountToPay = jsonObject.get("fareToPay").toString();
+				payToPerson = jsonObject.get("paidBy").toString();
+				totalFare = jsonObject.get("totalFare").toString();
+
+				if (Double.parseDouble(totalCredits) >= Double
+						.parseDouble(totalFare)) {
+					payUsingCredits(payToPerson, MemberNumberstr, amountToPay);
+				} else {
+					Toast.makeText(
+							MemberRideFragmentActivity.this,
+							"You do not have sufficient Club Points to pay for your share!",
+							Toast.LENGTH_LONG).show();
+					showPaymentDialog();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("payUsingCredits")) {
+			Log.d("MemberRideFragmentActivity", "payUsingCredits response : "
+					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"payUsingCredits Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				Toast.makeText(MemberRideFragmentActivity.this,
+						jsonObject.get("message").toString(), Toast.LENGTH_LONG)
+						.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	private void checksumInvalidToast() {
-		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
+		Log.e("MemberRideFragmentActivity",
+				"Response checksum does not match!!");
 		Toast.makeText(MemberRideFragmentActivity.this,
 				"Something went wrong, please try again", Toast.LENGTH_LONG)
 				.show();

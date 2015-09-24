@@ -293,6 +293,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	String payToPerson;
 	String totalFare;
 
+	String totalCredits;
+
 	private ArrayList<Double> FaredistanceList = new ArrayList<Double>();
 	private ArrayList<LatLng> FareLocationList = new ArrayList<LatLng>();
 
@@ -1203,8 +1205,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				dialog.dismiss();
 
 				String numberfareString = "";
-				for (int i = 0; i < MemberNumber.size(); i++) {
-					numberfareString += (MemberNumber.get(i).toString() + "~"
+				for (int i = 0; i < ShowMemberNumber.size(); i++) {
+					numberfareString += (ShowMemberNumber.get(i).toString()
+							+ "~"
 							+ String.format("%d%n", Math.round(fareSplit)) + ",");
 				}
 				numberfareString += (OwnerMobileNumber + "~"
@@ -1332,6 +1335,24 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 		});
 
+		linearLayout = (LinearLayout) builderView
+				.findViewById(R.id.ridecompletefareclubcreditsll);
+		linearLayout.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+
+				tracker.send(new HitBuilders.EventBuilder()
+						.setCategory("Fare settled in Credits")
+						.setAction("Fare settled in Credits")
+						.setLabel("Fare settled in Credits").build());
+
+				dialog.dismiss();
+
+				userData(OwnerMobileNumber);
+			}
+		});
+
 		dialog.show();
 
 	}
@@ -1355,6 +1376,47 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	// new GlobalAsyncTask(this, endpoint, params, null, this, true,
 	// "querywallet", true);
 	// }
+
+	private void userData(String mobileNumber) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/userData.php";
+		String authString = mobileNumber;
+		String params = "mobileNumber=" + mobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("CheckPoolFragmentActivity", "userData endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(CheckPoolFragmentActivity.this, endpoint, params,
+				null, CheckPoolFragmentActivity.this, true, "userData", false);
+	}
+
+	private void payUsingCredits(String mobileNumber, String sender,
+			String amount) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/payUsingCredits.php";
+		String authString = amount + rideDetailsModel.getCabId() + mobileNumber
+				+ OwnerMobileNumber + sender;
+		String params = "mobileNumber=" + mobileNumber + "&sender=" + sender
+				+ "&amount=" + amount + "&owner=" + OwnerMobileNumber
+				+ "&cabId=" + rideDetailsModel.getCabId() + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("CheckPoolFragmentActivity", "payUsingCredits endpoint : "
+				+ endpoint + " params : " + params);
+		new GlobalAsyncTask(CheckPoolFragmentActivity.this, endpoint, params,
+				null, CheckPoolFragmentActivity.this, true, "payUsingCredits",
+				false);
+	}
+
+	private void getMyFare(String cabID, String mobileNumber) {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/getMyFare.php";
+		String authString = cabID + mobileNumber;
+		String params = "mobileNumber=" + mobileNumber + "&cabId=" + cabID
+				+ "&auth=" + GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("CheckPoolFragmentActivity", "getMyFare endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(CheckPoolFragmentActivity.this, endpoint, params,
+				null, CheckPoolFragmentActivity.this, false, "getMyFare", false);
+	}
 
 	private void checkTransactionLimit(String mobilenumber, String amount) {
 
@@ -1638,6 +1700,88 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						GlobalVariables.Mobikwik_Mid, token,
 						OwnerMobileNumber.substring(4),
 						payToPerson.substring(4), rideDetailsModel.getCabId());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("userData")) {
+			Log.d("CheckPoolFragmentActivity", "userData response : "
+					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"userData Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString().equals("success")) {
+					JSONObject jsonObject2 = new JSONObject(jsonObject.get(
+							"data").toString());
+					totalCredits = jsonObject2.get("totalCredits").toString();
+
+					getMyFare(rideDetailsModel.getCabId(), OwnerMobileNumber);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("getMyFare")) {
+			Log.d("CheckPoolFragmentActivity", "getMyFare response : "
+					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"getMyFare Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				amountToPay = jsonObject.get("fareToPay").toString();
+				payToPerson = jsonObject.get("paidBy").toString();
+				totalFare = jsonObject.get("totalFare").toString();
+
+				if (Double.parseDouble(totalCredits) >= Double
+						.parseDouble(totalFare)) {
+					payUsingCredits(payToPerson, OwnerMobileNumber, amountToPay);
+				} else {
+					Toast.makeText(
+							CheckPoolFragmentActivity.this,
+							"You do not have sufficient Club Points to pay for your share!",
+							Toast.LENGTH_LONG).show();
+					showPaymentDialog();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("payUsingCredits")) {
+			Log.d("CheckPoolFragmentActivity", "payUsingCredits response : "
+					+ response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("CheckPoolFragmentActivity",
+						"payUsingCredits Unauthorized Access");
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						jsonObject.get("message").toString(), Toast.LENGTH_LONG)
+						.show();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -40,15 +40,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.R;
-import com.clubmycab.asynctasks.GlobalAsyncTask;
-import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-public class RegistrationActivity extends Activity implements
-		AsyncTaskResultListener {
+public class RegistrationActivity extends Activity {
 
 	TextView registerheadertxt;
 	TextView fullnametxt;
@@ -75,8 +72,6 @@ public class RegistrationActivity extends Activity implements
 	String result;
 	private String mobNo = "";
 	boolean exceptioncheck = false;
-
-	private boolean walletExists;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -344,9 +339,12 @@ public class RegistrationActivity extends Activity implements
 
 						Log.d("all set", "all set");
 
-						walletExists = false;
-
-						querywallet(mobileedittext.getText().toString().trim());
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							new ConnectionTaskForRegister()
+									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						} else {
+							new ConnectionTaskForRegister().execute();
+						}
 					}
 
 				}
@@ -424,38 +422,45 @@ public class RegistrationActivity extends Activity implements
 					if (jsonObject.get("status").toString()
 							.equalsIgnoreCase("SUCCESS")) {
 
-						if (!referralcodeedittext.getText().toString().trim()
-								.isEmpty()) {
-							// if (Build.VERSION.SDK_INT >=
-							// Build.VERSION_CODES.HONEYCOMB) {
-							// new ConnectionTaskForTopUp()
-							// .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-							// } else {
-							// new ConnectionTaskForTopUp().execute();
-							// }
-
-							if (!walletExists) {
-								AlertDialog.Builder builder = new AlertDialog.Builder(
-										RegistrationActivity.this);
-								builder.setMessage("You do not have a Mobikwik wallet yet, you'll need it to receive the cashback. Please create it on the Wallets page.");
-								builder.setCancelable(false);
-
-								builder.setPositiveButton("OK",
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int which) {
-												openOTPActivity();
-											}
-										});
-
-								builder.show();
-							} else {
-								openOTPActivity();
-							}
-						} else {
-							openOTPActivity();
+						PackageInfo pInfo = null;
+						try {
+							pInfo = getPackageManager().getPackageInfo(
+									getPackageName(), 0);
+						} catch (NameNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
+						String version = pInfo.versionName;
+
+						SharedPreferences sharedPreferences = getSharedPreferences(
+								"FacebookData", 0);
+						SharedPreferences.Editor editor = sharedPreferences
+								.edit();
+						editor.putString("FullName", fullnameedittext.getText()
+								.toString().trim());
+						editor.putString("MobileNumber", countrycode.getText()
+								.toString().trim()
+								+ mobileedittext.getText().toString().trim());
+						editor.putString("Email", emailedittext.getText()
+								.toString().trim());
+						editor.putString("verifyotp", "false");
+						editor.putString("LastRegisteredAppVersion", version);
+						editor.commit();
+
+						Intent i = new Intent(RegistrationActivity.this,
+								OTPActivity.class);
+						i.putExtra("from", "reg");
+						i.putExtra("mobnum", countrycode.getText().toString()
+								.trim()
+								+ mobileedittext.getText().toString().trim());
+
+						i.putExtra("fullname", fullnameedittext.getText()
+								.toString().trim());
+						i.putExtra("regid", "");
+
+						i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+								| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+						startActivity(i);
 
 					} else {
 
@@ -481,42 +486,6 @@ public class RegistrationActivity extends Activity implements
 			}
 		}
 
-	}
-
-	private void openOTPActivity() {
-		PackageInfo pInfo = null;
-		try {
-			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String version = pInfo.versionName;
-
-		SharedPreferences sharedPreferences = getSharedPreferences(
-				"FacebookData", 0);
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString("FullName", fullnameedittext.getText().toString()
-				.trim());
-		editor.putString("MobileNumber", countrycode.getText().toString()
-				.trim()
-				+ mobileedittext.getText().toString().trim());
-		editor.putString("Email", emailedittext.getText().toString().trim());
-		editor.putString("verifyotp", "false");
-		editor.putString("LastRegisteredAppVersion", version);
-		editor.commit();
-
-		Intent i = new Intent(RegistrationActivity.this, OTPActivity.class);
-		i.putExtra("from", "reg");
-		i.putExtra("mobnum", countrycode.getText().toString().trim()
-				+ mobileedittext.getText().toString().trim());
-
-		i.putExtra("fullname", fullnameedittext.getText().toString().trim());
-		i.putExtra("regid", "");
-
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		startActivity(i);
 	}
 
 	public class AuthenticateConnectionRegister {
@@ -717,66 +686,4 @@ public class RegistrationActivity extends Activity implements
 	// }
 	// }
 
-	private void querywallet(String mobilenumber) {
-
-		String msgcode = "500";
-		String action = "existingusercheck";
-
-		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
-				+ action + "''" + mobilenumber + "''"
-				+ GlobalVariables.Mobikwik_MerchantName + "''"
-				+ GlobalVariables.Mobikwik_Mid + "''" + msgcode + "'",
-				GlobalVariables.Mobikwik_14SecretKey);
-		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/querywallet";
-		String params = "cell=" + mobilenumber + "&msgcode=" + msgcode
-				+ "&action=" + action + "&mid=" + GlobalVariables.Mobikwik_Mid
-				+ "&merchantname=" + GlobalVariables.Mobikwik_MerchantName
-				+ "&checksum=" + checksumstring;
-		Log.d("WalletsActivity", "querywallet endpoint : " + endpoint
-				+ " params : " + params);
-		new GlobalAsyncTask(this, endpoint, params, null, this, false,
-				"querywallet", true);
-
-	}
-
-	@Override
-	public void getResult(String response, String uniqueID) {
-
-		if (uniqueID.equals("querywallet")) {
-
-			try {
-				JSONObject jsonObject = new JSONObject(response);
-				Log.d("ShareThisAppActivity", "querywallet jsonObject :"
-						+ jsonObject);
-				if (!GlobalMethods.checkResponseChecksum(response)) {
-					checksumInvalidToast();
-					return;
-				}
-
-				if (jsonObject.getString("status").equals("SUCCESS")) {
-					walletExists = true;
-				} else {
-					walletExists = false;
-				}
-
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					new ConnectionTaskForRegister()
-							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				} else {
-					new ConnectionTaskForRegister().execute();
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-	}
-
-	private void checksumInvalidToast() {
-		Log.e("ShareThisAppActivity", "Response checksum does not match!!");
-		Toast.makeText(RegistrationActivity.this,
-				"Something went wrong, please try again", Toast.LENGTH_LONG)
-				.show();
-	}
 }

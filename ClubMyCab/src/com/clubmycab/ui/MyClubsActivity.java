@@ -21,7 +21,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -416,13 +415,6 @@ public class MyClubsActivity extends Activity implements
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			new ConnectionTaskForReferralCode()
-					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			new ConnectionTaskForReferralCode().execute();
-		}
 	}
 
 	@Override
@@ -2773,152 +2765,6 @@ public class MyClubsActivity extends Activity implements
 			editor1.commit();
 
 			// ///////////////
-		}
-	}
-
-	private class ConnectionTaskForReferralCode extends
-			AsyncTask<String, Void, Void> {
-		// private ProgressDialog dialog = new ProgressDialog(
-		// MyClubsActivity.this);
-
-		@Override
-		protected void onPreExecute() {
-			// dialog.setMessage("Please Wait...");
-			// dialog.setCancelable(false);
-			// dialog.setCanceledOnTouchOutside(false);
-			// dialog.show();
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionReferralCode mAuth1 = new AuthenticateConnectionReferralCode();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			// if (dialog.isShowing()) {
-			// dialog.dismiss();
-			// }
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(MyClubsActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (referralResult.contains("Unauthorized Access")) {
-				Log.e("MyClubsActivity", "referralResult Unauthorized Access");
-				Toast.makeText(MyClubsActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			try {
-				if (referralResult != null && !referralResult.isEmpty()) {
-					JSONObject jsonObject = new JSONObject(referralResult);
-
-					if (jsonObject.get("status").toString()
-							.equalsIgnoreCase("success")) {
-
-						JSONObject jsonObject2 = new JSONObject(jsonObject.get(
-								"data").toString());
-						// String referral = jsonObject2.get("referralCode")
-						// .toString();
-						String amount = jsonObject2.get("amount").toString();
-						String maxUseLimit = jsonObject2.get("maxUseLimit")
-								.toString();
-						String totalReferrals = jsonObject2.get(
-								"totalReferrals").toString();
-
-						TextView textView = (TextView) findViewById(R.id.textViewMyClubOffer);
-						textView.setText("Add/refer your friend(s) to clubs. When they join ClubMyCab, we give an instant cashback of Rs."
-								+ amount
-								+ " to both of you! Offer valid upto a maximum of Rs."
-								+ (String.format(
-										"%1.0f",
-										Float.parseFloat(amount)
-												* Float.parseFloat(maxUseLimit)))
-								+ ", you have earned Rs."
-								+ (String.format(
-										"%1.0f",
-										Float.parseFloat(amount)
-												* Float.parseFloat(totalReferrals)))
-								+ " so far");
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionReferralCode {
-
-		public AuthenticateConnectionReferralCode() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select = GlobalVariables.ServiceUrl
-					+ "/referralCode.php";
-
-			HttpPost httpPost = new HttpPost(url_select);
-
-			SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
-			String MemberNumberstr = mPrefs.getString("MobileNumber", "");
-
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"mobileNumber", MemberNumberstr);
-
-			String authString = MemberNumberstr;
-			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
-					GlobalMethods.calculateCMCAuthString(authString));
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			nameValuePairList.add(authValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				referralResult = stringBuilder.append(bufferedStrChunk)
-						.toString();
-			}
-
-			Log.d("referralResult", "" + stringBuilder.toString());
 		}
 	}
 

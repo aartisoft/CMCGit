@@ -4,10 +4,17 @@ public class GlobalVariables {
 
 	// chat IpAddress is same for both production & UAT
 
-	public static final String ServiceUrl = "http://180.179.207.159/cmc/cmcservice"; // Production
-	public static final String IpAddress = "180.179.208.23"; // Production
-	public static final String ServerNameForChat = "@p2p-vm1"; // Production
-	public static final String CMC_SecretKey = "ahKQMpBZmCYVwYpPMG9CVgrN9H6K9MgC"; // Production
+	// public static final String ServiceUrl =
+	// "http://180.179.207.159/cmc/cmcservice"; // Production
+	// public static final String IpAddress = "180.179.208.23"; // Production
+	// public static final String ServerNameForChat = "@p2p-vm1"; // Production
+	// public static final String CMC_SecretKey =
+	// "ahKQMpBZmCYVwYpPMG9CVgrN9H6K9MgC"; // Production
+
+	public static final String ServiceUrl = "http://104.155.193.222/cmc/cmcservice"; // GoogleCloudProduction
+	public static final String IpAddress = "104.155.193.222"; // GoogleCloudProduction
+	public static final String ServerNameForChat = "@p2p-vm2"; // GoogleCloudProduction
+	public static final String CMC_SecretKey = "ahKQMpBZmCYVwYpPMG9CVgrN9H6K9MgC"; // GoogleCloudProduction
 
 	// Mobikwik
 	public static final String Mobikwik_ServerURL = "https://walletapi.mobikwik.com"; // Production
@@ -22,7 +29,8 @@ public class GlobalVariables {
 	// public static final String ServerNameForChat = "@p2p-vm2"; // UAT
 	// public static final String CMC_SecretKey =
 	// "NrD4LMv5xGAXdYvxvzzcxASUgWQkKcZx"; // UAT
-
+	//http://107.167.183.147/ GoogleCloudUAT
+	
 	// Mobikwik
 	// public static final String Mobikwik_ServerURL =
 	// "https://test.mobikwik.com/mobikwik"; // UAT
@@ -34,14 +42,7 @@ public class GlobalVariables {
 	// public static final String Mobikwik_14SecretKey_TokenRegenerate =
 	// "lu6tygh7u7tdg554k098ujd5468o"; // UAT
 
-	// public static final String ServiceUrl = "http://104.155.216.171/cmc";
-	// // GoogleCloudUAT
-	// public static final String IpAddress = "104.155.216.171";
-	// // GoogleCloudUAT
-	// public static final String ServerNameForChat = "@p2p-vm2";
-	// // GoogleCloudUAT
-
-	public static final boolean LOGGING_ENABLED = true;
+	public static final boolean LOGGING_ENABLED = false;
 
 	public static final double GEOFENCING_RADIUS = 0.003;
 

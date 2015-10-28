@@ -3818,7 +3818,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						.setCategory("Call Member").setAction("Call Member")
 						.setLabel("Call Member").build());
 
-				Intent intent = new Intent(Intent.ACTION_CALL);
+				Intent intent = new Intent(Intent.ACTION_DIAL);
 				intent.setData(Uri.parse("tel:" + mnum));
 				startActivity(intent);
 
@@ -4021,7 +4021,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(Intent.ACTION_CALL, Uri
+					Intent intent = new Intent(Intent.ACTION_DIAL, Uri
 							.parse("tel:" + rideDetailsModel.getDriverNumber()));
 					startActivity(intent);
 				}

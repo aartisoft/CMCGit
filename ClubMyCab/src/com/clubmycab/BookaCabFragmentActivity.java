@@ -3223,6 +3223,31 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				textView.setText((jsonString.isEmpty() || jsonString
 						.equalsIgnoreCase("null")) ? "-" : jsonString);
 
+				ImageView imageView = (ImageView) convertView
+						.findViewById(R.id.imageViewCabCoIcon);
+				textView.setVisibility(View.GONE);
+				imageView.setVisibility(View.VISIBLE);
+
+				if (jsonString.equalsIgnoreCase("Ola")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_ola_icon));
+				} else if (jsonString.equalsIgnoreCase("Uber")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_uber_icon));
+				} else if (jsonString.equalsIgnoreCase("Meru")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_meru_icon));
+				} else if (jsonString.equalsIgnoreCase("TaxiForSure")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_tfs_icon));
+				} else if (jsonString.equalsIgnoreCase("Mega")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_mega_icon));
+				} else {
+					textView.setVisibility(View.VISIBLE);
+					imageView.setVisibility(View.GONE);
+				}
+
 				textView = (TextView) convertView
 						.findViewById(R.id.textViewCabType);
 				try {
@@ -3376,7 +3401,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				// "Phone number could not be retrieved",
 				// Toast.LENGTH_LONG).show();
 				// } else {
-				// Intent intent = new Intent(Intent.ACTION_CALL,
+				// Intent intent = new Intent(Intent.ACTION_DIAL,
 				// Uri.parse("tel:" + phoneString));
 				// startActivity(intent);
 				// }
@@ -5095,7 +5120,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				public void run() {
 
 					if (shouldCall) {
-						Intent intent = new Intent(Intent.ACTION_CALL,
+						Intent intent = new Intent(Intent.ACTION_DIAL,
 								Uri.parse("tel:" + phoneNumber));
 						startActivity(intent);
 					}

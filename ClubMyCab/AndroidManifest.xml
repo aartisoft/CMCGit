@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.clubmycab"
-    android:versionCode="12"
-    android:versionName="2.1" >
+    android:versionCode="14"
+    android:versionName="2.3" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -15,8 +15,8 @@
         android:name="com.clubmycab.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="android.permission.CALL_PHONE" >
-    </uses-permission>
+<!--     <uses-permission android:name="android.permission.CALL_PHONE" > -->
+<!--     </uses-permission> -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="com.clubmycab.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />

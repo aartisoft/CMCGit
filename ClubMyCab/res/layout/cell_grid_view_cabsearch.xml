@@ -14,19 +14,33 @@
 
         <!-- android:background="@drawable/bookacab_rowbanner" -->
 
-        <LinearLayout
-            android:id="@+id/LinearLayout"
+        <RelativeLayout
+            android:id="@+id/RelativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp" >
+            android:layout_marginTop="10dp" >
+
+            <ImageView
+                android:id="@+id/imageViewCabCoIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|left"
+                android:layout_marginLeft="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/cabappicon"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textViewCabName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="80"
+                android:layout_toRightOf="@+id/imageViewCabCoIcon"
                 android:gravity="left"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
@@ -35,6 +49,9 @@
                 android:id="@+id/buttonBookNow"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/bookacab_booknowbtn"
                 android:focusable="false"
@@ -62,7 +79,7 @@
             <!-- android:textColor="#FFFFFF" -->
             <!-- android:textSize="13sp" /> -->
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayout1"

@@ -2690,6 +2690,14 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 								.get("productId").toString(), fAddress,
 						tAddress);
 			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
+					.toString().toLowerCase().contains("ola")) {
+				cabBookingPosition = position;
+				bookOlaCab(
+						mCabSearchArray.getJSONObject(position).get("CabName")
+								.toString(), fAddress, tAddress,
+						mCabSearchArray.getJSONObject(position).get("CarType")
+								.toString());
+			} else if (mCabSearchArray.getJSONObject(position).get("CabName")
 					.toString().toLowerCase().contains("mega")) {
 
 				// if (editTextUserName.getText()
@@ -3223,6 +3231,31 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				textView.setText((jsonString.isEmpty() || jsonString
 						.equalsIgnoreCase("null")) ? "-" : jsonString);
 
+				ImageView imageView = (ImageView) convertView
+						.findViewById(R.id.imageViewCabCoIcon);
+				textView.setVisibility(View.GONE);
+				imageView.setVisibility(View.VISIBLE);
+
+				if (jsonString.equalsIgnoreCase("Ola")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_ola_icon));
+				} else if (jsonString.equalsIgnoreCase("Uber")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_uber_icon));
+				} else if (jsonString.equalsIgnoreCase("Meru")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_meru_icon));
+				} else if (jsonString.equalsIgnoreCase("TaxiForSure")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_tfs_icon));
+				} else if (jsonString.equalsIgnoreCase("Mega")) {
+					imageView.setImageDrawable(getResources().getDrawable(
+							R.drawable.cab_mega_icon));
+				} else {
+					textView.setVisibility(View.VISIBLE);
+					imageView.setVisibility(View.GONE);
+				}
+
 				textView = (TextView) convertView
 						.findViewById(R.id.textViewCabType);
 				try {
@@ -3376,7 +3409,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				// "Phone number could not be retrieved",
 				// Toast.LENGTH_LONG).show();
 				// } else {
-				// Intent intent = new Intent(Intent.ACTION_CALL,
+				// Intent intent = new Intent(Intent.ACTION_DIAL,
 				// Uri.parse("tel:" + phoneString));
 				// startActivity(intent);
 				// }
@@ -3812,6 +3845,28 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				getUberAccessTokenAsync
 						.execute(data
 								.getStringExtra(MobileSiteFragment.ARGUMENTS_UBER_REQUEST_ID));
+			}
+		} else if (requestCode == 2 && resultCode == RESULT_OK) {
+			Log.d("onActivityResult",
+					"onActivityResult requestCode : "
+							+ requestCode
+							+ " resultCode : "
+							+ resultCode
+							+ " data : "
+							+ data.getStringExtra(MobileSiteFragment.ARGUMENTS_OLA_REQUEST_URL));
+
+			GetOlaBookingStatusAsync getOlaBookingStatusAsync = new GetOlaBookingStatusAsync();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				getOlaBookingStatusAsync
+						.executeOnExecutor(
+								AsyncTask.THREAD_POOL_EXECUTOR,
+								data.getStringExtra(MobileSiteFragment.ARGUMENTS_OLA_REQUEST_URL),
+								data.getStringExtra(MobileSiteFragment.ARGUMENTS_OLA_REQUEST_ID));
+			} else {
+				getOlaBookingStatusAsync
+						.execute(
+								data.getStringExtra(MobileSiteFragment.ARGUMENTS_OLA_REQUEST_URL),
+								data.getStringExtra(MobileSiteFragment.ARGUMENTS_OLA_REQUEST_ID));
 			}
 		}
 	}
@@ -4272,6 +4327,493 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			});
 		}
 
+	}
+
+	private void bookOlaCab(final String cabType, final Address startAddress,
+			final Address endAddress, final String productID) {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		} else if (startAddress == null || endAddress == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					BookaCabFragmentActivity.this);
+			builder.setTitle("");
+			builder.setMessage("Please provide both From & To locations to make a booking.");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				BookaCabFragmentActivity.this);
+		builder.setMessage("Please provide us with your Ola account information on the next page");
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+				String authString = cabType
+						+ String.valueOf(endAddress.getLatitude())
+						+ String.valueOf(endAddress.getLongitude())
+						+ String.valueOf(startAddress.getLatitude())
+						+ String.valueOf(startAddress.getLongitude())
+						+ productID;
+
+				GetOlaRequestIDAsync getOlaRequestIDAsync = new GetOlaRequestIDAsync();
+				String param = "cabType=" + cabType + "&productid=" + productID
+						+ "&lat=" + String.valueOf(startAddress.getLatitude())
+						+ "&lon=" + String.valueOf(startAddress.getLongitude())
+						+ "&elat=" + String.valueOf(endAddress.getLatitude())
+						+ "&elon=" + String.valueOf(endAddress.getLongitude())
+						+ "&cabID=&auth="
+						+ GlobalMethods.calculateCMCAuthString(authString);
+				// mOlaBookingInputParams = "&productid=" + "&lat="
+				// + String.valueOf(startAddress.getLatitude()) + "&lon="
+				// + String.valueOf(startAddress.getLongitude())
+				// + "&elat=" + String.valueOf(endAddress.getLatitude())
+				// + "&elon=" + String.valueOf(endAddress.getLongitude());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					getOlaRequestIDAsync.executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR, param);
+				} else {
+					getOlaRequestIDAsync.execute(param);
+				}
+			}
+		});
+		AlertDialog dialog = builder.show();
+		TextView messageText = (TextView) dialog
+				.findViewById(android.R.id.message);
+		messageText.setGravity(Gravity.CENTER);
+		dialog.show();
+	}
+
+	public class GetOlaRequestIDAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		@Override
+		protected void onPreExecute() {
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
+
+			dialog12.setMessage("Please Wait...");
+			dialog12.setCancelable(false);
+			dialog12.setCanceledOnTouchOutside(false);
+			dialog12.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("GetOlaRequestIDAsync",
+					"GetOlaRequestIDAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl
+						+ "/cabbookrequest.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("GetOlaRequestIDAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("GetOlaRequestIDAsync",
+						"GetOlaRequestIDAsync response : " + response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (!result.isEmpty()) {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+
+						if (result.contains("Unauthorized Access")) {
+							Log.e("BookaCabFragmentActivity",
+									"GetOlaRequestIDAsync Unauthorized Access");
+							Toast.makeText(
+									BookaCabFragmentActivity.this,
+									getResources().getString(
+											R.string.exceptionstring),
+									Toast.LENGTH_LONG).show();
+							return;
+						}
+
+						Intent intent = new Intent(
+								BookaCabFragmentActivity.this,
+								MobileSiteActivity.class);
+						intent.putExtra(
+								MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL,
+								GlobalVariables.ServiceUrl
+										+ "/olaApi.php?type=oauth");
+						intent.putExtra(
+								MobileSiteFragment.ARGUMENTS_OLA_REQUEST_ID,
+								result);
+
+						startActivityForResult(intent, 2);
+					}
+				});
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog12.isShowing()) {
+				dialog12.dismiss();
+			}
+		}
+	}
+
+	public class GetOlaBookingStatusAsync extends
+			AsyncTask<String, Void, String> {
+
+		String response = "";
+
+		@Override
+		protected void onPreExecute() {
+			dialog12 = new ProgressDialog(BookaCabFragmentActivity.this);
+
+			dialog12.setMessage("Please Wait...");
+			dialog12.setCancelable(false);
+			dialog12.setCanceledOnTouchOutside(false);
+			dialog12.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("GetOlaBookingStatusAsync", "GetOlaBookingStatusAsync : "
+					+ args[0].toString());
+
+			try {
+				URL url = new URL(args[0].toString());
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				// OutputStream outputStream = urlConnection.getOutputStream();
+				// BufferedWriter bufferedWriter = new BufferedWriter(new
+				// OutputStreamWriter(outputStream, "UTF-8"));
+				// bufferedWriter.write(params);
+				// bufferedWriter.flush();
+				// bufferedWriter.close();
+				// outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("getOlaBookingStatus",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					return response;
+				}
+
+				Log.d("getOlaBookingStatus", "getOlaBookingStatus response : "
+						+ response);
+
+				if (response.toLowerCase().contains("crn")) {
+
+					try {
+						JSONObject responseObject = new JSONObject(response);
+						if (responseObject.length() > 0) {
+
+							String driverName = "", driverPhone = "", eta = "", vehicleMake = "", vehicleLicense = "", requestID = "";
+
+							driverName = responseObject.get("driver_name")
+									.toString();
+							driverPhone = responseObject.get("driver_number")
+									.toString();
+							eta = responseObject.get("eta").toString();
+							vehicleMake = responseObject.get("car_model")
+									.toString();
+							vehicleLicense = responseObject.get("cab_number")
+									.toString();
+							requestID = responseObject.get("crn").toString();
+
+							if (rideObject != null) {
+								rideObject.driverName = driverName;
+								rideObject.driverPhone = driverPhone;
+								rideObject.vehicle = vehicleLicense + " ("
+										+ vehicleMake + ")";
+							} else {
+								rideObject = new RideObject();
+								rideObject.driverName = driverName;
+								rideObject.driverPhone = driverPhone;
+								rideObject.vehicle = vehicleLicense + " ("
+										+ vehicleMake + ")";
+							}
+
+							final String driverNameFinal = driverName, driverPhoneFinal = driverPhone, etaFinal = eta, vehicleMakeFinal = vehicleMake, vehicleLicenseFinal = vehicleLicense, requestIDFinal = requestID;
+							final String requestIDInTable = args[1].toString();
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+
+									AlertDialog.Builder builder = new AlertDialog.Builder(
+											BookaCabFragmentActivity.this);
+									builder.setTitle("Success");
+									builder.setMessage("Cab booked succesfully!\r\n"
+											+ "Driver : "
+											+ driverNameFinal
+											+ " ("
+											+ driverPhoneFinal
+											+ ")\r\n"
+											+ "Vehicle : "
+											+ vehicleMakeFinal
+											+ " ("
+											+ vehicleLicenseFinal
+											+ ")\r\n"
+											+ "Est. Time : "
+											+ etaFinal + " mins");
+									builder.setPositiveButton(
+											"OK",
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+
+													try {
+														updateCMCRecords(
+																mCabSearchArray
+																		.getJSONObject(
+																				cabBookingPosition)
+																		.get("CabNameID")
+																		.toString()
+																		+ "~"
+																		+ requestIDInTable,
+																mCabSearchArray
+																		.getJSONObject(
+																				cabBookingPosition)
+																		.get("CarType")
+																		.toString(),
+																"1", fAddress,
+																tAddress, "",
+																requestIDFinal,
+																false, false,
+																"", "", "",
+																true);
+													} catch (Exception e) {
+														e.printStackTrace();
+													}
+												}
+											});
+									AlertDialog dialog = builder.show();
+									TextView messageText = (TextView) dialog
+											.findViewById(android.R.id.message);
+									messageText.setGravity(Gravity.CENTER);
+									dialog.show();
+								}
+							});
+
+						} else {
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									Toast.makeText(
+											BookaCabFragmentActivity.this,
+											"Something went wrong, please try again",
+											Toast.LENGTH_LONG).show();
+								}
+							});
+						}
+
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(
+										BookaCabFragmentActivity.this,
+										"Something went wrong, please try again",
+										Toast.LENGTH_LONG).show();
+							}
+						});
+					}
+
+				} else {
+
+					try {
+						JSONObject responseObject = new JSONObject(response);
+						Log.d("getOlaBookingStatus", "responseObject : "
+								+ responseObject.toString());
+						if (responseObject.length() > 0) {
+							String dialogTitle = "", dialogMessage = "";
+
+							// Log.d("getOlaBookingStatus", "errors : "
+							// + (new
+							// JSONArray(responseObject.get("errors").toString())));
+
+							dialogTitle = responseObject.get("message")
+									.toString();
+							dialogMessage = responseObject.get("code")
+									.toString();
+
+							final String finalDialogTitle = dialogTitle;
+							final String finalDialogMessage = dialogMessage;
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									AlertDialog.Builder builder = new AlertDialog.Builder(
+											BookaCabFragmentActivity.this);
+									builder.setTitle(finalDialogTitle);
+									builder.setMessage("Cab could not be booked because : "
+											+ finalDialogMessage);
+									builder.setPositiveButton("OK", null);
+									AlertDialog dialog = builder.show();
+									TextView messageText = (TextView) dialog
+											.findViewById(android.R.id.message);
+									messageText.setGravity(Gravity.CENTER);
+									dialog.show();
+								}
+							});
+
+						} else {
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									Toast.makeText(
+											BookaCabFragmentActivity.this,
+											"Something went wrong, please try again",
+											Toast.LENGTH_LONG).show();
+								}
+							});
+						}
+
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(
+										BookaCabFragmentActivity.this,
+										"Something went wrong, please try again",
+										Toast.LENGTH_LONG).show();
+							}
+						});
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(BookaCabFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return response;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog12.isShowing()) {
+				dialog12.dismiss();
+			}
+		}
 	}
 
 	private void bookTFSCab(final Address startAddress, String username,
@@ -5095,7 +5637,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				public void run() {
 
 					if (shouldCall) {
-						Intent intent = new Intent(Intent.ACTION_CALL,
+						Intent intent = new Intent(Intent.ACTION_DIAL,
 								Uri.parse("tel:" + phoneNumber));
 						startActivity(intent);
 					}

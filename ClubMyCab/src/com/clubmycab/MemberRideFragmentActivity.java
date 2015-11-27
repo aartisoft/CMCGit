@@ -4060,6 +4060,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 									} else if (rideDetailsModel.getCabName()
 											.equalsIgnoreCase("TaxiForSure")) {
 										cancelTFSCab();
+									} else if (rideDetailsModel.getCabName()
+											.equalsIgnoreCase("ola")) {
+										cancelOlaCab();
 									}
 								}
 							});
@@ -7723,6 +7726,219 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 					} else {
 						final String reason = jsonObject.get("error_desc")
+								.toString();
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setTitle("Cab could not be cancelled");
+								builder.setMessage(reason);
+								builder.setPositiveButton("OK", null);
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			} else {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+		}
+	}
+
+	private void cancelOlaCab() {
+
+		if (!isOnline()) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MemberRideFragmentActivity.this);
+			builder.setTitle("Internet Connection Error");
+			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setPositiveButton("OK", null);
+			AlertDialog dialog = builder.show();
+			TextView messageText = (TextView) dialog
+					.findViewById(android.R.id.message);
+			messageText.setGravity(Gravity.CENTER);
+			dialog.show();
+
+			return;
+		}
+
+		CancelOlaCabAsync cancelOlaCabAsync = new CancelOlaCabAsync();
+		String authString = rideDetailsModel.getBookingRefNo() + "cancellation";
+		String param = "type=cancellation" + "&booking_id="
+				+ rideDetailsModel.getBookingRefNo() + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			cancelOlaCabAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					param);
+		} else {
+			cancelOlaCabAsync.execute(param);
+		}
+	}
+
+	public class CancelOlaCabAsync extends AsyncTask<String, Void, String> {
+
+		String result;
+
+		private ProgressDialog dialog = new ProgressDialog(
+				MemberRideFragmentActivity.this);
+
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
+
+		@Override
+		protected String doInBackground(String... args) {
+			Log.d("CancelOlaCabAsync",
+					"CancelOlaCabAsync : " + args[0].toString());
+
+			try {
+				URL url = new URL(GlobalVariables.ServiceUrl + "/olaApi.php");
+				String response = "";
+
+				HttpURLConnection urlConnection = (HttpURLConnection) url
+						.openConnection();
+				urlConnection.setReadTimeout(30000);
+				urlConnection.setConnectTimeout(30000);
+				urlConnection.setRequestMethod("POST");
+				urlConnection.setDoInput(true);
+				urlConnection.setDoOutput(true);
+
+				OutputStream outputStream = urlConnection.getOutputStream();
+				BufferedWriter bufferedWriter = new BufferedWriter(
+						new OutputStreamWriter(outputStream, "UTF-8"));
+				bufferedWriter.write(args[0].toString());
+				bufferedWriter.flush();
+				bufferedWriter.close();
+				outputStream.close();
+
+				int responseCode = urlConnection.getResponseCode();
+
+				if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+					String line = "";
+					BufferedReader bufferedReader = new BufferedReader(
+							new InputStreamReader(
+									urlConnection.getInputStream()));
+					while ((line = bufferedReader.readLine()) != null) {
+						response += line;
+					}
+
+				} else {
+					response = "";
+					Log.d("CancelOlaCabAsync",
+							"responseCode != HttpsURLConnection.HTTP_OK : "
+									+ responseCode);
+					result = response;
+				}
+
+				Log.d("CancelOlaCabAsync", "CancelOlaCabAsync response : "
+						+ response);
+				result = response;
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = "";
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(MemberRideFragmentActivity.this,
+								"Something went wrong, please try again",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			if (result.contains("Unauthorized Access")) {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.e("MemberRideFragmentActivity",
+								"CancelOlaCabAsync Unauthorized Access");
+						Toast.makeText(
+								MemberRideFragmentActivity.this,
+								getResources().getString(
+										R.string.exceptionstring),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				return "";
+			}
+
+			if (!result.isEmpty()) {
+
+				try {
+					JSONObject jsonObject = new JSONObject(result);
+					String status = jsonObject.get("status").toString();
+					if (status.equalsIgnoreCase("success")) {
+
+						// JSONObject jsonObjectData = new JSONObject(jsonObject
+						// .get("data").toString());
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(
+										MemberRideFragmentActivity.this);
+								builder.setMessage("Booking cancelled!");
+								builder.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+
+											@Override
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+											}
+										});
+								AlertDialog dialog = builder.show();
+								TextView messageText = (TextView) dialog
+										.findViewById(android.R.id.message);
+								messageText.setGravity(Gravity.CENTER);
+								dialog.show();
+
+							}
+						});
+
+					} else {
+						final String reason = jsonObject.get("reason")
 								.toString();
 
 						runOnUiThread(new Runnable() {

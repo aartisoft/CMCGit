@@ -29,8 +29,8 @@ public class GlobalVariables {
 	// public static final String ServerNameForChat = "@p2p-vm2"; // UAT
 	// public static final String CMC_SecretKey =
 	// "NrD4LMv5xGAXdYvxvzzcxASUgWQkKcZx"; // UAT
-	//http://107.167.183.147/ GoogleCloudUAT
-	
+	// http://107.167.183.147/ GoogleCloudUAT
+
 	// Mobikwik
 	// public static final String Mobikwik_ServerURL =
 	// "https://test.mobikwik.com/mobikwik"; // UAT
@@ -42,7 +42,7 @@ public class GlobalVariables {
 	// public static final String Mobikwik_14SecretKey_TokenRegenerate =
 	// "lu6tygh7u7tdg554k098ujd5468o"; // UAT
 
-	public static final boolean LOGGING_ENABLED = false;
+	public static final boolean LOGGING_ENABLED = true;
 
 	public static final double GEOFENCING_RADIUS = 0.003;
 

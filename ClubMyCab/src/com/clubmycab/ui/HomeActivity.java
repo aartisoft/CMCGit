@@ -19,8 +19,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -52,14 +50,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -79,7 +72,6 @@ import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
-import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -98,9 +90,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.navdrawer.SimpleSideDrawer;
-import com.viewpagerindicator.CirclePageIndicator;
 
 public class HomeActivity extends FragmentActivity implements
 		AsyncTaskResultListener, LocationListener, OnClickListener {
@@ -159,8 +149,6 @@ public class HomeActivity extends FragmentActivity implements
 	String myclubsresp;
 	String myprofileresp;
 
-	private static long back_pressed;
-
 	RelativeLayout unreadnoticountrl;
 	TextView unreadnoticount;
 
@@ -177,8 +165,6 @@ public class HomeActivity extends FragmentActivity implements
 
 	// flag for refresh page in onresume
 	boolean isCallresetIntentParams = false;
-	boolean isRunning = false;
-	boolean playAnimation = true;
 	float FromToMinDestance = 2000;
 
 	// String StartAddLatLngIntent;
@@ -193,7 +179,7 @@ public class HomeActivity extends FragmentActivity implements
 	String toshortname;
 	LatLng invitemapcenter;
 	private Context mcontext;
-	private String poolresponse, rideInvitationsResponse = "";
+	private String poolresponse;
 	// public ArrayList<String> CabId = new ArrayList<String>();
 	// public ArrayList<String> MobileNumberList = new ArrayList<String>();
 	// public ArrayList<String> OwnerName = new ArrayList<String>();
@@ -217,13 +203,10 @@ public class HomeActivity extends FragmentActivity implements
 	// public ArrayList<String> CabName = new ArrayList<String>();
 	// public ArrayList<String> ExpTripDuration = new ArrayList<String>();
 	// public ArrayList<String> status = new ArrayList<String>();
-	public static ArrayList<RideDetailsModel> arrayRideDetailsModels = new ArrayList<RideDetailsModel>();
 
-	public static ViewPager viewPagerHome;
-	private FragmentStatePagerAdapter mFragmentStatePagerAdapter;
-	private TextView tvViewpagerHeading;
-	private CirclePageIndicator circlePageIndicator;
-	private View viewHome;
+	public static final String HOME_ACTIVITY_CAR_POOL = "HOME_ACTIVITY_CAR_POOL";
+	public static final String HOME_ACTIVITY_SHARE_CAB = "HOME_ACTIVITY_SHARE_CAB";
+	public static final String HOME_ACTIVITY_BOOK_CAB = "HOME_ACTIVITY_BOOK_CAB";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -231,16 +214,6 @@ public class HomeActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_home_page);
 		mcontext = this;
 		isCallresetIntentParams = false;
-		SharedPreferences mPrefs1 = getSharedPreferences("QuitApplication", 0);
-		boolean shouldQuitApp = mPrefs1.getBoolean("quitapplication", false);
-		if (shouldQuitApp) {
-
-			SharedPreferences.Editor editor = mPrefs1.edit();
-			editor.putBoolean("quitapplication", false);
-			editor.commit();
-
-			finish();
-		}
 
 		// Check if Internet present
 		if (!isOnline()) {
@@ -288,7 +261,7 @@ public class HomeActivity extends FragmentActivity implements
 		// .setScreenName("help popup dialog").build());
 
 		// ///////////////////
-		tvViewpagerHeading = (TextView) findViewById(R.id.tvViewpagerHeading);
+
 		homepagerl = (RelativeLayout) findViewById(R.id.homepagerl);
 		homepagerl.setOnClickListener(new OnClickListener() {
 
@@ -311,7 +284,6 @@ public class HomeActivity extends FragmentActivity implements
 		profilepic = (CircularImageView) findViewById(R.id.profilepic);
 		notificationimg = (ImageView) findViewById(R.id.notificationimg);
 		drawerprofilepic = (CircularImageView) findViewById(R.id.drawerprofilepic);
-		viewHome = findViewById(R.id.viewHome);
 
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
@@ -1135,90 +1107,7 @@ public class HomeActivity extends FragmentActivity implements
 				}
 			}
 		});
-		setPagger();
-	}
 
-	// Set ViewPagger Adapter
-	private void setPagger() {
-		viewPagerHome = (ViewPager) findViewById(R.id.viewPagerHome);
-
-		// Get Rides
-		mFragmentStatePagerAdapter = new FragmentStatePagerAdapter(
-				getSupportFragmentManager()) {
-
-			@Override
-			public int getCount() {
-				return arrayRideDetailsModels.size();
-			}
-
-			@Override
-			public Fragment getItem(int position) {
-
-				return HomeRidePageFragment.newInstance(arrayRideDetailsModels
-						.get(position));
-
-			}
-
-			@Override
-			public int getItemPosition(Object object) {
-				return PagerAdapter.POSITION_NONE;
-			}
-
-		};
-
-		viewPagerHome.setAdapter(mFragmentStatePagerAdapter);
-
-		String comefrom = getIntent().getStringExtra("comefrom");
-
-		Log.d("MyRidesActivity", "comefrom : " + comefrom);
-		circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicatorHome);
-		circlePageIndicator.setViewPager(viewPagerHome, 0);
-		circlePageIndicator
-				.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-					@Override
-					public void onPageSelected(int position) {
-						// Log.d(TAG,
-						// "circlePageIndicator onPageSelected : " +
-						// position);
-						// mCurrentIndex = position;
-					}
-
-					@Override
-					public void onPageScrolled(int position,
-							float positionOffset, int positionOffsetPixels) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onPageScrollStateChanged(int state) {
-						// TODO Auto-generated method stub
-
-					}
-				});
-
-	}
-
-	private void swipeAutomaticViewPagger() {
-
-		new Handler().postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				int index = viewPagerHome.getCurrentItem();
-
-				if (index < (arrayRideDetailsModels.size() - 1)) {
-					viewPagerHome.setCurrentItem(index + 1);
-
-				} else
-					viewPagerHome.setCurrentItem(0);
-				if (playAnimation)
-
-					swipeAutomaticViewPagger();
-
-			}
-		}, 4000);
 	}
 
 	private void showButtonsDialog() {
@@ -1256,101 +1145,170 @@ public class HomeActivity extends FragmentActivity implements
 			}
 
 			else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						HomeActivity.this);
-				View builderView = (View) getLayoutInflater().inflate(
-						R.layout.dialog_home_page, null);
 
-				builder.setView(builderView);
-				final AlertDialog dialog = builder.create();
+				String screentoopen = getIntent()
+						.getStringExtra("screentoopen");
+				if (screentoopen.equals(HOME_ACTIVITY_SHARE_CAB)
+						|| screentoopen.equals(HOME_ACTIVITY_CAR_POOL)) {
+					isCallresetIntentParams = false;
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("ClubMyCab Click")
+							.setAction("ClubMyCab Click")
+							.setLabel("ClubMyCab Click").build());
 
-				LinearLayout linearLayout = (LinearLayout) builderView
-						.findViewById(R.id.homeclubmycabll);
-				linearLayout.setOnClickListener(new View.OnClickListener() {
+					logger.logEvent("HomePage ClubMyCab Click");
 
-					@Override
-					public void onClick(View view) {
-						isCallresetIntentParams = false;
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("ClubMyCab Click")
-								.setAction("ClubMyCab Click")
-								.setLabel("ClubMyCab Click").build());
+					Log.d("HomeActivity",
+							"homeclubmycabll click addressModelFrom : "
+									+ addressModelFrom.getShortname()
+									+ " addressModelTo : "
+									+ addressModelTo.getShortname());
 
-						logger.logEvent("HomePage ClubMyCab Click");
+					Intent mainIntent = new Intent(HomeActivity.this,
+							InviteFragmentActivity.class);
+					if (addressModelFrom != null && addressModelTo != null) {
 
-						Log.d("HomeActivity",
-								"homeclubmycabll click addressModelFrom : "
-										+ addressModelFrom.getShortname()
-										+ " addressModelTo : "
-										+ addressModelTo.getShortname());
+						Gson gson = new Gson();
 
-						Intent mainIntent = new Intent(HomeActivity.this,
-								InviteFragmentActivity.class);
-						if (addressModelFrom != null && addressModelTo != null) {
+						mainIntent.putExtra("StartAddressModel",
+								gson.toJson(addressModelFrom).toString());
+						mainIntent.putExtra("EndAddressModel",
+								gson.toJson(addressModelTo).toString());
 
-							Gson gson = new Gson();
+						mainIntent.putExtra("screentoopen", screentoopen);
 
-							mainIntent.putExtra("StartAddressModel", gson
-									.toJson(addressModelFrom).toString());
-							mainIntent.putExtra("EndAddressModel",
-									gson.toJson(addressModelTo).toString());
-
-							addressModelFrom = null;
-							addressModelTo = null;
-							startActivityForResult(mainIntent, 500);
-							overridePendingTransition(R.anim.slide_in_right,
-									R.anim.slide_out_left);
-						} else {
-							Toast.makeText(HomeActivity.this,
-									"Please enter both from & to locations",
-									Toast.LENGTH_LONG).show();
-						}
-
-						dialog.dismiss();
+						addressModelFrom = null;
+						addressModelTo = null;
+						startActivity(mainIntent);
+					} else {
+						Toast.makeText(HomeActivity.this,
+								"Please enter both from & to locations",
+								Toast.LENGTH_LONG).show();
 					}
-				});
+				} else if (screentoopen.equals(HOME_ACTIVITY_BOOK_CAB)) {
+					isCallresetIntentParams = false;
+					tracker.send(new HitBuilders.EventBuilder()
+							.setCategory("Book A Cab (HomePage)")
+							.setAction("BookaCab Click")
+							.setLabel("BookaCab Click").build());
 
-				linearLayout = (LinearLayout) builderView
-						.findViewById(R.id.homebookacabll);
-				linearLayout.setOnClickListener(new View.OnClickListener() {
+					logger.logEvent("HomePage BookaCab Click");
 
-					@Override
-					public void onClick(View view) {
-						isCallresetIntentParams = false;
-						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("Book A Cab (HomePage)")
-								.setAction("BookaCab Click")
-								.setLabel("BookaCab Click").build());
+					Intent mainIntent = new Intent(HomeActivity.this,
+							BookaCabFragmentActivity.class);
+					if (addressModelFrom != null && addressModelTo != null) {
 
-						logger.logEvent("HomePage BookaCab Click");
+						Gson gson = new Gson();
 
-						Intent mainIntent = new Intent(HomeActivity.this,
-								BookaCabFragmentActivity.class);
-						if (addressModelFrom != null && addressModelTo != null) {
+						mainIntent.putExtra("StartAddressModel",
+								gson.toJson(addressModelFrom).toString());
+						mainIntent.putExtra("EndAddressModel",
+								gson.toJson(addressModelTo).toString());
+						addressModelFrom = null;
+						addressModelTo = null;
 
-							Gson gson = new Gson();
-
-							mainIntent.putExtra("StartAddressModel", gson
-									.toJson(addressModelFrom).toString());
-							mainIntent.putExtra("EndAddressModel",
-									gson.toJson(addressModelTo).toString());
-							addressModelFrom = null;
-							addressModelTo = null;
-
-							startActivityForResult(mainIntent, 500);
-							overridePendingTransition(R.anim.slide_in_right,
-									R.anim.slide_out_left);
-						} else {
-							Toast.makeText(HomeActivity.this,
-									"Please enter both from & to locations",
-									Toast.LENGTH_LONG).show();
-						}
-
-						dialog.dismiss();
+						startActivity(mainIntent);
+					} else {
+						Toast.makeText(HomeActivity.this,
+								"Please enter both from & to locations",
+								Toast.LENGTH_LONG).show();
 					}
-				});
-
-				dialog.show();
+				}
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// HomeActivity.this);
+				// View builderView = (View) getLayoutInflater().inflate(
+				// R.layout.dialog_home_page, null);
+				//
+				// builder.setView(builderView);
+				// final AlertDialog dialog = builder.create();
+				//
+				// LinearLayout linearLayout = (LinearLayout) builderView
+				// .findViewById(R.id.homeclubmycabll);
+				// linearLayout.setOnClickListener(new View.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(View view) {
+				// isCallresetIntentParams = false;
+				// tracker.send(new HitBuilders.EventBuilder()
+				// .setCategory("ClubMyCab Click")
+				// .setAction("ClubMyCab Click")
+				// .setLabel("ClubMyCab Click").build());
+				//
+				// logger.logEvent("HomePage ClubMyCab Click");
+				//
+				// Log.d("HomeActivity",
+				// "homeclubmycabll click addressModelFrom : "
+				// + addressModelFrom.getShortname()
+				// + " addressModelTo : "
+				// + addressModelTo.getShortname());
+				//
+				// Intent mainIntent = new Intent(HomeActivity.this,
+				// InviteFragmentActivity.class);
+				// if (addressModelFrom != null && addressModelTo != null) {
+				//
+				// Gson gson = new Gson();
+				//
+				// mainIntent.putExtra("StartAddressModel", gson
+				// .toJson(addressModelFrom).toString());
+				// mainIntent.putExtra("EndAddressModel",
+				// gson.toJson(addressModelTo).toString());
+				//
+				// addressModelFrom = null;
+				// addressModelTo = null;
+				// startActivityForResult(mainIntent, 500);
+				// overridePendingTransition(R.anim.slide_in_right,
+				// R.anim.slide_out_left);
+				// } else {
+				// Toast.makeText(HomeActivity.this,
+				// "Please enter both from & to locations",
+				// Toast.LENGTH_LONG).show();
+				// }
+				//
+				// dialog.dismiss();
+				// }
+				// });
+				//
+				// linearLayout = (LinearLayout) builderView
+				// .findViewById(R.id.homebookacabll);
+				// linearLayout.setOnClickListener(new View.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(View view) {
+				// isCallresetIntentParams = false;
+				// tracker.send(new HitBuilders.EventBuilder()
+				// .setCategory("Book A Cab (HomePage)")
+				// .setAction("BookaCab Click")
+				// .setLabel("BookaCab Click").build());
+				//
+				// logger.logEvent("HomePage BookaCab Click");
+				//
+				// Intent mainIntent = new Intent(HomeActivity.this,
+				// BookaCabFragmentActivity.class);
+				// if (addressModelFrom != null && addressModelTo != null) {
+				//
+				// Gson gson = new Gson();
+				//
+				// mainIntent.putExtra("StartAddressModel", gson
+				// .toJson(addressModelFrom).toString());
+				// mainIntent.putExtra("EndAddressModel",
+				// gson.toJson(addressModelTo).toString());
+				// addressModelFrom = null;
+				// addressModelTo = null;
+				//
+				// startActivityForResult(mainIntent, 500);
+				// overridePendingTransition(R.anim.slide_in_right,
+				// R.anim.slide_out_left);
+				// } else {
+				// Toast.makeText(HomeActivity.this,
+				// "Please enter both from & to locations",
+				// Toast.LENGTH_LONG).show();
+				// }
+				//
+				// dialog.dismiss();
+				// }
+				// });
+				//
+				// dialog.show();
 			}
 		} else {
 			Toast.makeText(HomeActivity.this,
@@ -2037,20 +1995,14 @@ public class HomeActivity extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		super.onBackPressed();
 
-		if (fromrelative.getVisibility() == View.VISIBLE) {
-			fromrelative.setVisibility(View.GONE);
-			contentrelativehomepage.setVisibility(View.VISIBLE);
-		} else {
-			if (back_pressed + 2000 > System.currentTimeMillis()) {
-				super.onBackPressed();
-			} else {
-				Toast.makeText(getBaseContext(), "Press once again to exit!",
-						Toast.LENGTH_SHORT).show();
-				back_pressed = System.currentTimeMillis();
-			}
-		}
-
+		Intent mainIntent = new Intent(HomeActivity.this,
+				HomeCarPoolActivity.class);
+		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivityForResult(mainIntent, 500);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 
 	// // ///////
@@ -2573,16 +2525,6 @@ public class HomeActivity extends FragmentActivity implements
 			}
 
 		}
-		playAnimation = true;
-		if (!isRunning) {
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForFetchPool()
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				new ConnectionTaskForFetchPool().execute();
-			}
-		}
 
 	}
 
@@ -2590,7 +2532,6 @@ public class HomeActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		AppEventsLogger.deactivateApp(this);
-		playAnimation = false;
 	}
 
 	@Override
@@ -2769,210 +2710,5 @@ public class HomeActivity extends FragmentActivity implements
 			break;
 		}
 
-	}
-
-	private void ConnectionTaskForFetchPoolPostExecute() {
-		String response = "";
-		String msg = "";
-		JSONObject obj = null;
-		try {
-			obj = new JSONObject(rideInvitationsResponse);
-			response = obj.getString("status");
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		// 07-30 16:42:37.665: D/poolresponse(13451): {status:"fail",
-		// message:"No Records Found"}
-
-		if (response.equalsIgnoreCase("fail")) {
-			// Toast.makeText(HomeActivity.this, ""+msg,
-			// Toast.LENGTH_LONG).show();
-			tvViewpagerHeading.setVisibility(View.GONE);
-			circlePageIndicator.setVisibility(View.GONE);
-			viewHome.setVisibility(View.GONE);
-			arrayRideDetailsModels.clear();
-
-			mFragmentStatePagerAdapter.notifyDataSetChanged();
-
-		}
-
-		else {
-
-			if (response.equalsIgnoreCase("success")) {
-				tvViewpagerHeading.setVisibility(View.VISIBLE);
-
-				circlePageIndicator.setVisibility(View.VISIBLE);
-				viewHome.setVisibility(View.VISIBLE);
-
-				try {
-					arrayRideDetailsModels.clear();
-					Gson gson = new Gson();
-
-					ArrayList<RideDetailsModel> arrayRideLocal = gson.fromJson(
-							obj.getJSONArray("data").toString(),
-							new TypeToken<ArrayList<RideDetailsModel>>() {
-							}.getType());
-
-					if (arrayRideLocal.size() > 0) {
-
-						for (int i = 0; i < arrayRideLocal.size(); i++) {
-
-							arrayRideDetailsModels.add(arrayRideLocal.get(i));
-
-						}
-					}
-
-					// if(arrayRideDetailsModels.size()>0){
-					// for (int i = 0; i < arrayRideDetailsModels.size(); i++) {
-					//
-					//
-					// OwnerName.add(arrayRideDetailsModels.get(i).getOwnerName());
-					// FromShortName.add(arrayRideDetailsModels.get(i)
-					// .getFromShortName());
-					// ToShortName.add(arrayRideDetailsModels.get(i)
-					// .getToShortName());
-					// TravelDate.add(arrayRideDetailsModels.get(i)
-					// .getTravelDate());
-					// TravelTime.add(arrayRideDetailsModels.get(i)
-					// .getTravelTime());
-					// Seat_Status.add(arrayRideDetailsModels.get(i)
-					// .getSeat_Status());
-					// imagename.add(arrayRideDetailsModels.get(i).getImagename());
-					// }
-					// }
-					Log.d("MyRidesActivity",
-							"GSON pools : "
-									+ gson.toJson(arrayRideDetailsModels)
-											.toString());
-
-					mFragmentStatePagerAdapter.notifyDataSetChanged();
-
-					viewPagerHome.setCurrentItem(0);
-
-					if (arrayRideDetailsModels.size() > 1) {
-
-						swipeAutomaticViewPagger();
-
-					}
-
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-
-	}
-
-	// ///////
-
-	private class ConnectionTaskForFetchPool extends
-			AsyncTask<String, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-			AuthenticateConnectionFetchPool mAuth1 = new AuthenticateConnectionFetchPool();
-			try {
-				mAuth1.connection();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				exceptioncheck = true;
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void v) {
-
-			if (exceptioncheck) {
-				exceptioncheck = false;
-				Toast.makeText(HomeActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (rideInvitationsResponse.contains("Unauthorized Access")) {
-				Log.e("HomeActivity",
-						"rideInvitationsResponse Unauthorized Access");
-				Toast.makeText(HomeActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			ConnectionTaskForFetchPoolPostExecute();
-			isRunning = false;
-
-			// clearBookedOrCarPreference();
-
-			String comefrom = getIntent().getStringExtra("comefrom");
-
-			if (comefrom != null && !comefrom.isEmpty()
-					&& !comefrom.equalsIgnoreCase("null")) {
-
-			}
-		}
-
-	}
-
-	public class AuthenticateConnectionFetchPool {
-
-		public AuthenticateConnectionFetchPool() {
-
-		}
-
-		public void connection() throws Exception {
-
-			// Connect to google.com
-			HttpClient httpClient = new DefaultHttpClient();
-			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/rideInvitations.php";
-			HttpPost httpPost = new HttpPost(url_select11);
-			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"mobileNumber", MobileNumber);
-			String authString = MobileNumber;
-			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
-					GlobalMethods.calculateCMCAuthString(authString));
-
-			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-			nameValuePairList.add(MobileNumberBasicNameValuePair);
-			nameValuePairList.add(authValuePair);
-
-			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-					nameValuePairList);
-			httpPost.setEntity(urlEncodedFormEntity);
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-
-			Log.d("httpResponse rideInvitations", "" + httpResponse);
-
-			InputStream inputStream = httpResponse.getEntity().getContent();
-			InputStreamReader inputStreamReader = new InputStreamReader(
-					inputStream);
-
-			BufferedReader bufferedReader = new BufferedReader(
-					inputStreamReader);
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			String bufferedStrChunk = null;
-
-			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-				rideInvitationsResponse = stringBuilder
-						.append(bufferedStrChunk).toString();
-			}
-
-			Log.d("rideInvitationsResponse", "" + stringBuilder.toString()
-					+ " mobileNumber : " + MobileNumber);
-		}
 	}
 }

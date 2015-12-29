@@ -69,7 +69,7 @@
             android:visibility="gone"
             android:layout_weight="1"
             android:background="#4279bd"
-            android:text="Clubs"
+            android:text="Groups"
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </LinearLayout>
@@ -141,7 +141,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/createnewclubbtn"
                     android:gravity="center"
-                    android:text="My Clubs"
+                    android:text="My Groups"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
 
@@ -168,7 +168,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/createnewclubbtn"
                     android:gravity="center"
-                    android:text="Clubs I&apos;m Member of"
+                    android:text="Groups I&apos;m Member of"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
 
@@ -230,7 +230,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="You can invite friends by selecting “Clubs” or individual friends from your contact list."
+                android:text="You can invite friends by selecting “Groups” or individual friends from your contact list."
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
@@ -241,7 +241,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="(If you haven’t created any clubs, we will help you at next step – just select the friends here)"
+                android:text="(If you haven’t created any groups, we will help you at next step – just select the friends here)"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp"
                 android:textStyle="italic" />
@@ -253,7 +253,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="If your friends don’t have Club My Cab, we will help them get it. They will still get your cab share request"
+                android:text="If your friends don’t have iShareRyde, we will help them get it. They will still get your ride share request"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>

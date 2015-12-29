@@ -326,7 +326,7 @@ public class RegistrationActivity extends Activity {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								RegistrationActivity.this);
 						builder.setTitle("Internet Connection Error");
-						builder.setMessage("ClubMyCab requires Internet connection");
+						builder.setMessage("iShareRyde requires Internet connection");
 						builder.setPositiveButton("OK", null);
 						AlertDialog dialog = builder.show();
 						TextView messageText = (TextView) dialog
@@ -438,8 +438,7 @@ public class RegistrationActivity extends Activity {
 								.edit();
 						editor.putString("FullName", fullnameedittext.getText()
 								.toString().trim());
-						editor.putString("MobileNumber", countrycode.getText()
-								.toString().trim()
+						editor.putString("MobileNumber", "0091"
 								+ mobileedittext.getText().toString().trim());
 						editor.putString("Email", emailedittext.getText()
 								.toString().trim());
@@ -450,8 +449,7 @@ public class RegistrationActivity extends Activity {
 						Intent i = new Intent(RegistrationActivity.this,
 								OTPActivity.class);
 						i.putExtra("from", "reg");
-						i.putExtra("mobnum", countrycode.getText().toString()
-								.trim()
+						i.putExtra("mobnum", "0091"
 								+ mobileedittext.getText().toString().trim());
 
 						i.putExtra("fullname", fullnameedittext.getText()
@@ -526,7 +524,7 @@ public class RegistrationActivity extends Activity {
 					"Password", "");
 
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", countrycode.getText().toString().trim()
+					"MobileNumber", "0091"
 							+ mobileedittext.getText().toString().trim());
 			BasicNameValuePair DeviceTokenBasicNameValuePair = new BasicNameValuePair(
 					"DeviceToken", regid);
@@ -539,7 +537,7 @@ public class RegistrationActivity extends Activity {
 			BasicNameValuePair platformBasicNameValuePair = new BasicNameValuePair(
 					"Platform", "A");
 
-			Log.d("MobileNumber", countrycode.getText().toString().trim()
+			Log.d("MobileNumber", "0091"
 					+ mobileedittext.getText().toString().trim());
 
 			Log.d("DeviceToken", regid);
@@ -565,7 +563,7 @@ public class RegistrationActivity extends Activity {
 			String authString = regid
 					+ emailedittext.getText().toString().trim()
 					+ fullnameedittext.getText().toString().trim()
-					+ countrycode.getText().toString().trim()
+					+ "0091"
 					+ mobileedittext.getText().toString().trim() + "A"
 					+ referralcodeedittext.getText().toString().trim();
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",

@@ -12,7 +12,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:text="Booking for a club ride? Select one below :"
+        android:text="Booking for a group ride? Select one below :"
         android:textColor="@android:color/black"
         android:textSize="15sp"
         android:textStyle="bold" />

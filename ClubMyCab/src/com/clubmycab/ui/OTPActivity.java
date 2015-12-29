@@ -397,7 +397,7 @@ public class OTPActivity extends Activity {
 				editor.commit();
 
 				Intent mainIntent = new Intent(OTPActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				mainIntent.putExtra("from", "normal");
 				mainIntent.putExtra("message", "null");
 				startActivityForResult(mainIntent, 500);

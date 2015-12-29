@@ -114,12 +114,12 @@ public class OffersDetailsActivity extends Activity {
 									sendIntent
 											.putExtra(
 													Intent.EXTRA_TEXT,
-													"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
+													"I am using this cool app 'iShareRyde' to share rides. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
 								} else {
 									sendIntent
 											.putExtra(
 													Intent.EXTRA_TEXT,
-													"I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab. Use my referral code "
+													"I am using this cool app 'iShareRyde' to share rides. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab. Use my referral code "
 															+ jsonObject
 																	.get("referralCode")
 																	.toString()

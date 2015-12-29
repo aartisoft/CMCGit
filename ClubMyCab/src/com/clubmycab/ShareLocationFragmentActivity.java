@@ -79,7 +79,7 @@ import android.widget.Toast;
 import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.ui.ContactsInviteForRideActivity;
 import com.clubmycab.ui.FavoritePlaceFindActivity;
-import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.HomeCarPoolActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalMethods;
@@ -1974,7 +1974,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 					Toast.makeText(ShareLocationFragmentActivity.this,
-							"No Clubs Created Yet!!", Toast.LENGTH_LONG).show();
+							"No Groups Created Yet!!", Toast.LENGTH_LONG).show();
 				} else {
 
 					try {
@@ -2475,7 +2475,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 			if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 				Toast.makeText(ShareLocationFragmentActivity.this,
-						"No clubs created yet!", Toast.LENGTH_LONG).show();
+						"No groups created yet!", Toast.LENGTH_LONG).show();
 			} else {
 
 				try {
@@ -2904,7 +2904,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		if (!fromrelative.isShown()) {
 
 			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-					HomeActivity.class);
+					HomeCarPoolActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

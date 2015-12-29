@@ -45,7 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="Full Name:" />
+                    android:text="Full Name:"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/fullnameedittext"
@@ -69,7 +70,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="Mobile Number:" />
+                    android:text="Mobile Number:"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/countrycode"
@@ -79,7 +81,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:editable="false"
-                    android:text="0091"
+                    android:text="+91"
                     android:textColor="#9e9e9e"
                     android:textSize="15sp" />
 
@@ -106,7 +108,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="E-mail:" />
+                    android:text="E-mail:"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/emailedittext"
@@ -131,7 +134,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="Referral code:" />
+                    android:text="Referral code:"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/referralcodeedittext"
@@ -156,7 +160,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="Password:" />
+                    android:text="Password:"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/passwordedittext"
@@ -182,7 +187,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="Confirm password:" />
+                    android:text="Confirm password:"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/confirmpasswordedittext"

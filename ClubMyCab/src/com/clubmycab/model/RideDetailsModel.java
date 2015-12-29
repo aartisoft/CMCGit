@@ -32,6 +32,8 @@ public class RideDetailsModel {
 	String DriverNumber;
 	String CarNumber;
 	String CarType;
+	String rideType;
+	String perKmCharge;
 
 	public String getCabId() {
 		return CabId;
@@ -271,5 +273,21 @@ public class RideDetailsModel {
 
 	public void setCarType(String carType) {
 		CarType = carType;
+	}
+
+	public String getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(String rideType) {
+		this.rideType = rideType;
+	}
+
+	public String getPerKmCharge() {
+		return perKmCharge;
+	}
+
+	public void setPerKmCharge(String perKmCharge) {
+		this.perKmCharge = perKmCharge;
 	}
 }

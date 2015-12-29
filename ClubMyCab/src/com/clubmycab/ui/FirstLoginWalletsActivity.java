@@ -447,6 +447,12 @@ public class FirstLoginWalletsActivity extends Activity implements
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 
 					walletLinearLayout.setVisibility(View.VISIBLE);
+					
+					otpEditText.setVisibility(View.VISIBLE);
+					continuewithotp.setVisibility(View.VISIBLE);
+					TextView textView = (TextView)findViewById(R.id.textViewbyclicking);
+					textView.setVisibility(View.VISIBLE);
+							
 				} else {
 
 					Toast.makeText(FirstLoginWalletsActivity.this,
@@ -596,7 +602,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(FirstLoginWalletsActivity.this,
-				HomeActivity.class);
+				HomeCarPoolActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

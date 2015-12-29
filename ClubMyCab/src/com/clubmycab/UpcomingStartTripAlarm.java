@@ -76,7 +76,7 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 				intent.putExtra(CAB_ID_KEY, cabID);
 				intent.putExtra(MESSAGE_KEY, "You have an upcoming trip from "
 						+ fShortName + " to " + tShortName
-						+ ". Click here to book a cab");
+						+ ". Click here to check trip details");
 
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(
 						context, ALARM_UPCOMING_ID, intent, 0);
@@ -150,10 +150,10 @@ public class UpcomingStartTripAlarm extends WakefulBroadcastReceiver {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)

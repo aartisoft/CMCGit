@@ -165,7 +165,7 @@ public class MyClubsActivity extends Activity implements
 
 	RelativeLayout myclubsrl;
 
-	String comefrom;
+	String comefrom, comefromfirstlogin;
 
 	Tracker tracker;
 	boolean exceptioncheck = false;
@@ -374,6 +374,11 @@ public class MyClubsActivity extends Activity implements
 				showAlertDialog();
 			}
 		});
+		
+		comefromfirstlogin = getIntent().getStringExtra("comefromfirstlogin");
+		if (comefromfirstlogin != null && comefromfirstlogin.length() > 0) {
+			newclub.performClick();
+		}
 
 		// ///////////////
 		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -522,7 +527,7 @@ public class MyClubsActivity extends Activity implements
 						|| cname.equalsIgnoreCase("")) {
 
 					Toast.makeText(MyClubsActivity.this,
-							"Please enter the club name", Toast.LENGTH_LONG)
+							"Please enter the group name", Toast.LENGTH_LONG)
 							.show();
 				} else {
 
@@ -584,7 +589,7 @@ public class MyClubsActivity extends Activity implements
 		String clubs = mPrefs11111.getString("clubs", "");
 
 		if (clubs.equalsIgnoreCase("No Users of your Club")) {
-			Toast.makeText(MyClubsActivity.this, "No clubs created yet!!",
+			Toast.makeText(MyClubsActivity.this, "No groups created yet!!",
 					Toast.LENGTH_LONG).show();
 		} else {
 
@@ -978,13 +983,13 @@ public class MyClubsActivity extends Activity implements
 					meradialog.dismiss();
 
 					String toaststr = selectednumbers.size()
-							+ " friend(s) added to " + clubname + " club";
+							+ " friend(s) added to " + clubname + " group";
 					Toast.makeText(MyClubsActivity.this, "" + toaststr,
 							Toast.LENGTH_LONG).show();
 
 				} else {
 					Toast.makeText(MyClubsActivity.this,
-							"Please select contact(s) to create club",
+							"Please select contact(s) to create group",
 							Toast.LENGTH_LONG).show();
 				}
 
@@ -1110,7 +1115,7 @@ public class MyClubsActivity extends Activity implements
 					meradialog.dismiss();
 
 					String toaststr = selectednumbers.size()
-							+ " friend(s) refered to " + clubname + " club";
+							+ " friend(s) refered to " + clubname + " group";
 					Toast.makeText(MyClubsActivity.this, "" + toaststr,
 							Toast.LENGTH_LONG).show();
 
@@ -1415,11 +1420,11 @@ public class MyClubsActivity extends Activity implements
 							|| name.get(position).equalsIgnoreCase("null")) {
 
 						str = "Are you sure you Want to delete "
-								+ number.get(position) + " from this club?";
+								+ number.get(position) + " from this group?";
 					} else {
 
 						str = "Are you sure you Want to delete "
-								+ name.get(position) + " from this club?";
+								+ name.get(position) + " from this group?";
 					}
 
 					builder.setMessage(str);
@@ -1937,7 +1942,7 @@ public class MyClubsActivity extends Activity implements
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							MyClubsActivity.this);
-					builder.setMessage("Want to delete this club?");
+					builder.setMessage("Want to delete this group?");
 					builder.setCancelable(true);
 					builder.setPositiveButton("No",
 							new DialogInterface.OnClickListener() {
@@ -2197,7 +2202,7 @@ public class MyClubsActivity extends Activity implements
 			MyClubsActivity.this.finish();
 		} else {
 			Intent mainIntent = new Intent(MyClubsActivity.this,
-					HomeActivity.class);
+					HomeCarPoolActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

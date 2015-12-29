@@ -44,7 +44,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="#4279bd"
-            android:text="Clubs"
+            android:text="Groups"
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </LinearLayout>
@@ -76,27 +76,28 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical" >
-          <TextView 
-         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        
-        android:text="@string/selectclub"
-        android:gravity="center"
-        android:textColor="#000"
-        />
-         <TextView 
-         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:textSize="10sp"
-        android:text="@string/memberexcludingmsg"
-        android:gravity="center"
-        android:textColor="#000"
-        />
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="10dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:gravity="center"
+              android:text="Select groups/contacts from above"
+              android:textColor="#000" />
+
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="10dp"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:gravity="center"
+             android:text="@string/memberexcludingmsg"
+             android:textColor="#000"
+             android:textSize="10sp"
+             android:visibility="gone" />
 
         <Button
             android:id="@+id/sendbtn"
@@ -156,7 +157,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/createnewclubbtn"
                     android:gravity="center"
-                    android:text="My Clubs"
+                    android:text="My Groups"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
 
@@ -185,7 +186,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/createnewclubbtn"
                     android:gravity="center"
-                    android:text="Clubs I&apos;m Member of"
+                    android:text="Groups I&apos;m Member of"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp" />
 

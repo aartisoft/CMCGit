@@ -31,9 +31,9 @@
         android:layout_margin="5dp"
         android:layout_weight="20"
         android:paddingBottom="5dp"
-        android:text="Tell us about your regular travel locations"
+        android:text="Tell us about your regular travel locations, this will help you set up rides faster"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <!-- <ScrollView -->
@@ -85,22 +85,6 @@
             android:orientation="horizontal" >
 
             <Button
-                android:id="@+id/btnSkip"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="#4279bd"
-                android:onClick="onSkipButtonClick"
-                android:text="Skip"
-                android:textColor="#ffffff"
-                android:textSize="13sp" />
-
-            <View
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:background="#ffffff" />
-
-            <Button
                 android:id="@+id/idDoneButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -110,6 +94,23 @@
                 android:text="Save"
                 android:textColor="#ffffff"
                 android:textSize="13sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="#ffffff" />
+            
+            <Button
+                android:id="@+id/btnSkip"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="#E99D1A"
+                android:onClick="onSkipButtonClick"
+                android:text="Skip"
+                android:textColor="#ffffff"
+                android:textSize="13sp" />
+            
         </LinearLayout>
     </LinearLayout>
 

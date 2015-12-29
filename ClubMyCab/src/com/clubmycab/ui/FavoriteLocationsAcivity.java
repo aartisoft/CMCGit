@@ -774,18 +774,21 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			else
 				json = gson.toJson(addressModelList.get(i));
 
-			if (favoriteTag.get(i).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE))
+			if (favoriteTag.get(i).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE) && json.length() > 0)
 				favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY, json);
 			else if (favoriteTag.get(i).equalsIgnoreCase(
-					StringTags.TAG_WHERE_WORK))
+					StringTags.TAG_WHERE_WORK) && json.length() > 0)
 				favLocationHashMap.put(StringTags.TAG_WHERE_WORK_KEY, json);
-			else
+			else if (json.length() > 0)
 				favLocationHashMap.put(favoriteTag.get(i), json);
 
 		}
 
 		// }
 
+		Log.d("onDoneButtonClick",
+				"favLocationHashMap : " + favLocationHashMap.size()
+						+ " favoriteAddress : " + favoriteAddress.size());
 		if (favLocationHashMap.size() == 0) {
 			Toast.makeText(getApplicationContext(),
 					"Fill atleast one location ..", Toast.LENGTH_SHORT).show();

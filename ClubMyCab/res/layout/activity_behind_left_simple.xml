@@ -60,7 +60,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:text="My Clubs"
+                android:text="My Groups"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -349,7 +349,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
-                android:text="Offers"
+                android:text="Offers/My Rewards"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
         </LinearLayout>

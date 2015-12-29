@@ -368,7 +368,7 @@
                 <!-- android:layout_height="wrap_content" -->
                 <!-- android:layout_gravity="center_vertical" -->
                 <!-- android:layout_marginLeft="20dp" -->
-                <!-- android:text="ClubMyCab" -->
+                <!-- android:text="iShareRyde" -->
                 <!-- android:textColor="#ffffff" -->
                 <!-- android:textSize="16sp" -->
                 <!-- android:textStyle="bold" /> -->
@@ -477,52 +477,6 @@
                 <!-- android:visibility="gone" /> -->
                 <!-- </LinearLayout> -->
 
-                <View
-                    android:id="@+id/viewHome"
-                    android:layout_width="fill_parent"
-                    android:layout_height="8dp"
-                    android:layout_below="@id/rlTo"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"
-                    android:background="@color/dark_gray" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/viewHome"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/tvViewpagerHeading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/str_home_pagger_heading"
-                        android:textColor="#000"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/viewPagerHome"
-                        android:layout_width="match_parent"
-                        android:layout_height="90dp"
-                        android:layout_marginTop="10dp" />
-
-                    <com.viewpagerindicator.CirclePageIndicator
-                        android:id="@+id/indicatorHome"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="5dp"
-                        android:padding="6dp"
-                        app:fillColor="@android:color/black"
-                        app:pageColor="@android:color/white"
-                        app:radius="5dp"
-                        app:strokeColor="@android:color/darker_gray"
-                        app:strokeWidth="1dp" />
-                </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

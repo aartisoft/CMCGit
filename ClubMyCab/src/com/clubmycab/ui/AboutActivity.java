@@ -191,7 +191,7 @@ public class AboutActivity extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(AboutActivity.this, HomeActivity.class);
+		Intent mainIntent = new Intent(AboutActivity.this, HomeCarPoolActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

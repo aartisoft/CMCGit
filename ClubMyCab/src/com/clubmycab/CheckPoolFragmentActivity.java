@@ -111,7 +111,7 @@ import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.FirstLoginWalletsActivity;
-import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.HomeCarPoolActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
 import com.clubmycab.utility.GlobalMethods;
@@ -548,6 +548,17 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 							.findViewById(android.R.id.message);
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
+				} else if (rideDetailsModel.getRideType().equals("1")) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							CheckPoolFragmentActivity.this);
+					builder.setMessage("This is a car pool ride, you can book a cab from home page");
+					builder.setCancelable(false);
+					builder.setNegativeButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
 				} else {
 
 					openBookCabPage();
@@ -826,7 +837,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 
 				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				mainIntent.putExtra("from", "normal");
 				mainIntent.putExtra("message", "null");
 				mainIntent.putExtra("CabId", "null");
@@ -1119,9 +1130,11 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 											key).toString()))));
 				}
 			}
-			arrayList.add(0,
+			arrayList.add(
+					0,
 					"Total Fare : \u20B9 "
-							+ hashMap.get("tripTotalFare").toString());
+							+ Math.round(Double.parseDouble(hashMap.get(
+									"tripTotalFare").toString())));
 
 			listView.setAdapter(new ListViewAdapterFareSplit(
 					CheckPoolFragmentActivity.this, arrayList));
@@ -1756,7 +1769,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				} else {
 					Toast.makeText(
 							CheckPoolFragmentActivity.this,
-							"You do not have sufficient Club Points to pay for your share!",
+							"You do not have sufficient reward Points to pay for your share!",
 							Toast.LENGTH_LONG).show();
 					showPaymentDialog();
 				}
@@ -2062,6 +2075,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 	}
 
 	private void showCabBookingDialog(final boolean shouldShowTripStartDialog) {
+
+		if (rideDetailsModel.getRideType().equals("1")) {
+			if (shouldShowTripStartDialog) {
+				showTripStartDialog();
+			}
+			return;
+		}
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				CheckPoolFragmentActivity.this);
 		View builderView = (View) getLayoutInflater().inflate(
@@ -2219,11 +2240,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		}
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				CheckPoolFragmentActivity.this);
+		shareLocation(false);
+
+		// AlertDialog.Builder builder = new AlertDialog.Builder(
+		// CheckPoolFragmentActivity.this);
+		// //
 		// builder.setMessage("Member(s) of your trip will now receive your location updates, would you like to share your location with others?");
-		builder.setMessage("Member(s) of your trip will now receive your location updates.");
-		builder.setCancelable(false);
+		// builder.setMessage("Member(s) of your trip will now receive your location updates.");
+		// builder.setCancelable(false);
 
 		// builder.setPositiveButton("Select receipients",
 		// new DialogInterface.OnClickListener() {
@@ -2232,13 +2256,14 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		// }
 		// });
 
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				if (MemberName.size() > 0) {
-					shareLocation(false);
-				}
-			}
-		});
+		// builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+		// {
+		// public void onClick(DialogInterface dialog, int which) {
+		// if (MemberName.size() > 0) {
+		// shareLocation(false);
+		// }
+		// }
+		// });
 
 		// builder.setNegativeButton("NO", new DialogInterface.OnClickListener()
 		// {
@@ -2252,7 +2277,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		// }
 		// });
 
-		builder.show();
+		// builder.show();
 	}
 
 	private void shareLocation(boolean hasAdditionalReceipients) {
@@ -3260,7 +3285,24 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 								"CheckPoolFragmentActivity", "Trip completed",
 								"Trip completed", extraParams);
 
-						showRideCompleteDialog();
+						if (rideDetailsModel.getRideType().equals("1")) {
+							FareCalculatorNewCarPool fareCalculatorNewCarPool = new FareCalculatorNewCarPool(
+									FareMobNoList, FareMemberPickLocaton,
+									FareMemberDropLocaton, FareLocationList,
+									FaredistanceList,
+									Double.valueOf(rideDetailsModel
+											.getPerKmCharge()));
+
+							HashMap<String, Double> hashMap = fareCalculatorNewCarPool
+									.getFareSplit();
+
+							Log.d("CheckPoolFragmentActivity",
+									"fareCalculatorNew : " + hashMap);
+
+							sendFareSplitToMembers(hashMap);
+						} else {
+							showRideCompleteDialog();
+						}
 					} else if (rideDetailsModel.getCabStatus().equals("A")
 							&& rideDetailsModel.getStatus().equals("3")) {
 						showPaymentDialog();
@@ -3667,7 +3709,23 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						"CheckPoolFragmentActivity", "Trip completed",
 						"Trip completed", extraParams);
 
-				showRideCompleteDialog();
+				if (rideDetailsModel.getRideType().equals("1")) {
+					FareCalculatorNewCarPool fareCalculatorNewCarPool = new FareCalculatorNewCarPool(
+							FareMobNoList, FareMemberPickLocaton,
+							FareMemberDropLocaton, FareLocationList,
+							FaredistanceList, Double.valueOf(rideDetailsModel
+									.getPerKmCharge()));
+
+					HashMap<String, Double> hashMap = fareCalculatorNewCarPool
+							.getFareSplit();
+
+					Log.d("CheckPoolFragmentActivity", "fareCalculatorNew : "
+							+ hashMap);
+
+					sendFareSplitToMembers(hashMap);
+				} else {
+					showRideCompleteDialog();
+				}
 			} else if (rideDetailsModel.getCabStatus().equals("A")
 					&& rideDetailsModel.getStatus().equals("3")) {
 				showPaymentDialog();
@@ -4798,6 +4856,16 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			tvAvSeats.setText("Available : ");
 		}
 
+		TextView textViewCharges = (TextView) dialog
+				.findViewById(R.id.carpoolchargestext);
+		if (rideDetailsModel.getRideType().equals("1")) {
+			textViewCharges.setVisibility(View.VISIBLE);
+			textViewCharges.setText("Per seat charge :  \u20B9"
+					+ rideDetailsModel.getPerKmCharge() + "/km");
+		} else {
+			textViewCharges.setVisibility(View.GONE);
+		}
+
 		if (showmembersresp.equalsIgnoreCase("No Members joined yet")) {
 
 			joinedmembersll.setVisibility(View.GONE);
@@ -4996,7 +5064,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			if (!chatlayoutmainrl.isShown()) {
 				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);
@@ -6392,7 +6460,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 					Toast.makeText(CheckPoolFragmentActivity.this,
-							"No Clubs Created Yet!!", Toast.LENGTH_LONG).show();
+							"No Groups Created Yet!!", Toast.LENGTH_LONG)
+							.show();
 				} else {
 
 					try {
@@ -6780,7 +6849,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 				Toast.makeText(CheckPoolFragmentActivity.this,
-						"No clubs created yet!", Toast.LENGTH_LONG).show();
+						"No groups created yet!", Toast.LENGTH_LONG).show();
 			} else {
 
 				try {
@@ -7057,7 +7126,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					CheckPoolFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -7272,7 +7341,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					CheckPoolFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -7464,7 +7533,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					CheckPoolFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -7679,7 +7748,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					CheckPoolFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog

@@ -156,7 +156,7 @@ public class ContactsInviteForRideActivity extends Activity {
 	RelativeLayout contexthelpcontacts;
 	String distancetext;
 
-	String imagenameresp;
+	String imagenameresp, poolresponse;
 
 	RelativeLayout contactsmyclubrl;
 	Tracker tracker;
@@ -500,7 +500,7 @@ public class ContactsInviteForRideActivity extends Activity {
 
 						} else {
 							Toast.makeText(ContactsInviteForRideActivity.this,
-									"Please select Clubs/Contacts to invite",
+									"Please select Groups/Contacts to invite",
 									Toast.LENGTH_LONG).show();
 						}
 
@@ -663,126 +663,209 @@ public class ContactsInviteForRideActivity extends Activity {
 
 		if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(
-					ContactsInviteForRideActivity.this);
-			builder.setMessage("You are not a member of any club yet. Would you like to create one now?");
-			builder.setCancelable(false);
+			flag = 1;
 
-			builder.setPositiveButton("Yes, Create club",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent(
-									ContactsInviteForRideActivity.this,
-									MyClubsActivity.class);
-							intent.putExtra("comefrom", "comefrom");
-							startActivity(intent);
-						}
-					});
+			// myclubbtn.setVisibility(View.GONE);
+			// contactsbtn.setVisibility(View.VISIBLE);
 
-			builder.setNegativeButton("No, Invite contacts",
-					new DialogInterface.OnClickListener() {
+			clubcontactslistll.setVisibility(View.VISIBLE);
+			searchfromlist.setVisibility(View.VISIBLE);
+			validmobiletxt.setVisibility(View.VISIBLE);
+			mainclublistll.setVisibility(View.GONE);
 
+			getContacts();
+
+			ContactsListClass.phoneList.clear();
+
+			for (int i = 0; i < namearraynew.size(); i++) {
+
+				ContactObject cp = new ContactObject();
+
+				cp.setName(namearraynew.get(i));
+				cp.setNumber(phonenoarraynew.get(i));
+				cp.setImage(imagearraynew.get(i));
+				cp.setAppUserimagename("contacticon.png");
+
+				ContactsListClass.phoneList.add(cp);
+			}
+
+			Collections.sort(ContactsListClass.phoneList,
+					new Comparator<ContactObject>() {
 						@Override
-						public void onClick(DialogInterface dialog, int which) {
-
-							flag = 1;
-
-							// myclubbtn.setVisibility(View.GONE);
-							// contactsbtn.setVisibility(View.VISIBLE);
-
-							clubcontactslistll.setVisibility(View.VISIBLE);
-							searchfromlist.setVisibility(View.VISIBLE);
-							validmobiletxt.setVisibility(View.VISIBLE);
-							mainclublistll.setVisibility(View.GONE);
-
-							getContacts();
-
-							ContactsListClass.phoneList.clear();
-
-							for (int i = 0; i < namearraynew.size(); i++) {
-
-								ContactObject cp = new ContactObject();
-
-								cp.setName(namearraynew.get(i));
-								cp.setNumber(phonenoarraynew.get(i));
-								cp.setImage(imagearraynew.get(i));
-								cp.setAppUserimagename("contacticon.png");
-
-								ContactsListClass.phoneList.add(cp);
-							}
-
-							Collections.sort(ContactsListClass.phoneList,
-									new Comparator<ContactObject>() {
-										@Override
-										public int compare(ContactObject lhs,
-												ContactObject rhs) {
-											return lhs.getName().compareTo(
-													rhs.getName());
-										}
-									});
-
-							objAdapter = new ContactsAdapter(
-									ContactsInviteForRideActivity.this,
-									ContactsListClass.phoneList);
-							contactslist.setAdapter(objAdapter);
-							contactslist
-									.setOnItemClickListener(new OnItemClickListener() {
-
-										@Override
-										public void onItemClick(
-												AdapterView<?> parent,
-												View view, int position, long id) {
-
-											CheckBox chk = (CheckBox) view
-													.findViewById(R.id.contactcheck);
-											ContactObject bean = ContactsListClass.phoneList
-													.get(position);
-											if (bean.isSelected()) {
-												bean.setSelected(false);
-												chk.setChecked(false);
-											} else {
-												bean.setSelected(true);
-												chk.setChecked(true);
-											}
-
-										}
-									});
-
-							searchfromlist
-									.addTextChangedListener(new TextWatcher() {
-
-										@Override
-										public void onTextChanged(
-												CharSequence cs, int arg1,
-												int arg2, int arg3) {
-											// When user changed the Text
-											String text = searchfromlist
-													.getText()
-													.toString()
-													.toLowerCase(
-															Locale.getDefault());
-											objAdapter.filter(text);
-										}
-
-										@Override
-										public void beforeTextChanged(
-												CharSequence arg0, int arg1,
-												int arg2, int arg3) {
-											// TODO Auto-generated method stub
-
-										}
-
-										@Override
-										public void afterTextChanged(
-												Editable arg0) {
-											// TODO Auto-generated method stub
-										}
-									});
-
+						public int compare(ContactObject lhs, ContactObject rhs) {
+							return lhs.getName().compareTo(rhs.getName());
 						}
 					});
 
-			builder.show();
+			objAdapter = new ContactsAdapter(
+					ContactsInviteForRideActivity.this,
+					ContactsListClass.phoneList);
+			contactslist.setAdapter(objAdapter);
+			contactslist.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+
+					CheckBox chk = (CheckBox) view
+							.findViewById(R.id.contactcheck);
+					ContactObject bean = ContactsListClass.phoneList
+							.get(position);
+					if (bean.isSelected()) {
+						bean.setSelected(false);
+						chk.setChecked(false);
+					} else {
+						bean.setSelected(true);
+						chk.setChecked(true);
+					}
+
+				}
+			});
+
+			searchfromlist.addTextChangedListener(new TextWatcher() {
+
+				@Override
+				public void onTextChanged(CharSequence cs, int arg1, int arg2,
+						int arg3) {
+					// When user changed the Text
+					String text = searchfromlist.getText().toString()
+							.toLowerCase(Locale.getDefault());
+					objAdapter.filter(text);
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence arg0, int arg1,
+						int arg2, int arg3) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable arg0) {
+					// TODO Auto-generated method stub
+				}
+			});
+
+			// AlertDialog.Builder builder = new AlertDialog.Builder(
+			// ContactsInviteForRideActivity.this);
+			// builder.setMessage("You are not a member of any groups yet. Would you like to create one now?");
+			// builder.setCancelable(false);
+			//
+			// builder.setPositiveButton("Yes, Create group",
+			// new DialogInterface.OnClickListener() {
+			// public void onClick(DialogInterface dialog, int which) {
+			// Intent intent = new Intent(
+			// ContactsInviteForRideActivity.this,
+			// MyClubsActivity.class);
+			// intent.putExtra("comefrom", "comefrom");
+			// startActivity(intent);
+			// }
+			// });
+			//
+			// builder.setNegativeButton("No, Invite contacts",
+			// new DialogInterface.OnClickListener() {
+			//
+			// @Override
+			// public void onClick(DialogInterface dialog, int which) {
+			//
+			// flag = 1;
+			//
+			// // myclubbtn.setVisibility(View.GONE);
+			// // contactsbtn.setVisibility(View.VISIBLE);
+			//
+			// clubcontactslistll.setVisibility(View.VISIBLE);
+			// searchfromlist.setVisibility(View.VISIBLE);
+			// validmobiletxt.setVisibility(View.VISIBLE);
+			// mainclublistll.setVisibility(View.GONE);
+			//
+			// getContacts();
+			//
+			// ContactsListClass.phoneList.clear();
+			//
+			// for (int i = 0; i < namearraynew.size(); i++) {
+			//
+			// ContactObject cp = new ContactObject();
+			//
+			// cp.setName(namearraynew.get(i));
+			// cp.setNumber(phonenoarraynew.get(i));
+			// cp.setImage(imagearraynew.get(i));
+			// cp.setAppUserimagename("contacticon.png");
+			//
+			// ContactsListClass.phoneList.add(cp);
+			// }
+			//
+			// Collections.sort(ContactsListClass.phoneList,
+			// new Comparator<ContactObject>() {
+			// @Override
+			// public int compare(ContactObject lhs,
+			// ContactObject rhs) {
+			// return lhs.getName().compareTo(
+			// rhs.getName());
+			// }
+			// });
+			//
+			// objAdapter = new ContactsAdapter(
+			// ContactsInviteForRideActivity.this,
+			// ContactsListClass.phoneList);
+			// contactslist.setAdapter(objAdapter);
+			// contactslist
+			// .setOnItemClickListener(new OnItemClickListener() {
+			//
+			// @Override
+			// public void onItemClick(
+			// AdapterView<?> parent,
+			// View view, int position, long id) {
+			//
+			// CheckBox chk = (CheckBox) view
+			// .findViewById(R.id.contactcheck);
+			// ContactObject bean = ContactsListClass.phoneList
+			// .get(position);
+			// if (bean.isSelected()) {
+			// bean.setSelected(false);
+			// chk.setChecked(false);
+			// } else {
+			// bean.setSelected(true);
+			// chk.setChecked(true);
+			// }
+			//
+			// }
+			// });
+			//
+			// searchfromlist
+			// .addTextChangedListener(new TextWatcher() {
+			//
+			// @Override
+			// public void onTextChanged(
+			// CharSequence cs, int arg1,
+			// int arg2, int arg3) {
+			// // When user changed the Text
+			// String text = searchfromlist
+			// .getText()
+			// .toString()
+			// .toLowerCase(
+			// Locale.getDefault());
+			// objAdapter.filter(text);
+			// }
+			//
+			// @Override
+			// public void beforeTextChanged(
+			// CharSequence arg0, int arg1,
+			// int arg2, int arg3) {
+			// // TODO Auto-generated method stub
+			//
+			// }
+			//
+			// @Override
+			// public void afterTextChanged(
+			// Editable arg0) {
+			// // TODO Auto-generated method stub
+			// }
+			// });
+			//
+			// }
+			// });
+			//
+			// builder.show();
 		} else {
 
 			try {
@@ -1100,30 +1183,7 @@ public class ContactsInviteForRideActivity extends Activity {
 			builder.setMessage("Your friend(s) have been informed about the ride! We will let you know when they join. Sit back & relax!");
 			builder.setCancelable(false);
 
-			builder.setPositiveButton("I'm done here",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-
-							scheduleUpcomingTripNotification();
-							scheduleStartTripNotification();
-
-							SharedPreferences sharedPreferences1 = getSharedPreferences(
-									"QuitApplication", 0);
-							SharedPreferences.Editor editor1 = sharedPreferences1
-									.edit();
-							editor1.putBoolean("quitapplication", true);
-							editor1.commit();
-
-							Intent mainIntent = new Intent(
-									ContactsInviteForRideActivity.this,
-									HomeActivity.class);
-							mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-									| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-							startActivity(mainIntent);
-						}
-					});
-
-			builder.setNegativeButton("Start over again",
+			builder.setPositiveButton("OK",
 					new DialogInterface.OnClickListener() {
 
 						@Override
@@ -1134,7 +1194,11 @@ public class ContactsInviteForRideActivity extends Activity {
 
 							Intent mainIntent = new Intent(
 									ContactsInviteForRideActivity.this,
-									HomeActivity.class);
+									MyRidesActivity.class);
+
+							mainIntent.putExtra("comefrom", "comefrom");
+							mainIntent.putExtra("cabID", CabId);
+
 							mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 									| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 							startActivityForResult(mainIntent, 500);
@@ -1144,6 +1208,56 @@ public class ContactsInviteForRideActivity extends Activity {
 					});
 
 			builder.show();
+
+			// AlertDialog.Builder builder = new AlertDialog.Builder(
+			// ContactsInviteForRideActivity.this);
+			// builder.setMessage("Your friend(s) have been informed about the ride! We will let you know when they join. Sit back & relax!");
+			// builder.setCancelable(false);
+			//
+			// builder.setPositiveButton("I'm done here",
+			// new DialogInterface.OnClickListener() {
+			// public void onClick(DialogInterface dialog, int which) {
+			//
+			// scheduleUpcomingTripNotification();
+			// scheduleStartTripNotification();
+			//
+			// SharedPreferences sharedPreferences1 = getSharedPreferences(
+			// "QuitApplication", 0);
+			// SharedPreferences.Editor editor1 = sharedPreferences1
+			// .edit();
+			// editor1.putBoolean("quitapplication", true);
+			// editor1.commit();
+			//
+			// Intent mainIntent = new Intent(
+			// ContactsInviteForRideActivity.this,
+			// HomeCarPoolActivity.class);
+			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			// startActivity(mainIntent);
+			// }
+			// });
+			//
+			// builder.setNegativeButton("Start over again",
+			// new DialogInterface.OnClickListener() {
+			//
+			// @Override
+			// public void onClick(DialogInterface dialog, int which) {
+			//
+			// scheduleUpcomingTripNotification();
+			// scheduleStartTripNotification();
+			//
+			// Intent mainIntent = new Intent(
+			// ContactsInviteForRideActivity.this,
+			// HomeCarPoolActivity.class);
+			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			// startActivityForResult(mainIntent, 500);
+			// overridePendingTransition(R.anim.slide_in_right,
+			// R.anim.slide_out_left);
+			// }
+			// });
+			//
+			// builder.show();
 		}
 
 	}
@@ -1221,6 +1335,16 @@ public class ContactsInviteForRideActivity extends Activity {
 			String msg = FullName + " invited you to share a cab from "
 					+ fromshortname + " to " + toshortname;
 
+			String screentoopen = getIntent().getStringExtra("screentoopen");
+			String perKmCharge = "0";
+			if (screentoopen
+					.equalsIgnoreCase(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
+				perKmCharge = getIntent().getStringExtra("perKmCharge");
+				msg = FullName + " invited you to join a car pool from "
+						+ fromshortname + " to " + toshortname + " at Rs."
+						+ perKmCharge + " per Km";
+			}
+
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
 			String url_select = GlobalVariables.ServiceUrl + "/openacab.php";
@@ -1282,6 +1406,20 @@ public class ContactsInviteForRideActivity extends Activity {
 			BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair(
 					"Message", msg);
 
+			String rideType = "2";
+			BasicNameValuePair RideTypeNameBasicNameValuePair = new BasicNameValuePair(
+					"rideType", rideType);
+			BasicNameValuePair PerKmChargeBasicNameValuePair = new BasicNameValuePair(
+					"perKmCharge", perKmCharge);
+			if (screentoopen
+					.equalsIgnoreCase(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
+				rideType = "1";
+				RideTypeNameBasicNameValuePair = new BasicNameValuePair(
+						"rideType", rideType);
+				PerKmChargeBasicNameValuePair = new BasicNameValuePair(
+						"perKmCharge", perKmCharge);
+			}
+
 			Log.d("ContactsToInviteForRideActivity",
 					"AuthenticateConnectionSendInvite : "
 							+ GlobalVariables.ServiceUrl + "/openacab.php"
@@ -1297,7 +1435,11 @@ public class ContactsInviteForRideActivity extends Activity {
 							+ distancetext + " ExpTripDuration : "
 							+ durationvalue + " MembersNumber : "
 							+ selectednumbers.toString() + " MembersName : "
-							+ selectednames.toString() + " Message : " + msg);
+							+ selectednames.toString() + " Message : " + msg
+							+ " screentoopen : "
+							+ getIntent().getStringExtra("screentoopen")
+							+ " rideType : " + rideType + " perKmCharge : "
+							+ perKmCharge);
 
 			String authString = CabId
 					+ distancetext
@@ -1311,7 +1453,9 @@ public class ContactsInviteForRideActivity extends Activity {
 					+ msg
 					+ MobileNumberstr
 					+ OwnerName
+					+ perKmCharge
 					+ Seats
+					+ rideType
 					+ Seats
 					+ ToLocation
 					+ ((toshortname == null || toshortname.equalsIgnoreCase("") || toshortname
@@ -1339,6 +1483,9 @@ public class ContactsInviteForRideActivity extends Activity {
 			nameValuePairList.add(MembersNumberBasicNameValuePair);
 			nameValuePairList.add(MembersNameBasicNameValuePair);
 			nameValuePairList.add(MessageBasicNameValuePair);
+
+			nameValuePairList.add(RideTypeNameBasicNameValuePair);
+			nameValuePairList.add(PerKmChargeBasicNameValuePair);
 
 			nameValuePairList.add(authValuePair);
 

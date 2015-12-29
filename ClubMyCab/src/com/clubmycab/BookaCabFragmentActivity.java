@@ -1830,7 +1830,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						BookaCabFragmentActivity.this);
 				builder.setTitle("Internet Connection Error");
-				builder.setMessage("ClubMyCab requires Internet connection");
+				builder.setMessage("iShareRyde requires Internet connection");
 				builder.setPositiveButton("OK", null);
 				AlertDialog dialog = builder.show();
 				TextView messageText = (TextView) dialog
@@ -3615,7 +3615,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -4337,7 +4337,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -4824,7 +4824,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -5145,7 +5145,7 @@ public class BookaCabFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					BookaCabFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog

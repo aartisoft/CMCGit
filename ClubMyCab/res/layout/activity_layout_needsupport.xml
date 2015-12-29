@@ -78,7 +78,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="5dp"
                 android:text="@string/str_description"
-                android:textColor="@color/bg_darkgray"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <EditText
@@ -98,6 +98,16 @@
                 android:textColor="@color/bg_darkgray"
                 android:textSize="15sp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:text="We will respond to your query on the e-mail address registered with us"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
             <RelativeLayout
                 android:id="@+id/rlCheckbox"
                 android:layout_width="match_parent"
@@ -109,8 +119,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/check_box"
-                 android:visibility="gone"
-                    android:textColor="#000" />
+                    android:textColor="#000"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <LinearLayout

@@ -7,28 +7,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.clubmycab.CheckPoolFragmentActivity;
-import com.clubmycab.CircularImageView;
 import com.clubmycab.MemberRideFragmentActivity;
 import com.clubmycab.R;
 import com.clubmycab.model.RideDetailsModel;
-import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
 import com.clubmycab.utility.StringTags;
 import com.google.gson.Gson;
 
 public class HomeRidePageFragment extends Fragment {
 
-	private String floc, tloc, tdate, ttime, sets, ownnam, ownimgnam;
+	private String floc, tloc, tdate, ttime, sets, ownnam, ownimgnam, type;
 	AQuery aq;
 
 	public static final String ARGUMENTS_BITMAP = "HelpPageFragment.ArgumentsBitmap";
 
-	public static HomeRidePageFragment newInstance(RideDetailsModel model) {
+	public static HomeRidePageFragment newInstance(RideDetailsModel model,
+			String type) {
 
 		Bundle args = new Bundle();
 		args.putString("floc", model.getFromShortName());
@@ -38,6 +36,8 @@ public class HomeRidePageFragment extends Fragment {
 		args.putString("sets", model.getSeat_Status());
 		args.putString("ownnam", model.getOwnerName());
 		args.putString("ownimgnam", model.getImagename());
+
+		args.putString("type", type);
 
 		HomeRidePageFragment helpPageFragment = new HomeRidePageFragment();
 		helpPageFragment.setArguments(args);
@@ -60,17 +60,18 @@ public class HomeRidePageFragment extends Fragment {
 		this.ownnam = getArguments().getString("ownnam");
 		this.ownimgnam = getArguments().getString("ownimgnam");
 
+		this.type = getArguments().getString("type");
+
 		this.aq = new AQuery(getActivity());
 
-		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View convertView = (View) inflater.inflate(R.layout.myrides_list_row,
-				container, false);
+		View convertView = (View) inflater.inflate(
+				R.layout.myrides_list_row_pager, container, false);
 		convertView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -78,19 +79,26 @@ public class HomeRidePageFragment extends Fragment {
 
 				// TODO Auto-generated method stub
 
-				// mypoollist.setOnItemClickListener(new OnItemClickListener() {
-				// @Override
-				// public void onItemClick(AdapterView<?> arg0, View arg1,
-				// int arg2, long arg3) {
-				int arg2 = HomeActivity.viewPagerHome.getCurrentItem();
-				// Toast.makeText(getActivity(), "call::"+arg2,
-				// Toast.LENGTH_SHORT).show();
+				RideDetailsModel rideDetailsModel = new RideDetailsModel();
+				String mobileNumber = "";
 
-				Log.d("arg2", "" + arg2);
+				if (type.equals(HomeCarPoolActivity.OFFER_CAR_POOL)) {
+					int arg2 = HomeCarPoolActivity.viewPagerHome
+							.getCurrentItem();
+					Log.d("arg2", "" + arg2);
 
-				RideDetailsModel rideDetailsModel = HomeActivity.arrayRideDetailsModels
-						.get(arg2);
-				String mobileNumber = rideDetailsModel.getMobileNumber();
+					rideDetailsModel = HomeCarPoolActivity.arrayListInvitations
+							.get(arg2);
+					mobileNumber = rideDetailsModel.getMobileNumber();
+				} else if (type.equals(HomeCarPoolActivity.OFFER_SHARE_CAB)) {
+					int arg2 = HomeCarPoolActivity.viewPagerHome
+							.getCurrentItem();
+					Log.d("arg2", "" + arg2);
+
+					rideDetailsModel = HomeCarPoolActivity.arrayListInvitations
+							.get(arg2);
+					mobileNumber = rideDetailsModel.getMobileNumber();
+				}
 
 				if (mobileNumber.equalsIgnoreCase("121")) {
 
@@ -218,11 +226,12 @@ public class HomeRidePageFragment extends Fragment {
 		// imageView.setImageDrawable(mBitmapDrawable);
 		//
 
-		LinearLayout llCircularHeader = (LinearLayout) convertView
-				.findViewById(R.id.llCircularHeader);
-		llCircularHeader.setVisibility(View.GONE);
-		CircularImageView myridesbannerimage = (CircularImageView) convertView
-				.findViewById(R.id.myridesbannerimage);
+		// LinearLayout llCircularHeader = (LinearLayout) convertView
+		// .findViewById(R.id.llCircularHeader);
+		// llCircularHeader.setVisibility(View.GONE);
+		// CircularImageView myridesbannerimage = (CircularImageView)
+		// convertView
+		// .findViewById(R.id.myridesbannerimage);
 		TextView myridesbannerusername = (TextView) convertView
 				.findViewById(R.id.myridesbannerusername);
 		TextView fromtolocationvalue = (TextView) convertView
@@ -234,16 +243,16 @@ public class HomeRidePageFragment extends Fragment {
 		TextView tvAvSeats = (TextView) convertView
 				.findViewById(R.id.tvAvSeats);
 
-		if (ownimgnam.trim().isEmpty()) {
-
-			Log.d("image nahi hai", "" + ownimgnam.trim());
-
-		} else {
-			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
-					+ ownimgnam.trim();
-			aq.id(myridesbannerimage).image(url, true, true);
-		}
-		myridesbannerusername.setText(ownnam.trim());
+//		if (ownimgnam.trim().isEmpty()) {
+//
+//			Log.d("image nahi hai", "" + ownimgnam.trim());
+//
+//		} else {
+//			String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
+//					+ ownimgnam.trim();
+//			aq.id(myridesbannerimage).image(url, true, true);
+//		}
+		
 		fromtolocationvalue.setText(floc.trim() + " > " + tloc.trim());
 		datetext.setText(tdate.trim());
 		timetext.setText(ttime.trim());
@@ -260,6 +269,30 @@ public class HomeRidePageFragment extends Fragment {
 		} catch (Exception e) {
 			seatstext.setText("Total seats :");
 			tvAvSeats.setText("Available :");
+		}
+
+		TextView textView = (TextView) convertView
+				.findViewById(R.id.carpoolchargestext);
+		RideDetailsModel rideDetailsModel = new RideDetailsModel();
+
+		if (type.equals(HomeCarPoolActivity.OFFER_CAR_POOL)) {
+
+			int arg2 = HomeCarPoolActivity.viewPagerHome.getCurrentItem();
+			Log.d("arg2", "" + arg2);
+
+			rideDetailsModel = HomeCarPoolActivity.arrayListInvitations
+					.get(arg2);
+
+			textView.setVisibility(View.VISIBLE);
+			textView.setText("Per seat charge :  \u20B9"
+					+ rideDetailsModel.getPerKmCharge() + "/km");
+			
+			myridesbannerusername.setText(ownnam.trim() + " (Car Pool)");
+
+		} else if (type.equals(HomeCarPoolActivity.OFFER_SHARE_CAB)) {
+			textView.setVisibility(View.INVISIBLE);
+			
+			myridesbannerusername.setText(ownnam.trim() + " (Cab Share)");
 		}
 
 		return convertView;

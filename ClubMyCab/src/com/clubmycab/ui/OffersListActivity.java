@@ -203,7 +203,7 @@ public class OffersListActivity extends Activity implements
 				if (jsonObject.get("status").toString().equals("success")) {
 					JSONObject jsonObject2 = new JSONObject(jsonObject.get(
 							"data").toString());
-					textViewCredits.setText("Your Club Points : "
+					textViewCredits.setText("Your reward points : "
 							+ jsonObject2.get("totalCredits").toString());
 				}
 
@@ -335,7 +335,7 @@ public class OffersListActivity extends Activity implements
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(OffersListActivity.this,
-				HomeActivity.class);
+				HomeCarPoolActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

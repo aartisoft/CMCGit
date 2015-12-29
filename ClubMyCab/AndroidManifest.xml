@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.clubmycab"
-    android:versionCode="14"
-    android:versionName="2.3" >
+    android:versionCode="15"
+    android:versionName="2.4" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -76,7 +76,7 @@
             android:name="af_SessionTimeOut"
             android:value="3600" />
         <meta-data
-            android:name="ClubMyCab"
+            android:name="iShareRyde"
             android:value="" />
 
         <activity
@@ -104,7 +104,22 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
-
+        
+        <activity
+            android:name=".ui.HomeCarPoolActivity"
+            android:label="@string/title_activity_home_page"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
+        
+        <activity
+            android:name=".ui.OfferPoolOrCabShare"
+            android:label="@string/title_activity_home_page"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" >
+        </activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

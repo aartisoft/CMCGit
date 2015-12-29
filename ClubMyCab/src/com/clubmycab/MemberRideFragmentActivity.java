@@ -102,7 +102,7 @@ import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.FirstLoginWalletsActivity;
-import com.clubmycab.ui.HomeActivity;
+import com.clubmycab.ui.HomeCarPoolActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
 import com.clubmycab.ui.UpdatePickupLocationFragmentActivity;
@@ -303,6 +303,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	private ArrayList<String> FareMobNoList = new ArrayList<String>();
 	private ArrayList<LatLng> FareMemberPickLocaton = new ArrayList<LatLng>();
 	private ArrayList<LatLng> FareMemberDropLocaton = new ArrayList<LatLng>();
+
+	String gotopoolresp;
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -813,6 +815,17 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							.findViewById(android.R.id.message);
 					messageText.setGravity(Gravity.CENTER);
 					dialog.show();
+				} else if (rideDetailsModel.getRideType().equals("1")) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							MemberRideFragmentActivity.this);
+					builder.setMessage("This is a car pool ride, you can book a cab from home page");
+					builder.setCancelable(false);
+					builder.setNegativeButton("OK", null);
+					AlertDialog dialog = builder.show();
+					TextView messageText = (TextView) dialog
+							.findViewById(android.R.id.message);
+					messageText.setGravity(Gravity.CENTER);
+					dialog.show();
 				} else {
 
 					tracker.send(new HitBuilders.EventBuilder()
@@ -1306,6 +1319,133 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			new ConnectionTaskForGetMyFare().execute(
 					rideDetailsModel.getCabId(), MemberNumberstr, "");
 		}
+
+		// This is called to check if the ride has been cancelled
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			new ConnectionTaskForseenotification()
+					.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+							rideDetailsModel.getCabId());
+		} else {
+			new ConnectionTaskForseenotification().execute(rideDetailsModel
+					.getCabId());
+		}
+
+	}
+
+	private class ConnectionTaskForseenotification extends
+			AsyncTask<String, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionseenotification mAuth1 = new AuthenticateConnectionseenotification();
+			try {
+				mAuth1.cid = args[0];
+
+				mAuth1.connection();
+			} catch (Exception e) {
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (gotopoolresp.contains("Unauthorized Access")) {
+				Log.e("MemberRideFragmentActivity",
+						"gotopoolresp Unauthorized Access");
+				// Toast.makeText(SplashActivity.this,
+				// getResources().getString(R.string.exceptionstring),
+				// Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (gotopoolresp.equalsIgnoreCase("This Ride no longer exist")) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						MemberRideFragmentActivity.this);
+				builder.setMessage("This ride no longer exists");
+				builder.setCancelable(false);
+
+				builder.setPositiveButton("Ok",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								finish();
+							}
+						});
+
+				builder.show();
+			} else {
+
+			}
+		}
+
+	}
+
+	public class AuthenticateConnectionseenotification {
+
+		public String cid;
+
+		public AuthenticateConnectionseenotification() {
+
+		}
+
+		public void connection() throws Exception {
+
+			// Connect to google.com
+			HttpClient httpClient = new DefaultHttpClient();
+			String url_select = GlobalVariables.ServiceUrl + "/GoToPool.php";
+			HttpPost httpPost = new HttpPost(url_select);
+			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
+					"CabId", cid);
+
+			String authString = cid;
+			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+					GlobalMethods.calculateCMCAuthString(authString));
+
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(CabIdBasicNameValuePair);
+			nameValuePairList.add(authValuePair);
+
+			UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+					nameValuePairList);
+			httpPost.setEntity(urlEncodedFormEntity);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+
+			Log.d("httpResponse", "" + httpResponse);
+
+			InputStream inputStream = httpResponse.getEntity().getContent();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream);
+
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			StringBuilder stringBuilder = new StringBuilder();
+
+			String bufferedStrChunk = null;
+
+			while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+				gotopoolresp = stringBuilder.append(bufferedStrChunk)
+						.toString();
+			}
+
+			Log.d("gotopoolresp", "" + stringBuilder.toString());
+		}
 	}
 
 	private void showRideCompleteDialog() {
@@ -1362,7 +1502,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 
 				Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				mainIntent.putExtra("from", "normal");
 				mainIntent.putExtra("message", "null");
 				mainIntent.putExtra("CabId", "null");
@@ -1628,9 +1768,11 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 											key).toString()))));
 				}
 			}
-			arrayList.add(0,
+			arrayList.add(
+					0,
 					"Total Fare : \u20B9 "
-							+ hashMap.get("tripTotalFare").toString());
+							+ Math.round(Double.parseDouble(hashMap.get(
+									"tripTotalFare").toString())));
 
 			listView.setAdapter(new ListViewAdapterFareSplit(
 					MemberRideFragmentActivity.this, arrayList));
@@ -3244,7 +3386,9 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						"MemberRideFragmentActivity", "Trip completed",
 						"Trip completed", extraParams);
 
-				showRideCompleteDialog();
+				if (!rideDetailsModel.getRideType().equals("1")) {
+					showRideCompleteDialog();
+				}
 			} else if (rideDetailsModel.getCabStatus().equals("A")
 					&& rideDetailsModel.getStatus().equals("3")) {
 				showPaymentDialog();
@@ -3696,7 +3840,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			}
 
 			Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
-					HomeActivity.class);
+					HomeCarPoolActivity.class);
 			mainIntent.putExtra("from", "normal");
 			mainIntent.putExtra("message", "null");
 			mainIntent.putExtra("CabId", "null");
@@ -3946,6 +4090,16 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		} catch (Exception e) {
 			seatstext.setText("Total seats : ");
 			tvAvSeats.setText("Available : ");
+		}
+
+		TextView textViewCharges = (TextView) dialog
+				.findViewById(R.id.carpoolchargestext);
+		if (rideDetailsModel.getRideType().equals("1")) {
+			textViewCharges.setVisibility(View.VISIBLE);
+			textViewCharges.setText("Per seat charge :  \u20B9"
+					+ rideDetailsModel.getPerKmCharge() + "/km");
+		} else {
+			textViewCharges.setVisibility(View.GONE);
 		}
 
 		if (checkpoolalreadyjoinresp.equalsIgnoreCase("fresh pool")) {
@@ -4801,7 +4955,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			if (!chatlayoutmainrl.isShown()) {
 				Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);
@@ -6710,7 +6864,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				} else {
 					Toast.makeText(
 							MemberRideFragmentActivity.this,
-							"You do not have sufficient Club Points to pay for your share!",
+							"You do not have sufficient reward Points to pay for your share!",
 							Toast.LENGTH_LONG).show();
 					showPaymentDialog();
 				}
@@ -7161,7 +7315,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					MemberRideFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -7374,7 +7528,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					MemberRideFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -7566,7 +7720,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					MemberRideFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog
@@ -7780,7 +7934,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					MemberRideFragmentActivity.this);
 			builder.setTitle("Internet Connection Error");
-			builder.setMessage("ClubMyCab requires Internet connection");
+			builder.setMessage("iShareRyde requires Internet connection");
 			builder.setPositiveButton("OK", null);
 			AlertDialog dialog = builder.show();
 			TextView messageText = (TextView) dialog

@@ -237,7 +237,7 @@ public class UniversalDrawer {
 		// sendIntent
 		// .putExtra(
 		// Intent.EXTRA_TEXT,
-		// "I am using this cool app 'ClubMyCab' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
+		// "I am using this cool app 'iShareRyde' to share & book cabs. Check it out @ https://play.google.com/store/apps/details?id=com.clubmycab");
 		// sendIntent.setType("text/plain");
 		// context.startActivity(Intent.createChooser(sendIntent,
 		// "Share Via"));

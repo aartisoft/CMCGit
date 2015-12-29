@@ -214,7 +214,7 @@ public class LoginActivity extends Activity {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								LoginActivity.this);
 						builder.setTitle("Internet Connection Error");
-						builder.setMessage("ClubMyCab requires Internet connection");
+						builder.setMessage("iShareRyde requires Internet connection");
 						builder.setPositiveButton("OK", null);
 						AlertDialog dialog = builder.show();
 						TextView messageText = (TextView) dialog
@@ -398,8 +398,7 @@ public class LoginActivity extends Activity {
 			String url_select = GlobalVariables.ServiceUrl + "/login.php";
 			HttpPost httpPost = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
-					"MobileNumber", countrycodelogin.getText().toString()
-							.trim()
+					"MobileNumber", "0091"
 							+ numberedittext.getText().toString().trim());
 
 			// BasicNameValuePair PasswordBasicNameValuePair = new
@@ -413,8 +412,7 @@ public class LoginActivity extends Activity {
 			BasicNameValuePair platformBasicNameValuePair = new BasicNameValuePair(
 					"Platform", "A");
 
-			String authString = regid
-					+ countrycodelogin.getText().toString().trim()
+			String authString = regid + "0091"
 					+ numberedittext.getText().toString().trim() + "A";
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
 					GlobalMethods.calculateCMCAuthString(authString));

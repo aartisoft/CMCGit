@@ -198,10 +198,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)
@@ -240,10 +240,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)
@@ -313,10 +313,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)
@@ -352,10 +352,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)
@@ -404,10 +404,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)
@@ -458,10 +458,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 						context);
 				Notification notification = mBuilder
 						.setSmallIcon(icon)
-						.setTicker("ClubMyCab")
+						.setTicker("iShareRyde")
 						.setWhen(System.currentTimeMillis())
 						.setAutoCancel(true)
-						.setContentTitle("ClubMyCab")
+						.setContentTitle("iShareRyde")
 						.setStyle(
 								new NotificationCompat.BigTextStyle()
 										.bigText(message))
@@ -591,10 +591,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 							context);
 					Notification notification = mBuilder
 							.setSmallIcon(icon)
-							.setTicker("ClubMyCab")
+							.setTicker("iShareRyde")
 							.setWhen(System.currentTimeMillis())
 							.setAutoCancel(true)
-							.setContentTitle("ClubMyCab")
+							.setContentTitle("iShareRyde")
 							.setStyle(
 									new NotificationCompat.BigTextStyle()
 											.bigText(message))
@@ -628,10 +628,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 							context);
 					Notification notification = mBuilder
 							.setSmallIcon(icon)
-							.setTicker("ClubMyCab")
+							.setTicker("iShareRyde")
 							.setWhen(System.currentTimeMillis())
 							.setAutoCancel(true)
-							.setContentTitle("ClubMyCab")
+							.setContentTitle("iShareRyde")
 							.setStyle(
 									new NotificationCompat.BigTextStyle()
 											.bigText(message))
@@ -983,10 +983,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 				context);
 		Notification notification = mBuilder
 				.setSmallIcon(icon)
-				.setTicker("ClubMyCab")
+				.setTicker("iShareRyde")
 				.setWhen(System.currentTimeMillis())
 				.setAutoCancel(true)
-				.setContentTitle("ClubMyCab")
+				.setContentTitle("iShareRyde")
 				.setStyle(
 						new NotificationCompat.BigTextStyle().bigText(message))
 				.setContentIntent(pIntent)
@@ -1098,10 +1098,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 								mcontext);
 						Notification notification = mBuilder
 								.setSmallIcon(icon)
-								.setTicker("ClubMyCab")
+								.setTicker("iShareRyde")
 								.setWhen(System.currentTimeMillis())
 								.setAutoCancel(true)
-								.setContentTitle("ClubMyCab")
+								.setContentTitle("iShareRyde")
 								.setStyle(
 										new NotificationCompat.BigTextStyle()
 												.bigText(message))
@@ -1149,10 +1149,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 								mcontext);
 						Notification notification = mBuilder
 								.setSmallIcon(icon)
-								.setTicker("ClubMyCab")
+								.setTicker("iShareRyde")
 								.setWhen(System.currentTimeMillis())
 								.setAutoCancel(true)
-								.setContentTitle("ClubMyCab")
+								.setContentTitle("iShareRyde")
 								.setStyle(
 										new NotificationCompat.BigTextStyle()
 												.bigText(message))
@@ -1324,10 +1324,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 						mcontext);
 				Notification notification = mBuilder
 						.setSmallIcon(icon)
-						.setTicker("ClubMyCab")
+						.setTicker("iShareRyde")
 						.setWhen(System.currentTimeMillis())
 						.setAutoCancel(true)
-						.setContentTitle("ClubMyCab")
+						.setContentTitle("iShareRyde")
 						.setStyle(
 								new NotificationCompat.BigTextStyle()
 										.bigText(message))

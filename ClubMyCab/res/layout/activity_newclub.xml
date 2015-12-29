@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
-            android:text="Club Name :" />
+            android:text="Group Name :" />
 
         <EditText
             android:id="@+id/editTextnewclub"
@@ -28,7 +28,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@+id/cnametext"
-            android:hint="Enter Club Name"
+            android:hint="Enter Group Name"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -39,7 +39,10 @@
         android:layout_below="@+id/clubnamerl"
         android:layout_margin="5dp"
         android:hint="Search"
-        android:textSize="15sp" />
+        android:textSize="15sp" >
+
+        <requestFocus />
+    </EditText>
 
     <LinearLayout
         android:id="@+id/contactsearchll"

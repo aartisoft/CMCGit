@@ -536,7 +536,7 @@ public class ContactsToInviteActivity extends Activity {
 				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 					Toast.makeText(
 							ContactsToInviteActivity.this,
-							"You are not yet a member of any club. Create your own club through My Clubs option",
+							"You are not yet a member of any groups. Create your own group through My Groups option",
 							Toast.LENGTH_LONG).show();
 				} else {
 
@@ -961,7 +961,7 @@ public class ContactsToInviteActivity extends Activity {
 
 						} else {
 							Toast.makeText(ContactsToInviteActivity.this,
-									"Please select Clubs/Contacts to invite",
+									"Please select Groups/Contacts to invite",
 									Toast.LENGTH_LONG).show();
 						}
 
@@ -1078,7 +1078,7 @@ public class ContactsToInviteActivity extends Activity {
 				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 					Toast.makeText(
 							ContactsToInviteActivity.this,
-							"You are not yet a member of any club. Create your own club through My Clubs option",
+							"You are not yet a member of any groups. Create your own group through My Groups option",
 							Toast.LENGTH_LONG).show();
 				} else {
 

@@ -101,6 +101,7 @@
     <string name="promt">Ask a question</string>
     
     <string name="underline_text_book_a_cab"><u>Going alone, just find a cab</u></string>
+    <string name="underline_text_save_favorites"><u>Save Favorites</u></string>
 
     <string-array name="needsupport_arrays">
         <item>Ask a question</item>

@@ -130,7 +130,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.google.maps.android.PolyUtil;
 
 public class MemberRideFragmentActivity extends FragmentActivity implements
 		FareCalculatorInterface, LocationListener, AsyncTaskResultListener {
@@ -244,6 +243,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 	String CompletePageResponse;
 
 	ImageView locationmarker;
+	Button buttonLocationMarker;
 	ProgressDialog onedialog;
 
 	ImageView refreshlocationbtn;
@@ -434,6 +434,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 		locationmarker = (ImageView) findViewById(R.id.locationmarker);
 		locationmarker.setVisibility(View.GONE);
+		buttonLocationMarker = (Button) findViewById(R.id.buttonLocationMarker);
+		buttonLocationMarker.setVisibility(View.GONE);
 
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
@@ -547,6 +549,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 											tvJoinRide
 													.setText("Select Drop Location");
+											buttonLocationMarker
+													.setText("Tap to select Drop Location");
 											// onedialog = new ProgressDialog(
 											// MemberRideFragmentActivity.this);
 											// onedialog.setMessage("Please Wait...");
@@ -628,6 +632,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 											// isPick=true;
 											locationmarker
 													.setVisibility(View.GONE);
+											buttonLocationMarker
+													.setVisibility(View.GONE);
 											onedialog = new ProgressDialog(
 													MemberRideFragmentActivity.this);
 											onedialog
@@ -692,6 +698,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 
 						tvJoinRide.setText("Select Pickup Location");
+						buttonLocationMarker
+								.setText("Tap to select Pickup Location");
 					} else {
 						Toast.makeText(
 								MemberRideFragmentActivity.this,
@@ -699,6 +707,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 								Toast.LENGTH_LONG).show();
 					}
 				}
+			}
+		});
+
+		buttonLocationMarker.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				joinpoolbtn.performClick();
 			}
 		});
 
@@ -2680,7 +2696,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 			joinpoolchangelocationtext.setVisibility(View.VISIBLE);
 			locationmarker.setVisibility(View.VISIBLE);
-
+			buttonLocationMarker.setVisibility(View.VISIBLE);
 		}
 
 		if (!isPick) {
@@ -3052,6 +3068,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				memberlocationaddressFrom = usermemlocadd;
 
 				locationmarker.setVisibility(View.GONE);
+				buttonLocationMarker.setVisibility(View.GONE);
 				joinpoolchangelocationtext.setVisibility(View.GONE);
 
 				joinpoolmap.setOnMapClickListener(null);
@@ -4450,9 +4467,10 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				// ::::: Check joinride location is within 5 km of path or not
 				// :::://
 
-				boolean isOnPath = PolyUtil.isLocationOnPath(ll, listGeopoints,
-						false, maxDistace);
-				Log.d("isLocationonpath", "" + isOnPath);
+				// boolean isOnPath = PolyUtil.isLocationOnPath(ll,
+				// listGeopoints,
+				// false, maxDistace);
+				// Log.d("isLocationonpath", "" + isOnPath);
 
 			}
 

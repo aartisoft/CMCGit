@@ -23,6 +23,21 @@
             android:layout_centerInParent="true"
             android:adjustViewBounds="true"
             android:src="@drawable/locationmarker" />
+
+        <Button
+            android:id="@+id/buttonUpdateLocationMarker"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_above="@id/updatelocationmarker"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:alpha="0.6"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:text="Tap to update Pickup Location"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <TextView
@@ -40,8 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:padding="10dp"
         android:background="#4279bd"
+        android:padding="10dp"
         android:text="Update PickUp Location"
         android:textColor="#ffffff"
         android:textSize="17sp" />

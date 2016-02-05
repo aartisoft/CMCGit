@@ -126,7 +126,6 @@ public class ClubsAdaptor extends BaseAdapter {
 								.notifyDataSetChanged();
 						notifyDataSetChanged();
 
-
 					}
 
 				}

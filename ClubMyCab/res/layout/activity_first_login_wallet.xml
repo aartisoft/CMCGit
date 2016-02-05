@@ -29,10 +29,23 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/mobikwik_already_account"
         android:textColor="@color/black"
         android:textSize="15sp" />
+    
+    <Button
+        android:id="@+id/buttonTopUpWallet"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:background="#4279bd"
+        android:gravity="center"
+        android:text="Wallet Top-up"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/couponcodemobikwik"

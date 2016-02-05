@@ -1108,208 +1108,235 @@ public class HomeActivity extends FragmentActivity implements
 			}
 		});
 
+		Button button = (Button) findViewById(R.id.buttonNext);
+		button.setVisibility(View.INVISIBLE);
 	}
 
 	private void showButtonsDialog() {
 
 		if (addressModelFrom != null && addressModelTo != null) {
-			Location locationA = new Location("Start point");
+			Button button = (Button) findViewById(R.id.buttonNext);
+			button.setVisibility(View.VISIBLE);
+			button.setOnClickListener(new View.OnClickListener() {
 
-			locationA.setLatitude(addressModelFrom.getAddress().getLatitude());
-			locationA
-					.setLongitude(addressModelFrom.getAddress().getLongitude());
+				@Override
+				public void onClick(View v) {
+					Location locationA = new Location("Start point");
 
-			Location locationB = new Location("End point");
+					locationA.setLatitude(addressModelFrom.getAddress()
+							.getLatitude());
+					locationA.setLongitude(addressModelFrom.getAddress()
+							.getLongitude());
 
-			locationB.setLatitude(addressModelTo.getAddress().getLatitude());
-			locationB.setLongitude(addressModelTo.getAddress().getLongitude());
+					Location locationB = new Location("End point");
 
-			float distance = locationA.distanceTo(locationB);
+					locationB.setLatitude(addressModelTo.getAddress()
+							.getLatitude());
+					locationB.setLongitude(addressModelTo.getAddress()
+							.getLongitude());
 
-			if (distance < FromToMinDestance) {
-				new AlertDialog.Builder(HomeActivity.this)
-						.setTitle("")
-						.setMessage(
-								"From and To locations for this trip are too close. Please try with diffrent locations")
-						.setPositiveButton(android.R.string.ok,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// continue with delete
-										dialog.cancel();
+					float distance = locationA.distanceTo(locationB);
 
-									}
-								})
+					if (distance < FromToMinDestance) {
+						new AlertDialog.Builder(HomeActivity.this)
+								.setTitle("")
+								.setMessage(
+										"From and To locations for this trip are too close. Please try with diffrent locations")
+								.setPositiveButton(android.R.string.ok,
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												// continue with delete
+												dialog.cancel();
 
-						.setIcon(android.R.drawable.ic_dialog_alert).show();
-			}
+											}
+										})
 
-			else {
-
-				String screentoopen = getIntent()
-						.getStringExtra("screentoopen");
-				if (screentoopen.equals(HOME_ACTIVITY_SHARE_CAB)
-						|| screentoopen.equals(HOME_ACTIVITY_CAR_POOL)) {
-					isCallresetIntentParams = false;
-					tracker.send(new HitBuilders.EventBuilder()
-							.setCategory("ClubMyCab Click")
-							.setAction("ClubMyCab Click")
-							.setLabel("ClubMyCab Click").build());
-
-					logger.logEvent("HomePage ClubMyCab Click");
-
-					Log.d("HomeActivity",
-							"homeclubmycabll click addressModelFrom : "
-									+ addressModelFrom.getShortname()
-									+ " addressModelTo : "
-									+ addressModelTo.getShortname());
-
-					Intent mainIntent = new Intent(HomeActivity.this,
-							InviteFragmentActivity.class);
-					if (addressModelFrom != null && addressModelTo != null) {
-
-						Gson gson = new Gson();
-
-						mainIntent.putExtra("StartAddressModel",
-								gson.toJson(addressModelFrom).toString());
-						mainIntent.putExtra("EndAddressModel",
-								gson.toJson(addressModelTo).toString());
-
-						mainIntent.putExtra("screentoopen", screentoopen);
-
-						addressModelFrom = null;
-						addressModelTo = null;
-						startActivity(mainIntent);
-					} else {
-						Toast.makeText(HomeActivity.this,
-								"Please enter both from & to locations",
-								Toast.LENGTH_LONG).show();
+								.setIcon(android.R.drawable.ic_dialog_alert)
+								.show();
 					}
-				} else if (screentoopen.equals(HOME_ACTIVITY_BOOK_CAB)) {
-					isCallresetIntentParams = false;
-					tracker.send(new HitBuilders.EventBuilder()
-							.setCategory("Book A Cab (HomePage)")
-							.setAction("BookaCab Click")
-							.setLabel("BookaCab Click").build());
 
-					logger.logEvent("HomePage BookaCab Click");
+					else {
 
-					Intent mainIntent = new Intent(HomeActivity.this,
-							BookaCabFragmentActivity.class);
-					if (addressModelFrom != null && addressModelTo != null) {
+						String screentoopen = getIntent().getStringExtra(
+								"screentoopen");
+						if (screentoopen.equals(HOME_ACTIVITY_SHARE_CAB)
+								|| screentoopen.equals(HOME_ACTIVITY_CAR_POOL)) {
+							isCallresetIntentParams = false;
+							tracker.send(new HitBuilders.EventBuilder()
+									.setCategory("ClubMyCab Click")
+									.setAction("ClubMyCab Click")
+									.setLabel("ClubMyCab Click").build());
 
-						Gson gson = new Gson();
+							logger.logEvent("HomePage ClubMyCab Click");
 
-						mainIntent.putExtra("StartAddressModel",
-								gson.toJson(addressModelFrom).toString());
-						mainIntent.putExtra("EndAddressModel",
-								gson.toJson(addressModelTo).toString());
-						addressModelFrom = null;
-						addressModelTo = null;
+							Log.d("HomeActivity",
+									"homeclubmycabll click addressModelFrom : "
+											+ addressModelFrom.getShortname()
+											+ " addressModelTo : "
+											+ addressModelTo.getShortname());
 
-						startActivity(mainIntent);
-					} else {
-						Toast.makeText(HomeActivity.this,
-								"Please enter both from & to locations",
-								Toast.LENGTH_LONG).show();
+							Intent mainIntent = new Intent(HomeActivity.this,
+									InviteFragmentActivity.class);
+							if (addressModelFrom != null
+									&& addressModelTo != null) {
+
+								Gson gson = new Gson();
+
+								mainIntent.putExtra("StartAddressModel", gson
+										.toJson(addressModelFrom).toString());
+								mainIntent.putExtra("EndAddressModel", gson
+										.toJson(addressModelTo).toString());
+
+								mainIntent.putExtra("screentoopen",
+										screentoopen);
+
+								addressModelFrom = null;
+								addressModelTo = null;
+								startActivity(mainIntent);
+							} else {
+								Toast.makeText(
+										HomeActivity.this,
+										"Please enter both from & to locations",
+										Toast.LENGTH_LONG).show();
+							}
+						} else if (screentoopen.equals(HOME_ACTIVITY_BOOK_CAB)) {
+							isCallresetIntentParams = false;
+							tracker.send(new HitBuilders.EventBuilder()
+									.setCategory("Book A Cab (HomePage)")
+									.setAction("BookaCab Click")
+									.setLabel("BookaCab Click").build());
+
+							logger.logEvent("HomePage BookaCab Click");
+
+							Intent mainIntent = new Intent(HomeActivity.this,
+									BookaCabFragmentActivity.class);
+							if (addressModelFrom != null
+									&& addressModelTo != null) {
+
+								Gson gson = new Gson();
+
+								mainIntent.putExtra("StartAddressModel", gson
+										.toJson(addressModelFrom).toString());
+								mainIntent.putExtra("EndAddressModel", gson
+										.toJson(addressModelTo).toString());
+								addressModelFrom = null;
+								addressModelTo = null;
+
+								startActivity(mainIntent);
+							} else {
+								Toast.makeText(
+										HomeActivity.this,
+										"Please enter both from & to locations",
+										Toast.LENGTH_LONG).show();
+							}
+						}
+						// AlertDialog.Builder builder = new
+						// AlertDialog.Builder(
+						// HomeActivity.this);
+						// View builderView = (View)
+						// getLayoutInflater().inflate(
+						// R.layout.dialog_home_page, null);
+						//
+						// builder.setView(builderView);
+						// final AlertDialog dialog = builder.create();
+						//
+						// LinearLayout linearLayout = (LinearLayout)
+						// builderView
+						// .findViewById(R.id.homeclubmycabll);
+						// linearLayout.setOnClickListener(new
+						// View.OnClickListener() {
+						//
+						// @Override
+						// public void onClick(View view) {
+						// isCallresetIntentParams = false;
+						// tracker.send(new HitBuilders.EventBuilder()
+						// .setCategory("ClubMyCab Click")
+						// .setAction("ClubMyCab Click")
+						// .setLabel("ClubMyCab Click").build());
+						//
+						// logger.logEvent("HomePage ClubMyCab Click");
+						//
+						// Log.d("HomeActivity",
+						// "homeclubmycabll click addressModelFrom : "
+						// + addressModelFrom.getShortname()
+						// + " addressModelTo : "
+						// + addressModelTo.getShortname());
+						//
+						// Intent mainIntent = new Intent(HomeActivity.this,
+						// InviteFragmentActivity.class);
+						// if (addressModelFrom != null && addressModelTo !=
+						// null) {
+						//
+						// Gson gson = new Gson();
+						//
+						// mainIntent.putExtra("StartAddressModel", gson
+						// .toJson(addressModelFrom).toString());
+						// mainIntent.putExtra("EndAddressModel",
+						// gson.toJson(addressModelTo).toString());
+						//
+						// addressModelFrom = null;
+						// addressModelTo = null;
+						// startActivityForResult(mainIntent, 500);
+						// overridePendingTransition(R.anim.slide_in_right,
+						// R.anim.slide_out_left);
+						// } else {
+						// Toast.makeText(HomeActivity.this,
+						// "Please enter both from & to locations",
+						// Toast.LENGTH_LONG).show();
+						// }
+						//
+						// dialog.dismiss();
+						// }
+						// });
+						//
+						// linearLayout = (LinearLayout) builderView
+						// .findViewById(R.id.homebookacabll);
+						// linearLayout.setOnClickListener(new
+						// View.OnClickListener() {
+						//
+						// @Override
+						// public void onClick(View view) {
+						// isCallresetIntentParams = false;
+						// tracker.send(new HitBuilders.EventBuilder()
+						// .setCategory("Book A Cab (HomePage)")
+						// .setAction("BookaCab Click")
+						// .setLabel("BookaCab Click").build());
+						//
+						// logger.logEvent("HomePage BookaCab Click");
+						//
+						// Intent mainIntent = new Intent(HomeActivity.this,
+						// BookaCabFragmentActivity.class);
+						// if (addressModelFrom != null && addressModelTo !=
+						// null) {
+						//
+						// Gson gson = new Gson();
+						//
+						// mainIntent.putExtra("StartAddressModel", gson
+						// .toJson(addressModelFrom).toString());
+						// mainIntent.putExtra("EndAddressModel",
+						// gson.toJson(addressModelTo).toString());
+						// addressModelFrom = null;
+						// addressModelTo = null;
+						//
+						// startActivityForResult(mainIntent, 500);
+						// overridePendingTransition(R.anim.slide_in_right,
+						// R.anim.slide_out_left);
+						// } else {
+						// Toast.makeText(HomeActivity.this,
+						// "Please enter both from & to locations",
+						// Toast.LENGTH_LONG).show();
+						// }
+						//
+						// dialog.dismiss();
+						// }
+						// });
+						//
+						// dialog.show();
 					}
 				}
-				// AlertDialog.Builder builder = new AlertDialog.Builder(
-				// HomeActivity.this);
-				// View builderView = (View) getLayoutInflater().inflate(
-				// R.layout.dialog_home_page, null);
-				//
-				// builder.setView(builderView);
-				// final AlertDialog dialog = builder.create();
-				//
-				// LinearLayout linearLayout = (LinearLayout) builderView
-				// .findViewById(R.id.homeclubmycabll);
-				// linearLayout.setOnClickListener(new View.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(View view) {
-				// isCallresetIntentParams = false;
-				// tracker.send(new HitBuilders.EventBuilder()
-				// .setCategory("ClubMyCab Click")
-				// .setAction("ClubMyCab Click")
-				// .setLabel("ClubMyCab Click").build());
-				//
-				// logger.logEvent("HomePage ClubMyCab Click");
-				//
-				// Log.d("HomeActivity",
-				// "homeclubmycabll click addressModelFrom : "
-				// + addressModelFrom.getShortname()
-				// + " addressModelTo : "
-				// + addressModelTo.getShortname());
-				//
-				// Intent mainIntent = new Intent(HomeActivity.this,
-				// InviteFragmentActivity.class);
-				// if (addressModelFrom != null && addressModelTo != null) {
-				//
-				// Gson gson = new Gson();
-				//
-				// mainIntent.putExtra("StartAddressModel", gson
-				// .toJson(addressModelFrom).toString());
-				// mainIntent.putExtra("EndAddressModel",
-				// gson.toJson(addressModelTo).toString());
-				//
-				// addressModelFrom = null;
-				// addressModelTo = null;
-				// startActivityForResult(mainIntent, 500);
-				// overridePendingTransition(R.anim.slide_in_right,
-				// R.anim.slide_out_left);
-				// } else {
-				// Toast.makeText(HomeActivity.this,
-				// "Please enter both from & to locations",
-				// Toast.LENGTH_LONG).show();
-				// }
-				//
-				// dialog.dismiss();
-				// }
-				// });
-				//
-				// linearLayout = (LinearLayout) builderView
-				// .findViewById(R.id.homebookacabll);
-				// linearLayout.setOnClickListener(new View.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(View view) {
-				// isCallresetIntentParams = false;
-				// tracker.send(new HitBuilders.EventBuilder()
-				// .setCategory("Book A Cab (HomePage)")
-				// .setAction("BookaCab Click")
-				// .setLabel("BookaCab Click").build());
-				//
-				// logger.logEvent("HomePage BookaCab Click");
-				//
-				// Intent mainIntent = new Intent(HomeActivity.this,
-				// BookaCabFragmentActivity.class);
-				// if (addressModelFrom != null && addressModelTo != null) {
-				//
-				// Gson gson = new Gson();
-				//
-				// mainIntent.putExtra("StartAddressModel", gson
-				// .toJson(addressModelFrom).toString());
-				// mainIntent.putExtra("EndAddressModel",
-				// gson.toJson(addressModelTo).toString());
-				// addressModelFrom = null;
-				// addressModelTo = null;
-				//
-				// startActivityForResult(mainIntent, 500);
-				// overridePendingTransition(R.anim.slide_in_right,
-				// R.anim.slide_out_left);
-				// } else {
-				// Toast.makeText(HomeActivity.this,
-				// "Please enter both from & to locations",
-				// Toast.LENGTH_LONG).show();
-				// }
-				//
-				// dialog.dismiss();
-				// }
-				// });
-				//
-				// dialog.show();
-			}
+			});
 		} else {
 			Toast.makeText(HomeActivity.this,
 					"Please enter both from & to locations", Toast.LENGTH_LONG)
@@ -2526,6 +2553,35 @@ public class HomeActivity extends FragmentActivity implements
 
 		}
 
+		TextView textViewChooseFav = (TextView) findViewById(R.id.textViewChooseFav);
+		LinearLayout whereheadedlinear = (LinearLayout) findViewById(R.id.whereheadedlinear);
+		TextView textViewSaveFavorite = (TextView) findViewById(R.id.textViewSaveFavorite);
+
+		if (home != null && work != null) {
+			textViewChooseFav.setVisibility(View.VISIBLE);
+			whereheadedlinear.setVisibility(View.VISIBLE);
+			textViewSaveFavorite.setVisibility(View.INVISIBLE);
+		} else {
+			textViewChooseFav.setVisibility(View.INVISIBLE);
+			whereheadedlinear.setVisibility(View.INVISIBLE);
+			textViewSaveFavorite.setVisibility(View.VISIBLE);
+
+			textViewSaveFavorite.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(HomeActivity.this,
+							FavoriteLocationsAcivity.class);
+					intent.putExtra("NotFromRegistration", true);
+					startActivity(intent);
+				}
+			});
+		}
+
+		if (addressModelFrom == null || addressModelTo == null) {
+			Button button = (Button) findViewById(R.id.buttonNext);
+			button.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	@Override

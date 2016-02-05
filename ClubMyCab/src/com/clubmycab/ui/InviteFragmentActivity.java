@@ -95,10 +95,11 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	private TextView timetextview, timetextview2, timetextview3;
 	// Button seatsbutton;
 
-	private LinearLayout inviteLl, llSeats, llPricePerKm;
+	private LinearLayout inviteLl, llSeats;
 	// private TextView datechoose, timehalfhour,timeonehour;//
 	// timechoose,datetoday;
-	private LinearLayout llHalfHour, llOneHour, llDateTime;
+	private LinearLayout llHalfHour, llOneHour;
+	private RelativeLayout llDateTime, llPricePerKm;
 
 	Calendar myCalendar = Calendar.getInstance();
 
@@ -218,7 +219,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	private int hour, minute;
 	private TimePickerDialog timePickerDialog;
 	private TextView tvNext;
-	private ImageView ivHalfArrow, ivOneArrow, ivDateTimeArrow;
+	private ImageView ivHalfArrow, ivOneArrow; // , ivDateTimeArrow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -258,8 +259,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		topthreerideslist = (ListView) findViewById(R.id.topthreerideslist);
 
-		ivDateTimeArrow = (ImageView) findViewById(R.id.ivDateTimeArrow);
-		ivDateTimeArrow.setVisibility(View.INVISIBLE);
+		// ivDateTimeArrow = (ImageView) findViewById(R.id.ivDateTimeArrow);
+		// ivDateTimeArrow.setVisibility(View.INVISIBLE);
 		ivOneArrow = (ImageView) findViewById(R.id.ivOneArrow);
 		ivOneArrow.setVisibility(View.INVISIBLE);
 		ivHalfArrow = (ImageView) findViewById(R.id.ivHalfArrow);
@@ -370,7 +371,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		timetextview3 = (TextView) findViewById(R.id.timetextview3);
 
 		llSeats = (LinearLayout) findViewById(R.id.llSeats);
-		llPricePerKm = (LinearLayout) findViewById(R.id.llPricePerKm);
+		llPricePerKm = (RelativeLayout) findViewById(R.id.llPricePerKm);
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		datetextview.setText(simpleDateFormat.format(new Date()));
@@ -521,7 +522,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				timetextview3.setVisibility(View.INVISIBLE);
 				ivOneArrow.setVisibility(View.VISIBLE);
 				ivHalfArrow.setVisibility(View.INVISIBLE);
-				ivDateTimeArrow.setVisibility(View.INVISIBLE);
+				// ivDateTimeArrow.setVisibility(View.INVISIBLE);
 
 				// Calendar calendar = Calendar.getInstance();
 				long time = System.currentTimeMillis();
@@ -571,10 +572,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		datetextview3.setVisibility(View.VISIBLE);
 		timetextview3.setVisibility(View.VISIBLE);
-		ivDateTimeArrow.setVisibility(View.GONE);
+		// ivDateTimeArrow.setVisibility(View.GONE);
 		// ///////////////////////////////////////////////////////
 
-		llDateTime = (LinearLayout) findViewById(R.id.llDateTime);
+		llDateTime = (RelativeLayout) findViewById(R.id.llDateTime);
 
 		llDateTime.setOnClickListener(new View.OnClickListener() {
 
@@ -635,7 +636,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 				ivOneArrow.setVisibility(View.INVISIBLE);
 				ivHalfArrow.setVisibility(View.VISIBLE);
-				ivDateTimeArrow.setVisibility(View.INVISIBLE);
+				// ivDateTimeArrow.setVisibility(View.INVISIBLE);
 				long time = System.currentTimeMillis();
 
 				long nextTime = time + (60000 * 30);
@@ -1024,7 +1025,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 								Intent mainIntent = new Intent(
 										InviteFragmentActivity.this,
-										ContactsInviteForRideActivity.class);
+										ContactsInviteForRideActivityNew.class);
 								mainIntent.putExtra("fromcome", "invite");
 								mainIntent.putExtra("CabId", CabId);
 								mainIntent.putExtra("MobileNumber",
@@ -1102,12 +1103,12 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		});
 
 		TextView textView = (TextView) findViewById(R.id.textViewPricePerKmLabel);
-		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llPricePerKm);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.llPricePerKm);
 
 		String screentoopen = getIntent().getStringExtra("screentoopen");
 		if (screentoopen.equals(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
 			textView.setVisibility(View.VISIBLE);
-			linearLayout.setVisibility(View.VISIBLE);
+			relativeLayout.setVisibility(View.VISIBLE);
 
 			textViewPricePerKm = (TextView) findViewById(R.id.textViewPricePerKm);
 			checkBoxForFree = (CheckBox) findViewById(R.id.checkBoxForFree);
@@ -1129,7 +1130,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					});
 		} else if (screentoopen.equals(HomeActivity.HOME_ACTIVITY_SHARE_CAB)) {
 			textView.setVisibility(View.GONE);
-			linearLayout.setVisibility(View.GONE);
+			relativeLayout.setVisibility(View.GONE);
 		}
 
 		// ///////////////

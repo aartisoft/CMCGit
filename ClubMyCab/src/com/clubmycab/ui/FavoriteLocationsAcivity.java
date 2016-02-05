@@ -411,8 +411,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 				else
 					addMoreButton.setVisibility(View.VISIBLE);
 
-				addMoreButton.setText("Add More (" + remainigfavorites
-						+ " remaining )");
+				// addMoreButton.setText("Add More (" + remainigfavorites
+				// + " remaining )");
 				deleteFavoriteLocaiton();
 
 			}
@@ -461,8 +461,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 					addMoreButton.setVisibility(View.GONE);
 				else
 					addMoreButton.setVisibility(View.VISIBLE);
-				addMoreButton.setText("Add More (" + remainigfavorites
-						+ " remaining )");
+				// addMoreButton.setText("Add More (" + remainigfavorites
+				// + " remaining )");
 
 				deleteFavoriteLocaiton();
 
@@ -512,8 +512,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 					addMoreButton.setVisibility(View.GONE);
 				else
 					addMoreButton.setVisibility(View.VISIBLE);
-				addMoreButton.setText("Add More (" + remainigfavorites
-						+ " remaining )");
+				// addMoreButton.setText("Add More (" + remainigfavorites
+				// + " remaining )");
 
 				deleteFavoriteLocaiton();
 
@@ -646,14 +646,17 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		// favoriteTag.clear();
 		// addressModelList.clear();
 
-		remainigfavorites = 5 - favLocationHashMap.size();
-		if (remainigfavorites == 0)
-			addMoreButton.setVisibility(View.GONE);
-		else
-			addMoreButton.setText("Add More (" + remainigfavorites
-					+ " remaining )");
-
 		if (favLocationHashMap.size() > 0) {
+
+			if (!favLocationHashMap.keySet().contains(
+					StringTags.TAG_WHERE_LIVE_KEY)) {
+				favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY, "");
+			}
+
+			if (!favLocationHashMap.keySet().contains(
+					StringTags.TAG_WHERE_WORK_KEY)) {
+				favLocationHashMap.put(StringTags.TAG_WHERE_WORK_KEY, "");
+			}
 
 			if (favLocationHashMap.size() == 2) {
 
@@ -758,6 +761,13 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			}
 		});
 
+		remainigfavorites = 5 - favLocationHashMap.size();
+		if (remainigfavorites == 0)
+			addMoreButton.setVisibility(View.GONE);
+		// else
+		// addMoreButton.setText("Add More (" + remainigfavorites
+		// + " remaining )");
+
 	}
 
 	public void onDoneButtonClick(View v) {
@@ -774,10 +784,12 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 			else
 				json = gson.toJson(addressModelList.get(i));
 
-			if (favoriteTag.get(i).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE) && json.length() > 0)
+			if (favoriteTag.get(i).equalsIgnoreCase(StringTags.TAG_WHERE_LIVE)
+					&& json.length() > 0)
 				favLocationHashMap.put(StringTags.TAG_WHERE_LIVE_KEY, json);
 			else if (favoriteTag.get(i).equalsIgnoreCase(
-					StringTags.TAG_WHERE_WORK) && json.length() > 0)
+					StringTags.TAG_WHERE_WORK)
+					&& json.length() > 0)
 				favLocationHashMap.put(StringTags.TAG_WHERE_WORK_KEY, json);
 			else if (json.length() > 0)
 				favLocationHashMap.put(favoriteTag.get(i), json);
@@ -1052,9 +1064,9 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 		remainigfavorites = 5 - favoriteTag.size();
 		if (remainigfavorites == 0)
 			addMoreButton.setVisibility(View.GONE);
-		else
-			addMoreButton.setText("Add More (" + remainigfavorites
-					+ " remaining )");
+		// else
+		// addMoreButton.setText("Add More (" + remainigfavorites
+		// + " remaining )");
 
 		if (favoriteTag.size() > 0) {
 
@@ -1198,8 +1210,8 @@ public class FavoriteLocationsAcivity extends FragmentActivity implements
 					remainigfavorites = remainigfavorites - 1;
 					if (remainigfavorites == 0)
 						addMoreButton.setVisibility(View.GONE);
-					addMoreButton.setText("Add More (" + remainigfavorites
-							+ " remaining )");
+					// addMoreButton.setText("Add More (" + remainigfavorites
+					// + " remaining )");
 				}
 			}
 		});

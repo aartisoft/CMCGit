@@ -15,8 +15,8 @@
         android:name="com.clubmycab.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-<!--     <uses-permission android:name="android.permission.CALL_PHONE" > -->
-<!--     </uses-permission> -->
+    <!-- <uses-permission android:name="android.permission.CALL_PHONE" > -->
+    <!-- </uses-permission> -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="com.clubmycab.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -104,7 +104,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
-        
         <activity
             android:name=".ui.HomeCarPoolActivity"
             android:label="@string/title_activity_home_page"
@@ -112,7 +111,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
-        
         <activity
             android:name=".ui.OfferPoolOrCabShare"
             android:label="@string/title_activity_home_page"
@@ -120,6 +118,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -176,6 +175,29 @@
             android:name=".LocationShareForRideService"
             android:stopWithTask="true" >
         </service>
+        
+        <service
+            android:name="com.quantumgraph.sdk.GcmNotificationIntentService"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name="com.quantumgraph.sdk.GcmBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="PACKAGE_NAME_OF_YOUR_APP" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.quantumgraph.sdk.NotificationIntentProcessor"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
 
         <activity
             android:name=".ui.MyRidesActivity"

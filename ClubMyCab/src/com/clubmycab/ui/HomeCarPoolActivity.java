@@ -50,6 +50,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.quantumgraph.sdk.QG;
 import com.viewpagerindicator.CirclePageIndicator;
 
 public class HomeCarPoolActivity extends FragmentActivity implements
@@ -365,33 +366,6 @@ public class HomeCarPoolActivity extends FragmentActivity implements
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void getResult(String response, String uniqueID) {
-		if (uniqueID.equals("FetchUnreadNotificationCount")) {
-
-			if (response != null && response.length() > 0
-					&& response.contains("Unauthorized Access")) {
-				Log.e("HomeActivity",
-						"FetchUnreadNotificationCount Unauthorized Access");
-				Toast.makeText(HomeCarPoolActivity.this,
-						getResources().getString(R.string.exceptionstring),
-						Toast.LENGTH_LONG).show();
-				return;
-			}
-
-			if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
-
-				unreadnoticountrl.setVisibility(View.GONE);
-
-			} else {
-
-				unreadnoticountrl.setVisibility(View.VISIBLE);
-				unreadnoticount
-						.setText(GlobalVariables.UnreadNotificationCount);
-			}
-		}
 	}
 
 	@Override
@@ -840,5 +814,93 @@ public class HomeCarPoolActivity extends FragmentActivity implements
 
 			}
 		}, 4000);
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+
+		// QGraph API
+
+		userData();
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+
+		// QGraph API
+
+		QG qg = QG.getInstance(getApplicationContext());
+		qg.onStop();
+	}
+
+	private void userData() {
+
+		String endpoint = GlobalVariables.ServiceUrl + "/userData.php";
+		String authString = MobileNumber;
+		String params = "mobileNumber=" + MobileNumber + "&auth="
+				+ GlobalMethods.calculateCMCAuthString(authString);
+		Log.d("userData", "userData endpoint : " + endpoint + " params : "
+				+ params);
+		new GlobalAsyncTask(HomeCarPoolActivity.this, endpoint, params, null,
+				HomeCarPoolActivity.this, false, "userData", false);
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		if (uniqueID.equals("FetchUnreadNotificationCount")) {
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("HomeActivity",
+						"FetchUnreadNotificationCount Unauthorized Access");
+				Toast.makeText(HomeCarPoolActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
+
+				unreadnoticountrl.setVisibility(View.GONE);
+
+			} else {
+
+				unreadnoticountrl.setVisibility(View.VISIBLE);
+				unreadnoticount
+						.setText(GlobalVariables.UnreadNotificationCount);
+			}
+		} else if (uniqueID.equals("userData")) {
+			Log.d("HomeCarPoolActivity", "userData response : " + response);
+
+			if (response != null && response.length() > 0
+					&& response.contains("Unauthorized Access")) {
+				Log.e("HomeCarPoolActivity", "userData Unauthorized Access");
+				Toast.makeText(HomeCarPoolActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.get("status").toString().equals("success")) {
+					JSONObject jsonObject2 = new JSONObject(jsonObject.get(
+							"data").toString());
+
+					QG qg = QG.getInstance(getApplicationContext());
+					qg.onStart("fa76ed0dab16ee8bf463",
+							jsonObject2.get("DeviceToken").toString());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(HomeCarPoolActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 }

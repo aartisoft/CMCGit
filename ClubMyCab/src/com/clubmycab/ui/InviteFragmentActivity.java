@@ -48,6 +48,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -84,6 +86,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	TextView seats;
 	private String seatCount = "3";
 	private String seatSuffix = "";// " seat(s) to share";
+	private TextView textViewPricePerKm;
+	private CheckBox checkBoxForFree;
 
 	private AutoCompleteTextView from_places;
 	private AutoCompleteTextView to_places;
@@ -94,7 +98,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	private LinearLayout inviteLl, llSeats;
 	// private TextView datechoose, timehalfhour,timeonehour;//
 	// timechoose,datetoday;
-	private LinearLayout llHalfHour, llOneHour, llDateTime;
+	private LinearLayout llHalfHour, llOneHour;
+	private RelativeLayout llDateTime, llPricePerKm;
 
 	Calendar myCalendar = Calendar.getInstance();
 
@@ -214,7 +219,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 	private int hour, minute;
 	private TimePickerDialog timePickerDialog;
 	private TextView tvNext;
-	private ImageView ivHalfArrow, ivOneArrow, ivDateTimeArrow;
+	private ImageView ivHalfArrow, ivOneArrow; // , ivDateTimeArrow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -254,8 +259,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		topthreerideslist = (ListView) findViewById(R.id.topthreerideslist);
 
-		ivDateTimeArrow = (ImageView) findViewById(R.id.ivDateTimeArrow);
-		ivDateTimeArrow.setVisibility(View.INVISIBLE);
+		// ivDateTimeArrow = (ImageView) findViewById(R.id.ivDateTimeArrow);
+		// ivDateTimeArrow.setVisibility(View.INVISIBLE);
 		ivOneArrow = (ImageView) findViewById(R.id.ivOneArrow);
 		ivOneArrow.setVisibility(View.INVISIBLE);
 		ivHalfArrow = (ImageView) findViewById(R.id.ivHalfArrow);
@@ -366,6 +371,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		timetextview3 = (TextView) findViewById(R.id.timetextview3);
 
 		llSeats = (LinearLayout) findViewById(R.id.llSeats);
+		llPricePerKm = (RelativeLayout) findViewById(R.id.llPricePerKm);
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		datetextview.setText(simpleDateFormat.format(new Date()));
@@ -400,26 +406,26 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		to_places.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Light.ttf"));
 
-		date.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Bold.ttf"));
-		datetextview.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		datetextview2.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		datetextview3.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
+		// date.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Bold.ttf"));
+		// datetextview.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// datetextview2.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// datetextview3.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		//
+		// time.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Bold.ttf"));
+		// timetextview.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// timetextview2.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
+		// timetextview3.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Light.ttf"));
 
-		time.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Bold.ttf"));
-		timetextview.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		timetextview2.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-		timetextview3.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Light.ttf"));
-
-		seats.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Bold.ttf"));
+		// seats.setTypeface(Typeface.createFromAsset(getAssets(),
+		// "NeutraText-Bold.ttf"));
 		// pawan seatsedittext.setTypeface(Typeface.createFromAsset(getAssets(),
 		// "NeutraText-Light.ttf"));
 
@@ -516,7 +522,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				timetextview3.setVisibility(View.INVISIBLE);
 				ivOneArrow.setVisibility(View.VISIBLE);
 				ivHalfArrow.setVisibility(View.INVISIBLE);
-				ivDateTimeArrow.setVisibility(View.INVISIBLE);
+				// ivDateTimeArrow.setVisibility(View.INVISIBLE);
 
 				// Calendar calendar = Calendar.getInstance();
 				long time = System.currentTimeMillis();
@@ -544,7 +550,32 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			}
 		});
 
-		llDateTime = (LinearLayout) findViewById(R.id.llDateTime);
+		// ///////////////////////////////////////////////////////
+		long timeNew = System.currentTimeMillis();
+
+		long nextTimeNew = timeNew + (60000 * 30);
+		Calendar cl = Calendar.getInstance();
+		cl.setTimeInMillis(nextTimeNew); // here your time in miliseconds
+		String time1 = "" + cl.get(Calendar.HOUR_OF_DAY) + ":"
+				+ cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND);
+		Log.d("Time:::", time1);
+		String selecteddateNew = cl.get(Calendar.DAY_OF_MONTH) + "/"
+				+ (cl.get(Calendar.MONTH) + 1) + "/" + cl.get(Calendar.YEAR);
+		datetextview.setText(selecteddate.toString().trim());
+		datetextview2.setText(selecteddate.toString().trim());
+		datetextview3.setText(selecteddate.toString().trim());
+
+		// calendar.add(Calendar.HOUR, 1);
+		hour = cl.get(Calendar.HOUR_OF_DAY);
+		minute = cl.get(Calendar.MINUTE);
+		updateTime(hour, minute);
+
+		datetextview3.setVisibility(View.VISIBLE);
+		timetextview3.setVisibility(View.VISIBLE);
+		// ivDateTimeArrow.setVisibility(View.GONE);
+		// ///////////////////////////////////////////////////////
+
+		llDateTime = (RelativeLayout) findViewById(R.id.llDateTime);
 
 		llDateTime.setOnClickListener(new View.OnClickListener() {
 
@@ -575,7 +606,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				timetextview3.setVisibility(View.VISIBLE);
 				ivOneArrow.setVisibility(View.INVISIBLE);
 				ivHalfArrow.setVisibility(View.INVISIBLE);
-				ivDateTimeArrow.setVisibility(View.VISIBLE);
+				// ivDateTimeArrow.setVisibility(View.VISIBLE);
 
 				datePickerDialog.setVibrate(isVibrate());
 				datePickerDialog.setYearRange(1985, 2028);
@@ -605,7 +636,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 				ivOneArrow.setVisibility(View.INVISIBLE);
 				ivHalfArrow.setVisibility(View.VISIBLE);
-				ivDateTimeArrow.setVisibility(View.INVISIBLE);
+				// ivDateTimeArrow.setVisibility(View.INVISIBLE);
 				long time = System.currentTimeMillis();
 
 				long nextTime = time + (60000 * 30);
@@ -768,6 +799,35 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 				dialog = builder.create();
 				dialog.show();
+
+			}
+		});
+
+		llPricePerKm.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// commented to hard code per seat charges to 3
+
+				// AlertDialog dialog;
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// InviteFragmentActivity.this);
+				// builder.setTitle("Select charge per seat");
+				//
+				// final CharSequence str[] = { "1", "2", "3", "4", "5" };
+				//
+				// builder.setItems(str, new DialogInterface.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(DialogInterface dialog, int position) {
+				// // TODO Auto-generated method stub
+				// textViewPricePerKm.setText(str[position]);
+				// }
+				// });
+				//
+				// dialog = builder.create();
+				// dialog.show();
 
 			}
 		});
@@ -966,7 +1026,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 								Intent mainIntent = new Intent(
 										InviteFragmentActivity.this,
-										ContactsInviteForRideActivity.class);
+										ContactsInviteForRideActivityNew.class);
 								mainIntent.putExtra("fromcome", "invite");
 								mainIntent.putExtra("CabId", CabId);
 								mainIntent.putExtra("MobileNumber",
@@ -984,6 +1044,46 @@ public class InviteFragmentActivity extends FragmentActivity implements
 								mainIntent.putExtra("fromshortname",
 										fromshortname);
 								mainIntent.putExtra("toshortname", toshortname);
+
+								mainIntent.putExtra("screentoopen", getIntent()
+										.getStringExtra("screentoopen"));
+
+								if (getIntent()
+										.getStringExtra("screentoopen")
+										.equals(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
+									if (checkBoxForFree.isChecked()) {
+										mainIntent.putExtra("perKmCharge", "0");
+									} else {
+										String charge = textViewPricePerKm
+												.getText().toString();
+										if (charge.isEmpty()
+												|| charge.length() <= 0
+												|| charge.equals("0")
+												|| Integer.parseInt(charge) <= 0) {
+											AlertDialog.Builder builder = new AlertDialog.Builder(
+													InviteFragmentActivity.this);
+											builder.setMessage("Please enter a valid per seat charge");
+											builder.setCancelable(false);
+
+											builder.setPositiveButton(
+													"OK",
+													new DialogInterface.OnClickListener() {
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+
+														}
+													});
+
+											builder.show();
+											return;
+										} else {
+											mainIntent.putExtra("perKmCharge",
+													charge);
+										}
+									}
+								}
+
 								startActivityForResult(mainIntent, 500);
 								overridePendingTransition(
 										R.anim.slide_in_right,
@@ -1002,6 +1102,45 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 			}
 		});
+
+		TextView textView = (TextView) findViewById(R.id.textViewPricePerKmLabel);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.llPricePerKm);
+		TextView perseatchargesmsg = (TextView)findViewById(R.id.perseatchargesmsg);
+
+		String screentoopen = getIntent().getStringExtra("screentoopen");
+		if (screentoopen.equals(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
+			textView.setVisibility(View.GONE);
+			relativeLayout.setVisibility(View.GONE);
+			perseatchargesmsg.setVisibility(View.VISIBLE);
+
+			textViewPricePerKm = (TextView) findViewById(R.id.textViewPricePerKm);
+			checkBoxForFree = (CheckBox) findViewById(R.id.checkBoxForFree);
+
+			checkBoxForFree
+					.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							if (isChecked) {
+								textViewPricePerKm.setText("0");
+								textViewPricePerKm.setEnabled(false);
+							} else {
+								textViewPricePerKm.setText("3");
+								textViewPricePerKm.setEnabled(true);
+							}
+						}
+					});
+
+			seats.setText("3");
+			seatCount = "3";
+		} else if (screentoopen.equals(HomeActivity.HOME_ACTIVITY_SHARE_CAB)) {
+			textView.setVisibility(View.GONE);
+			relativeLayout.setVisibility(View.GONE);
+			perseatchargesmsg.setVisibility(View.GONE);
+			seats.setText("2");
+			seatCount = "2";
+		}
 
 		// ///////////////
 		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1238,7 +1377,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 				drawerprofilepic.setImageResource(R.drawable.cabappicon);
 
 			} else if (imagenameresp.contains("Unauthorized Access")) {
-				Log.e("InviteFragmentActivity", "imagenameresp Unauthorized Access");
+				Log.e("InviteFragmentActivity",
+						"imagenameresp Unauthorized Access");
 				Toast.makeText(InviteFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
@@ -1268,7 +1408,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			HttpPost httpPost11 = new HttpPost(url_select);
 			BasicNameValuePair MobileNumberBasicNameValuePair11 = new BasicNameValuePair(
 					"MobileNumber", MobileNumber);
-			
+
 			String authString = MobileNumber;
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
 					GlobalMethods.calculateCMCAuthString(authString));

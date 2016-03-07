@@ -16,12 +16,15 @@
             android:id="@+id/textMessageFirstLoginClub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="15dp"
             android:layout_weight="20"
+            android:gravity="center"
             android:paddingBottom="5dp"
             android:text=""
             android:textColor="#000000"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <ListView
             android:id="@+id/listViewFirstLoginClubs"
@@ -56,7 +59,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:background="@drawable/createnewclubbtn"
+            android:background="#E99D1A"
             android:text="@string/button_flc_continue"
             android:textColor="#FFFFFF"
             android:textSize="15sp" />

@@ -1335,7 +1335,7 @@ public class MyRidesActivity extends Activity implements
 
 		if (shouldGoBack) {
 			Intent mainIntent = new Intent(MyRidesActivity.this,
-					HomeActivity.class);
+					HomeCarPoolActivity.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

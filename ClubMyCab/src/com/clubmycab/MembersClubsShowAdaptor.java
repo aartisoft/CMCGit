@@ -157,7 +157,7 @@ public class MembersClubsShowAdaptor extends BaseAdapter {
 			public void onClick(View v) {
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setMessage("Are you sure you want to leave this club?");
+				builder.setMessage("Are you sure you want to leave this group?");
 				builder.setCancelable(true);
 				builder.setPositiveButton("No",
 						new DialogInterface.OnClickListener() {

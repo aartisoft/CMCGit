@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -250,8 +251,9 @@ public class FirstLoginWalletsActivity extends Activity implements
 			token = sharedPreferences.getString("token", "");
 			if (!token.isEmpty() && !token.equalsIgnoreCase("")) {
 
-				otphardtext
-						.setText("Your Mobikwik wallet is already linked with the app");
+				// otphardtext
+				// .setText("Your Mobikwik wallet is already linked with the app");
+				checkUserBalance();
 				walletLinearLayout.setVisibility(View.INVISIBLE);
 
 				SharedPreferences sharedPreferences2 = getSharedPreferences(
@@ -383,6 +385,79 @@ public class FirstLoginWalletsActivity extends Activity implements
 				false);
 	}
 
+	private void checkUserBalance() {
+		String msgcode = "501";
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
+				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
+				+ token + "'", GlobalVariables.Mobikwik_14SecretKey);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL + "/userbalance";
+		String params = "cell=" + mobilenumber + "&token=" + token
+				+ "&msgcode=" + msgcode + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("checkUserBalance", "checkUserBalance endpoint : " + endpoint
+				+ " params : " + params);
+		new GlobalAsyncTask(FirstLoginWalletsActivity.this, endpoint, params,
+				null, FirstLoginWalletsActivity.this, true, "userbalance", true);
+	}
+
+	private void tokenRegenerate() {
+		String msgcode = "507";
+
+		String checksumstring = GlobalMethods.calculateCheckSumForService("'"
+				+ mobilenumber + "''" + GlobalVariables.Mobikwik_MerchantName
+				+ "''" + GlobalVariables.Mobikwik_Mid + "''" + msgcode + "''"
+				+ token + "''1'",
+				GlobalVariables.Mobikwik_14SecretKey_TokenRegenerate);
+		String endpoint = GlobalVariables.Mobikwik_ServerURL
+				+ "/tokenregenerate";
+		String params = "cell=" + mobilenumber + "&token=" + token
+				+ "&tokentype=1" + "&msgcode=" + msgcode + "&mid="
+				+ GlobalVariables.Mobikwik_Mid + "&merchantname="
+				+ GlobalVariables.Mobikwik_MerchantName + "&checksum="
+				+ checksumstring;
+		Log.d("FirstLoginWalletActivity", "tokenRegenerate endpoint : "
+				+ endpoint + " params : " + params);
+
+		new GlobalAsyncTask(this, endpoint, params, null, this, true,
+				"tokenregenerate", true);
+	}
+	
+	private void openAppOrMSite() {
+
+		String packageName = "com.mobikwik_new";
+		String mSite = "https://m.mobikwik.com";
+
+		if (checkIfAppInstalled(packageName)) {
+
+			Intent launchIntent = getPackageManager()
+					.getLaunchIntentForPackage(packageName);
+			startActivity(launchIntent);
+
+		} else {
+
+			Intent intent = new Intent(this, MobileSiteActivity.class);
+			intent.putExtra(MobileSiteFragment.ARGUMENTS_MOBILE_SITE_URL, mSite);
+			startActivity(intent);
+		}
+	}
+
+	private boolean checkIfAppInstalled(String packageName) {
+
+		PackageManager packageManager = getPackageManager();
+
+		try {
+			packageManager.getPackageInfo(packageName,
+					PackageManager.GET_ACTIVITIES);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	private void checksumInvalidToast() {
 		Log.e("FirstLoginWalletsActivity", "Response checksum does not match!!");
 		Toast.makeText(FirstLoginWalletsActivity.this,
@@ -447,6 +522,12 @@ public class FirstLoginWalletsActivity extends Activity implements
 				if (jsonObject.getString("status").equals("SUCCESS")) {
 
 					walletLinearLayout.setVisibility(View.VISIBLE);
+
+					otpEditText.setVisibility(View.VISIBLE);
+					continuewithotp.setVisibility(View.VISIBLE);
+					TextView textView = (TextView) findViewById(R.id.textViewbyclicking);
+					textView.setVisibility(View.VISIBLE);
+
 				} else {
 
 					Toast.makeText(FirstLoginWalletsActivity.this,
@@ -500,8 +581,9 @@ public class FirstLoginWalletsActivity extends Activity implements
 						startActivity(mainIntent);
 						finish();
 					} else {
-						otphardtext
-								.setText("Your Mobikwik wallet is already linked with the app");
+						// otphardtext
+						// .setText("Your Mobikwik wallet is already linked with the app");
+						checkUserBalance();
 						walletLinearLayout.setVisibility(View.INVISIBLE);
 					}
 				} else {
@@ -578,6 +660,47 @@ public class FirstLoginWalletsActivity extends Activity implements
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else if (uniqueID.equals("userbalance")) {
+			Log.d("FirstLoginWalletActivity", "userbalance response : "
+					+ response);
+
+			try {
+				JSONObject jsonObject = new JSONObject(response);
+				if (jsonObject.getString("status").equalsIgnoreCase("success")) {
+					Log.d("FirstLoginWalletActivity", "userbalance response : ");
+					otphardtext.setText("Your wallet balance : \u20B9"
+							+ jsonObject.getString("balanceamount"));
+					tokenRegenerate();
+					Button button = (Button)findViewById(R.id.buttonTopUpWallet);
+					button.setVisibility(View.VISIBLE);
+					button.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							openAppOrMSite();
+						}
+					});
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (uniqueID.equals("tokenregenerate")) {
+			Log.d("FirstLoginWalletActivity", "tokenregenerate response : "
+					+ response);
+			try {
+
+				JSONObject jsonObject = new JSONObject(response);
+				String token = jsonObject.get("token").toString();
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"MobikwikToken", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("token", token);
+				editor.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -596,7 +719,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(FirstLoginWalletsActivity.this,
-				HomeActivity.class);
+				HomeCarPoolActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

@@ -66,23 +66,23 @@ public class SplashActivity extends Activity {
 
 		ans1 = new ArrayList<String>();
 		ans1.add("Sharing a cab with friends can reduce cost to as low as Rs. 2/km when 4 friends travel in a hatchback");
-		ans1.add("Sharing works best with people you trust - create a \"club\" of such people who usually travel same routes as you and start sharing rides");
-		ans1.add("Clubs are your closed groups where only known people are added	");
-		ans1.add("You can create clubs and add friends or refer friends to a club that you are a member of");
+		ans1.add("Sharing works best with people you trust - create a \"group\" of such people who usually travel same routes as you and start sharing rides");
+		ans1.add("Groups are your closed groups where only known people are added	");
+		ans1.add("You can create groups and add friends or refer friends to a group that you are a member of");
 
-		ans1.add("Creating clubs makes it easier to share rides with people who travel similar routes");
+		ans1.add("Creating groups makes it easier to share rides with people who travel similar routes");
 
-		ans1.add("Bigger clubs increase chances of ride sharing. Add more friends to your clubs");
-		ans1.add("After adding friends to clubs, make sure to ask them to join ClubMyCab. Sharing begins only when they join");
-		ans1.add("When you add friends to a club, we send them a message on your behalf. But, nothing like telling them about ClubMyCab yourself");
+		ans1.add("Bigger groups increase chances of ride sharing. Add more friends to your groups");
+		ans1.add("After adding friends to groups, make sure to ask them to join iShareRyde. Sharing begins only when they join");
+		ans1.add("When you add friends to a group, we send them a message on your behalf. But, nothing like telling them about iShareRyde yourself");
 		ans1.add("Start rides even with a few friends - let the word spread");
-		ans1.add("Keep clubs focussed to friends who travel same route as you");
-		ans1.add("Name your clubs such to let your club members know what the purpose is. Or just choose a fun name");
+		ans1.add("Keep groups focussed to friends who travel same route as you");
+		ans1.add("Name your groups such to let your group members know what the purpose is. Or just choose a fun name");
 		ans1.add("Add a profile image - helps your friends identify you");
 
 		ans1.add("Add your home, office/college location and upto 3 more preferences in Settings to make ride creation easy");
-		ans1.add("When you want to share a ride, first check your notifications to see if any club member has invited you for one and seats are available");
-		ans1.add("If no existing rides are available, create your own and invite club members");
+		ans1.add("When you want to share a ride, first check your notifications to see if any group member has invited you for one and seats are available");
+		ans1.add("If no existing rides are available, create your own and invite group members");
 
 		ans1.add("See suggested routes and location of other members to decide if the route suits you  ");
 
@@ -93,10 +93,10 @@ public class SplashActivity extends Activity {
 
 		ans1.add("We show you choice of cabs with estimated costs and arrival time");
 		ans1.add("You can sort the cabs on Book a Cab page by nearest and cheapest. Click the icons that appear on top");
-		ans1.add("Book the cab when you are ready to leave - ClubMyCab is about sharing on-the-go");
+		ans1.add("Book the cab when you are ready to leave - iShareRyde is about sharing on-the-go");
 		ans1.add("You can book a cab even if you are riding alone");
 
-		ans1.add("We do not share phone numbers of club members till they join a ride with you to protect privacy");
+		ans1.add("We do not share phone numbers of group members till they join a ride with you to protect privacy");
 		ans1.add("Instant Messenger history is deleted on ride completion");
 		ans1.add("\"Here, I am\" can be used to let your loved ones know where you are through the journey. Activate this when you want");
 
@@ -520,7 +520,7 @@ public class SplashActivity extends Activity {
 
 			if (diff >= (delay * 1000)) {
 				Intent mainIntent = new Intent(SplashActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				mainIntent.putExtra("PoolResponseSplash", poolresponse);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -534,7 +534,7 @@ public class SplashActivity extends Activity {
 					public void run() {
 
 						Intent mainIntent = new Intent(SplashActivity.this,
-								HomeActivity.class);
+								HomeCarPoolActivity.class);
 						mainIntent.putExtra("PoolResponseSplash", poolresponse);
 						mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 								| Intent.FLAG_ACTIVITY_CLEAR_TASK);

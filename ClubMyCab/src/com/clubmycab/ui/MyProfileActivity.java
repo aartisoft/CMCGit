@@ -425,7 +425,7 @@ public class MyProfileActivity extends Activity {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								MyProfileActivity.this);
 						builder.setTitle("Internet Connection Error");
-						builder.setMessage("ClubMyCab requires Internet connection");
+						builder.setMessage("iShareRyde requires Internet connection");
 						builder.setPositiveButton("OK", null);
 						AlertDialog dialog = builder.show();
 						TextView messageText = (TextView) dialog
@@ -1139,7 +1139,7 @@ public class MyProfileActivity extends Activity {
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(MyProfileActivity.this,
-				HomeActivity.class);
+				HomeCarPoolActivity.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

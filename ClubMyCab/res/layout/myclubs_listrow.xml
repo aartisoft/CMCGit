@@ -24,7 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/ivWarnning1"
         android:layout_marginLeft="10dp"
-        android:text="Mera Club"
+        android:text="My Group"
            android:singleLine="true"
     android:maxEms="10"
     android:ellipsize="end"

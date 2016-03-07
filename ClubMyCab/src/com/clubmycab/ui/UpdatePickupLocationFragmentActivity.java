@@ -31,11 +31,15 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -67,7 +71,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
+public class UpdatePickupLocationFragmentActivity extends FragmentActivity
+		implements LocationListener {
 
 	String CabId;
 	String CabStatus;
@@ -145,6 +150,11 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 
 	ProgressDialog onedialog;
 
+	LocationManager locationManager;
+	Location mycurrentlocationobject;
+
+	Button buttonUpdateLocationMarker;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -202,10 +212,12 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 		joinpoollocationtext = (TextView) findViewById(R.id.joinpoollocationtext);
 		joinpoollocationtext.setTypeface(Typeface.createFromAsset(getAssets(),
 				"NeutraText-Bold.ttf"));
+		buttonUpdateLocationMarker = (Button) findViewById(R.id.buttonUpdateLocationMarker);
 
 		joinpoollocationtext.setText(FromLocation);
 
 		updatelocationmarker.setVisibility(View.GONE);
+		buttonUpdateLocationMarker.setVisibility(View.GONE);
 
 		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
@@ -216,6 +228,7 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 		updatepickuplocationbtn.setTypeface(Typeface.createFromAsset(
 				getAssets(), "NeutraText-Bold.ttf"));
 
+		mycurrentlocationobject = getLocation();
 		updatepickuplocationbtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -249,7 +262,9 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 														.icon(BitmapDescriptorFactory
 																.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 										updatepickuplocationbtn
-												.setText("Update  Drop Location");
+												.setText("Update Drop Location");
+										buttonUpdateLocationMarker
+												.setText("Tap to update drop location");
 										joinpoollocationtext
 												.setText(memberlocationaddressFrom);
 
@@ -315,14 +330,48 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 					}
 
 				} else {
-					Toast.makeText(
-							UpdatePickupLocationFragmentActivity.this,
-							"Please update your pickup location by clicking on map",
-							Toast.LENGTH_LONG).show();
+
+					Location location = mycurrentlocationobject;
+					Log.d("UpdatePickupLocationFragmentActivity", "location : "
+							+ location);
+					if (location != null) {
+
+						LatLng point = new LatLng(location.getLatitude(),
+								location.getLongitude());
+						updatepoolmap.animateCamera(CameraUpdateFactory
+								.newLatLngZoom(point, 21));
+
+						Toast.makeText(
+								UpdatePickupLocationFragmentActivity.this,
+								"We have set your pick-up to your current location, please move the map around to select a different location",
+								Toast.LENGTH_LONG).show();
+
+						updatelocationmarker.setVisibility(View.VISIBLE);
+						buttonUpdateLocationMarker.setVisibility(View.VISIBLE);
+						buttonUpdateLocationMarker
+								.setText("Tap to update pickup location");
+						// tvJoinRide.setText("Select Pickup Location");
+						// buttonLocationMarker
+						// .setText("Tap to select Pickup Location");
+					} else {
+						Toast.makeText(
+								UpdatePickupLocationFragmentActivity.this,
+								"Please update your pickup location by clicking on map",
+								Toast.LENGTH_LONG).show();
+					}
 				}
 
 			}
 		});
+
+		buttonUpdateLocationMarker
+				.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						updatepickuplocationbtn.performClick();
+					}
+				});
 
 		onedialog = new ProgressDialog(
 				UpdatePickupLocationFragmentActivity.this);
@@ -444,6 +493,7 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 					updatepoolmap.animateCamera(CameraUpdateFactory
 							.newLatLng(point));
 					updatelocationmarker.setVisibility(View.VISIBLE);
+					buttonUpdateLocationMarker.setVisibility(View.VISIBLE);
 
 					if (!isPick) {
 						memberlocationlatlongFrom = point;
@@ -492,6 +542,8 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 												UpdatePickupLocationFragmentActivity.this,
 												mapcenter.latitude,
 												mapcenter.longitude);
+								joinpoollocationtext
+										.setText(memberlocationaddressFrom);
 
 								Log.d("memberlocationlatlongfrom", ""
 										+ memberlocationlatlongFrom);
@@ -504,6 +556,8 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 												UpdatePickupLocationFragmentActivity.this,
 												mapcenter.latitude,
 												mapcenter.longitude);
+								joinpoollocationtext
+										.setText(memberlocationaddressTo);
 
 								Log.d("memberlocationlatlongTo", ""
 										+ memberlocationlatlongTo);
@@ -998,6 +1052,7 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 				memberlocationaddressFrom = usermemlocadd;
 
 				updatelocationmarker.setVisibility(View.GONE);
+				buttonUpdateLocationMarker.setVisibility(View.GONE);
 				// joinpoolchangelocationtext.setVisibility(View.GONE);
 				joinpoollocationtext.setText(memberlocationaddressFrom);
 				// updatepoolmap.setOnMapClickListener(null);
@@ -1341,21 +1396,25 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 
-		double lat = memberlocationlatlongFrom.latitude;
-		double longi = memberlocationlatlongFrom.longitude;
-		String latlong = String.valueOf(lat) + "," + String.valueOf(longi);
+		if (memberlocationlatlongFrom != null
+				&& memberlocationlatlongTo != null) {
+			double lat = memberlocationlatlongFrom.latitude;
+			double longi = memberlocationlatlongFrom.longitude;
+			String latlong = String.valueOf(lat) + "," + String.valueOf(longi);
 
-		double latTo = memberlocationlatlongTo.latitude;
-		double longiTo = memberlocationlatlongTo.longitude;
-		String latlongTo = String.valueOf(latTo) + ","
-				+ String.valueOf(longiTo);
+			double latTo = memberlocationlatlongTo.latitude;
+			double longiTo = memberlocationlatlongTo.longitude;
+			String latlongTo = String.valueOf(latTo) + ","
+					+ String.valueOf(longiTo);
 
-		Intent intent = new Intent();
-		intent.putExtra("memberlocationaddress", memberlocationaddressFrom);
-		intent.putExtra("memberlocationlatlong", latlong);
-		intent.putExtra("memberlocationaddressTo", memberlocationaddressTo);
-		intent.putExtra("memberlocationlatlongTo", latlongTo);
-		setResult(RESULT_OK, intent);
+			Intent intent = new Intent();
+			intent.putExtra("memberlocationaddress", memberlocationaddressFrom);
+			intent.putExtra("memberlocationlatlong", latlong);
+			intent.putExtra("memberlocationaddressTo", memberlocationaddressTo);
+			intent.putExtra("memberlocationlatlongTo", latlongTo);
+			setResult(RESULT_OK, intent);
+		}
+
 		finish();
 
 		super.onBackPressed();
@@ -2137,5 +2196,125 @@ public class UpdatePickupLocationFragmentActivity extends FragmentActivity {
 			}
 			Log.d("via_waypointstrarr", "" + via_waypointstrarr);
 		}
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		mycurrentlocationobject = location;
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public Location getLocation() {
+		Location location = null;
+		try {
+			locationManager = (LocationManager) this
+					.getSystemService(LOCATION_SERVICE);
+
+			// getting GPS status
+			boolean isGPSEnabled = locationManager
+					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+			// getting network status
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+			if (!isGPSEnabled && !isNetworkEnabled) {
+				// no network provider is enabled
+				AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+				dialog.setMessage("Please check your location services");
+				dialog.setPositiveButton("Retry",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent intent = getIntent();
+								intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+								finish();
+
+								startActivity(intent);
+
+							}
+						});
+				dialog.setNegativeButton("Settings",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface paramDialogInterface,
+									int paramInt) {
+								Intent myIntent = new Intent(
+										Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								startActivity(myIntent);
+								// get gps
+
+							}
+						});
+				dialog.show();
+				return null;
+			} else {
+
+				double lat = 0;
+				double lng = 0;
+				// get the location by gps
+				if (isGPSEnabled) {
+					if (location == null) {
+						locationManager.requestLocationUpdates(
+								LocationManager.GPS_PROVIDER, 20000, 1, this);
+						Log.d("GPS Enabled", "GPS Enabled");
+						if (locationManager != null) {
+							location = locationManager
+									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							if (location != null) {
+								lat = location.getLatitude();
+								lng = location.getLongitude();
+							}
+						}
+					}
+				}
+
+				// First get location from Network Provider
+				if (isNetworkEnabled) {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 20000, 1, this);
+					Log.d("Network", "Network");
+					if (locationManager != null) {
+						location = locationManager
+								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						if (location != null) {
+							lat = location.getLatitude();
+							lng = location.getLongitude();
+						}
+					}
+				}
+
+				Log.d("lat", "" + lat);
+				Log.d("lng", "" + lng);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return location;
 	}
 }

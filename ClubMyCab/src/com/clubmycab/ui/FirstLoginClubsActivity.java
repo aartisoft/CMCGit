@@ -270,6 +270,7 @@ public class FirstLoginClubsActivity extends Activity implements
 			public void onClick(View v) {
 				Intent mainIntent = new Intent(FirstLoginClubsActivity.this,
 						MyClubsActivity.class);
+				mainIntent.putExtra("comefromfirstlogin", "comefromfirstlogin");
 				startActivity(mainIntent);
 				finish();
 			}
@@ -280,7 +281,7 @@ public class FirstLoginClubsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				Intent mainIntent = new Intent(FirstLoginClubsActivity.this,
-						HomeActivity.class);
+						HomeCarPoolActivity.class);
 				startActivity(mainIntent);
 				finish();
 			}

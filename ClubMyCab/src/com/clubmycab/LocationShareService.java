@@ -171,7 +171,7 @@ public class LocationShareService extends Service implements LocationListener {
 
 					Location mycurrentlocation = getLocation();
 
-					if (mycurrentlocation != null) {
+					if (mycurrentlocation != null && destinationlatlong != null) {
 
 						double latdiff = mycurrentlocation.getLatitude()
 								- destinationlatlong.latitude;
@@ -212,6 +212,8 @@ public class LocationShareService extends Service implements LocationListener {
 					} else {
 						if (System.currentTimeMillis() > destinationtimevalue) {
 							keepsharing = false;
+						} else {
+							sendlocation(recpnames, recpnumbers);
 						}
 					}
 				}

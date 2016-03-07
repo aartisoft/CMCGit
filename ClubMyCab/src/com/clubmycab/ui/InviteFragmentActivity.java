@@ -808,25 +808,26 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 
-				// TODO Auto-generated method stub
-				AlertDialog dialog;
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						InviteFragmentActivity.this);
-				builder.setTitle("Select charge per seat");
+				// commented to hard code per seat charges to 3
 
-				final CharSequence str[] = { "1", "2", "3", "4", "5" };
-
-				builder.setItems(str, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int position) {
-						// TODO Auto-generated method stub
-						textViewPricePerKm.setText(str[position]);
-					}
-				});
-
-				dialog = builder.create();
-				dialog.show();
+				// AlertDialog dialog;
+				// AlertDialog.Builder builder = new AlertDialog.Builder(
+				// InviteFragmentActivity.this);
+				// builder.setTitle("Select charge per seat");
+				//
+				// final CharSequence str[] = { "1", "2", "3", "4", "5" };
+				//
+				// builder.setItems(str, new DialogInterface.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(DialogInterface dialog, int position) {
+				// // TODO Auto-generated method stub
+				// textViewPricePerKm.setText(str[position]);
+				// }
+				// });
+				//
+				// dialog = builder.create();
+				// dialog.show();
 
 			}
 		});
@@ -1104,11 +1105,13 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 		TextView textView = (TextView) findViewById(R.id.textViewPricePerKmLabel);
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.llPricePerKm);
+		TextView perseatchargesmsg = (TextView)findViewById(R.id.perseatchargesmsg);
 
 		String screentoopen = getIntent().getStringExtra("screentoopen");
 		if (screentoopen.equals(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
-			textView.setVisibility(View.VISIBLE);
-			relativeLayout.setVisibility(View.VISIBLE);
+			textView.setVisibility(View.GONE);
+			relativeLayout.setVisibility(View.GONE);
+			perseatchargesmsg.setVisibility(View.VISIBLE);
 
 			textViewPricePerKm = (TextView) findViewById(R.id.textViewPricePerKm);
 			checkBoxForFree = (CheckBox) findViewById(R.id.checkBoxForFree);
@@ -1128,9 +1131,15 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							}
 						}
 					});
+
+			seats.setText("3");
+			seatCount = "3";
 		} else if (screentoopen.equals(HomeActivity.HOME_ACTIVITY_SHARE_CAB)) {
 			textView.setVisibility(View.GONE);
 			relativeLayout.setVisibility(View.GONE);
+			perseatchargesmsg.setVisibility(View.GONE);
+			seats.setText("2");
+			seatCount = "2";
 		}
 
 		// ///////////////

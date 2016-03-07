@@ -44,7 +44,7 @@ public class AboutPagerFragmentActivity extends FragmentActivity {
 		mHelpPageDrawables.add(getResources().getDrawable(R.drawable.screen1));
 		mHelpPageDrawables.add(getResources().getDrawable(R.drawable.screen2));
 		mHelpPageDrawables.add(getResources().getDrawable(R.drawable.screen3));
-		mHelpPageDrawables.add(getResources().getDrawable(R.drawable.screen4));
+//		mHelpPageDrawables.add(getResources().getDrawable(R.drawable.screen4));
 
 		setContentView(R.layout.activity_help_pager);
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);

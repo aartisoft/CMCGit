@@ -590,7 +590,6 @@
                             android:textColor="#000"
                             android:textSize="20sp"
                             android:visibility="invisible" >
-
                         </TextView>
                     </RelativeLayout>
                 </LinearLayout>
@@ -686,7 +685,6 @@
                     android:text="@string/seatcount"
                     android:textColor="#000000"
                     android:textSize="20sp" />
-
             </LinearLayout>
 
             <TextView
@@ -719,7 +717,7 @@
                     android:contentDescription="@string/accept"
                     android:scaleType="fitXY"
                     android:src="@drawable/edit_icon"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/textViewPricePerKm"
@@ -745,8 +743,17 @@
                     android:text="(Offer for free)"
                     android:textColor="@android:color/black"
                     android:textSize="15sp" />
-
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/perseatchargesmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Per seat charge of Rs.3/Km applicable to people joining the ride"
+                android:textColor="#000"
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/inviteloadingll"

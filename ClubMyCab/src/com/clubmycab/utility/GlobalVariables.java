@@ -54,6 +54,7 @@ public class GlobalVariables {
 
 	public static String UnreadNotificationCount = "0";
 
+	// Old Netmagic setup
 	// public static final String ServiceUrl =
 	// "http://180.179.207.159/cmc/cmcservice"; // Production
 	// public static final String IpAddress = "180.179.208.23"; // Production

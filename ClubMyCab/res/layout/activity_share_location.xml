@@ -67,7 +67,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:orientation="horizontal"
-                android:padding="8dp" >
+                android:padding="8dp"
+                android:visibility="gone" >
 
                 <ImageView
                     android:id="@+id/watchmeforimg"
@@ -117,7 +118,8 @@
                 android:text="OR"
                 android:textColor="#9e9e9e"
                 android:textIsSelectable="false"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/sharetodestinationll"

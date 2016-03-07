@@ -27,6 +27,9 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +46,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -52,6 +56,7 @@ import android.os.Handler;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -725,33 +730,41 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		if (isMyServiceRunning(LocationShareService.class)) {
 			Log.d("service", "service running");
 
-			stopService(new Intent(this, LocationShareService.class));
-
-			setnamesandnumbersintext(obj.recipientsnames, obj.recipientsnumbers);
-
-			if (obj.sharetilltype.toString().trim()
-					.equalsIgnoreCase("duration")) {
-				long sharemins = (obj.timetillvalue - System
-						.currentTimeMillis()) / 60000;
-
-				watchmeforvalue.setText("" + sharemins + " minutes");
-				from_places.setText("");
-				from_places.setHint("Select Destination");
+			String action = getIntent().getAction();
+			if (action != null && action == "CLOSE_ACTION") {
+				Log.d("onCreate", "action CLOSE_ACTION : " + NOTIFICATION_ID);
+				// to be stopped from onResume(), not here otherwise 2 calls to
+				// stop background service are generated resulting in crash
 			} else {
-				from_places.setText(obj.destinationlongname);
-				watchmeforvalue.setText("Select Time");
+				stopService(new Intent(this, LocationShareService.class));
+
+				setnamesandnumbersintext(obj.recipientsnames,
+						obj.recipientsnumbers);
+
+				if (obj.sharetilltype.toString().trim()
+						.equalsIgnoreCase("duration")) {
+					long sharemins = (obj.timetillvalue - System
+							.currentTimeMillis()) / 60000;
+
+					watchmeforvalue.setText("" + sharemins + " minutes");
+					from_places.setText("");
+					from_places.setHint("Select Destination");
+				} else {
+					from_places.setText(obj.destinationlongname);
+					watchmeforvalue.setText("Select Time");
+				}
+
+				shartsharing.setVisibility(View.GONE);
+				stopsharing.setVisibility(View.VISIBLE);
+				poolinfoimg.setVisibility(View.VISIBLE);
+
+				selectrecprll.setEnabled(false);
+				watchmeforrll.setEnabled(false);
+				from_places.setEnabled(false);
+				threedotsfrom.setEnabled(false);
+
+				startService(new Intent(this, LocationShareService.class));
 			}
-
-			shartsharing.setVisibility(View.GONE);
-			stopsharing.setVisibility(View.VISIBLE);
-			poolinfoimg.setVisibility(View.VISIBLE);
-
-			selectrecprll.setEnabled(false);
-			watchmeforrll.setEnabled(false);
-			from_places.setEnabled(false);
-			threedotsfrom.setEnabled(false);
-
-			startService(new Intent(this, LocationShareService.class));
 
 		} else {
 			Log.d("service", "service not running");
@@ -804,10 +817,11 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 										&& from_places.getText().toString()
 												.equalsIgnoreCase("")) {
 
-									Toast.makeText(
-											getBaseContext(),
-											"Please Select Time Or Destination",
-											Toast.LENGTH_SHORT).show();
+//									Toast.makeText(getBaseContext(),
+//											"Please Select Destination",
+//											Toast.LENGTH_SHORT).show();
+									
+									sharemylocationmethod("destination");
 
 								} else {
 									if (from_places
@@ -1646,11 +1660,21 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			myObject.recipientsnames = selectednames;
 			myObject.recipientsnumbers = selectednumbers;
 			myObject.sharetilltype = "Destination";
-			myObject.destinationlongname = from_places.getText().toString()
-					.trim();
-			LatLng invitemapcenter = new LatLng(fAddress.getLatitude(),
-					fAddress.getLongitude());
-			myObject.destinationlatlong = invitemapcenter;
+			
+			if (from_places.getText().toString()
+					.trim().length() > 0) {
+				myObject.destinationlongname = from_places.getText().toString()
+						.trim();
+				LatLng invitemapcenter = new LatLng(fAddress.getLatitude(),
+						fAddress.getLongitude());
+				myObject.destinationlatlong = invitemapcenter;
+			} else {
+				myObject.destinationlongname = "";
+//				LatLng invitemapcenter = new LatLng(fAddress.getLatitude(),
+//						fAddress.getLongitude());
+				myObject.destinationlatlong = null;
+			}
+			
 			myObject.destinationtimevalue = System.currentTimeMillis()
 					+ (60000 * 240);
 
@@ -1675,6 +1699,72 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 		startService(new Intent(this, LocationShareService.class));
 
+		generatePersistentNotification();
+	}
+
+	// static int notificationID = 1;
+	final int NOTIFICATION_ID = 111;
+
+	private void generatePersistentNotification() {
+		int icon = R.drawable.cabappicon;
+		// notificationID++;
+
+		String message = "You are sharing your location";
+
+		Intent intent = new Intent();
+		intent = new Intent(ShareLocationFragmentActivity.this,
+				ShareLocationFragmentActivity.class);
+
+		PendingIntent pIntent = PendingIntent.getActivity(
+				ShareLocationFragmentActivity.this, NOTIFICATION_ID, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		PendingIntent pendingCloseIntent = PendingIntent.getActivity(
+				this,
+				0,
+				new Intent(this, ShareLocationFragmentActivity.class).setFlags(
+						Intent.FLAG_ACTIVITY_CLEAR_TOP
+								| Intent.FLAG_ACTIVITY_SINGLE_TOP).setAction(
+						"CLOSE_ACTION"), 0);
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				ShareLocationFragmentActivity.this);
+		Notification notification = mBuilder
+				.setSmallIcon(icon)
+				.setTicker("iShareRyde")
+				.setWhen(System.currentTimeMillis())
+				.setOngoing(true)
+				.addAction(android.R.drawable.ic_menu_close_clear_cancel,
+						"Stop sharing", pendingCloseIntent)
+				.setContentTitle("iShareRyde")
+				.setStyle(
+						new NotificationCompat.BigTextStyle().bigText(message))
+				.setContentIntent(pIntent)
+				.setSound(
+						RingtoneManager
+								.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+				.setContentText(message).build();
+
+		NotificationManager notificationManager = (NotificationManager) ShareLocationFragmentActivity.this
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(NOTIFICATION_ID, notification);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		String action = intent.getAction();
+		if (action == null) {
+			return;
+		}
+		Log.d("onNewIntent", "action CLOSE_ACTION : " + NOTIFICATION_ID);
+		if (action == "CLOSE_ACTION") {
+			NotificationManager notificationManager = (NotificationManager) ShareLocationFragmentActivity.this
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(NOTIFICATION_ID);
+
+			stopsharing.performClick();
+		}
 	}
 
 	// ///////
@@ -1974,7 +2064,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 				if (clubs1.equalsIgnoreCase("No Users of your Club")) {
 					Toast.makeText(ShareLocationFragmentActivity.this,
-							"No Groups Created Yet!!", Toast.LENGTH_LONG).show();
+							"No Groups Created Yet!!", Toast.LENGTH_LONG)
+							.show();
 				} else {
 
 					try {
@@ -2905,11 +2996,12 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
 					HomeCarPoolActivity.class);
-			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);
 			overridePendingTransition(R.anim.slide_in_right,
 					R.anim.slide_out_left);
+			finish();
 		} else {
 			fromrelative.setVisibility(View.GONE);
 		}
@@ -2920,6 +3012,19 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		Log.d("onResume", "onResume");
 		super.onResume();
+
+		String action = getIntent().getAction();
+		if (action == null) {
+			return;
+		}
+		Log.d("onResume", "action CLOSE_ACTION : " + NOTIFICATION_ID);
+		if (action == "CLOSE_ACTION") {
+			NotificationManager notificationManager = (NotificationManager) ShareLocationFragmentActivity.this
+					.getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel(NOTIFICATION_ID);
+
+			stopsharing.performClick();
+		}
 	}
 
 	@Override

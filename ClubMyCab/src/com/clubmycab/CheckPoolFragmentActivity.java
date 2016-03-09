@@ -2304,7 +2304,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 		LatLng latLng = endaddlatlng.get(endaddlatlng.size() - 1);
 		myObject.destinationlatlong = latLng;
 		myObject.destinationtimevalue = System.currentTimeMillis()
-				+ (60000 * 240);
+				+ (60000 * 2400);
 		myObject.cabID = rideDetailsModel.getCabId();
 
 		Gson gson = new Gson();

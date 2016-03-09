@@ -1676,7 +1676,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			}
 			
 			myObject.destinationtimevalue = System.currentTimeMillis()
-					+ (60000 * 240);
+					+ (60000 * 2400);
 
 			Gson gson = new Gson();
 			String json = gson.toJson(myObject);

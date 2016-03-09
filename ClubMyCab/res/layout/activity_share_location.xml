@@ -148,7 +148,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="Till I reach..."
+                        android:text="Till I reach (Optional)"
                         android:textColor="#9e9e9e"
                         android:textIsSelectable="false"
                         android:textSize="15sp" />
@@ -251,7 +251,6 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Location updates will be sent for a maximum of 4 hours, when you share till a destination"
                 android:textColor="#9e9e9e"
                 android:textSize="15sp" />
         </LinearLayout>

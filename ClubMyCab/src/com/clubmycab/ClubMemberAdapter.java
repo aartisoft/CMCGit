@@ -120,12 +120,14 @@ public class ClubMemberAdapter extends BaseAdapter {
 						}
 
 						// Uncheck Member club
-						ContactsInviteForRideActivity.adapterClubMy
-								.setSelectedIndex(-1);
-						ContactsInviteForRideActivity.adapterClubMy
-								.notifyDataSetChanged();
-						notifyDataSetChanged();
+						if (ContactsInviteForRideActivity.adapterClubMy != null) {
+							ContactsInviteForRideActivity.adapterClubMy
+									.setSelectedIndex(-1);
+							ContactsInviteForRideActivity.adapterClubMy
+									.notifyDataSetChanged();
+						}
 
+						notifyDataSetChanged();
 
 					}
 

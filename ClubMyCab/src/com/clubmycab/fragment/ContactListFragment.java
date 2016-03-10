@@ -131,7 +131,8 @@ public class ContactListFragment extends Fragment {
     private void searchList(String str) {
         tempArrayList.clear();
         for (ContactData d : contactArrayList) {
-            if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(d.getName(), str))
+           // if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(d.getName(), str))
+            if(d.getSearchstring().contains(str.toLowerCase()))
                 tempArrayList.add(d);
         }
         notifyAdapter(tempArrayList);
@@ -251,6 +252,7 @@ public class ContactListFragment extends Fragment {
                             phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
                             contactData.setPhoneNumber(phoneNumber);
                             contactData.setName(name);
+                            contactData.setSearchstring(name.toLowerCase());
 
                         }
 

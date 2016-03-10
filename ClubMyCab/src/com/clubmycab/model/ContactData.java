@@ -11,6 +11,15 @@ public class ContactData implements Parcelable {
     private String phoneNumber;
     private String name;
 
+    public String getSearchstring() {
+        return searchstring;
+    }
+
+    public void setSearchstring(String searchstring) {
+        this.searchstring = searchstring;
+    }
+
+    private String searchstring;
     public ContactData()
     {
 

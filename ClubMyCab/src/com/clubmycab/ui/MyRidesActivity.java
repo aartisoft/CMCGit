@@ -139,6 +139,7 @@ public class MyRidesActivity extends Activity implements
 
 	Button showhistory;
 	String latestcabid;
+	int poolhistorypagenumber;
 	boolean cabchk;
 
 	boolean shouldGoBack = true;
@@ -812,6 +813,7 @@ public class MyRidesActivity extends Activity implements
 						MyRidesActivity.this);
 
 				latestcabid = "";
+				poolhistorypagenumber = -1;
 				cabchk = false;
 
 				listView.setAdapter(showhisadaptor);
@@ -824,7 +826,7 @@ public class MyRidesActivity extends Activity implements
 							new ConnectionTaskForShowRidesHistory()
 									.executeOnExecutor(
 											AsyncTask.THREAD_POOL_EXECUTOR,
-											latestcabid);
+											Integer.toString(++poolhistorypagenumber));
 						} else {
 							listView.onFinishLoading(false, null);
 						}
@@ -1068,6 +1070,7 @@ public class MyRidesActivity extends Activity implements
 						Toast.LENGTH_LONG).show();
 
 				latestcabid = "khatam";
+				poolhistorypagenumber = -1;
 				cabchk = true;
 				listView.onFinishLoading(false, null);
 
@@ -1075,7 +1078,9 @@ public class MyRidesActivity extends Activity implements
 
 				MyRidesListClass.listmyrides.clear();
 
-				if (latestcabid.equalsIgnoreCase("") || latestcabid.isEmpty()) {
+				// if (latestcabid.equalsIgnoreCase("") ||
+				// latestcabid.isEmpty()) {
+				if (poolhistorypagenumber == -1) {
 
 					for (int i = 0; i < arrayRideDetailsModels.size(); i++) {
 
@@ -1258,13 +1263,13 @@ public class MyRidesActivity extends Activity implements
 
 			HttpClient httpclient = new DefaultHttpClient();
 			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/fetchmypoolshistory.php";
+					+ "/fetchmypoolshistorypagewise.php";
 			HttpPost httpPost = new HttpPost(url_select11);
 
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"MobileNumber", MobileNumberstr);
 			BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair(
-					"LastCabId", cid.toString().trim());
+					"page", cid.toString().trim());
 
 			String authString = cid.toString().trim() + MobileNumberstr;
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
@@ -1323,6 +1328,7 @@ public class MyRidesActivity extends Activity implements
 				listView.onFinishLoading(true, newItems);
 			} else {
 				latestcabid = "khatam";
+				poolhistorypagenumber = -1;
 				cabchk = true;
 				listView.onFinishLoading(false, null);
 			}

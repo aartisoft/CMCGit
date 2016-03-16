@@ -48,7 +48,7 @@ public class FAQActivity extends FragmentActivity {
 		ans3.add("If there is no ride in your groups that you can join, you can start one");
 
 		ans4 = new ArrayList<String>();
-		ans4.add("If it is a carpool, the person offering the ride asks for a per km rate. You can see this in ride details");
+		ans4.add("If it is a carpool, the person offering the ride will charge Rs.3/km per seat");
 		ans4.add("If you are sharing a cab, the cost will depend on bill");
 		ans4.add("Wallet to wallet transfer in the app is most convenient for paying");
 

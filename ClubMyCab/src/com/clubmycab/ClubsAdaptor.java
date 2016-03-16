@@ -119,8 +119,7 @@ public class ClubsAdaptor extends BaseAdapter {
 								mainDataList.get(i).setSelected(false);
 						}
 
-						// Uncheck Member club 
-						//test
+						// Uncheck Member club
 						if (ContactsInviteForRideActivity.adapterClubMember != null) {
 							ContactsInviteForRideActivity.adapterClubMember
 									.setSelectedIndex(-1);

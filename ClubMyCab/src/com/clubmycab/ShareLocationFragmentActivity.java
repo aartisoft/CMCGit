@@ -817,10 +817,10 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 										&& from_places.getText().toString()
 												.equalsIgnoreCase("")) {
 
-//									Toast.makeText(getBaseContext(),
-//											"Please Select Destination",
-//											Toast.LENGTH_SHORT).show();
-									
+									// Toast.makeText(getBaseContext(),
+									// "Please Select Destination",
+									// Toast.LENGTH_SHORT).show();
+
 									sharemylocationmethod("destination");
 
 								} else {
@@ -1133,6 +1133,12 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 					stopService(new Intent(ShareLocationFragmentActivity.this,
 							LocationShareService.class));
 				}
+
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"routeId", 0);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("routeId", "");
+				editor.commit();
 
 				tracker.send(new HitBuilders.EventBuilder()
 						.setCategory("Stop Location Sharing")
@@ -1660,9 +1666,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			myObject.recipientsnames = selectednames;
 			myObject.recipientsnumbers = selectednumbers;
 			myObject.sharetilltype = "Destination";
-			
-			if (from_places.getText().toString()
-					.trim().length() > 0) {
+
+			if (from_places.getText().toString().trim().length() > 0) {
 				myObject.destinationlongname = from_places.getText().toString()
 						.trim();
 				LatLng invitemapcenter = new LatLng(fAddress.getLatitude(),
@@ -1670,11 +1675,11 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 				myObject.destinationlatlong = invitemapcenter;
 			} else {
 				myObject.destinationlongname = "";
-//				LatLng invitemapcenter = new LatLng(fAddress.getLatitude(),
-//						fAddress.getLongitude());
+				// LatLng invitemapcenter = new LatLng(fAddress.getLatitude(),
+				// fAddress.getLongitude());
 				myObject.destinationlatlong = null;
 			}
-			
+
 			myObject.destinationtimevalue = System.currentTimeMillis()
 					+ (60000 * 2400);
 
@@ -1700,6 +1705,11 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		startService(new Intent(this, LocationShareService.class));
 
 		generatePersistentNotification();
+
+		SharedPreferences sharedPreferences = getSharedPreferences("routeId", 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString("routeId", "");
+		editor.commit();
 	}
 
 	// static int notificationID = 1;
@@ -2996,8 +3006,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
 					HomeCarPoolActivity.class);
-//			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-//					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);
 			overridePendingTransition(R.anim.slide_in_right,
 					R.anim.slide_out_left);

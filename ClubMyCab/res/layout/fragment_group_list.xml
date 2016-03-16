@@ -2,12 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.clubmycab.ui.fragment.GroupListFragment">
+    tools:context="com.clubmycab.ui.fragment.GroupListFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+   
+    <ListView
+        android:id="@+id/listMyclubs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF" />
+     <ProgressBar
+        android:id="@+id/pBarGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    
 
 </FrameLayout>

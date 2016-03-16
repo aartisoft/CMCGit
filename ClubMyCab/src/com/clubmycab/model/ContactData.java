@@ -21,14 +21,14 @@ public class ContactData implements Parcelable {
 
     private String searchstring;
     public ContactData()
-    {
+    { 
 
     }
 
 
     private ContactData(Parcel in){
-        phoneNumber = in.readString();
         name = in.readString();
+        phoneNumber = in.readString();
     }
     public String getName() {
         return name;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -11,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -35,8 +37,6 @@ public class ContactListFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private ListView contactslist;
     private ContactListAdapter contactListAdapter;
     private ArrayList<ContactData> contactArrayList = new ArrayList<ContactData>();
@@ -47,6 +47,17 @@ public class ContactListFragment extends Fragment {
     private Dialog glDialog;
 
     public ContactListFragment() {
+    }
+    private ContactListListener contactListListener;
+    public interface ContactListListener{
+    	public void onContactListModified(ArrayList<ContactData> arrayList);
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+    	// TODO Auto-generated method stub
+    	super.onAttach(activity);
+    	contactListListener = (ContactListListener)activity;
     }
 
     public static ContactListFragment newInstance(Bundle args) {
@@ -59,8 +70,6 @@ public class ContactListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -80,30 +89,54 @@ public class ContactListFragment extends Fragment {
         contactListAdapter = new ContactListAdapter();
         contactListAdapter.init(getActivity(), contactArrayList);
         contactslist.setAdapter(contactListAdapter);
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LoadContacts loadContacts = new LoadContacts();
-                loadContacts.execute(null,null,null);
-            }
-        },1000);
+        new Handler().postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				 LoadContacts loadContacts = new LoadContacts();
+			        loadContacts.execute(null,null,null);
+			}
+		}, 500);
+      
 
     }
 
-    private synchronized void notifyAdapter(ArrayList<ContactData> arrayList) {
+    private  void notifyAdapter(ArrayList<ContactData> arrayList) {
 
-        if (contactListAdapter != null) {
-            contactListAdapter.init(getActivity(), arrayList);
-            contactListAdapter.notifyDataSetChanged();
+        try{
+        	if (contactListAdapter != null) {
+                contactListAdapter.init(getActivity(), arrayList);
+                contactListAdapter.notifyDataSetChanged();
+            }
+        }catch(Exception e){
+        	e.printStackTrace();
         }
+    }
+    
+    /**
+     * Add User from contact list to group
+     * - Remove user from main contact list
+     * - Add user to group list
+     * - notify list
+     * - update groupCount
+     */
+    public void addUserToGroup(ContactData contactData) {
+        contactArrayList.remove(contactData);
+        tempArrayList.remove(contactData);
+        groupDataList.add(contactData);
+        ((SendInvitesToOtherScreen) getActivity()).updateCount(groupDataList.size());
+        contactListListener.onContactListModified(groupDataList);
     }
 
     public void removeUserFromGroup(ContactData contactData) {
-        glDialog.dismiss();
+       // glDialog.dismiss();
         groupDataList.remove(contactData);
         contactArrayList.add(contactData);
         ((SendInvitesToOtherScreen) getActivity()).updateCount(groupDataList.size());
         notifyAdapter(contactArrayList);
+        contactListListener.onContactListModified(groupDataList);
+
     }
 
     public void showGrouplistDialog() {
@@ -160,30 +193,22 @@ public class ContactListFragment extends Fragment {
         }
     };
 
-    /**
-     * Add User from contact list to group
-     * - Remove user from main contact list
-     * - Add user to group list
-     * - notify list
-     * - update groupCount
-     */
-    public void addUserToGroup(ContactData contactData) {
-        contactArrayList.remove(contactData);
-        tempArrayList.remove(contactData);
-        groupDataList.add(contactData);
-        ((SendInvitesToOtherScreen) getActivity()).updateCount(groupDataList.size());
-    }
+   
 
 
     private void showProgressDialog() {
-        if (progressDialog != null)
+      /*  if (progressDialog != null)
             progressDialog.dismiss();
-        progressDialog = ProgressDialog.show(getActivity(), "Loading Contacts", "please wait...", true);
+        progressDialog = ProgressDialog.show(getActivity(), "Loading Contacts", "please wait...", true);*/
+    	getView().findViewById(R.id.pBarContacts).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressDialog() {
-        if (progressDialog != null)
-            progressDialog.dismiss();
+       /* if (progressDialog != null)
+            progressDialog.dismiss();*/
+    	if(getView() !=null)
+    	getView().findViewById(R.id.pBarContacts).setVisibility(View.GONE);
+
     }
 
     class LoadContacts extends AsyncTask<Void, Void, Void> {
@@ -214,7 +239,6 @@ public class ContactListFragment extends Fragment {
         try {
             String phoneNumber = null;
             String email = null;
-
             Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
             String _ID = ContactsContract.Contacts._ID;
             String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
@@ -242,7 +266,7 @@ public class ContactListFragment extends Fragment {
                     String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
                     int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
 
-                    if (hasPhoneNumber > 0 && name.length() > 0) {
+                    if (hasPhoneNumber >0 && name.length() > 0) {
 
 
                         // Query and loop for every phone number of the contact
@@ -250,9 +274,13 @@ public class ContactListFragment extends Fragment {
 
                         while (phoneCursor.moveToNext()) {
                             phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                            contactData.setPhoneNumber(phoneNumber);
-                            contactData.setName(name);
-                            contactData.setSearchstring(name.toLowerCase());
+                            if(phoneNumber.length()>=10){
+                            	contactData.setPhoneNumber(phoneNumber);
+                                contactData.setName(name);
+                                contactData.setSearchstring(name.toLowerCase());
+                                contactArrayList.add(contactData);
+
+                            }
 
                         }
 
@@ -262,7 +290,6 @@ public class ContactListFragment extends Fragment {
                         continue;
                     }
 
-                    contactArrayList.add(contactData);
                 }
                 cursor.close();
                 if (contactArrayList.size() > 0) {

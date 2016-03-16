@@ -1,37 +1,42 @@
-
-
-package com.clubmycab;
+package com.clubmycab.adapter;
 
 import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clubmycab.ui.ContactsInviteForRideActivity;
+import com.clubmycab.ClubObject;
+import com.clubmycab.R;
+import com.clubmycab.model.OwnerModel;
+import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.utility.StringTags;
 
-public class ClubsAdaptorNew extends BaseAdapter {
+public class UserGroupAdapter extends BaseAdapter {
 
 	Context mContext;
 	LayoutInflater inflater;
-	private List<ClubObject> mainDataList = null;
+	private List<OwnerModel> mainDataList = null;
 	int selectedIndex = -1;
 	private boolean isWarnning;
+	
+	public UserGroupAdapter(){
+	}
 
-	public ClubsAdaptorNew(Context context, List<ClubObject> mainDataList,
+	public void init(Context context, List<OwnerModel> mainDataList,
 			boolean isWarnning) {
 		this.isWarnning = isWarnning;
 		mContext = context;
 		this.mainDataList = mainDataList;
 		inflater = LayoutInflater.from(mContext);
+
 	}
 
 	static class ViewHolder {
@@ -48,7 +53,7 @@ public class ClubsAdaptorNew extends BaseAdapter {
 	}
 
 	@Override
-	public ClubObject getItem(int position) {
+	public OwnerModel getItem(int position) {
 		return mainDataList.get(position);
 	}
 
@@ -98,7 +103,7 @@ public class ClubsAdaptorNew extends BaseAdapter {
 					int getPosition = (Integer) v.getTag();
 
 					int count = Integer.parseInt(mainDataList.get(getPosition)
-							.getNoofMembers());
+							.getNumberOfMembers());
 
 					if (count <= 1) {
 
@@ -110,12 +115,12 @@ public class ClubsAdaptorNew extends BaseAdapter {
 
 					} else {
 						
-						if (mainDataList.get(getPosition).isSelected()) {
+						/*if (mainDataList.get(getPosition).isSelected()) {
 							mainDataList.get(getPosition).setSelected(false);
 						} else {
 							mainDataList.get(getPosition).setSelected(true);
-						}
-						
+						}*/
+						((SendInvitesToOtherScreen)mContext).onGroupChecked(mainDataList.get(getPosition));
 						notifyDataSetChanged();
 
 					}
@@ -131,7 +136,7 @@ public class ClubsAdaptorNew extends BaseAdapter {
 
 			try {
 				int count = Integer.parseInt(mainDataList.get(position)
-						.getNoofMembers());
+						.getNumberOfMembers());
 				if (count <= 10)
 					holder.ivWarnning.setVisibility(View.VISIBLE);
 				else
@@ -147,27 +152,27 @@ public class ClubsAdaptorNew extends BaseAdapter {
 
 		holder.check.setTag(position);
 		
-		if (mainDataList.get(position).isSelected()) {
+		/*if (mainDataList.get(position).isSelected()) {
 			holder.check.setChecked(true);
 		} else {
 			holder.check.setChecked(false);
-		}
+		}*/
 		
-		holder.name.setText(mainDataList.get(position).getName());
+		holder.name.setText(mainDataList.get(position).getPoolName());
 
-		holder.nofmem.setText("(" + mainDataList.get(position).getNoofMembers()
+		holder.nofmem.setText("(" + mainDataList.get(position).getNumberOfMembers()
 				+ ")");
 
-		if (mainDataList.get(position).getClubOwnerName().toString().trim()
+		if (mainDataList.get(position).getOwnerName().toString().trim()
 				.equalsIgnoreCase("")
-				|| mainDataList.get(position).getClubOwnerName().toString()
+				|| mainDataList.get(position).getOwnerName().toString()
 						.trim().length() == 0) {
 
 			holder.clubownername.setVisibility(View.GONE);
 
 		} else {
 			holder.clubownername.setText("("
-					+ mainDataList.get(position).getClubOwnerName() + ")");
+					+ mainDataList.get(position).getOwnerName() + ")");
 		}
 
 
@@ -175,3 +180,4 @@ public class ClubsAdaptorNew extends BaseAdapter {
 	}
 
 }
+

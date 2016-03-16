@@ -2,44 +2,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
- >
+    android:orientation="vertical" >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
->
+        android:orientation="horizontal" >
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/search"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/search" />
+
         <EditText
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:inputType="textPersonName"
-            android:hint="Search..."
-            android:textColorHint="#5d5d5d"
-            android:textSize="14sp"
-            android:ems="10"
-            android:id="@+id/etName"
-            android:paddingLeft="8dp"
             android:background="@android:color/transparent"
-
-            />
+            android:ems="10"
+            android:hint="Search..."
+            android:inputType="textPersonName"
+            android:paddingLeft="8dp"
+            android:textColorHint="#5d5d5d"
+            android:textSize="14sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#b8b8b8"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="8dp"
+        android:background="#b8b8b8" />
 
-    <ListView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/contactslist"
-        android:divider="@null"
-     />
+        android:layout_height="match_parent" >
+
+        <ProgressBar
+            android:id="@+id/pBarContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ListView
+            android:id="@+id/contactslist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null" />
+    </FrameLayout>
+
 </LinearLayout>

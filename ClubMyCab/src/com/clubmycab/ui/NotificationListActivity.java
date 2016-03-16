@@ -86,6 +86,7 @@ public class NotificationListActivity extends Activity {
 	ArrayList<String> DateTime = new ArrayList<String>();
 	ArrayList<String> Status = new ArrayList<String>();
 	ArrayList<String> RefId = new ArrayList<String>();
+	ArrayList<String> routeId = new ArrayList<String>();
 
 	CircularImageView profilepic;
 	TextView username;
@@ -588,6 +589,7 @@ public class NotificationListActivity extends Activity {
 				DateTime.clear();
 				Status.clear();
 				RefId.clear();
+				routeId.clear();
 
 				try {
 					JSONArray subArray = new JSONArray(allnotificationresp);
@@ -620,6 +622,8 @@ public class NotificationListActivity extends Activity {
 									.getString("Status").toString());
 							RefId.add(subArray.getJSONObject(i)
 									.getString("RefId").toString());
+							routeId.add(subArray.getJSONObject(i)
+									.getString("routeId").toString());
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -866,6 +870,9 @@ public class NotificationListActivity extends Activity {
 										mainIntent.putExtra("address", address);
 										mainIntent.putExtra("latlongmap",
 												latlongmap);
+										mainIntent.putExtra("routeId",
+												routeId.get(arg2));
+
 										NotificationListActivity.this
 												.startActivity(mainIntent);
 

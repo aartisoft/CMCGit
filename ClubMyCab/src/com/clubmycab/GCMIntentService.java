@@ -92,6 +92,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String onumber = intent.getExtras().getString("onumber");
 		String NotificationId = intent.getExtras().getString("notificationId");
 		String latLong = intent.getExtras().getString("latLong");
+		String routeId = intent.getExtras().getString("routeId");
 		Log.d(TAG, "pushfrom : " + (pushfrom == null ? "null" : pushfrom));
 
 		if (pushfrom != null && pushfrom.equalsIgnoreCase("groupchat")) {
@@ -131,7 +132,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			// MobileNumberstr = mPrefs.getString("MobileNumber", "");
 
 			generateSharedLocationNotificaiton(context, message, latLong,
-					NotificationId);
+					NotificationId, routeId);
 
 		} else if (pushfrom != null && pushfrom.equalsIgnoreCase("PoolId_")) {
 			genrateMyClubNotificaton(context, message, NotificationId);
@@ -176,7 +177,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	public void generateSharedLocationNotificaiton(Context context,
-			String message, String latLong, String NotificationId) {
+			String message, String latLong, String NotificationId, String routeId) {
 
 		String[] arr = message.split("-");
 		Log.d("arr", "" + arr[1].toString().trim());
@@ -190,6 +191,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		intent.putExtra("address", address);
 		intent.putExtra("latlongmap", latLong);
 		intent.putExtra("nid", NotificationId);
+		intent.putExtra("routeId", routeId);
 
 		PendingIntent pIntent = PendingIntent.getActivity(this, notificationID,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);

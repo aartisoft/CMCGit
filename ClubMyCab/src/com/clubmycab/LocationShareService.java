@@ -143,7 +143,7 @@ public class LocationShareService extends Service implements LocationListener {
 			sharetilltype = obj.sharetilltype;
 
 			keepsharing = true;
-
+			Log.d(TAG, "keepsharing = true; connection");
 			do {
 
 				if (sharetilltype.equalsIgnoreCase("duration")) {
@@ -164,6 +164,8 @@ public class LocationShareService extends Service implements LocationListener {
 						prefsEditor.commit();
 
 						keepsharing = false;
+						Log.d(TAG, "keepsharing = false; timetilvalue");
+						resetRouteID();
 					}
 				} else {
 					destinationtimevalue = obj.destinationtimevalue;
@@ -208,10 +210,16 @@ public class LocationShareService extends Service implements LocationListener {
 							prefsEditor.commit();
 
 							keepsharing = false;
+							Log.d(TAG,
+									"keepsharing = false; destinationtimevalue");
+							resetRouteID();
 						}
 					} else {
 						if (System.currentTimeMillis() > destinationtimevalue) {
 							keepsharing = false;
+							Log.d(TAG,
+									"keepsharing = false; destinationtimevalue 2");
+							resetRouteID();
 						} else {
 							sendlocation(recpnames, recpnumbers);
 						}
@@ -247,7 +255,18 @@ public class LocationShareService extends Service implements LocationListener {
 			mytask.cancel(true);
 			stopSelf();
 
+			Log.d(TAG, "out of while loop keepsharing : " + keepsharing
+					+ " locationsend : " + locationsend);
 		}
+	}
+	
+	private void resetRouteID() {
+		Log.d(TAG, "reset routeId");
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				"routeId", 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString("routeId", "");
+		editor.commit();
 	}
 
 	@Override
@@ -315,11 +334,28 @@ public class LocationShareService extends Service implements LocationListener {
 				BasicNameValuePair latlongstrBasicNameValuePair = new BasicNameValuePair(
 						"latlongstr", latlong);
 
-				String authString = FullName.toString().trim() + latlong
-						+ recpnames.toString().trim()
-						+ recpnumbers.toString().trim() + FullName
-						+ " is at - " + lcladdress.replaceAll("-", "")
-						+ MobileNumber.toString().trim();
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"routeId", 0);
+				String routeId = sharedPreferences.getString("routeId", "");
+
+				BasicNameValuePair routeIdNameValuePair = new BasicNameValuePair(
+						"routeId", routeId);
+
+				String authString;
+				if (routeId != null && routeId.length() > 0) {
+					authString = FullName.toString().trim() + latlong
+							+ recpnames.toString().trim()
+							+ recpnumbers.toString().trim() + FullName
+							+ " is at - " + lcladdress.replaceAll("-", "")
+							+ MobileNumber.toString().trim() + routeId;
+				} else {
+					authString = FullName.toString().trim() + latlong
+							+ recpnames.toString().trim()
+							+ recpnumbers.toString().trim() + FullName
+							+ " is at - " + lcladdress.replaceAll("-", "")
+							+ MobileNumber.toString().trim();
+				}
+
 				BasicNameValuePair authValuePair = new BasicNameValuePair(
 						"auth",
 						GlobalMethods.calculateCMCAuthString(authString));
@@ -332,6 +368,7 @@ public class LocationShareService extends Service implements LocationListener {
 				nameValuePairList.add(MessageBasicNameValuePair);
 				nameValuePairList.add(latlongstrBasicNameValuePair);
 				nameValuePairList.add(authValuePair);
+				nameValuePairList.add(routeIdNameValuePair);
 
 				UrlEncodedFormEntity urlEncodedFormEntity = null;
 				try {
@@ -345,6 +382,40 @@ public class LocationShareService extends Service implements LocationListener {
 				HttpResponse httpResponse = null;
 				try {
 					httpResponse = httpClient.execute(httpPost);
+
+					InputStream inputStream = httpResponse.getEntity()
+							.getContent();
+					InputStreamReader inputStreamReader = new InputStreamReader(
+							inputStream);
+
+					BufferedReader bufferedReader = new BufferedReader(
+							inputStreamReader);
+
+					StringBuilder stringBuilder = new StringBuilder();
+
+					String bufferedStrChunk = null;
+					String resp = null;
+
+					while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+						resp = stringBuilder.append(bufferedStrChunk)
+								.toString();
+					}
+
+					Log.d("sharelocationtomembers resp", "" + resp);
+
+					if (resp != null && resp.length() > 0
+							&& resp.contains("Unauthorized Access")) {
+						Log.e("sharelocationtomembers",
+								"sharelocationtomembers Unauthorized Access");
+
+						return;
+					} else if (resp != null && resp.length() > 0
+							&& !resp.contains("no one in database")) {
+						SharedPreferences.Editor editor = sharedPreferences
+								.edit();
+						editor.putString("routeId", resp);
+						editor.commit();
+					}
 				} catch (ClientProtocolException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -352,8 +423,6 @@ public class LocationShareService extends Service implements LocationListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				Log.d("httpResponse", "" + httpResponse);
 			}
 
 		} else {

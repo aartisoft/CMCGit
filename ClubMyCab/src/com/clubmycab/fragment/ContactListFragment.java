@@ -3,17 +3,17 @@ package com.clubmycab.fragment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,13 +39,13 @@ public class ContactListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private ListView contactslist;
     private ContactListAdapter contactListAdapter;
-    private ArrayList<ContactData> contactArrayList = new ArrayList<ContactData>();
+    private ArrayList<ContactData> contatcMainList = new ArrayList<ContactData>();
     private ArrayList<ContactData> tempArrayList = new ArrayList<ContactData>();
-    private ArrayList<ContactData> groupDataList = new ArrayList<ContactData>();
+    private ArrayList<ContactData> selectedContactList = new ArrayList<ContactData>();
     private EditText etName;
     private ProgressDialog progressDialog;
     private Dialog glDialog;
-
+    private boolean isContactLoded;
     public ContactListFragment() {
     }
     private ContactListListener contactListListener;
@@ -87,7 +87,7 @@ public class ContactListFragment extends Fragment {
         etName = (EditText) view.findViewById(R.id.etName);
         etName.addTextChangedListener(textWatcher);
         contactListAdapter = new ContactListAdapter();
-        contactListAdapter.init(getActivity(), contactArrayList);
+        contactListAdapter.init(getActivity(), contatcMainList);
         contactslist.setAdapter(contactListAdapter);
         new Handler().postDelayed(new Runnable() {
 			
@@ -122,20 +122,23 @@ public class ContactListFragment extends Fragment {
      * - update groupCount
      */
     public void addUserToGroup(ContactData contactData) {
-        contactArrayList.remove(contactData);
+        contatcMainList.remove(contactData);
         tempArrayList.remove(contactData);
-        groupDataList.add(contactData);
-        ((SendInvitesToOtherScreen) getActivity()).updateCount(groupDataList.size());
-        contactListListener.onContactListModified(groupDataList);
+        selectedContactList.add(contactData);
+        ((SendInvitesToOtherScreen) getActivity()).updateCount(selectedContactList.size());
+        contactListListener.onContactListModified(selectedContactList);
     }
 
     public void removeUserFromGroup(ContactData contactData) {
        // glDialog.dismiss();
-        groupDataList.remove(contactData);
-        contactArrayList.add(contactData);
-        ((SendInvitesToOtherScreen) getActivity()).updateCount(groupDataList.size());
-        notifyAdapter(contactArrayList);
-        contactListListener.onContactListModified(groupDataList);
+        selectedContactList.remove(contactData);
+        contatcMainList.add(contactData);
+        ((SendInvitesToOtherScreen) getActivity()).updateCount(selectedContactList.size());
+        notifyAdapter(contatcMainList);
+        contactListListener.onContactListModified(selectedContactList);
+        if(selectedContactList.size() ==0){
+        	glDialog.dismiss();
+        }
 
     }
 
@@ -150,7 +153,7 @@ public class ContactListFragment extends Fragment {
             ListView groupList = (ListView) glDialog.findViewById(R.id.groupList);
             GroupListAdapter groupListAdapter = new GroupListAdapter();
             groupListAdapter = new GroupListAdapter();
-            groupListAdapter.init(getActivity(), groupDataList);
+            groupListAdapter.init(getActivity(), selectedContactList);
             groupList.setAdapter(groupListAdapter);
             glDialog.show();
         }
@@ -163,7 +166,7 @@ public class ContactListFragment extends Fragment {
 
     private void searchList(String str) {
         tempArrayList.clear();
-        for (ContactData d : contactArrayList) {
+        for (ContactData d : contatcMainList) {
            // if (org.apache.commons.lang3.StringUtils.containsIgnoreCase(d.getName(), str))
             if(d.getSearchstring().contains(str.toLowerCase()))
                 tempArrayList.add(d);
@@ -179,12 +182,14 @@ public class ContactListFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (count > 0) {
-                searchList(s.toString());
-            } else {
+        //	if(isContactLoded){
+        		if (count > 0) {
+                    searchList(s.toString());
+                } else {
 
-                notifyAdapter(contactArrayList);
-            }
+                    notifyAdapter(contatcMainList);
+                }
+        //	}
         }
 
         @Override
@@ -217,6 +222,7 @@ public class ContactListFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             showProgressDialog();
+            isContactLoded = false;
         }
 
         @Override
@@ -229,85 +235,100 @@ public class ContactListFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             hideProgressDialog();
-            if(contactArrayList !=null && contactArrayList.size()>0){
-                notifyAdapter(contactArrayList);
+            if(contatcMainList !=null && contatcMainList.size()>0){
+            	isContactLoded = true;
+                notifyAdapter(contatcMainList);
             }
         }
     }
 
-    public synchronized void fetchContacts() {
-        try {
-            String phoneNumber = null;
-            String email = null;
-            Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
-            String _ID = ContactsContract.Contacts._ID;
-            String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
-            String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
+ 
+    
+    private void fetchContacts(){
+    	Cursor cursor = null;
+		try {
+			cursor = getActivity().getContentResolver().query(
+					Phone.CONTENT_URI, null, null, null, null);
+			int nameIdx = cursor.getColumnIndex(Phone.DISPLAY_NAME);
+			int phoneNumberIdx = cursor.getColumnIndex(Phone.NUMBER);
+			int imageIdx = cursor.getColumnIndex(Phone.CONTACT_ID);
 
-            Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-            String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
-            String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+			cursor.moveToFirst();
+			HashSet set = new HashSet();
 
-            //    Uri EmailCONTENT_URI =  ContactsContract.CommonDataKinds.Email.CONTENT_URI;
-            //    String EmailCONTACT_ID = ContactsContract.CommonDataKinds.Email.CONTACT_ID;
-            //     String DATA = ContactsContract.CommonDataKinds.Email.DATA;
+			do {
+				
+				if (cursor.getString(phoneNumberIdx).length() > 10) {
+					ContactData contactData = new ContactData();
+					contactData.setName(cursor.getString(nameIdx));
+					contactData.setSearchstring(cursor.getString(nameIdx).toLowerCase());
+					String phonenumbercapt = cursor.getString(phoneNumberIdx);
 
+					String phoneStr = phonenumbercapt.replaceAll("\\D+", "");
 
-            ContentResolver contentResolver = getActivity().getContentResolver();
+					String phonesub = null;
+					if (phoneStr.length() > 10) {
+						phonesub = phoneStr.substring(phoneStr.length() - 10,
+								phoneStr.length());
+					} else {
+						phonesub = phoneStr;
+					}
 
-            Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
+					contactData.setPhoneNumber(phonesub);
+					boolean result = set.add(phonesub);
+					if(result){
+						contatcMainList.add(contactData);
+					}
+					//imagearray.add(cursor.getString(imageIdx));
+				}
 
-            // Loop for every contact in the phone
-            if (cursor.getCount() > 0) {
-
-                while (cursor.moveToNext()) {
-                    ContactData contactData = new ContactData();
-                    String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
-                    String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-                    int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
-
-                    if (hasPhoneNumber >0 && name.length() > 0) {
-
-
-                        // Query and loop for every phone number of the contact
-                        Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contact_id}, null);
-
-                        while (phoneCursor.moveToNext()) {
-                            phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                            if(phoneNumber.length()>=10){
-                            	contactData.setPhoneNumber(phoneNumber);
-                                contactData.setName(name);
-                                contactData.setSearchstring(name.toLowerCase());
-                                contactArrayList.add(contactData);
-
-                            }
-
-                        }
-
-                        phoneCursor.close();
-
-                    } else {
-                        continue;
+			} while (cursor.moveToNext());
+			set.clear();
+			if (contatcMainList.size() > 0) {
+                Collections.sort(contatcMainList, new Comparator<ContactData>() {
+                    @Override
+                    public int compare(final ContactData object1, final ContactData object2) {
+                        return object1.getName().compareTo(object2.getName());
                     }
+                });
 
-                }
-                cursor.close();
-                if (contactArrayList.size() > 0) {
-                    Collections.sort(contactArrayList, new Comparator<ContactData>() {
-                        @Override
-                        public int compare(final ContactData object1, final ContactData object2) {
-                            return object1.getName().compareTo(object2.getName());
-                        }
-                    });
-
-                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+		/*HashSet set = new HashSet();
+		for (int i = 0; i < phonenoarray.size(); i++) {
+			boolean val = set.add(phonenoarray.get(i));
+			if (val == false) {
 
-
+			} else {
+				namearraynew.add(namearray.get(i));
+				phonenoarraynew.add(phonenoarray.get(i));
+				imagearraynew.add(imagearray.get(i));
+			}
+		}*/
     }
+
+	public void clearSectedContacts() {
+		contatcMainList.addAll(selectedContactList);
+		selectedContactList.clear();
+		contactListListener.onContactListModified(selectedContactList);
+		if (contatcMainList.size() > 0) {
+            Collections.sort(contatcMainList, new Comparator<ContactData>() {
+                @Override
+                public int compare(final ContactData object1, final ContactData object2) {
+                    return object1.getName().compareTo(object2.getName());
+                }
+            });
+
+        }
+		notifyAdapter(contatcMainList);
+		
+	}
 
 
 

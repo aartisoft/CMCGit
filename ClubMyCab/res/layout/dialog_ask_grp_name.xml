@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f8f8f8" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Add Group"
+        android:textSize="16sp"
+        android:textColor="#5d5d5d"
+      />
+
+    <EditText
+        android:id="@+id/etGrpName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:ems="10"
+        android:hint="Enter group name"
+        android:textColorHint="#b8b8b8"
+        android:gravity="left|bottom"
+        android:padding="5dp"
+        android:textSize="14sp"
+        android:paddingBottom="5dp" >
+
+        <requestFocus />
+    </EditText>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" 
+        android:background="#5fb2b8"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="25dp" >
+
+        <TextView
+            android:id="@+id/tvOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="OK"
+            android:textColor="@color/dialog_ok_btn"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginRight="16dp" />
+
+        <TextView
+            android:id="@+id/tvCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/tvOk"
+            android:text="CANCEL"
+            android:textColor="@color/dialog_ok_btn"
+            android:textSize="14sp" />
+    </RelativeLayout>
+    
+    <View android:layout_width="match_parent"
+        android:layout_height="18dp"/>
+
+</LinearLayout>

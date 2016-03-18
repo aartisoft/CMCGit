@@ -8,9 +8,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -36,6 +39,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -43,6 +47,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
@@ -50,6 +55,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -73,8 +79,10 @@ import com.clubmycab.MyClubsShowAdaptor;
 import com.clubmycab.R;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
+import com.clubmycab.model.ContactData;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.L;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -169,6 +177,9 @@ public class MyClubsActivity extends Activity implements
 
 	Tracker tracker;
 	boolean exceptioncheck = false;
+	private static final int CREATE_NEW_GRP_REQUEST = 101;
+	private static final int ADD_MORE_MEMBER_REQUEST = 102;
+	private static final int REFER_MEMBER_FOR_CLUB_REQUEST = 103;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -371,7 +382,8 @@ public class MyClubsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showAlertDialog();
+			//	showAlertDialog();
+					showGroupNameDialog();
 			}
 		});
 		
@@ -818,8 +830,15 @@ public class MyClubsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
-				ReferMembersForClub(poolids.get(0).toString().trim(), cname);
+				selectedPoolId = poolids.get(0).toString().trim();
+				selectedPoolName = cname;
+				if(meradialog != null){
+					meradialog.dismiss();
+				}
+				Intent intent = new Intent(MyClubsActivity.this, SendInvitesToOtherScreen.class);
+				intent.putExtra("activity_id", SendInvitesToOtherScreen.MY_CLUB_ACTIVITY_ID);
+				startActivityForResult(intent, REFER_MEMBER_FOR_CLUB_REQUEST);
+				//ReferMembersForClub(poolids.get(0).toString().trim(), cname);
 			}
 		});
 
@@ -856,8 +875,16 @@ public class MyClubsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				selectedPoolId = poolids.get(0).toString().trim();
+				selectedPoolName = cname;
+				if(meradialog != null){
+					meradialog.dismiss();
+				}
+				Intent intent = new Intent(MyClubsActivity.this, SendInvitesToOtherScreen.class);
+				intent.putExtra("activity_id", SendInvitesToOtherScreen.MY_CLUB_ACTIVITY_ID);
+				startActivityForResult(intent, ADD_MORE_MEMBER_REQUEST);
+			//	Addmorememberstoclub(, clubname)
 
-				Addmorememberstoclub(poolids.get(0).toString().trim(), cname);
 			}
 		});
 
@@ -2787,4 +2814,252 @@ public class MyClubsActivity extends Activity implements
 		// TODO Auto-generated method stub
 
 	}
+	
+	/*
+	 *______________________________________VD______________________________
+	 */
+	private Dialog askGrpDialog;
+	private String groupName, selectedPoolId, selectedPoolName;
+
+	private void showGroupNameDialog(){
+		if(askGrpDialog == null){
+			askGrpDialog = new Dialog(MyClubsActivity.this);
+			askGrpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			askGrpDialog.setContentView(R.layout.dialog_ask_grp_name);
+			askGrpDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+			askGrpDialog.findViewById(R.id.tvOk).setOnClickListener(dialogClickListener);
+			askGrpDialog.findViewById(R.id.tvCancel).setOnClickListener(dialogClickListener);
+		}
+		if(!askGrpDialog.isShowing()){
+			((EditText)askGrpDialog.findViewById(R.id.etGrpName)).setText("");
+			askGrpDialog.show();
+		}
+	}
+	
+	private OnClickListener dialogClickListener = new OnClickListener() {
+		
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.tvOk:
+				if(!TextUtils.isEmpty(((EditText)askGrpDialog.findViewById(R.id.etGrpName)).getText().toString().trim())){
+					askGrpDialog.dismiss();
+					groupName = ((EditText)askGrpDialog.findViewById(R.id.etGrpName)).getText().toString().trim();
+					Intent intent = new Intent(MyClubsActivity.this, SendInvitesToOtherScreen.class);
+					intent.putExtra("activity_id", SendInvitesToOtherScreen.MY_CLUB_ACTIVITY_ID);
+					startActivityForResult(intent, CREATE_NEW_GRP_REQUEST);
+				}else {
+					((EditText)askGrpDialog.findViewById(R.id.etGrpName)).setError("Please enter group name");
+				}
+				break;
+				
+			case R.id.tvCancel:
+				askGrpDialog.dismiss();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == CREATE_NEW_GRP_REQUEST){
+			if(resultCode == RESULT_OK){
+				if (data.getExtras().getBoolean("iscontactslected")) {
+					Log.d("", "");
+					ArrayList<ContactData> myList = data.getExtras()
+							.getParcelableArrayList("Contact_list");
+					if (myList != null && myList.size() > 0) {
+						sendCreateGrpRequest(
+							myList);
+					}
+				} 
+			}
+		}else if(requestCode == ADD_MORE_MEMBER_REQUEST){
+			if(resultCode == RESULT_OK){
+				if (data.getExtras().getBoolean("iscontactslected")) {
+					Log.d("", "");
+					ArrayList<ContactData> myList = data.getExtras()
+							.getParcelableArrayList("Contact_list");
+					if (myList != null && myList.size() > 0) {
+						sendAddMoreMemeberReq(
+							myList);
+					}
+				} 
+			}
+		}else if(requestCode == REFER_MEMBER_FOR_CLUB_REQUEST){
+			if(resultCode == RESULT_OK){
+				if (data.getExtras().getBoolean("iscontactslected")) {
+					Log.d("", "");
+					ArrayList<ContactData> myList = data.getExtras()
+							.getParcelableArrayList("Contact_list");
+					if (myList != null && myList.size() > 0) {
+						sendReferMemberClubReq(
+							myList);
+					}
+				} 
+			}
+		}
+		
+	};
+	
+	private void sendCreateGrpRequest(ArrayList<ContactData> contactList){
+			selectednames.clear();
+			selectednumbers.clear();
+			HashMap<String, String> map = new HashMap<String, String>();
+			for (ContactData bean : contactList) {
+				// duplicacy check, my number check is left currently
+				map.put(bean.getPhoneNumber().replace(" ", ""), bean.getName());
+				L.mesaage(bean.getPhoneNumber().length()+"");
+			}
+			Iterator it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pair = (Map.Entry) it.next();
+				String number = String.valueOf(pair.getKey());
+				int length = number.length();
+				L.mesaage(length+"");
+					it.remove(); // avoids a ConcurrentModificationException
+				selectednames.add((String) pair.getValue());
+				selectednumbers.add("0091"
+						+ number.substring(number.length()-10));
+
+			}
+			L.mesaage(selectednames.toString() + " , "
+					+ selectednumbers.toString());
+			if (selectednames != null && selectednames.size() > 0) {
+
+				Log.d("selectednames", "" + selectednames);
+				Log.d("selectednumbers", "" + selectednumbers);
+
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new ConnectionTaskForcreatingNewClub()
+							.executeOnExecutor(
+									AsyncTask.THREAD_POOL_EXECUTOR,
+									FullName, OwnerNumber, groupName
+											,
+									selectednames.toString(),
+									selectednumbers.toString());
+				} else {
+					new ConnectionTaskForcreatingNewClub().execute(
+							FullName, OwnerNumber, groupName, selectednames
+									.toString(), selectednumbers
+									.toString());
+				}
+			} else {
+				Toast.makeText(MyClubsActivity.this,
+						"Please select contact(s) to create club",
+						Toast.LENGTH_LONG).show();
+			}
+
+		
+	}
+	
+	private void sendAddMoreMemeberReq(ArrayList<ContactData> contactList){
+		selectednames.clear();
+		selectednumbers.clear();
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (ContactData bean : contactList) {
+			// duplicacy check, my number check is left currently
+			map.put(bean.getPhoneNumber().replace(" ", ""), bean.getName());
+			L.mesaage(bean.getPhoneNumber().length()+"");
+		}
+		Iterator it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			String number = String.valueOf(pair.getKey());
+			int length = number.length();
+			L.mesaage(length+"");
+				it.remove(); // avoids a ConcurrentModificationException
+			selectednames.add((String) pair.getValue());
+			selectednumbers.add("0091"
+					+ number.substring(number.length()-10));
+
+		}
+		L.mesaage(selectednames.toString() + " , "
+				+ selectednumbers.toString());
+
+		if (selectednames != null && selectednames.size() > 0) {
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForAddmoreuserstoclub()
+						.executeOnExecutor(
+								AsyncTask.THREAD_POOL_EXECUTOR, selectedPoolId,
+								selectednames.toString().trim(),
+								selectednumbers.toString().trim());
+			} else {
+				new ConnectionTaskForAddmoreuserstoclub().execute(
+						selectedPoolId, selectednames.toString().trim(),
+						selectednumbers.toString().trim());
+			}
+
+
+			String toaststr = selectednumbers.size()
+					+ " friend(s) added to " + selectedPoolName + " group";
+			Toast.makeText(MyClubsActivity.this, "" + toaststr,
+					Toast.LENGTH_LONG).show();
+
+		} else {
+			Toast.makeText(MyClubsActivity.this,
+					"Please select contact(s) to create group",
+					Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	private void sendReferMemberClubReq(ArrayList<ContactData> contactList){
+		selectednames.clear();
+		selectednumbers.clear();
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (ContactData bean : contactList) {
+			// duplicacy check, my number check is left currently
+			map.put(bean.getPhoneNumber().replace(" ", ""), bean.getName());
+			L.mesaage(bean.getPhoneNumber().length()+"");
+		}
+		Iterator it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			String number = String.valueOf(pair.getKey());
+			int length = number.length();
+			L.mesaage(length+"");
+				it.remove(); // avoids a ConcurrentModificationException
+			selectednames.add((String) pair.getValue());
+			selectednumbers.add("0091"
+					+ number.substring(number.length()-10));
+
+		}
+		L.mesaage(selectednames.toString() + " , "
+				+ selectednumbers.toString());
+		if (selectednames.size() > 0) {
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				new ConnectionTaskForReferfriends().executeOnExecutor(
+						AsyncTask.THREAD_POOL_EXECUTOR, selectedPoolId);
+			} else {
+				new ConnectionTaskForReferfriends().execute(selectedPoolId);
+			}
+
+		
+
+			String toaststr = selectednumbers.size()
+					+ " friend(s) refered to " + selectedPoolName + " group";
+			Toast.makeText(MyClubsActivity.this, "" + toaststr,
+					Toast.LENGTH_LONG).show();
+
+		} else {
+			Toast.makeText(MyClubsActivity.this,
+					"Please select contact(s) to refer",
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+
+
+
 }

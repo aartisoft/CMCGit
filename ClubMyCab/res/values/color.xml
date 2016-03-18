@@ -31,4 +31,5 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorDullWhite">#40ffffff</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="dialog_ok_btn">#23988a</color>
 </resources>

@@ -1,5 +1,9 @@
 package com.clubmycab;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import android.app.Application;
 
 import com.affle.affledowloadtracker.AffleAppDownloadTracker;
@@ -7,7 +11,8 @@ import com.clubmycab.utility.GlobalVariables;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-
+@ReportsCrashes(formKey = "", // will not be used
+mailTo = "vindhya.singh07@gmail.com", mode = ReportingInteractionMode.TOAST, resToastText = R.string.app_name)
 public class CabApplication extends Application {
 
 	public static GoogleAnalytics analytics;
@@ -29,5 +34,6 @@ public class CabApplication extends Application {
 		affledownloadtracker.trackDownload(this,null);
 
 		FacebookSdk.sdkInitialize(getApplicationContext());
+		ACRA.init(CabApplication.this);
 	}
 }

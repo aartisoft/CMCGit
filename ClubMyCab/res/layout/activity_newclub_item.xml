@@ -5,29 +5,41 @@
     android:background="#FFFFFF"
     android:orientation="horizontal"
     android:padding="10dp" >
-    
-    <ImageView 
-         android:layout_height="@dimen/warnning_height"
-        android:layout_width="@dimen/warnning_width"
+
+    <ImageView
         android:id="@+id/ivWarnning"
-        android:background="@drawable/warnning"
-        android:layout_centerVertical="true"
+        android:layout_width="@dimen/warnning_width"
+        android:layout_height="@dimen/warnning_height"
         android:layout_alignParentLeft="true"
-        
-        />
-       <RadioButton
-            android:id="@+id/myclubcheckBox"
-           android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/warnning" />
+
+    <RadioButton
+        android:id="@+id/myclubcheckBox"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-android:focusable="false"
-android:focusableInTouchMode="false"       
-        
-        android:layout_marginRight="10dp" 
-            />
- 
+        android:layout_marginRight="10dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/flAddGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="8dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_user" />
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/llmemclub_row"
         android:layout_width="wrap_content"
@@ -41,10 +53,10 @@ android:focusableInTouchMode="false"
             android:id="@+id/nameofclub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxEms="8"
+            android:singleLine="true"
             android:text="My Group"
-           android:singleLine="true"
-    android:maxEms="8"
-    android:ellipsize="end"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -56,7 +68,7 @@ android:focusableInTouchMode="false"
             android:textSize="13sp" />
     </LinearLayout>
 
-   <TextView
+    <TextView
         android:id="@+id/noofmembers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,14 +79,13 @@ android:focusableInTouchMode="false"
         android:textColor="#000000"
         android:textSize="18sp" />
 
-<!--     <CheckBox -->
-<!--         android:id="@+id/myclubcheckBox" -->
-<!--         android:layout_width="wrap_content" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentRight="true" -->
-<!--         android:layout_centerVertical="true" -->
-<!--         android:layout_marginLeft="10dp" -->
-<!--         android:layout_marginRight="10dp" /> -->
-  
+    <!-- <CheckBox -->
+    <!-- android:id="@+id/myclubcheckBox" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:layout_marginLeft="10dp" -->
+    <!-- android:layout_marginRight="10dp" /> -->
 
 </RelativeLayout>

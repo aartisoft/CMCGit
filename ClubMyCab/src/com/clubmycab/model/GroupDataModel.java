@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class OwnerModel implements Parcelable {
+public class GroupDataModel implements Parcelable {
 	private String ownerName = "";
 	private String ownerNumber = "";
 	private String numberOfMembers = "";
@@ -13,11 +13,11 @@ public class OwnerModel implements Parcelable {
 	private String poolId = "";
 	private ArrayList<MemberModel> memberList;
 
-	public OwnerModel() {
+	public GroupDataModel() {
 
 	}
 
-	private OwnerModel(Parcel in) {
+	private GroupDataModel(Parcel in) {
 		this.ownerName = in.readString();
 		this.ownerNumber = in.readString();
 		this.numberOfMembers = in.readString();
@@ -91,14 +91,14 @@ public class OwnerModel implements Parcelable {
 
 	}
 
-	public static final Parcelable.Creator<OwnerModel> CREATOR = new Parcelable.Creator<OwnerModel>() {
+	public static final Parcelable.Creator<GroupDataModel> CREATOR = new Parcelable.Creator<GroupDataModel>() {
 
-		public OwnerModel createFromParcel(Parcel in) {
-			return new OwnerModel(in);
+		public GroupDataModel createFromParcel(Parcel in) {
+			return new GroupDataModel(in);
 		}
 
-		public OwnerModel[] newArray(int size) {
-			return new OwnerModel[size];
+		public GroupDataModel[] newArray(int size) {
+			return new GroupDataModel[size];
 		}
 	};
 }

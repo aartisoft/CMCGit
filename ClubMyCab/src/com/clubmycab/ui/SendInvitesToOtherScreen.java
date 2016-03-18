@@ -20,7 +20,7 @@ import com.clubmycab.fragment.ContactListFragment.ContactListListener;
 import com.clubmycab.fragment.GroupListFragment;
 import com.clubmycab.fragment.GroupListFragment.GroplistFragmnetListener;
 import com.clubmycab.model.ContactData;
-import com.clubmycab.model.OwnerModel;
+import com.clubmycab.model.GroupDataModel;
 
 /**
  * 1) List Contacts 2) Delete Contacts 3) Searching Contacts 4) Dialog to show
@@ -29,6 +29,8 @@ import com.clubmycab.model.OwnerModel;
 
 public class SendInvitesToOtherScreen extends FragmentActivity implements
 		View.OnClickListener, GroplistFragmnetListener, ContactListListener {
+	public static final int MY_CLUB_ACTIVITY_ID = 101;
+	public static final int INVITE_FRAGMENT_ACTIVTY_ID = 102;
 	private static final int CONTACTS_FRAGMENT = 0;
 	private static final int GROUP_FRAGMENTS = 1;
 	private ViewPager viewPager;
@@ -36,25 +38,56 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 	private static final int GROUP_REQUEST_RESULT = 101;
 	private static final int CONTACT_REQUEST_RESULT = 102;
 	private ArrayList<ContactData> contactList =  new ArrayList<ContactData>();
-	private ArrayList<OwnerModel> groupList =  new ArrayList<OwnerModel>();
-
+	private ArrayList<GroupDataModel> groupList =  new ArrayList<GroupDataModel>();
 	private boolean isContactSelected;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_send_invites_to_other_screen);
 		findViewById(R.id.rlGroupIcon).setOnClickListener(this);
+		findViewById(R.id.rlGroupIconGroups).setOnClickListener(this);
+
 		findViewById(R.id.llContacts).setOnClickListener(this);
 		findViewById(R.id.tvGroups).setOnClickListener(this);
 		findViewById(R.id.btnSend).setOnClickListener(this);
-
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
-		viewPager.setOffscreenPageLimit(2);
-		setupViewPager(viewPager);
-		viewPager.setCurrentItem(GROUP_FRAGMENTS);
-		switchTabs(findViewById(R.id.tvGroups));
-		viewPager.setOnPageChangeListener(onPageChangeListener);
+		initializeView();
 
+	}
+	
+	private void initializeView(){
+		if(getIntent().getExtras() != null){
+			Bundle bundle = getIntent().getExtras();
+			if(bundle.containsKey("activity_id")){
+				if(bundle.getInt("activity_id") == INVITE_FRAGMENT_ACTIVTY_ID){
+					isContactSelected = false;
+					viewPager.setOffscreenPageLimit(2);
+					ViewPagerAdapter adapter = new ViewPagerAdapter(
+							getSupportFragmentManager());
+					adapter.addFrag(ContactListFragment.newInstance(null), "Contacts");
+					adapter.addFrag(GroupListFragment.newInstance(null), "Groups");
+					viewPager.setAdapter(adapter);
+					viewPager.setCurrentItem(GROUP_FRAGMENTS);
+					switchTabsFromTabs(findViewById(R.id.tvGroups));
+					viewPager.setOnPageChangeListener(onPageChangeListener);
+				}else {
+					isContactSelected = true;
+					viewPager.setOffscreenPageLimit(1);
+					ViewPagerAdapter adapter = new ViewPagerAdapter(
+							getSupportFragmentManager());
+					adapter.addFrag(ContactListFragment.newInstance(null), "Contacts");
+					viewPager.setAdapter(adapter);
+					switchTabsFromTabs(findViewById(R.id.tvContacts));
+					
+					//Hide View--------------------------->
+					findViewById(R.id.tab_switcher).setVisibility(View.GONE);
+					findViewById(R.id.llGroups).setVisibility(View.GONE);
+					((TextView) findViewById(R.id.tvContacts))
+					.setTextColor(getResources().getColor(R.color.colorWhite));
+					//viewPager.setOnPageChangeListener(onPageChangeListener);
+				}
+			}
+		}
 	}
 
 	private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
@@ -62,14 +95,16 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 		@Override
 		public void onPageSelected(int arg0) {
 			if (arg0 == 0) {
-				switchTabsForPager(findViewById(R.id.llContacts));
+				switchTabsFromPager(findViewById(R.id.llContacts));
 				isContactSelected = true;
 				findViewById(R.id.rlGroupIcon).setAlpha(1);
+				findViewById(R.id.rlGroupIconGroups).setAlpha(.5f);
+
 			} else {
-				switchTabsForPager(findViewById(R.id.tvGroups));
+				switchTabsFromPager(findViewById(R.id.tvGroups));
 				isContactSelected = false;
 				findViewById(R.id.rlGroupIcon).setAlpha(.5f);
-
+				findViewById(R.id.rlGroupIconGroups).setAlpha(1);
 			}
 
 		}
@@ -91,40 +126,30 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 	 * @param viewPager
 	 */
 	private void setupViewPager(ViewPager viewPager) {
-		ViewPagerAdapter adapter = new ViewPagerAdapter(
-				getSupportFragmentManager());
-		adapter.addFrag(ContactListFragment.newInstance(null), "Contacts");
-		adapter.addFrag(GroupListFragment.newInstance(null), "Groups");
-		viewPager.setAdapter(adapter);
+		
 	}
 
-	public void removeUserClicked(ContactData item) {
-		ViewPagerAdapter adapter = new ViewPagerAdapter(
-				getSupportFragmentManager());
-		ContactListFragment contactListFragment = (ContactListFragment) ((ViewPagerAdapter) viewPager
-				.getAdapter()).getItem(0);
-		// Log.d("Count",count+"");
-		contactListFragment.removeUserFromGroup(item);
-
-	}
+	
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.rlGroupIcon:
-			ViewPagerAdapter adapter = new ViewPagerAdapter(
-					getSupportFragmentManager());
 			ContactListFragment contactListFragment = (ContactListFragment) ((ViewPagerAdapter) viewPager
 					.getAdapter()).getItem(0);
 			contactListFragment.showGrouplistDialog();
 			break;
-
+		case R.id.rlGroupIconGroups:
+			GroupListFragment groupListFragment = (GroupListFragment) ((ViewPagerAdapter) viewPager
+					.getAdapter()).getItem(1);
+			groupListFragment.showGrouplistDialog();
+			break;
 		case R.id.llContacts:
-			switchTabs(v);
+			switchTabsFromTabs(v);
 			break;
 
 		case R.id.tvGroups:
-			switchTabs(v);
+			switchTabsFromTabs(v);
 
 			break;
 		case R.id.btnSend:
@@ -143,7 +168,7 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 
 	}
 
-	private void switchTabs(View view) {
+	private void switchTabsFromTabs(View view) {
 		if (view.getId() == R.id.llContacts) {
 			viewPager.setCurrentItem(CONTACTS_FRAGMENT);
 			((TextView) findViewById(R.id.tvContacts))
@@ -176,7 +201,7 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 
 	}
 
-	private void switchTabsForPager(View view) {
+	private void switchTabsFromPager(View view) {
 		if (view.getId() == R.id.llContacts) {
 			// viewPager.setCurrentItem(CONTACTS_FRAGMENT);
 			((TextView) findViewById(R.id.tvContacts))
@@ -238,29 +263,42 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 		}
 	}
 
-	/**
-	 * Adding custom view to tab
-	 */
-	private void setupTabIcons() {
-
-	}
+	
 
 	/**
 	 * Add User from contact list to group - Remove user from main contact list
 	 * - Add user to group list - notify list - update groupCount
 	 */
 	public void addUserClicked(ContactData contactData) {
-		ViewPagerAdapter adapter = new ViewPagerAdapter(
-				getSupportFragmentManager());
+		ContactListFragment contactListFragment = (ContactListFragment) ((ViewPagerAdapter) viewPager
+				.getAdapter()).getItem(0);
+		contactListFragment.addUserToGroup(contactData);
+		if(((ViewPagerAdapter) viewPager
+				.getAdapter()).getCount() ==2){
+			GroupListFragment groupListFragment = (GroupListFragment) ((ViewPagerAdapter) viewPager
+					.getAdapter()).getItem(1);
+			groupListFragment.clearSelectGroups();
+		}
+		
+	}
+	
+	/**
+	 * Remove user from selected contact list in Contact tab
+	 * @param item
+	 */
+	public void removeUserClicked(ContactData item) {
 		ContactListFragment contactListFragment = (ContactListFragment) ((ViewPagerAdapter) viewPager
 				.getAdapter()).getItem(0);
 		// Log.d("Count",count+"");
-		contactListFragment.addUserToGroup(contactData);
+		contactListFragment.removeUserFromGroup(item);
 
 	}
 
 	
-
+	/**
+	 * Update counting in contacts tab
+	 * @param size
+	 */
 	public void updateCount(int size) {
 		if (size > 0) {
 			findViewById(R.id.rlGroupIcon).setVisibility(View.VISIBLE);
@@ -268,6 +306,46 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 			findViewById(R.id.rlGroupIcon).setVisibility(View.GONE);
 		}
 		((TextView) findViewById(R.id.tvCount)).setText(String.valueOf(size));
+	}
+	
+	/**
+	 * Add new group from group list to selected groups and remove from main group list
+	 * @param item
+	 */
+	public void addGroupClicked(GroupDataModel item) {
+		GroupListFragment groupListFragment = (GroupListFragment) ((ViewPagerAdapter) viewPager
+				.getAdapter()).getItem(1);
+		// Log.d("Count",count+"");
+		groupListFragment.addNewGroup(item);
+		ContactListFragment contactListFragment = (ContactListFragment) ((ViewPagerAdapter) viewPager
+				.getAdapter()).getItem(0);
+		contactListFragment.clearSectedContacts();
+		
+	}
+
+	/**
+	 * Remove group from selected grouplist and add it again to maingrouplist 
+	 * @param item
+	 */
+	public void removeGroupClicked(GroupDataModel item) {
+		GroupListFragment contactListFragment = (GroupListFragment) ((ViewPagerAdapter) viewPager
+				.getAdapter()).getItem(1);
+		// Log.d("Count",count+"");
+		contactListFragment.removeGroupFromSelection(item);
+		
+	}
+	
+	/**
+	 * Update counting in groups tab
+	 * @param size
+	 */
+	public void updateGroupCount(int size) {
+		if (size > 0) {
+			findViewById(R.id.rlGroupIconGroups).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.rlGroupIconGroups).setVisibility(View.GONE);
+		}
+		((TextView) findViewById(R.id.tvCountGroups)).setText(String.valueOf(size));
 	}
 
 	/*
@@ -281,44 +359,31 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 
 	}
 
+	
+	@Override
+	public void onGroupListModified(ArrayList<GroupDataModel> groupList) {
+		this.groupList = groupList;
+		if(groupList.size() > 0){
+			findViewById(R.id.rlGroupIcon).setVisibility(View.GONE);
+		}
+			
+	}
+	
 	@Override
 	public void onContactListModified(ArrayList<ContactData> contactList) {
 		this.contactList = contactList;
-	}
-
-	/*
-	 * Intent intent = new Intent(this,DisplayContact.class);
-	 * intent.putExtra("Contact_list", ContactLis); startActivity(intent);
-	 * 
-	 * ArrayList<ContactClass> myList =
-	 * getIntent().getParcelableExtra("Contact_list");
-	 */
-	/*@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent();
-		intent.putExtra("iscontactslected",isContactSelected );
-		if(isContactSelected){
-			intent.putExtra("Contact_list", contactList); 
-		}else {
-			intent.putExtra("Group_list", groupList); 
-
+		if(contactList.size() > 0){
+			findViewById(R.id.rlGroupIconGroups).setVisibility(View.GONE);
 		}
-		setResult(RESULT_OK, intent);
-		super.onBackPressed();
-		
-	}*/
-
-	@Override
-	public void onGroupSelected(ArrayList<OwnerModel> groupList) {
-		this.groupList = groupList;
 	}
 
-	public void onGroupChecked(OwnerModel ownerModel) {
+	public void onGroupChecked(GroupDataModel ownerModel) {
 		GroupListFragment contactListFragment = (GroupListFragment) ((ViewPagerAdapter) viewPager
 				.getAdapter()).getItem(1);
 		// Log.d("Count",count+"");
 		contactListFragment.addUserToGroup(ownerModel);
 	}
+
+	
 
 }

@@ -74,7 +74,7 @@ import com.clubmycab.UpcomingStartTripAlarm;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.ContactData;
 import com.clubmycab.model.MemberModel;
-import com.clubmycab.model.OwnerModel;
+import com.clubmycab.model.GroupDataModel;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.L;
@@ -1061,7 +1061,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 									Intent mainIntent = new Intent(
 											InviteFragmentActivity.this,
 											SendInvitesToOtherScreen.class);
-									mainIntent.putExtra("fromcome", "invite");
+									mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.INVITE_FRAGMENT_ACTIVTY_ID);
+							/*		mainIntent.putExtra("fromcome", "invite");
 									mainIntent.putExtra("CabId", CabId);
 									mainIntent.putExtra("MobileNumber",
 											MobileNumber);
@@ -1086,7 +1087,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 									mainIntent.putExtra(
 											"screentoopen",
 											getIntent().getStringExtra(
-													"screentoopen"));
+													"screentoopen"));*/
 
 									if (getIntent()
 											.getStringExtra("screentoopen")
@@ -1308,7 +1309,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					}
 				} else {
 					L.mesaage("");
-					ArrayList<OwnerModel> myList = data.getExtras()
+					ArrayList<GroupDataModel> myList = data.getExtras()
 							.getParcelableArrayList("Group_list");
 					if (myList != null && myList.size() > 0) {
 						sendInviteRequest(
@@ -1324,7 +1325,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 	private void sendInviteRequest(final boolean isGrpFrmContact,
 			final ArrayList<ContactData> contactList,
-			final ArrayList<OwnerModel> groupList) {
+			final ArrayList<GroupDataModel> groupList) {
 
 		Handler mHandler2 = new Handler();
 		Runnable mRunnable2 = new Runnable() {
@@ -1345,7 +1346,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					Iterator it = map.entrySet().iterator();
 					while (it.hasNext()) {
 						Map.Entry pair = (Map.Entry) it.next();
-						String name = (String)pair.getValue();
 						String number = String.valueOf(pair.getKey());
 						int length = number.length();
 						L.mesaage(length+"");
@@ -1359,7 +1359,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							+ selectednumbers.toString());
 				} else {
 					HashMap<String, String> map = new HashMap<String, String>();
-					for (OwnerModel bean : groupList) {
+					for (GroupDataModel bean : groupList) {
 						if (!bean.getOwnerNumber().equals(MobileNumber)) {
 							map.put(bean.getOwnerNumber(), bean.getOwnerName());
 						}
@@ -1975,7 +1975,11 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			String perKmCharge = "0";
 			if (screentoopen
 					.equalsIgnoreCase(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
-				perKmCharge = getIntent().getStringExtra("perKmCharge");
+				if (checkBoxForFree.isChecked()) {
+					perKmCharge ="0";
+				} else {
+					perKmCharge = textViewPricePerKm
+							.getText().toString();}
 				msg = FullName + " invited you to join a car pool from "
 						+ fromshortname + " to " + toshortname + " at Rs."
 						+ perKmCharge + " per Km";

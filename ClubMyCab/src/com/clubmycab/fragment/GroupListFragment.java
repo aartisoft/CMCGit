@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,12 +27,16 @@ import com.clubmycab.ClubListClass;
 import com.clubmycab.ClubObject;
 import com.clubmycab.ClubsAdaptorNew;
 import com.clubmycab.R;
+import com.clubmycab.adapter.GroupListAdapter;
+import com.clubmycab.adapter.SelectedGroupAdapter;
 import com.clubmycab.adapter.UserGroupAdapter;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.model.MemberModel;
-import com.clubmycab.model.OwnerModel;
+import com.clubmycab.model.GroupDataModel;
 import com.clubmycab.model.UserModel;
 import com.clubmycab.ui.ContactsInviteForRideActivityNew;
+import com.clubmycab.ui.GroupListDialog;
+import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.ui.SplashActivity;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
@@ -47,8 +53,8 @@ GlobalAsyncTask.AsyncTaskResultListener {
 	private UserGroupAdapter adapterClubMy;
 	private int flag;
 	private static final String POOL_OWNER = "1";
-	private ArrayList<OwnerModel> groupList = new ArrayList<OwnerModel>();
-	private ArrayList<OwnerModel> selectedGroupList = new ArrayList<OwnerModel>();
+	private ArrayList<GroupDataModel> groupList = new ArrayList<GroupDataModel>();
+	private ArrayList<GroupDataModel> selectedGroupList = new ArrayList<GroupDataModel>();
 
     public GroupListFragment() {
     }
@@ -60,9 +66,10 @@ GlobalAsyncTask.AsyncTaskResultListener {
     }
     
     private GroplistFragmnetListener gpListener;
+	private Dialog glDialog;
     public interface GroplistFragmnetListener{
     	public void onEmptyGroup();
-    	public void onGroupSelected(ArrayList<OwnerModel> groupList);
+    	public void onGroupListModified(ArrayList<GroupDataModel> groupList);
     }
     
     @Override
@@ -330,7 +337,7 @@ GlobalAsyncTask.AsyncTaskResultListener {
 				groupList.clear();
 				JSONArray subArray = new JSONArray(response);
 				for (int i = 0; i < subArray.length(); i++) {
-					OwnerModel ownerModel = new OwnerModel();
+					GroupDataModel ownerModel = new GroupDataModel();
 					if(!subArray.getJSONObject(i).isNull("PoolId")){
 						ownerModel.setPoolId(subArray.getJSONObject(i).getString("PoolId"));
 					}
@@ -379,12 +386,56 @@ GlobalAsyncTask.AsyncTaskResultListener {
 		}
 	}
 
-	public void addUserToGroup(OwnerModel ownerModel) {
+	public void addUserToGroup(GroupDataModel ownerModel) {
 		selectedGroupList.add(ownerModel);
-		gpListener.onGroupSelected(selectedGroupList);
+		gpListener.onGroupListModified(selectedGroupList);
 	}
 
-	
+	public void addNewGroup(GroupDataModel item) {
+		groupList.remove(item);
+        //tempArrayList.remove(contactData);
+        selectedGroupList.add(item);
+        notifyAdapter();
+        ((SendInvitesToOtherScreen) getActivity()).updateGroupCount(selectedGroupList.size());
+		gpListener.onGroupListModified(selectedGroupList);
+		
+	}
+
+	public void showGrouplistDialog() {
+        if(glDialog != null && glDialog.isShowing()){
+            return;
+        }else {
+            glDialog = new GroupListDialog(getActivity());
+            glDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            glDialog.setContentView(R.layout.dialog_grouplist);
+            glDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ListView groupList = (ListView) glDialog.findViewById(R.id.groupList);
+            SelectedGroupAdapter groupListAdapter = new SelectedGroupAdapter();
+            groupListAdapter = new SelectedGroupAdapter();
+            groupListAdapter.init(getActivity(), selectedGroupList,true);
+            groupList.setAdapter(groupListAdapter);
+            glDialog.show();
+        }
+    }
+
+	public void removeGroupFromSelection(GroupDataModel item) {
+		 selectedGroupList.remove(item);
+	        groupList.add(item);
+	        ((SendInvitesToOtherScreen) getActivity()).updateGroupCount(selectedGroupList.size());
+	        notifyAdapter();
+			gpListener.onGroupListModified(selectedGroupList);
+	        if(selectedGroupList.size() ==0){
+	        	glDialog.dismiss();
+	        }
+		
+	}
+
+	public void clearSelectGroups() {
+		groupList.addAll(selectedGroupList);
+		selectedGroupList.clear();
+		gpListener.onGroupListModified(selectedGroupList);
+		notifyAdapter();
+	}
 
 
 }

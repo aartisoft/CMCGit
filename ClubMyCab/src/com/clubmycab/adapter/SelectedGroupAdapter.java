@@ -1,6 +1,5 @@
 package com.clubmycab.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -23,7 +22,7 @@ import com.clubmycab.model.GroupDataModel;
 import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.utility.StringTags;
 
-public class UserGroupAdapter extends BaseAdapter {
+public class SelectedGroupAdapter extends BaseAdapter {
     private static final int ANIMATION_DURATION = 200;
 
 	Context mContext;
@@ -32,10 +31,10 @@ public class UserGroupAdapter extends BaseAdapter {
 	int selectedIndex = -1;
 	private boolean isWarnning;
 	
-	public UserGroupAdapter(){
+	public SelectedGroupAdapter(){
 	}
 
-	public void init(Context context, ArrayList<GroupDataModel> mainDataList,
+	public void init(Context context, List<GroupDataModel> mainDataList,
 			boolean isWarnning) {
 		this.isWarnning = isWarnning;
 		mContext = context;
@@ -90,10 +89,10 @@ public class UserGroupAdapter extends BaseAdapter {
         final View view;
 
         if (convertView == null) {
-            view = inflater.inflate(R.layout.activity_newclub_item, parent, false);
+            view = inflater.inflate(R.layout.item_remove_group, parent, false);
             setViewHolder(view);
         } else if (((ViewHolder)convertView.getTag()).needInflate) {
-            view = inflater.inflate(R.layout.activity_newclub_item, parent, false);
+            view = inflater.inflate(R.layout.item_remove_group, parent, false);
             setViewHolder(view);
         }else {
             view = convertView;
@@ -204,7 +203,7 @@ public class UserGroupAdapter extends BaseAdapter {
 
 	                ViewHolder vh = (ViewHolder)v.getTag();
 	                vh.needInflate = true;
-	                ((SendInvitesToOtherScreen)mContext).addGroupClicked(getItem(index));
+	                ((SendInvitesToOtherScreen)mContext).removeGroupClicked(getItem(index));
 	            }
 	            @Override public void onAnimationRepeat(Animation animation) {}
 	            @Override public void onAnimationStart(Animation animation) {}

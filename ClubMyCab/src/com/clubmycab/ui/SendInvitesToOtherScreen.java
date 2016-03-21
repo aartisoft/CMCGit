@@ -31,6 +31,8 @@ public class SendInvitesToOtherScreen extends FragmentActivity implements
 		View.OnClickListener, GroplistFragmnetListener, ContactListListener {
 	public static final int MY_CLUB_ACTIVITY_ID = 101;
 	public static final int INVITE_FRAGMENT_ACTIVTY_ID = 102;
+	public static final int CHECK_POOL_FRAGMENT_ID = 103;
+	public static final int MEMBER_RIDE_ACTIVITY_ID =  104;
 	private static final int CONTACTS_FRAGMENT = 0;
 	private static final int GROUP_FRAGMENTS = 1;
 	private ViewPager viewPager;

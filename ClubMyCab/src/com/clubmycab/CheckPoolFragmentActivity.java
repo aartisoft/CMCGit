@@ -112,6 +112,7 @@ import com.clubmycab.maps.MapUtilityMethods;
 import com.clubmycab.model.AddressModel;
 import com.clubmycab.model.ContactData;
 import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.FirstLoginWalletsActivity;
 import com.clubmycab.ui.HomeCarPoolActivity;
 import com.clubmycab.ui.MobileSiteActivity;
@@ -8133,16 +8134,20 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			if (ownerinviteres != null && ownerinviteres.length() > 0
-					&& ownerinviteres.contains("Unauthorized Access")) {
+					&& ownerinviteres.contains("Unauthorized Access") ) {
 				Log.e("CheckPoolFragmentActivity",
 						"ownerinviteres Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
+			}else{
+				Toast.makeText(CheckPoolFragmentActivity.this,
+						"Invite sent successfully!",
+						Toast.LENGTH_LONG).show();
 			}
 
-			CheckPoolFragmentActivity.this.finish();
+			//CheckPoolFragmentActivity.this.finish();
 		}
 
 	}
@@ -8254,8 +8259,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
-			if (referfriendres != null && referfriendres.length() > 0
-					&& referfriendres.contains("Unauthorized Access")) {
+			if (ownerinviteres != null && ownerinviteres.length() > 0
+					&& ownerinviteres.contains("Unauthorized Access") ) {
+			
 				Log.e("CheckPoolFragmentActivity",
 						"referfriendres Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
@@ -8376,8 +8382,9 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 				return;
 			}
 
-			if (sendres != null && sendres.length() > 0
-					&& sendres.contains("Unauthorized Access")) {
+			if (ownerinviteres != null && ownerinviteres.length() > 0
+					&& ownerinviteres.contains("Unauthorized Access") ) {
+			
 				Log.e("CheckPoolFragmentActivity",
 						"SendInvite Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
@@ -8722,7 +8729,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			public void onClick(View v) {
 
 				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
-						CheckPoolFragmentActivity.class);
+						ContactsToInviteActivity.class);
 
 				RideDetailsModel rideDetailsModel = new RideDetailsModel();
 				rideDetailsModel.setCabId(CabId);

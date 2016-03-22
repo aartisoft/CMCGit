@@ -5086,9 +5086,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							getResources().getString(R.string.exceptionstring),
 							Toast.LENGTH_LONG).show();
 					return;
+				}else{
+					Toast.makeText(MemberRideFragmentActivity.this,
+							"Invite sent successfully!",
+							Toast.LENGTH_LONG).show();
 				}
 
-				MemberRideFragmentActivity.this.finish();
+				//MemberRideFragmentActivity.this.finish();
 			}
 
 		}
@@ -5276,7 +5280,7 @@ protected void onPostExecute(Void v) {
 		return;
 	}
 
-	MemberRideFragmentActivity.this.finish();
+	//MemberRideFragmentActivity.this.finish();
 }
 
 }

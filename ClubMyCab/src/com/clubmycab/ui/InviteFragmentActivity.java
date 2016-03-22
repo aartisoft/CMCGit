@@ -1061,33 +1061,39 @@ public class InviteFragmentActivity extends FragmentActivity implements
 									Intent mainIntent = new Intent(
 											InviteFragmentActivity.this,
 											SendInvitesToOtherScreen.class);
-									mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.INVITE_FRAGMENT_ACTIVTY_ID);
-							/*		mainIntent.putExtra("fromcome", "invite");
-									mainIntent.putExtra("CabId", CabId);
-									mainIntent.putExtra("MobileNumber",
-											MobileNumber);
-									mainIntent.putExtra("OwnerName", OwnerName);
-									mainIntent.putExtra("FromLocation",
-											from_places.getText().toString()
-													.trim());
-									mainIntent.putExtra("ToLocation", to_places
-											.getText().toString().trim());
-									mainIntent.putExtra("TravelDate",
-											datetextview.getText().toString()
-													.trim());
-									mainIntent.putExtra("TravelTime",
-											timetextview.getText().toString()
-													.trim());
-									mainIntent.putExtra("Seats", seatCount);
-									mainIntent.putExtra("fromshortname",
-											fromshortname);
-									mainIntent.putExtra("toshortname",
-											toshortname);
-
-									mainIntent.putExtra(
-											"screentoopen",
-											getIntent().getStringExtra(
-													"screentoopen"));*/
+									mainIntent
+											.putExtra(
+													"activity_id",
+													SendInvitesToOtherScreen.INVITE_FRAGMENT_ACTIVTY_ID);
+									/*
+									 * mainIntent.putExtra("fromcome",
+									 * "invite"); mainIntent.putExtra("CabId",
+									 * CabId);
+									 * mainIntent.putExtra("MobileNumber",
+									 * MobileNumber);
+									 * mainIntent.putExtra("OwnerName",
+									 * OwnerName);
+									 * mainIntent.putExtra("FromLocation",
+									 * from_places.getText().toString()
+									 * .trim());
+									 * mainIntent.putExtra("ToLocation",
+									 * to_places .getText().toString().trim());
+									 * mainIntent.putExtra("TravelDate",
+									 * datetextview.getText().toString()
+									 * .trim());
+									 * mainIntent.putExtra("TravelTime",
+									 * timetextview.getText().toString()
+									 * .trim()); mainIntent.putExtra("Seats",
+									 * seatCount);
+									 * mainIntent.putExtra("fromshortname",
+									 * fromshortname);
+									 * mainIntent.putExtra("toshortname",
+									 * toshortname);
+									 * 
+									 * mainIntent.putExtra( "screentoopen",
+									 * getIntent().getStringExtra(
+									 * "screentoopen"));
+									 */
 
 									if (getIntent()
 											.getStringExtra("screentoopen")
@@ -1340,19 +1346,20 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					HashMap<String, String> map = new HashMap<String, String>();
 					for (ContactData bean : contactList) {
 						// duplicacy check, my number check is left currently
-						map.put(bean.getPhoneNumber().replace(" ", ""), bean.getName());
-						L.mesaage(bean.getPhoneNumber().length()+"");
+						map.put(bean.getPhoneNumber().replace(" ", ""),
+								bean.getName());
+						L.mesaage(bean.getPhoneNumber().length() + "");
 					}
 					Iterator it = map.entrySet().iterator();
 					while (it.hasNext()) {
 						Map.Entry pair = (Map.Entry) it.next();
 						String number = String.valueOf(pair.getKey());
 						int length = number.length();
-						L.mesaage(length+"");
-							it.remove(); // avoids a ConcurrentModificationException
+						L.mesaage(length + "");
+						it.remove(); // avoids a ConcurrentModificationException
 						selectednames.add((String) pair.getValue());
 						selectednumbers.add("0091"
-								+ number.substring(number.length()-10));
+								+ number.substring(number.length() - 10));
 
 					}
 					L.mesaage(selectednames.toString() + " , "
@@ -1363,8 +1370,9 @@ public class InviteFragmentActivity extends FragmentActivity implements
 						if (!bean.getOwnerNumber().equals(MobileNumber)) {
 							map.put(bean.getOwnerNumber(), bean.getOwnerName());
 						}
-						if(bean.getMemberList() != null){
-							ArrayList<MemberModel> subArray = bean.getMemberList();
+						if (bean.getMemberList() != null) {
+							ArrayList<MemberModel> subArray = bean
+									.getMemberList();
 							for (int i = 0; i < subArray.size(); i++) {
 								if (!subArray.get(i).getMemberNumber()
 										.equals(MobileNumber)) {
@@ -1386,71 +1394,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					}
 					L.mesaage(selectednames.toString() + " , "
 							+ selectednumbers.toString());
-					// doubt , purpose of this
-					for (ClubObject bean1 : ClubListClass.MemberClubList) {
-
-						if (bean1.isSelected()) {
-
-							JSONArray subArray;
-							try {
-								subArray = new JSONArray(bean1.getClubmembers()
-										.toString().trim());
-								for (int i = 0; i < subArray.length(); i++) {
-
-									if (subArray.getJSONObject(i)
-											.getString("FullName").toString()
-											.trim() == null
-											|| subArray.getJSONObject(i)
-													.getString("FullName")
-													.toString().trim()
-													.equalsIgnoreCase("null")) {
-
-									} else {
-										selectednames.add(subArray
-												.getJSONObject(i)
-												.getString("FullName")
-												.toString().trim());
-										selectednumbers.add(subArray
-												.getJSONObject(i)
-												.getString("MemberNumber")
-												.toString().trim());
-									}
-								}
-
-								selectednames.add(subArray.getJSONObject(0)
-										.getString("OwnerName").toString()
-										.trim());
-								selectednumbers.add(subArray.getJSONObject(0)
-										.getString("OwnerNumber").toString()
-										.trim());
-
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-						}
-					}
-
-					/*Object[] st = selectednumbers.toArray();
-					for (Object s : st) {
-
-						if (selectednumbers.indexOf(s) != selectednumbers
-								.lastIndexOf(s)) {
-							selectednames
-									.remove(selectednumbers.lastIndexOf(s));
-							selectednumbers.remove(selectednumbers
-									.lastIndexOf(s));
-						}
-					}*/
-
-					/*
-					 * if (selectednumbers.indexOf(MobileNumberstr) != -1) {
-					 * selectednames.remove(selectednumbers
-					 * .indexOf(MobileNumberstr));
-					 * selectednumbers.remove(selectednumbers
-					 * .indexOf(MobileNumberstr)); }
-					 */
 
 				}
 
@@ -1464,7 +1407,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							.setLabel("Invite").build());
 
 					if (selectednames.size() >= Integer.parseInt(seatCount)) {
-					//	conitnuechk = false;
+						// conitnuechk = false;
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 							new ConnectionTaskForSendInvite()
@@ -1475,19 +1418,18 @@ public class InviteFragmentActivity extends FragmentActivity implements
 
 					} else {
 
-					//	conitnuechk = true;
-						int remainingSeats = Integer.parseInt(seatCount)-selectednames.size();
+						// conitnuechk = true;
+						int remainingSeats = Integer.parseInt(seatCount)
+								- selectednames.size();
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								InviteFragmentActivity.this);
-						builder.setMessage("You have "
-								+ seatCount
+						builder.setMessage("You have " + seatCount
 								+ " seats to share and have selected only "
 								+ selectednames.size() + " friend(s)");
 						builder.setCancelable(true);
 						builder.setPositiveButton("Continue Anyways",
 								new DialogInterface.OnClickListener() {
-									public void onClick(
-											DialogInterface dialog,
+									public void onClick(DialogInterface dialog,
 											int id) {
 
 										if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -1901,8 +1843,6 @@ public class InviteFragmentActivity extends FragmentActivity implements
 		}
 
 		public void connection() throws Exception {
-		
-
 
 			String source = from_places.getText().toString().trim()
 					.replaceAll(" ", "%20");
@@ -1976,10 +1916,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			if (screentoopen
 					.equalsIgnoreCase(HomeActivity.HOME_ACTIVITY_CAR_POOL)) {
 				if (checkBoxForFree.isChecked()) {
-					perKmCharge ="0";
+					perKmCharge = "0";
 				} else {
-					perKmCharge = textViewPricePerKm
-							.getText().toString();}
+					perKmCharge = textViewPricePerKm.getText().toString();
+				}
 				msg = FullName + " invited you to join a car pool from "
 						+ fromshortname + " to " + toshortname + " at Rs."
 						+ perKmCharge + " per Km";
@@ -2065,15 +2005,20 @@ public class InviteFragmentActivity extends FragmentActivity implements
 							+ GlobalVariables.ServiceUrl + "/openacab.php"
 							+ " CabId : " + CabId + " MobileNumber : "
 							+ MobileNumber + " OwnerName : " + FullName
-							+ " FromLocation : " + from_places.getText().toString()
+							+ " FromLocation : "
+							+ from_places.getText().toString()
 							+ " ToLocation : " + to_places.getText().toString()
 							+ " FromShortName : " + fromshortname
 							+ " ToShortName : " + toshortname
-							+ " TravelDate : " + datetextview.getText().toString().trim() + " TravelTime : "
-							+ timetextview.getText().toString().trim() + " Seats : " + seatCount
-							+ " RemainingSeats : " + seatCount + " Distance : "
-							+ distancetext + " ExpTripDuration : "
-							+ durationvalue + " MembersNumber : "+selectednumbers.toString()+"MemberName:"+selectednames.toString()
+							+ " TravelDate : "
+							+ datetextview.getText().toString().trim()
+							+ " TravelTime : "
+							+ timetextview.getText().toString().trim()
+							+ " Seats : " + seatCount + " RemainingSeats : "
+							+ seatCount + " Distance : " + distancetext
+							+ " ExpTripDuration : " + durationvalue
+							+ " MembersNumber : " + selectednumbers.toString()
+							+ "MemberName:" + selectednames.toString()
 							+ " screentoopen : "
 							+ getIntent().getStringExtra("screentoopen")
 							+ " rideType : " + rideType + " perKmCharge : "
@@ -2085,7 +2030,8 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					+ from_places.getText().toString()
 					+ ((fromshortname == null
 							|| fromshortname.equalsIgnoreCase("") || fromshortname
-								.isEmpty()) ? from_places.getText().toString() : fromshortname)
+								.isEmpty()) ? from_places.getText().toString()
+							: fromshortname)
 					+ selectednames.toString()
 					+ selectednumbers.toString()
 					+ msg
@@ -2097,8 +2043,10 @@ public class InviteFragmentActivity extends FragmentActivity implements
 					+ seatCount
 					+ to_places.getText().toString()
 					+ ((toshortname == null || toshortname.equalsIgnoreCase("") || toshortname
-							.isEmpty()) ? to_places.getText().toString() : toshortname)
-					+ datetextview.getText().toString().trim() + timetextview.getText().toString().trim();
+							.isEmpty()) ? to_places.getText().toString()
+							: toshortname)
+					+ datetextview.getText().toString().trim()
+					+ timetextview.getText().toString().trim();
 			BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
 					GlobalMethods.calculateCMCAuthString(authString));
 

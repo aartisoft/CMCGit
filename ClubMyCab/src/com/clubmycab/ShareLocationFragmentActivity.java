@@ -9,9 +9,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -58,6 +61,7 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.Gravity;
@@ -82,13 +86,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clubmycab.maps.MapUtilityMethods;
+import com.clubmycab.model.ContactData;
+import com.clubmycab.model.GroupDataModel;
+import com.clubmycab.model.MemberModel;
 import com.clubmycab.ui.ContactsInviteForRideActivity;
 import com.clubmycab.ui.FavoritePlaceFindActivity;
 import com.clubmycab.ui.HomeCarPoolActivity;
+import com.clubmycab.ui.InviteFragmentActivity;
 import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
+import com.clubmycab.utility.L;
 import com.clubmycab.utility.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -228,6 +238,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 	boolean exceptioncheck = false;
 
 	Location mycurrentlocationobject;
+	public static final int INVITE_FRIEND_REQUEST = 500;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -340,14 +351,20 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			unreadnoticountrl.setVisibility(View.VISIBLE);
 			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
 		}
-
+		
 		selectrecprll = (RelativeLayout) findViewById(R.id.selectrecprll);
 		selectrecprll.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				Intent mainIntent = new Intent(
+						ShareLocationFragmentActivity.this,
+						SendInvitesToOtherScreen.class);
+				mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.INVITE_FRAGMENT_ACTIVTY_ID);
+				startActivityForResult(mainIntent, 500);
 
-				showAlertDialog();
+				//showAlertDialog();
+				
 			}
 		});
 
@@ -1367,6 +1384,31 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 					}
 				}
 
+			}else if (requestCode == INVITE_FRIEND_REQUEST) {
+				// Make sure the request was successful
+				if (resultCode == RESULT_OK) {
+					if (data.getExtras().getBoolean("iscontactslected")) {
+						Log.d("", "");
+						ArrayList<ContactData> myList = data.getExtras()
+								.getParcelableArrayList("Contact_list");
+						if (myList != null && myList.size() > 0) {
+							sendInviteRequest(
+									data.getExtras().getBoolean("iscontactslected"),
+									myList, null);
+						}
+					} else {
+						L.mesaage("");
+						ArrayList<GroupDataModel> myList = data.getExtras()
+								.getParcelableArrayList("Group_list");
+						if (myList != null && myList.size() > 0) {
+							sendInviteRequest(
+									data.getExtras().getBoolean("iscontactslected"),
+									null, myList);
+						}
+
+					}
+
+				}
 			}
 		}
 	}
@@ -1466,6 +1508,113 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 	//
 	// }
 	// }
+
+	private void sendInviteRequest(final boolean isGrpFrmContact,
+			final ArrayList<ContactData> contactList,
+			final ArrayList<GroupDataModel> groupList) {
+		Handler mHandler2 = new Handler();
+		Runnable mRunnable2 = new Runnable() {
+			@Override
+			public void run() {
+				selectednames.clear();
+				selectednumbers.clear();
+				if (isGrpFrmContact) {
+					HashMap<String, String> map = new HashMap<String, String>();
+					for (ContactData bean : contactList) {
+						// duplicacy check, my number check is left currently
+						map.put(bean.getPhoneNumber().replace(" ", ""),
+								bean.getName());
+						L.mesaage(bean.getPhoneNumber().length() + "");
+					}
+					Iterator it = map.entrySet().iterator();
+					while (it.hasNext()) {
+						Map.Entry pair = (Map.Entry) it.next();
+						String number = String.valueOf(pair.getKey());
+						int length = number.length();
+						L.mesaage(length + "");
+						it.remove(); // avoids a ConcurrentModificationException
+						selectednames.add((String) pair.getValue());
+						selectednumbers.add("0091"
+								+ number.substring(number.length() - 10));
+
+					}
+					L.mesaage(selectednames.toString() + " , "
+							+ selectednumbers.toString());
+				} else {
+					HashMap<String, String> map = new HashMap<String, String>();
+					for (GroupDataModel bean : groupList) {
+						if (!bean.getOwnerNumber().equals(MobileNumber)) {
+							map.put(bean.getOwnerNumber(), bean.getOwnerName());
+						}
+						if (bean.getMemberList() != null) {
+							ArrayList<MemberModel> subArray = bean
+									.getMemberList();
+							for (int i = 0; i < subArray.size(); i++) {
+								if (!subArray.get(i).getMemberNumber()
+										.equals(MobileNumber)) {
+									map.put(subArray.get(i).getMemberNumber(),
+											subArray.get(i).getMemberName());
+								}
+							}
+						}
+					}
+					Iterator it = map.entrySet().iterator();
+					while (it.hasNext()) {
+						Map.Entry pair = (Map.Entry) it.next();
+						System.out.println(pair.getKey() + " = "
+								+ pair.getValue());
+						it.remove(); // avoids a ConcurrentModificationException
+						selectednames.add((String) pair.getValue());
+						selectednumbers.add(((String) pair.getKey()));
+
+					}
+					L.mesaage(selectednames.toString() + " , "
+							+ selectednumbers.toString());
+
+				}
+
+				if (selectednames.size() > 0) {
+
+					/*setnamesandnumbersintext(selectednames,
+							selectednumbers);*/
+					
+					//dialog.dismiss();
+					String str = "";
+					if(isGrpFrmContact){
+						for (int i = 0; i < selectednames.size(); i++) {
+
+							if (selectednames.get(i).toString().trim() == null
+									|| selectednames.get(i).toString().trim().equalsIgnoreCase("null")) {
+								str = str + selectednames.get(i) + "\n";
+							} else {
+								str = str + selectednames.get(i) + "\n";
+							}
+						}
+						str = str.substring(0, str.length() - 1);
+						Log.d("str", "" + str);
+						selectrecipientsvalue.setText(str);
+					}else {
+						for (int i = 0; i < groupList.size(); i++) {
+
+							if (!TextUtils.isEmpty(groupList.get(i).getPoolName())) {
+								str = str + groupList.get(i).getPoolName() + "\n";
+							} 
+						}
+						str = str.substring(0, str.length() - 1);
+						Log.d("str", "" + str);
+						selectrecipientsvalue.setText(str);
+					}
+				} else {
+					Toast.makeText(ShareLocationFragmentActivity.this,
+							"Please select contact(s)",
+							Toast.LENGTH_LONG).show();
+				}
+
+			}
+		};
+		mHandler2.postDelayed(mRunnable2, 500);
+		
+	}
 
 	// ////////////////////////
 	// ///////

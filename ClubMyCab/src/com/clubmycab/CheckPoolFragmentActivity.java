@@ -466,7 +466,6 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 		ownerinvite.setOnClickListener(new View.OnClickListener() {
 
-
 			@Override
 			public void onClick(View v) {
 
@@ -497,7 +496,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					Seats = rideDetailsModel.getSeats();
 					fromshortname = rideDetailsModel.getFromShortName();
 					toshortname = rideDetailsModel.getToShortName();
-						
+
 					/*
 					 * mainIntent.putExtra("fromcome", "checkpool");
 					 * mainIntent.putExtra("CabId",
@@ -521,7 +520,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 					 * mainIntent.putExtra("toshortname",
 					 * rideDetailsModel.getToShortName());
 					 */
-					mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.CHECK_POOL_FRAGMENT_ID);
+					mainIntent.putExtra("activity_id",
+							SendInvitesToOtherScreen.CHECK_POOL_FRAGMENT_ID);
 					startActivityForResult(mainIntent, CHECK_POOL_FRAGMENT_ID);
 					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);
@@ -8134,20 +8134,19 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			if (ownerinviteres != null && ownerinviteres.length() > 0
-					&& ownerinviteres.contains("Unauthorized Access") ) {
+					&& ownerinviteres.contains("Unauthorized Access")) {
 				Log.e("CheckPoolFragmentActivity",
 						"ownerinviteres Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
-			}else{
+			} else {
 				Toast.makeText(CheckPoolFragmentActivity.this,
-						"Invite sent successfully!",
-						Toast.LENGTH_LONG).show();
+						"Invite sent successfully!", Toast.LENGTH_LONG).show();
 			}
 
-			//CheckPoolFragmentActivity.this.finish();
+			// CheckPoolFragmentActivity.this.finish();
 		}
 
 	}
@@ -8260,8 +8259,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			if (ownerinviteres != null && ownerinviteres.length() > 0
-					&& ownerinviteres.contains("Unauthorized Access") ) {
-			
+					&& ownerinviteres.contains("Unauthorized Access")) {
+
 				Log.e("CheckPoolFragmentActivity",
 						"referfriendres Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
@@ -8383,8 +8382,8 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			}
 
 			if (ownerinviteres != null && ownerinviteres.length() > 0
-					&& ownerinviteres.contains("Unauthorized Access") ) {
-			
+					&& ownerinviteres.contains("Unauthorized Access")) {
+
 				Log.e("CheckPoolFragmentActivity",
 						"SendInvite Unauthorized Access");
 				Toast.makeText(CheckPoolFragmentActivity.this,
@@ -8983,24 +8982,23 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 			Log.d("storeclubres", "" + stringBuilder.toString());
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode == CHECK_POOL_FRAGMENT_ID){
-			if(resultCode == RESULT_OK){
+		if (requestCode == CHECK_POOL_FRAGMENT_ID) {
+			if (resultCode == RESULT_OK) {
 				if (data.getExtras().getBoolean("iscontactslected")) {
 					Log.d("", "");
 					ArrayList<ContactData> myList = data.getExtras()
 							.getParcelableArrayList("Contact_list");
 					if (myList != null && myList.size() > 0) {
-						sendInvitesToFriends(
-							myList);
+						sendInvitesToFriends(myList);
 					}
-				} 
+				}
 			}
 		}
-	}	
+	}
 
 }

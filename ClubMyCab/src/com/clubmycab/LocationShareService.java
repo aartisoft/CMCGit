@@ -246,7 +246,7 @@ public class LocationShareService extends Service implements LocationListener {
 
 						SystemClock.sleep(60000 * interval);
 					} else {
-						SystemClock.sleep(60000);
+						SystemClock.sleep(60000 * interval);
 					}
 				}
 

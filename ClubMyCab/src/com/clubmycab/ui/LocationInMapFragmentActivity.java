@@ -268,7 +268,7 @@ public class LocationInMapFragmentActivity extends FragmentActivity implements
 									Double.parseDouble(arr[1]));
 							sharelocationmap.addMarker(new MarkerOptions()
 									.position(pos)
-									.snippet("start")
+									.title(atTimeArray[0])
 									.icon(BitmapDescriptorFactory
 											.fromResource(R.drawable.start)));
 							bc.include(pos);
@@ -280,6 +280,7 @@ public class LocationInMapFragmentActivity extends FragmentActivity implements
 							sharelocationmap
 									.addMarker(new MarkerOptions()
 											.position(pos)
+											.title(atTimeArray[coordinatesArray.length - 1])
 											.icon(BitmapDescriptorFactory
 													.fromResource(R.drawable.sharelocationmarker)));
 							bc.include(pos);

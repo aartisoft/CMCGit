@@ -253,7 +253,7 @@ public class LocationShareForRideService extends Service implements
 
 						SystemClock.sleep(60000 * interval);
 					} else {
-						SystemClock.sleep(60000);
+						SystemClock.sleep(60000 * interval);
 					}
 				}
 

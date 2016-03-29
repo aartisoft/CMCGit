@@ -92,7 +92,6 @@ import com.clubmycab.model.MemberModel;
 import com.clubmycab.ui.ContactsInviteForRideActivity;
 import com.clubmycab.ui.FavoritePlaceFindActivity;
 import com.clubmycab.ui.HomeCarPoolActivity;
-import com.clubmycab.ui.InviteFragmentActivity;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.ui.UniversalDrawer;
@@ -351,7 +350,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 			unreadnoticountrl.setVisibility(View.VISIBLE);
 			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
 		}
-		
+
 		selectrecprll = (RelativeLayout) findViewById(R.id.selectrecprll);
 		selectrecprll.setOnClickListener(new View.OnClickListener() {
 
@@ -360,11 +359,12 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 				Intent mainIntent = new Intent(
 						ShareLocationFragmentActivity.this,
 						SendInvitesToOtherScreen.class);
-				mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.INVITE_FRAGMENT_ACTIVTY_ID);
+				mainIntent.putExtra("activity_id",
+						SendInvitesToOtherScreen.INVITE_FRAGMENT_ACTIVTY_ID);
 				startActivityForResult(mainIntent, 500);
 
-				//showAlertDialog();
-				
+				// showAlertDialog();
+
 			}
 		});
 
@@ -1179,6 +1179,10 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 				from_places.setEnabled(true);
 				threedotsfrom.setEnabled(true);
 
+				NotificationManager notificationManager = (NotificationManager) ShareLocationFragmentActivity.this
+						.getSystemService(Context.NOTIFICATION_SERVICE);
+				notificationManager.cancel(NOTIFICATION_ID);
+
 			}
 		});
 
@@ -1384,7 +1388,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 					}
 				}
 
-			}else if (requestCode == INVITE_FRIEND_REQUEST) {
+			} else if (requestCode == INVITE_FRIEND_REQUEST) {
 				// Make sure the request was successful
 				if (resultCode == RESULT_OK) {
 					if (data.getExtras().getBoolean("iscontactslected")) {
@@ -1393,8 +1397,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 								.getParcelableArrayList("Contact_list");
 						if (myList != null && myList.size() > 0) {
 							sendInviteRequest(
-									data.getExtras().getBoolean("iscontactslected"),
-									myList, null);
+									data.getExtras().getBoolean(
+											"iscontactslected"), myList, null);
 						}
 					} else {
 						L.mesaage("");
@@ -1402,8 +1406,8 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 								.getParcelableArrayList("Group_list");
 						if (myList != null && myList.size() > 0) {
 							sendInviteRequest(
-									data.getExtras().getBoolean("iscontactslected"),
-									null, myList);
+									data.getExtras().getBoolean(
+											"iscontactslected"), null, myList);
 						}
 
 					}
@@ -1575,16 +1579,18 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 
 				if (selectednames.size() > 0) {
 
-					/*setnamesandnumbersintext(selectednames,
-							selectednumbers);*/
-					
-					//dialog.dismiss();
+					/*
+					 * setnamesandnumbersintext(selectednames, selectednumbers);
+					 */
+
+					// dialog.dismiss();
 					String str = "";
-					if(isGrpFrmContact){
+					if (isGrpFrmContact) {
 						for (int i = 0; i < selectednames.size(); i++) {
 
 							if (selectednames.get(i).toString().trim() == null
-									|| selectednames.get(i).toString().trim().equalsIgnoreCase("null")) {
+									|| selectednames.get(i).toString().trim()
+											.equalsIgnoreCase("null")) {
 								str = str + selectednames.get(i) + "\n";
 							} else {
 								str = str + selectednames.get(i) + "\n";
@@ -1593,12 +1599,14 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 						str = str.substring(0, str.length() - 1);
 						Log.d("str", "" + str);
 						selectrecipientsvalue.setText(str);
-					}else {
+					} else {
 						for (int i = 0; i < groupList.size(); i++) {
 
-							if (!TextUtils.isEmpty(groupList.get(i).getPoolName())) {
-								str = str + groupList.get(i).getPoolName() + "\n";
-							} 
+							if (!TextUtils.isEmpty(groupList.get(i)
+									.getPoolName())) {
+								str = str + groupList.get(i).getPoolName()
+										+ "\n";
+							}
 						}
 						str = str.substring(0, str.length() - 1);
 						Log.d("str", "" + str);
@@ -1606,14 +1614,14 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 					}
 				} else {
 					Toast.makeText(ShareLocationFragmentActivity.this,
-							"Please select contact(s)",
-							Toast.LENGTH_LONG).show();
+							"Please select contact(s)", Toast.LENGTH_LONG)
+							.show();
 				}
 
 			}
 		};
 		mHandler2.postDelayed(mRunnable2, 500);
-		
+
 	}
 
 	// ////////////////////////

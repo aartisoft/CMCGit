@@ -260,24 +260,26 @@ public class ContactListFragment extends Fragment {
 				
 				if (cursor.getString(phoneNumberIdx).length() > 10) {
 					ContactData contactData = new ContactData();
-					contactData.setName(cursor.getString(nameIdx));
-					contactData.setSearchstring(cursor.getString(nameIdx).toLowerCase());
+					
 					String phonenumbercapt = cursor.getString(phoneNumberIdx);
 
-					String phoneStr = phonenumbercapt.replaceAll("\\D+", "");
+					String phoneStr = phonenumbercapt.replaceAll("\\D+", "").trim();
 
 					String phonesub = null;
-					if (phoneStr.length() > 10) {
-						phonesub = phoneStr.substring(phoneStr.length() - 10,
-								phoneStr.length());
-					} else {
-						phonesub = phoneStr;
-					}
-
-					contactData.setPhoneNumber(phonesub);
-					boolean result = set.add(phonesub);
-					if(result){
-						contatcMainList.add(contactData);
+					if(phoneStr.trim().length() >= 10){
+						if (phoneStr.length() >  10) {
+							phonesub = phoneStr.substring(phoneStr.length() - 10,
+									phoneStr.length());
+						} else if(phoneStr.length() == 10){
+							phonesub = phoneStr;
+						}
+						contactData.setName(cursor.getString(nameIdx));
+						contactData.setSearchstring(cursor.getString(nameIdx).toLowerCase());
+						contactData.setPhoneNumber(phonesub);
+						boolean result = set.add(phonesub);
+						if(result){
+							contatcMainList.add(contactData);
+						}
 					}
 					//imagearray.add(cursor.getString(imageIdx));
 				}

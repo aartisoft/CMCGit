@@ -86,9 +86,6 @@ public class MyRidesFragment extends Fragment implements
 	ArrayList<RideDetailsModel> arrayRideDetailsModels = new ArrayList<RideDetailsModel>();
 	ListViewAdapter adapter;
 	ShowHistoryRidesAdaptor showhisadaptor;
-	CircularImageView profilepic;
-	TextView username;
-	ImageView notificationimg;
 	ImageView sidemenu;
 	private SimpleSideDrawer mNav;
 	CircularImageView drawerprofilepic;
@@ -231,23 +228,7 @@ public class MyRidesFragment extends Fragment implements
 		// }
 
 		// ///////////////
-		SharedPreferences mPrefs111 = getActivity().getSharedPreferences(
-				"userimage", 0);
-		String imgname = mPrefs111.getString("imgname", "");
-		String imagestr = mPrefs111.getString("imagestr", "");
-
-		if (imagestr.isEmpty() || imagestr == null
-				|| imagestr.equalsIgnoreCase("")) {
-		} else {
-
-			byte[] b = Base64.decode(imagestr, Base64.DEFAULT);
-			InputStream is = new ByteArrayInputStream(b);
-			Bitmap yourSelectedImage = BitmapFactory.decodeStream(is);
-
-			profilepic.setImageBitmap(yourSelectedImage);
-			drawerprofilepic.setImageBitmap(yourSelectedImage);
-		}
-
+		
 		mypoollist = (ListView) view.findViewById(R.id.mypoollist);
 
 		showHistoryCalled = false;

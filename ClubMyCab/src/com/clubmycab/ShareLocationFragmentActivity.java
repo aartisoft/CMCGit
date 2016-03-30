@@ -91,8 +91,7 @@ import com.clubmycab.model.GroupDataModel;
 import com.clubmycab.model.MemberModel;
 import com.clubmycab.ui.ContactsInviteForRideActivity;
 import com.clubmycab.ui.FavoritePlaceFindActivity;
-import com.clubmycab.ui.HomeCarPoolActivity;
-import com.clubmycab.ui.InviteFragmentActivity;
+import com.clubmycab.ui.NewHomeScreen;
 import com.clubmycab.ui.NotificationListActivity;
 import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.ui.UniversalDrawer;
@@ -3154,7 +3153,7 @@ public class ShareLocationFragmentActivity extends FragmentActivity implements
 		if (!fromrelative.isShown()) {
 
 			Intent mainIntent = new Intent(ShareLocationFragmentActivity.this,
-					HomeCarPoolActivity.class);
+					NewHomeScreen.class);
 			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

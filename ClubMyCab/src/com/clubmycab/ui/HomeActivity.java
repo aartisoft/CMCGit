@@ -2025,7 +2025,7 @@ public class HomeActivity extends FragmentActivity implements
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(HomeActivity.this,
-				HomeCarPoolActivity.class);
+				NewHomeScreen.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

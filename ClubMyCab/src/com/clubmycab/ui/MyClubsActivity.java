@@ -2229,7 +2229,7 @@ public class MyClubsActivity extends Activity implements
 			MyClubsActivity.this.finish();
 		} else {
 			Intent mainIntent = new Intent(MyClubsActivity.this,
-					HomeCarPoolActivity.class);
+					NewHomeScreen.class);
 			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivityForResult(mainIntent, 500);

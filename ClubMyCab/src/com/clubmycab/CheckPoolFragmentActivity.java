@@ -114,9 +114,9 @@ import com.clubmycab.model.ContactData;
 import com.clubmycab.model.RideDetailsModel;
 import com.clubmycab.ui.ContactsToInviteActivity;
 import com.clubmycab.ui.FirstLoginWalletsActivity;
-import com.clubmycab.ui.HomeCarPoolActivity;
 import com.clubmycab.ui.MobileSiteActivity;
 import com.clubmycab.ui.MobileSiteFragment;
+import com.clubmycab.ui.NewHomeScreen;
 import com.clubmycab.ui.SendInvitesToOtherScreen;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
@@ -837,7 +837,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 						Toast.LENGTH_LONG).show();
 
 				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
-						HomeCarPoolActivity.class);
+						NewHomeScreen.class);
 				mainIntent.putExtra("from", "normal");
 				mainIntent.putExtra("message", "null");
 				mainIntent.putExtra("CabId", "null");
@@ -5064,7 +5064,7 @@ public class CheckPoolFragmentActivity extends FragmentActivity implements
 
 			if (!chatlayoutmainrl.isShown()) {
 				Intent mainIntent = new Intent(CheckPoolFragmentActivity.this,
-						HomeCarPoolActivity.class);
+						NewHomeScreen.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);

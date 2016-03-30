@@ -1287,7 +1287,7 @@ public class ContactsInviteForRideActivityNew extends Activity {
 			//
 			// Intent mainIntent = new Intent(
 			// ContactsInviteForRideActivityNew.this,
-			// HomeCarPoolActivity.class);
+			// NewHomeScreen.class);
 			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			// startActivity(mainIntent);
@@ -1305,7 +1305,7 @@ public class ContactsInviteForRideActivityNew extends Activity {
 			//
 			// Intent mainIntent = new Intent(
 			// ContactsInviteForRideActivityNew.this,
-			// HomeCarPoolActivity.class);
+			// NewHomeScreen.class);
 			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			// startActivityForResult(mainIntent, 500);

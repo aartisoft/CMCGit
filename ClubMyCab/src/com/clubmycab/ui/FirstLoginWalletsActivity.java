@@ -719,7 +719,7 @@ public class FirstLoginWalletsActivity extends Activity implements
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(FirstLoginWalletsActivity.this,
-				HomeCarPoolActivity.class);
+				NewHomeScreen.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

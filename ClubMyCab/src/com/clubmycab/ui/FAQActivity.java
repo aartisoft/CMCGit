@@ -407,7 +407,7 @@ public class FAQActivity extends FragmentActivity {
 
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(FAQActivity.this, HomeCarPoolActivity.class);
+		Intent mainIntent = new Intent(FAQActivity.this, NewHomeScreen.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

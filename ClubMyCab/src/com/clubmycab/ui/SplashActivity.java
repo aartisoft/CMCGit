@@ -520,7 +520,7 @@ public class SplashActivity extends Activity {
 
 			if (diff >= (delay * 1000)) {
 				Intent mainIntent = new Intent(SplashActivity.this,
-						HomeCarPoolActivity.class);
+						NewHomeScreen.class);
 				mainIntent.putExtra("PoolResponseSplash", poolresponse);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -534,7 +534,7 @@ public class SplashActivity extends Activity {
 					public void run() {
 
 						Intent mainIntent = new Intent(SplashActivity.this,
-								HomeCarPoolActivity.class);
+								NewHomeScreen.class);
 						mainIntent.putExtra("PoolResponseSplash", poolresponse);
 						mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 								| Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -281,7 +281,7 @@ public class FirstLoginClubsActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				Intent mainIntent = new Intent(FirstLoginClubsActivity.this,
-						HomeCarPoolActivity.class);
+						NewHomeScreen.class);
 				startActivity(mainIntent);
 				finish();
 			}

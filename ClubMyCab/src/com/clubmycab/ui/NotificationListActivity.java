@@ -1601,7 +1601,7 @@ public class NotificationListActivity extends Activity {
 		// TODO Auto-generated method stub
 
 		Intent mainIntent = new Intent(NotificationListActivity.this,
-				HomeCarPoolActivity.class);
+				NewHomeScreen.class);
 		mainIntent.putExtra("from", "normal");
 		mainIntent.putExtra("message", "null");
 		mainIntent.putExtra("CabId", "null");

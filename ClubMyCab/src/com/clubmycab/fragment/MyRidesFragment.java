@@ -1,4 +1,4 @@
-package com.clubmycab.ui;
+package com.clubmycab.fragment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -15,7 +15,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,9 +29,13 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -56,6 +59,11 @@ import com.clubmycab.ShowHistoryRidesAdaptor;
 import com.clubmycab.asynctasks.GlobalAsyncTask;
 import com.clubmycab.asynctasks.GlobalAsyncTask.AsyncTaskResultListener;
 import com.clubmycab.model.RideDetailsModel;
+import com.clubmycab.ui.MyRidesActivity;
+import com.clubmycab.ui.MyRidesActivity.AuthenticateConnectionFetchPool;
+import com.clubmycab.ui.MyRidesActivity.AuthenticateConnectionShowRidesHistory;
+import com.clubmycab.ui.NotificationListActivity;
+import com.clubmycab.ui.UniversalDrawer;
 import com.clubmycab.utility.GlobalMethods;
 import com.clubmycab.utility.GlobalVariables;
 import com.clubmycab.utility.Log;
@@ -65,38 +73,26 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.navdrawer.SimpleSideDrawer;
 
-public class MyRidesActivity extends Activity implements
+public class MyRidesFragment extends Fragment implements
 		AsyncTaskResultListener {
-
 	String FullName;
 	String MobileNumberstr;
-
 	String poolresponse;
 	String rideshistoryresponse;
-
 	ListView mypoollist;
 	PagingListView listView;
-
 	boolean exceptioncheck = false;
-
 	Tracker tracker;
-
-	
 	ArrayList<RideDetailsModel> arrayRideDetailsModels = new ArrayList<RideDetailsModel>();
-
 	ListViewAdapter adapter;
 	ShowHistoryRidesAdaptor showhisadaptor;
-
 	CircularImageView profilepic;
 	TextView username;
 	ImageView notificationimg;
-
 	ImageView sidemenu;
-
 	private SimpleSideDrawer mNav;
 	CircularImageView drawerprofilepic;
 	TextView drawerusername;
-
 	TextView myprofile;
 	TextView myrides;
 	TextView bookacab;
@@ -105,45 +101,49 @@ public class MyRidesActivity extends Activity implements
 	TextView sharethisapp;
 	TextView mypreferences;
 	TextView about;
-
 	RelativeLayout unreadnoticountrl;
 	TextView unreadnoticount;
-
 	String readunreadnotiresp;
 	Bitmap mIcon11;
-
 	RelativeLayout myridesrl;
-
 	Button showhistory;
 	String latestcabid;
 	int poolhistorypagenumber;
 	boolean cabchk;
-
 	boolean shouldGoBack = true;
 	boolean onCreateCalled;
 	boolean showHistoryCalled;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_pool);
+	public static MyRidesFragment newInstance(Bundle args) {
+		MyRidesFragment fragment = new MyRidesFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
-		// Check if Internet present
+	@Override
+	public View onCreateView(LayoutInflater inflater,
+			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.fragment_myrides, container, false);
+
+		return v;
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewCreated(view, savedInstanceState);
 		if (!isOnline()) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(
-					MyRidesActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setMessage("No Internet Connection. Please check and try again!");
 			builder.setCancelable(false);
 
 			builder.setPositiveButton("Retry",
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = getIntent();
+							Intent intent = getActivity().getIntent();
 							intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-							finish();
-
+							getActivity().finish();
 							startActivity(intent);
 
 						}
@@ -153,7 +153,7 @@ public class MyRidesActivity extends Activity implements
 			return;
 		}
 
-		myridesrl = (RelativeLayout) findViewById(R.id.myridesrl);
+		myridesrl = (RelativeLayout) view.findViewById(R.id.myridesrl);
 		myridesrl.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -164,33 +164,34 @@ public class MyRidesActivity extends Activity implements
 			}
 		});
 
-		GoogleAnalytics analytics = GoogleAnalytics
-				.getInstance(MyRidesActivity.this);
+/*		GoogleAnalytics analytics = GoogleAnalytics.getInstance(getActivity());
 		tracker = analytics
 				.newTracker(GlobalVariables.GoogleAnalyticsTrackerId);
 
 		// All subsequent hits will be send with screen name = "main screen"
 		tracker.setScreenName("MyRides");
 
-		UniversalDrawer drawer = new UniversalDrawer(this, tracker);
+		UniversalDrawer drawer = new UniversalDrawer(getActivity(), tracker);
 		drawer.createDrawer();
 
-		profilepic = (CircularImageView) findViewById(R.id.profilepic);
-		notificationimg = (ImageView) findViewById(R.id.notificationimg);
-		drawerprofilepic = (CircularImageView) findViewById(R.id.drawerprofilepic);
+		profilepic = (CircularImageView) view.findViewById(R.id.profilepic);
+		notificationimg = (ImageView) view.findViewById(R.id.notificationimg);
+		drawerprofilepic = (CircularImageView) view
+				.findViewById(R.id.drawerprofilepic);
 
-		SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
+		SharedPreferences mPrefs = getActivity().getSharedPreferences(
+				"FacebookData", 0);
 		FullName = mPrefs.getString("FullName", "");
 		MobileNumberstr = mPrefs.getString("MobileNumber", "");
 
-		username = (TextView) findViewById(R.id.username);
-		username.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Bold.ttf"));
+		username = (TextView) view.findViewById(R.id.username);
+		username.setTypeface(Typeface.createFromAsset(
+				getActivity().getAssets(), "NeutraText-Bold.ttf"));
 		username.setText(FullName);
 
-		drawerusername = (TextView) findViewById(R.id.drawerusername);
-		drawerusername.setTypeface(Typeface.createFromAsset(getAssets(),
-				"NeutraText-Bold.ttf"));
+		drawerusername = (TextView) view.findViewById(R.id.drawerusername);
+		drawerusername.setTypeface(Typeface.createFromAsset(getActivity()
+				.getAssets(), "NeutraText-Bold.ttf"));
 		drawerusername.setText(FullName);
 
 		notificationimg.setOnClickListener(new View.OnClickListener() {
@@ -198,17 +199,18 @@ public class MyRidesActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 
-				Intent mainIntent = new Intent(MyRidesActivity.this,
+				Intent mainIntent = new Intent(getActivity(),
 						NotificationListActivity.class);
 				startActivityForResult(mainIntent, 500);
-				overridePendingTransition(R.anim.slide_in_right,
+				getActivity().overridePendingTransition(R.anim.slide_in_right,
 						R.anim.slide_out_left);
 
 			}
 		});
 
-		unreadnoticountrl = (RelativeLayout) findViewById(R.id.unreadnoticountrl);
-		unreadnoticount = (TextView) findViewById(R.id.unreadnoticount);
+		unreadnoticountrl = (RelativeLayout) view
+				.findViewById(R.id.unreadnoticountrl);
+		unreadnoticount = (TextView) view.findViewById(R.id.unreadnoticount);
 
 		if (GlobalVariables.UnreadNotificationCount.equalsIgnoreCase("0")) {
 
@@ -218,7 +220,7 @@ public class MyRidesActivity extends Activity implements
 
 			unreadnoticountrl.setVisibility(View.VISIBLE);
 			unreadnoticount.setText(GlobalVariables.UnreadNotificationCount);
-		}
+		}*/
 
 		// ///////////////
 		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -229,7 +231,8 @@ public class MyRidesActivity extends Activity implements
 		// }
 
 		// ///////////////
-		SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
+		SharedPreferences mPrefs111 = getActivity().getSharedPreferences(
+				"userimage", 0);
 		String imgname = mPrefs111.getString("imgname", "");
 		String imagestr = mPrefs111.getString("imagestr", "");
 
@@ -245,19 +248,19 @@ public class MyRidesActivity extends Activity implements
 			drawerprofilepic.setImageBitmap(yourSelectedImage);
 		}
 
-		mypoollist = (ListView) findViewById(R.id.mypoollist);
+		mypoollist = (ListView) view.findViewById(R.id.mypoollist);
 
 		showHistoryCalled = false;
 		onCreateCalled = true;
 
-		String comefrom = getIntent().getStringExtra("comefrom");
+		String comefrom = getActivity().getIntent().getStringExtra("comefrom");
 
 		Log.d("MyRidesActivity", "comefrom : " + comefrom);
 
 		if (comefrom == null || comefrom.isEmpty()
 				|| comefrom.equalsIgnoreCase("null")) {
-			String PoolResponseSplash = getIntent().getStringExtra(
-					"PoolResponseSplash");
+			String PoolResponseSplash = getActivity().getIntent()
+					.getStringExtra("PoolResponseSplash");
 
 			Log.d("MyRidesActivity", "PoolResponseSplash : "
 					+ PoolResponseSplash);
@@ -294,7 +297,7 @@ public class MyRidesActivity extends Activity implements
 		} else {
 
 			// Mark notificaiton read call
-			String nid = getIntent().getStringExtra("nid");
+			String nid = getActivity().getIntent().getStringExtra("nid");
 			String params = "rnum=" + "&nid=" + nid + "&auth="
 					+ GlobalMethods.calculateCMCAuthString(nid);
 			String endpoint = GlobalVariables.ServiceUrl
@@ -302,8 +305,8 @@ public class MyRidesActivity extends Activity implements
 			Log.d("MyRidesActivity",
 					"UpdateNotificationStatusToRead endpoint : " + endpoint
 							+ " params : " + params);
-			new GlobalAsyncTask(this, endpoint, params, null, this, false,
-					"UpdateNotificationStatusToRead", false);
+			new GlobalAsyncTask(getActivity(), endpoint, params, null, this,
+					false, "UpdateNotificationStatusToRead", false);
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				new ConnectionTaskForFetchPool()
@@ -313,38 +316,12 @@ public class MyRidesActivity extends Activity implements
 			}
 
 		}
+
 	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-
-		Log.d("MyRidesActivity", "onResume onCreateCalled : " + onCreateCalled
-				+ " showHistoryCalled : " + showHistoryCalled);
-
-		if (showHistoryCalled) {
-			return;
-		}
-
-		if (onCreateCalled) {
-			// onCreateCalled = false;
-		} else {
-			mypoollist.setAdapter(null);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				new ConnectionTaskForFetchPool()
-						.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				new ConnectionTaskForFetchPool().execute();
-			}
-		}
-	}
-
-	// ///////
 
 	private class ConnectionTaskForFetchPool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(MyRidesActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		@Override
 		protected void onPreExecute() {
@@ -376,7 +353,7 @@ public class MyRidesActivity extends Activity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyRidesActivity.this,
+				Toast.makeText(getActivity(),
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -384,7 +361,7 @@ public class MyRidesActivity extends Activity implements
 
 			if (poolresponse.contains("Unauthorized Access")) {
 				Log.e("MyRidesActivity", "poolresponse Unauthorized Access");
-				Toast.makeText(MyRidesActivity.this,
+				Toast.makeText(getActivity(),
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -394,14 +371,16 @@ public class MyRidesActivity extends Activity implements
 
 			clearBookedOrCarPreference();
 
-			String comefrom = getIntent().getStringExtra("comefrom");
+			String comefrom = getActivity().getIntent().getStringExtra(
+					"comefrom");
 
 			if (onCreateCalled && comefrom != null && !comefrom.isEmpty()
 					&& !comefrom.equalsIgnoreCase("null")) {
 
 				onCreateCalled = false;
 
-				String cabID = getIntent().getStringExtra("cabID");
+				String cabID = getActivity().getIntent()
+						.getStringExtra("cabID");
 				// int index = CabId.indexOf(cabID);
 				int index = -1;
 				for (int i = 0; i < arrayRideDetailsModels.size(); i++) {
@@ -439,54 +418,27 @@ public class MyRidesActivity extends Activity implements
 
 	}
 
-	private void clearBookedOrCarPreference() {
-
-		if (arrayRideDetailsModels.size() > 0) {
-
-			SharedPreferences sharedPreferences = getSharedPreferences(
-					"AlreadyBookedOrOwnCar", 0);
-			String arrayListString = sharedPreferences.getString("arraylist",
-					"");
-
-			ArrayList<String> arrayList;
-			if (arrayListString == null || arrayListString.isEmpty()) {
-				arrayList = null;
-			} else {
-				Gson gson = new Gson();
-				arrayList = gson.fromJson(arrayListString, ArrayList.class);
-			}
-
-			if (arrayList != null && arrayList.size() > 0) {
-				ArrayList<String> newArrayList = new ArrayList<String>();
-				for (String string : arrayList) {
-					for (RideDetailsModel rideDetailsModel : arrayRideDetailsModels) {
-						if (rideDetailsModel.getCabId().equals(string)) {
-							newArrayList.add(string);
-						}
-					}
-					// if (CabId.indexOf(string) != -1) {
-					// newArrayList.add(string);
-					// }
-				}
-
-				Gson gson = new Gson();
-
-				String string = gson.toJson(newArrayList).toString();
-
-				SharedPreferences.Editor editor = sharedPreferences.edit();
-				editor.putString("arraylist", string.trim());
-				editor.commit();
-
-			}
+	public boolean isOnline() {
+		ConnectivityManager cm = (ConnectivityManager) getActivity()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
 		}
+		return false;
+	}
+
+	@Override
+	public void getResult(String response, String uniqueID) {
+		// TODO Auto-generated method stub
 
 	}
 
 	private void ConnectionTaskForFetchPoolPostExecute() {
 		if (poolresponse.equalsIgnoreCase("No Pool Created Yet!!")
 				|| poolresponse.equalsIgnoreCase("[]")) {
-			Toast.makeText(MyRidesActivity.this, "No active rides!",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(), "No active rides!", Toast.LENGTH_LONG)
+					.show();
 		} else {
 
 			// CabId.clear();
@@ -623,13 +575,13 @@ public class MyRidesActivity extends Activity implements
 				// }
 				// }
 
-				DatabaseHandler db = new DatabaseHandler(MyRidesActivity.this);
+				DatabaseHandler db = new DatabaseHandler(getActivity());
 				allcabids = allcabids.substring(1, allcabids.length() - 1);
 				db.deleteArchieveChats(allcabids);
 
-				adapter = new ListViewAdapter(MyRidesActivity.this,
-						FromShortName, ToShortName, TravelDate, TravelTime,
-						Seat_Status, OwnerName, imagename);
+				adapter = new ListViewAdapter(getActivity(), FromShortName,
+						ToShortName, TravelDate, TravelTime, Seat_Status,
+						OwnerName, imagename);
 				mypoollist.setAdapter(adapter);
 
 				mypoollist.setOnItemClickListener(new OnItemClickListener() {
@@ -646,8 +598,7 @@ public class MyRidesActivity extends Activity implements
 
 						if (mobileNumber.equalsIgnoreCase(MobileNumberstr)) {
 
-							final Intent mainIntent = new Intent(
-									MyRidesActivity.this,
+							final Intent mainIntent = new Intent(getActivity(),
 									CheckPoolFragmentActivity.class);
 							mainIntent.putExtra("RideDetailsModel",
 									(new Gson()).toJson(rideDetailsModel));
@@ -701,12 +652,11 @@ public class MyRidesActivity extends Activity implements
 							// ExpTripDuration.get(arg2));
 							// mainIntent.putExtra("status", status.get(arg2));
 
-							MyRidesActivity.this.startActivity(mainIntent);
+							getActivity().startActivity(mainIntent);
 
 						} else {
 
-							final Intent mainIntent = new Intent(
-									MyRidesActivity.this,
+							final Intent mainIntent = new Intent(getActivity(),
 									MemberRideFragmentActivity.class);
 							mainIntent.putExtra("RideDetailsModel",
 									(new Gson()).toJson(rideDetailsModel));
@@ -760,7 +710,7 @@ public class MyRidesActivity extends Activity implements
 							// ExpTripDuration.get(arg2));
 							// mainIntent.putExtra("status", status.get(arg2));
 
-							MyRidesActivity.this.startActivity(mainIntent);
+							getActivity().startActivity(mainIntent);
 						}
 					}
 				});
@@ -772,7 +722,7 @@ public class MyRidesActivity extends Activity implements
 
 		}
 
-		showhistory = (Button) findViewById(R.id.showhistory);
+		showhistory = (Button) getView().findViewById(R.id.showhistory);
 		showhistory.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -783,11 +733,11 @@ public class MyRidesActivity extends Activity implements
 
 				showhistory.setVisibility(View.GONE);
 				mypoollist.setVisibility(View.GONE);
-				listView = (PagingListView) findViewById(R.id.paging_list_view);
+				listView = (PagingListView) getActivity().findViewById(
+						R.id.paging_list_view);
 				listView.setVisibility(View.VISIBLE);
 
-				showhisadaptor = new ShowHistoryRidesAdaptor(
-						MyRidesActivity.this);
+				showhisadaptor = new ShowHistoryRidesAdaptor(getActivity());
 
 				latestcabid = "";
 				poolhistorypagenumber = -1;
@@ -824,121 +774,21 @@ public class MyRidesActivity extends Activity implements
 
 						if (mobileNumber.equalsIgnoreCase(MobileNumberstr)) {
 
-							final Intent mainIntent = new Intent(
-									MyRidesActivity.this,
+							final Intent mainIntent = new Intent(getActivity(),
 									CheckPoolFragmentActivity.class);
 							mainIntent.putExtra("RideDetailsModel",
 									(new Gson()).toJson(rideDetailsModel));
 
-							// mainIntent.putExtra("CabId", CabId.get(arg2));
-							// mainIntent.putExtra("MobileNumber",
-							// MobileNumber.get(arg2));
-							// mainIntent.putExtra("OwnerName",
-							// OwnerName.get(arg2));
-							// mainIntent.putExtra("OwnerImage",
-							// imagename.get(arg2));
-							// mainIntent.putExtra("FromLocation",
-							// FromLocation.get(arg2));
-							// mainIntent.putExtra("ToLocation",
-							// ToLocation.get(arg2));
-							//
-							// mainIntent.putExtra("FromShortName",
-							// FromShortName.get(arg2));
-							// mainIntent.putExtra("ToShortName",
-							// ToShortName.get(arg2));
-							//
-							// mainIntent.putExtra("TravelDate",
-							// TravelDate.get(arg2));
-							// mainIntent.putExtra("TravelTime",
-							// TravelTime.get(arg2));
-							// mainIntent.putExtra("Seats", Seats.get(arg2));
-							// mainIntent.putExtra("RemainingSeats",
-							// RemainingSeats.get(arg2));
-							// mainIntent.putExtra("Seat_Status",
-							// Seat_Status.get(arg2));
-							// mainIntent.putExtra("Distance",
-							// Distance.get(arg2));
-							// mainIntent.putExtra("OpenTime",
-							// OpenTime.get(arg2));
-							//
-							// mainIntent.putExtra("CabStatus",
-							// CabStatus.get(arg2));
-							//
-							// mainIntent.putExtra("BookingRefNo",
-							// BookingRefNo.get(arg2));
-							// mainIntent.putExtra("DriverName",
-							// DriverName.get(arg2));
-							// mainIntent.putExtra("DriverNumber",
-							// DriverNumber.get(arg2));
-							// mainIntent.putExtra("CarNumber",
-							// CarNumber.get(arg2));
-							// mainIntent.putExtra("CabName",
-							// CabName.get(arg2));
-							//
-							// mainIntent.putExtra("ExpTripDuration",
-							// ExpTripDuration.get(arg2));
-							// mainIntent.putExtra("status", status.get(arg2));
-
-							MyRidesActivity.this.startActivity(mainIntent);
+							getActivity().startActivity(mainIntent);
 
 						} else {
 
-							final Intent mainIntent = new Intent(
-									MyRidesActivity.this,
+							final Intent mainIntent = new Intent(getActivity(),
 									MemberRideFragmentActivity.class);
 							mainIntent.putExtra("RideDetailsModel",
 									(new Gson()).toJson(rideDetailsModel));
 
-							// mainIntent.putExtra("CabId", CabId.get(arg2));
-							// mainIntent.putExtra("MobileNumber",
-							// MobileNumber.get(arg2));
-							// mainIntent.putExtra("OwnerName",
-							// OwnerName.get(arg2));
-							// mainIntent.putExtra("OwnerImage",
-							// imagename.get(arg2));
-							// mainIntent.putExtra("FromLocation",
-							// FromLocation.get(arg2));
-							// mainIntent.putExtra("ToLocation",
-							// ToLocation.get(arg2));
-							//
-							// mainIntent.putExtra("FromShortName",
-							// FromShortName.get(arg2));
-							// mainIntent.putExtra("ToShortName",
-							// ToShortName.get(arg2));
-							//
-							// mainIntent.putExtra("TravelDate",
-							// TravelDate.get(arg2));
-							// mainIntent.putExtra("TravelTime",
-							// TravelTime.get(arg2));
-							// mainIntent.putExtra("Seats", Seats.get(arg2));
-							// mainIntent.putExtra("RemainingSeats",
-							// RemainingSeats.get(arg2));
-							// mainIntent.putExtra("Seat_Status",
-							// Seat_Status.get(arg2));
-							// mainIntent.putExtra("Distance",
-							// Distance.get(arg2));
-							// mainIntent.putExtra("OpenTime",
-							// OpenTime.get(arg2));
-							//
-							// mainIntent.putExtra("CabStatus",
-							// CabStatus.get(arg2));
-							//
-							// mainIntent.putExtra("BookingRefNo",
-							// BookingRefNo.get(arg2));
-							// mainIntent.putExtra("DriverName",
-							// DriverName.get(arg2));
-							// mainIntent.putExtra("DriverNumber",
-							// DriverNumber.get(arg2));
-							// mainIntent.putExtra("CarNumber",
-							// CarNumber.get(arg2));
-							// mainIntent.putExtra("CabName",
-							// CabName.get(arg2));
-							//
-							// mainIntent.putExtra("ExpTripDuration",
-							// ExpTripDuration.get(arg2));
-							// mainIntent.putExtra("status", status.get(arg2));
-
-							MyRidesActivity.this.startActivity(mainIntent);
+							getActivity().startActivity(mainIntent);
 						}
 					}
 				});
@@ -997,8 +847,48 @@ public class MyRidesActivity extends Activity implements
 		}
 	}
 
-	// /////////////////////////////
-	// ///////
+	private void clearBookedOrCarPreference() {
+
+		if (arrayRideDetailsModels.size() > 0) {
+
+			SharedPreferences sharedPreferences = getActivity()
+					.getSharedPreferences("AlreadyBookedOrOwnCar", 0);
+			String arrayListString = sharedPreferences.getString("arraylist",
+					"");
+
+			ArrayList<String> arrayList;
+			if (arrayListString == null || arrayListString.isEmpty()) {
+				arrayList = null;
+			} else {
+				Gson gson = new Gson();
+				arrayList = gson.fromJson(arrayListString, ArrayList.class);
+			}
+
+			if (arrayList != null && arrayList.size() > 0) {
+				ArrayList<String> newArrayList = new ArrayList<String>();
+				for (String string : arrayList) {
+					for (RideDetailsModel rideDetailsModel : arrayRideDetailsModels) {
+						if (rideDetailsModel.getCabId().equals(string)) {
+							newArrayList.add(string);
+						}
+					}
+					// if (CabId.indexOf(string) != -1) {
+					// newArrayList.add(string);
+					// }
+				}
+
+				Gson gson = new Gson();
+
+				String string = gson.toJson(newArrayList).toString();
+
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("arraylist", string.trim());
+				editor.commit();
+
+			}
+		}
+
+	}
 
 	private class ConnectionTaskForShowRidesHistory extends
 			AsyncTask<String, Void, Void> {
@@ -1026,7 +916,7 @@ public class MyRidesActivity extends Activity implements
 
 			if (exceptioncheck) {
 				exceptioncheck = false;
-				Toast.makeText(MyRidesActivity.this,
+				Toast.makeText(getActivity(),
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1035,7 +925,7 @@ public class MyRidesActivity extends Activity implements
 			if (rideshistoryresponse.contains("Unauthorized Access")) {
 				Log.e("MyRidesActivity",
 						"rideshistoryresponse Unauthorized Access");
-				Toast.makeText(MyRidesActivity.this,
+				Toast.makeText(getActivity(),
 						getResources().getString(R.string.exceptionstring),
 						Toast.LENGTH_LONG).show();
 				return;
@@ -1043,7 +933,7 @@ public class MyRidesActivity extends Activity implements
 
 			if (rideshistoryresponse.equalsIgnoreCase("No Pool Created Yet!!")
 					|| rideshistoryresponse.equalsIgnoreCase("[]")) {
-				Toast.makeText(MyRidesActivity.this, "No More history",
+				Toast.makeText(getActivity(), "No More history",
 						Toast.LENGTH_LONG).show();
 
 				latestcabid = "khatam";
@@ -1226,7 +1116,7 @@ public class MyRidesActivity extends Activity implements
 		}
 
 	}
-
+	
 	public class AuthenticateConnectionShowRidesHistory {
 
 		public String cid;
@@ -1283,9 +1173,7 @@ public class MyRidesActivity extends Activity implements
 			Log.d("rideshistoryresponse", "" + stringBuilder.toString());
 		}
 	}
-
-	// //////////////////////////
-
+	
 	private class CountryAsyncTask extends SafeAsyncTask<List<MyRidesObject>> {
 
 		@Override
@@ -1310,132 +1198,5 @@ public class MyRidesActivity extends Activity implements
 				listView.onFinishLoading(false, null);
 			}
 		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-
-		if (shouldGoBack) {
-			Intent mainIntent = new Intent(MyRidesActivity.this,
-					NewHomeScreen.class);
-			mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			startActivityForResult(mainIntent, 500);
-			overridePendingTransition(R.anim.slide_in_right,
-					R.anim.slide_out_left);
-		} else {
-			finish();
-		}
-
-	}
-
-	// ///////
-	// private class ConnectionTaskForreadunreadnotification extends
-	// AsyncTask<String, Void, Void> {
-	//
-	// @Override
-	// protected void onPreExecute() {
-	//
-	// }
-	//
-	// @Override
-	// protected Void doInBackground(String... args) {
-	// AuthenticateConnectionreadunreadnotification mAuth1 = new
-	// AuthenticateConnectionreadunreadnotification();
-	// try {
-	// mAuth1.connection();
-	// } catch (Exception e) {
-	// // TODO Auto-generated catch block
-	// exceptioncheck = true;
-	// e.printStackTrace();
-	// }
-	// return null;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(Void v) {
-	//
-	// if (exceptioncheck) {
-	// exceptioncheck = false;
-	// Toast.makeText(MyRidesActivity.this,
-	// getResources().getString(R.string.exceptionstring),
-	// Toast.LENGTH_LONG).show();
-	// return;
-	// }
-	//
-	// if (readunreadnotiresp.equalsIgnoreCase("0")) {
-	//
-	// unreadnoticountrl.setVisibility(View.GONE);
-	//
-	// } else {
-	//
-	// unreadnoticountrl.setVisibility(View.VISIBLE);
-	// unreadnoticount.setText(readunreadnotiresp);
-	// }
-	// }
-	//
-	// }
-	//
-	// public class AuthenticateConnectionreadunreadnotification {
-	//
-	// public AuthenticateConnectionreadunreadnotification() {
-	//
-	// }
-	//
-	// public void connection() throws Exception {
-	//
-	// // Connect to google.com
-	// HttpClient httpClient = new DefaultHttpClient();
-	// String url_select11 = GlobalVariables.ServiceUrl
-	// + "/FetchUnreadNotificationCount.php";
-	// HttpPost httpPost = new HttpPost(url_select11);
-	// BasicNameValuePair MobileNumberBasicNameValuePair = new
-	// BasicNameValuePair(
-	// "MobileNumber", MobileNumberstr);
-	//
-	// List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-	// nameValuePairList.add(MobileNumberBasicNameValuePair);
-	//
-	// UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-	// nameValuePairList);
-	// httpPost.setEntity(urlEncodedFormEntity);
-	// HttpResponse httpResponse = httpClient.execute(httpPost);
-	//
-	// Log.d("httpResponse", "" + httpResponse);
-	//
-	// InputStream inputStream = httpResponse.getEntity().getContent();
-	// InputStreamReader inputStreamReader = new InputStreamReader(
-	// inputStream);
-	//
-	// BufferedReader bufferedReader = new BufferedReader(
-	// inputStreamReader);
-	//
-	// StringBuilder stringBuilder = new StringBuilder();
-	//
-	// String bufferedStrChunk = null;
-	//
-	// while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-	// readunreadnotiresp = stringBuilder.append(bufferedStrChunk)
-	// .toString();
-	// }
-	//
-	// Log.d("readunreadnotiresp", "" + readunreadnotiresp);
-	//
-	// }
-	// }
-
-	public boolean isOnline() {
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void getResult(String response, String uniqueID) {
-
 	}
 }

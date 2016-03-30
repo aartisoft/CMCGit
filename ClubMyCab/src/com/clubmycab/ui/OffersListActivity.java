@@ -335,7 +335,7 @@ public class OffersListActivity extends Activity implements
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(OffersListActivity.this,
-				HomeCarPoolActivity.class);
+				NewHomeScreen.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

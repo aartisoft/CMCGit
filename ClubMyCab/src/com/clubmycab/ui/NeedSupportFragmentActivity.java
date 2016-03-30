@@ -78,7 +78,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 		super.onBackPressed();
 
 		Intent mainIntent = new Intent(NeedSupportFragmentActivity.this,
-				HomeCarPoolActivity.class);
+				NewHomeScreen.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);
@@ -233,7 +233,7 @@ public class NeedSupportFragmentActivity extends FragmentActivity {
 						"We have received your request, and we will get back to you soon ",
 						Toast.LENGTH_LONG).show();
 				Intent mainIntent = new Intent(
-						NeedSupportFragmentActivity.this, HomeCarPoolActivity.class);
+						NeedSupportFragmentActivity.this, NewHomeScreen.class);
 				mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivityForResult(mainIntent, 500);

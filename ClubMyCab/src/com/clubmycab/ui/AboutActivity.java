@@ -31,7 +31,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.navdrawer.SimpleSideDrawer;
 
 public class AboutActivity extends Activity {
-
+	//
 	CircularImageView profilepic;
 	TextView username;
 	ImageView notificationimg;
@@ -191,7 +191,7 @@ public class AboutActivity extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 
-		Intent mainIntent = new Intent(AboutActivity.this, HomeCarPoolActivity.class);
+		Intent mainIntent = new Intent(AboutActivity.this, NewHomeScreen.class);
 		mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivityForResult(mainIntent, 500);

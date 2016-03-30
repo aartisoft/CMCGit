@@ -1804,7 +1804,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			//
 			// Intent mainIntent = new Intent(
 			// InviteFragmentActivity.this,
-			// HomeCarPoolActivity.class);
+			// NewHomeScreen.class);
 			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			// startActivity(mainIntent);
@@ -1822,7 +1822,7 @@ public class InviteFragmentActivity extends FragmentActivity implements
 			//
 			// Intent mainIntent = new Intent(
 			// InviteFragmentActivity.this,
-			// HomeCarPoolActivity.class);
+			// NewHomeScreen.class);
 			// mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			// startActivityForResult(mainIntent, 500);

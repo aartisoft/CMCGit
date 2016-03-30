@@ -141,7 +141,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 	RideDetailsModel rideDetailsModel;
 	private static final int INVITE_FRIEND_ACTIVTY = 500;
-	private static final int MEMBER_RIDE_ACTIVITY_ID =101;
+	private static final int MEMBER_RIDE_ACTIVITY_ID = 101;
 
 	// String CabId;
 	// String MobileNumber;
@@ -314,7 +314,7 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 
 	String gotopoolresp;
 	private String fromcome, CabId, OwnerName, FromLocation, ToLocation,
-	TravelDate, TravelTime, Seats, fromshortname, toshortname;
+			TravelDate, TravelTime, Seats, fromshortname, toshortname;
 	ArrayList<String> selectednames = new ArrayList<String>();
 	ArrayList<String> selectednumbers = new ArrayList<String>();
 	Dialog dialogseats;
@@ -764,28 +764,32 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					Seats = rideDetailsModel.getSeats();
 					fromshortname = rideDetailsModel.getFromShortName();
 					toshortname = rideDetailsModel.getToShortName();
-					/*mainIntent.putExtra("fromcome", "joinpool");
-					mainIntent.putExtra("CabId", rideDetailsModel.getCabId());
-					mainIntent.putExtra("MobileNumber",
-							rideDetailsModel.getMobileNumber());
-					mainIntent.putExtra("OwnerName",
-							rideDetailsModel.getOwnerName());
-					mainIntent.putExtra("FromLocation",
-							rideDetailsModel.getFromLocation());
-					mainIntent.putExtra("ToLocation",
-							rideDetailsModel.getToLocation());
-					mainIntent.putExtra("TravelDate",
-							rideDetailsModel.getTravelDate());
-					mainIntent.putExtra("TravelTime",
-							rideDetailsModel.getTravelTime());
-					mainIntent.putExtra("Seats", rideDetailsModel.getSeats());
-					mainIntent.putExtra("fromshortname",
-							rideDetailsModel.getFromShortName());
-					mainIntent.putExtra("toshortname",
-							rideDetailsModel.getToShortName());
-	*/			mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.MEMBER_RIDE_ACTIVITY_ID);
-				startActivityForResult(mainIntent, MEMBER_RIDE_ACTIVITY_ID);
-				overridePendingTransition(R.anim.slide_in_right,
+					/*
+					 * mainIntent.putExtra("fromcome", "joinpool");
+					 * mainIntent.putExtra("CabId",
+					 * rideDetailsModel.getCabId());
+					 * mainIntent.putExtra("MobileNumber",
+					 * rideDetailsModel.getMobileNumber());
+					 * mainIntent.putExtra("OwnerName",
+					 * rideDetailsModel.getOwnerName());
+					 * mainIntent.putExtra("FromLocation",
+					 * rideDetailsModel.getFromLocation());
+					 * mainIntent.putExtra("ToLocation",
+					 * rideDetailsModel.getToLocation());
+					 * mainIntent.putExtra("TravelDate",
+					 * rideDetailsModel.getTravelDate());
+					 * mainIntent.putExtra("TravelTime",
+					 * rideDetailsModel.getTravelTime());
+					 * mainIntent.putExtra("Seats",
+					 * rideDetailsModel.getSeats());
+					 * mainIntent.putExtra("fromshortname",
+					 * rideDetailsModel.getFromShortName());
+					 * mainIntent.putExtra("toshortname",
+					 * rideDetailsModel.getToShortName());
+					 */mainIntent.putExtra("activity_id",
+							SendInvitesToOtherScreen.MEMBER_RIDE_ACTIVITY_ID);
+					startActivityForResult(mainIntent, MEMBER_RIDE_ACTIVITY_ID);
+					overridePendingTransition(R.anim.slide_in_right,
 							R.anim.slide_out_left);
 				}
 			}
@@ -928,7 +932,6 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		refermorefriendsafterpool
 				.setOnClickListener(new View.OnClickListener() {
 
-
 					@Override
 					public void onClick(View v) {
 
@@ -951,7 +954,8 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							fromcome = "joinpool";
 							CabId = rideDetailsModel.getCabId();
 							OwnerName = rideDetailsModel.getOwnerName();
-							OwnerMobileNumber = rideDetailsModel.getMobileNumber();
+							OwnerMobileNumber = rideDetailsModel
+									.getMobileNumber();
 							FromLocation = rideDetailsModel.getFromLocation();
 							ToLocation = rideDetailsModel.getToLocation();
 							TravelDate = rideDetailsModel.getTravelDate();
@@ -959,29 +963,35 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 							Seats = rideDetailsModel.getSeats();
 							fromshortname = rideDetailsModel.getFromShortName();
 							toshortname = rideDetailsModel.getToShortName();
-							/*mainIntent.putExtra("fromcome", "joinpool");
-							mainIntent.putExtra("CabId",
-									rideDetailsModel.getCabId());
-							mainIntent.putExtra("MobileNumber",
-									rideDetailsModel.getMobileNumber());
-							mainIntent.putExtra("OwnerName",
-									rideDetailsModel.getOwnerName());
-							mainIntent.putExtra("FromLocation",
-									rideDetailsModel.getFromLocation());
-							mainIntent.putExtra("ToLocation",
-									rideDetailsModel.getToLocation());
-							mainIntent.putExtra("TravelDate",
-									rideDetailsModel.getTravelDate());
-							mainIntent.putExtra("TravelTime",
-									rideDetailsModel.getTravelTime());
-							mainIntent.putExtra("Seats",
-									rideDetailsModel.getSeats());
-							mainIntent.putExtra("fromshortname",
-									rideDetailsModel.getFromShortName());
-							mainIntent.putExtra("toshortname",
-									rideDetailsModel.getToShortName());*/
-							mainIntent.putExtra("activity_id", SendInvitesToOtherScreen.MEMBER_RIDE_ACTIVITY_ID);
-							startActivityForResult(mainIntent, MEMBER_RIDE_ACTIVITY_ID);
+							/*
+							 * mainIntent.putExtra("fromcome", "joinpool");
+							 * mainIntent.putExtra("CabId",
+							 * rideDetailsModel.getCabId());
+							 * mainIntent.putExtra("MobileNumber",
+							 * rideDetailsModel.getMobileNumber());
+							 * mainIntent.putExtra("OwnerName",
+							 * rideDetailsModel.getOwnerName());
+							 * mainIntent.putExtra("FromLocation",
+							 * rideDetailsModel.getFromLocation());
+							 * mainIntent.putExtra("ToLocation",
+							 * rideDetailsModel.getToLocation());
+							 * mainIntent.putExtra("TravelDate",
+							 * rideDetailsModel.getTravelDate());
+							 * mainIntent.putExtra("TravelTime",
+							 * rideDetailsModel.getTravelTime());
+							 * mainIntent.putExtra("Seats",
+							 * rideDetailsModel.getSeats());
+							 * mainIntent.putExtra("fromshortname",
+							 * rideDetailsModel.getFromShortName());
+							 * mainIntent.putExtra("toshortname",
+							 * rideDetailsModel.getToShortName());
+							 */
+							mainIntent
+									.putExtra(
+											"activity_id",
+											SendInvitesToOtherScreen.MEMBER_RIDE_ACTIVITY_ID);
+							startActivityForResult(mainIntent,
+									MEMBER_RIDE_ACTIVITY_ID);
 							overridePendingTransition(R.anim.slide_in_right,
 									R.anim.slide_out_left);
 						}
@@ -4873,23 +4883,21 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 				LatLng ltTo = new LatLng(Double.parseDouble(latlongTo[0]),
 						Double.parseDouble(latlongTo[1]));
 
-				
 			}
-		}else if(requestCode == MEMBER_RIDE_ACTIVITY_ID){
-			if(resultCode == RESULT_OK){
+		} else if (requestCode == MEMBER_RIDE_ACTIVITY_ID) {
+			if (resultCode == RESULT_OK) {
 				if (data.getExtras().getBoolean("iscontactslected")) {
 					Log.d("", "");
 					ArrayList<ContactData> myList = data.getExtras()
 							.getParcelableArrayList("Contact_list");
 					if (myList != null && myList.size() > 0) {
-						sendInvitesToFriends(
-							myList);
+						sendInvitesToFriends(myList);
 					}
-				} 
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 */
 	private void sendInvitesToFriends(final ArrayList<ContactData> contactList) {
@@ -4934,40 +4942,33 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					if (fromcome.equalsIgnoreCase("invite")) {
 
 						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("Invite")
-								.setAction("Invite").setLabel("Invite")
-								.build());
+								.setCategory("Invite").setAction("Invite")
+								.setLabel("Invite").build());
 
-						if (selectednames.size() >= Integer
-								.parseInt(Seats)) {
-							//conitnuechk = false;
+						if (selectednames.size() >= Integer.parseInt(Seats)) {
+							// conitnuechk = false;
 
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 								new ConnectionTaskForSendInvite()
 										.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							} else {
-								new ConnectionTaskForSendInvite()
-										.execute();
+								new ConnectionTaskForSendInvite().execute();
 							}
 
 						} else {
 
-						//	conitnuechk = true;
+							// conitnuechk = true;
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(
 									MemberRideFragmentActivity.this);
-							builder.setMessage("You have "
-									+ Seats
+							builder.setMessage("You have " + Seats
 									+ " seats to share and have selected only "
-									+ selectednames.size()
-									+ " friend(s)");
+									+ selectednames.size() + " friend(s)");
 							builder.setCancelable(true);
-							builder.setPositiveButton(
-									"Continue Anyways",
+							builder.setPositiveButton("Continue Anyways",
 									new DialogInterface.OnClickListener() {
 										public void onClick(
-												DialogInterface dialog,
-												int id) {
+												DialogInterface dialog, int id) {
 
 											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 												new ConnectionTaskForSendInvite()
@@ -4992,15 +4993,13 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 						tracker.send(new HitBuilders.EventBuilder()
 								.setCategory("Refer Friend (Ride)")
 								.setAction("Refer Friend (Ride)")
-								.setLabel("Refer Friend (Ride)")
-								.build());
+								.setLabel("Refer Friend (Ride)").build());
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 							new ConnectionTaskForReferfriends()
 									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						} else {
-							new ConnectionTaskForReferfriends()
-									.execute();
+							new ConnectionTaskForReferfriends().execute();
 						}
 
 					}
@@ -5008,16 +5007,14 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 					else if (fromcome.equalsIgnoreCase("checkpool")) {
 
 						tracker.send(new HitBuilders.EventBuilder()
-								.setCategory("Invite")
-								.setAction("Invite").setLabel("Invite")
-								.build());
+								.setCategory("Invite").setAction("Invite")
+								.setLabel("Invite").build());
 
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 							new ConnectionTaskForOwnerInviteFriends()
 									.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						} else {
-							new ConnectionTaskForOwnerInviteFriends()
-									.execute();
+							new ConnectionTaskForOwnerInviteFriends().execute();
 						}
 
 					} else {
@@ -5034,68 +5031,66 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		};
 		mHandler2.postDelayed(mRunnable2, 500);
 	}
-	
+
 	// /////////////////////////
-		private class ConnectionTaskForOwnerInviteFriends extends
-				AsyncTask<String, Void, Void> {
-			private ProgressDialog dialog = new ProgressDialog(
-					MemberRideFragmentActivity.this);
+	private class ConnectionTaskForOwnerInviteFriends extends
+			AsyncTask<String, Void, Void> {
+		private ProgressDialog dialog = new ProgressDialog(
+				MemberRideFragmentActivity.this);
 
-			@Override
-			protected void onPreExecute() {
-				dialog.setMessage("Please Wait...");
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
-				dialog.show();
-			}
-
-			@Override
-			protected Void doInBackground(String... args) {
-				AuthenticateConnectionOwnerInviteFriends mAuth1 = new AuthenticateConnectionOwnerInviteFriends();
-				try {
-					mAuth1.connection();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					exceptioncheck = true;
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void v) {
-
-				if (dialog.isShowing()) {
-					dialog.dismiss();
-				}
-
-				if (exceptioncheck) {
-					exceptioncheck = false;
-					Toast.makeText(MemberRideFragmentActivity.this,
-							getResources().getString(R.string.exceptionstring),
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-
-				if (ownerinviteres != null && ownerinviteres.length() > 0
-						&& ownerinviteres.contains("Unauthorized Access")) {
-					Log.e("ContactsToInviteActivity",
-							"ownerinviteres Unauthorized Access");
-					Toast.makeText(MemberRideFragmentActivity.this,
-							getResources().getString(R.string.exceptionstring),
-							Toast.LENGTH_LONG).show();
-					return;
-				}else{
-					Toast.makeText(MemberRideFragmentActivity.this,
-							"Invite sent successfully!",
-							Toast.LENGTH_LONG).show();
-				}
-
-				//MemberRideFragmentActivity.this.finish();
-			}
-
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
 		}
-	
+
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionOwnerInviteFriends mAuth1 = new AuthenticateConnectionOwnerInviteFriends();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (ownerinviteres != null && ownerinviteres.length() > 0
+					&& ownerinviteres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"ownerinviteres Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			} else {
+				Toast.makeText(MemberRideFragmentActivity.this,
+						"Invite sent successfully!", Toast.LENGTH_LONG).show();
+			}
+
+			// MemberRideFragmentActivity.this.finish();
+		}
+
+	}
 
 	private class ConnectionTaskForSendInvite extends
 			AsyncTask<String, Void, Void> {
@@ -5227,63 +5222,62 @@ public class MemberRideFragmentActivity extends FragmentActivity implements
 		}
 
 	}
-	
+
 	private class ConnectionTaskForReferfriends extends
-	AsyncTask<String, Void, Void> {
-private ProgressDialog dialog = new ProgressDialog(
-		MemberRideFragmentActivity.this);
+			AsyncTask<String, Void, Void> {
+		private ProgressDialog dialog = new ProgressDialog(
+				MemberRideFragmentActivity.this);
 
-@Override
-protected void onPreExecute() {
-	dialog.setMessage("Please Wait...");
-	dialog.setCancelable(false);
-	dialog.setCanceledOnTouchOutside(false);
-	dialog.show();
-}
+		@Override
+		protected void onPreExecute() {
+			dialog.setMessage("Please Wait...");
+			dialog.setCancelable(false);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.show();
+		}
 
-@Override
-protected Void doInBackground(String... args) {
-	AuthenticateConnectionReferfriends mAuth1 = new AuthenticateConnectionReferfriends();
-	try {
-		mAuth1.connection();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		exceptioncheck = true;
-		e.printStackTrace();
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionReferfriends mAuth1 = new AuthenticateConnectionReferfriends();
+			try {
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (dialog.isShowing()) {
+				dialog.dismiss();
+			}
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (referfriendres != null && referfriendres.length() > 0
+					&& referfriendres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"referfriendres Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			// MemberRideFragmentActivity.this.finish();
+		}
+
 	}
-	return null;
-}
-
-@Override
-protected void onPostExecute(Void v) {
-
-	if (dialog.isShowing()) {
-		dialog.dismiss();
-	}
-
-	if (exceptioncheck) {
-		exceptioncheck = false;
-		Toast.makeText(MemberRideFragmentActivity.this,
-				getResources().getString(R.string.exceptionstring),
-				Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	if (referfriendres != null && referfriendres.length() > 0
-			&& referfriendres.contains("Unauthorized Access")) {
-		Log.e("ContactsToInviteActivity",
-				"referfriendres Unauthorized Access");
-		Toast.makeText(MemberRideFragmentActivity.this,
-				getResources().getString(R.string.exceptionstring),
-				Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	//MemberRideFragmentActivity.this.finish();
-}
-
-}
-
 
 	@Override
 	protected void onStart() {
@@ -8532,7 +8526,7 @@ protected void onPostExecute(Void v) {
 			}
 		}
 	}
-	
+
 	private void showAlertDialog(final ArrayList<String> names,
 			final ArrayList<String> numbers) {
 
@@ -8652,123 +8646,124 @@ protected void onPostExecute(Void v) {
 
 		dialog.show();
 	}
-	
+
 	private class ConnectionTaskForNewClub extends
-	AsyncTask<String, Void, Void> {
+			AsyncTask<String, Void, Void> {
 
-@Override
-protected void onPreExecute() {
+		@Override
+		protected void onPreExecute() {
 
-}
+		}
 
-@Override
-protected Void doInBackground(String... args) {
-	AuthenticateConnectionForNewClub mAuth1 = new AuthenticateConnectionForNewClub();
-	try {
-		mAuth1.fname = args[0];
-		mAuth1.munum = args[1];
-		mAuth1.cname = args[2];
-		mAuth1.namesarr = args[3];
-		mAuth1.numbersarr = args[4];
-		mAuth1.connection();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		exceptioncheck = true;
-		e.printStackTrace();
+		@Override
+		protected Void doInBackground(String... args) {
+			AuthenticateConnectionForNewClub mAuth1 = new AuthenticateConnectionForNewClub();
+			try {
+				mAuth1.fname = args[0];
+				mAuth1.munum = args[1];
+				mAuth1.cname = args[2];
+				mAuth1.namesarr = args[3];
+				mAuth1.numbersarr = args[4];
+				mAuth1.connection();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				exceptioncheck = true;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void v) {
+
+			if (exceptioncheck) {
+				exceptioncheck = false;
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			if (storeclubres.contains("Unauthorized Access")) {
+				Log.e("ContactsToInviteActivity",
+						"storeclubres Unauthorized Access");
+				Toast.makeText(MemberRideFragmentActivity.this,
+						getResources().getString(R.string.exceptionstring),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+
+			Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
+					CheckPoolFragmentActivity.class);
+
+			RideDetailsModel rideDetailsModel = new RideDetailsModel();
+			rideDetailsModel.setCabId(CabId);
+			rideDetailsModel.setMobileNumber(OwnerMobileNumber);
+			rideDetailsModel.setOwnerName(OwnerName);
+			SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
+			String imgname = mPrefs111.getString("imgname", "");
+			rideDetailsModel.setImagename(imgname);
+			rideDetailsModel.setFromLocation(FromLocation);
+			rideDetailsModel.setToLocation(ToLocation);
+			rideDetailsModel.setFromShortName(fromshortname);
+			rideDetailsModel.setToShortName(toshortname);
+			rideDetailsModel.setTravelDate(TravelDate);
+			rideDetailsModel.setTravelTime(TravelTime);
+			rideDetailsModel.setSeats(Seats);
+			rideDetailsModel.setRemainingSeats(Seats);
+			rideDetailsModel.setSeat_Status("0/" + Seats);
+			rideDetailsModel.setDistance(distancetext);
+			rideDetailsModel.setOpenTime("");
+			rideDetailsModel.setCabStatus("A");
+			mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+			rideDetailsModel.setBookingRefNo("");
+			rideDetailsModel.setDriverName("");
+			rideDetailsModel.setDriverNumber("");
+			rideDetailsModel.setCarNumber("");
+			rideDetailsModel.setCabName("");
+
+			mainIntent.putExtra("RideDetailsModel",
+					(new Gson()).toJson(rideDetailsModel));
+
+			// mainIntent.putExtra("CabId", CabId);
+			// mainIntent.putExtra("MobileNumber", MobileNumberstr);
+			// mainIntent.putExtra("OwnerName", OwnerName);
+			// SharedPreferences mPrefs111 = getSharedPreferences("userimage",
+			// 0);
+			// String imgname = mPrefs111.getString("imgname", "");
+			// mainIntent.putExtra("OwnerImage", imgname);
+			// mainIntent.putExtra("FromLocation", FromLocation);
+			// mainIntent.putExtra("ToLocation", ToLocation);
+			//
+			// mainIntent.putExtra("FromShortName", fromshortname);
+			// mainIntent.putExtra("ToShortName", toshortname);
+			//
+			// mainIntent.putExtra("TravelDate", TravelDate);
+			// mainIntent.putExtra("TravelTime", TravelTime);
+			// mainIntent.putExtra("Seats", Seats);
+			// mainIntent.putExtra("RemainingSeats", Seats);
+			// mainIntent.putExtra("Seat_Status", "0/" + Seats);
+			// mainIntent.putExtra("Distance", distancetext);
+			// mainIntent.putExtra("OpenTime", "");
+			// mainIntent.putExtra("CabStatus", "A");
+			// mainIntent.putExtra("comefrom", "fromcontactsmyclub");
+			//
+			// mainIntent.putExtra("BookingRefNo", "");
+			// mainIntent.putExtra("DriverName", "");
+			// mainIntent.putExtra("DriverNumber", "");
+			// mainIntent.putExtra("CarNumber", "");
+			// mainIntent.putExtra("CabName", "");
+
+			// mainIntent.putExtra("ExpTripDuration",
+			// ExpTripDuration.get(arg2));
+
+			startActivityForResult(mainIntent, 500);
+			overridePendingTransition(R.anim.slide_in_right,
+					R.anim.slide_out_left);
+		}
+
 	}
-	return null;
-}
 
-@Override
-protected void onPostExecute(Void v) {
-
-	if (exceptioncheck) {
-		exceptioncheck = false;
-		Toast.makeText(MemberRideFragmentActivity.this,
-				getResources().getString(R.string.exceptionstring),
-				Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	if (storeclubres.contains("Unauthorized Access")) {
-		Log.e("ContactsToInviteActivity",
-				"storeclubres Unauthorized Access");
-		Toast.makeText(MemberRideFragmentActivity.this,
-				getResources().getString(R.string.exceptionstring),
-				Toast.LENGTH_LONG).show();
-		return;
-	}
-
-	Intent mainIntent = new Intent(MemberRideFragmentActivity.this,
-			CheckPoolFragmentActivity.class);
-
-	RideDetailsModel rideDetailsModel = new RideDetailsModel();
-	rideDetailsModel.setCabId(CabId);
-	rideDetailsModel.setMobileNumber(OwnerMobileNumber);
-	rideDetailsModel.setOwnerName(OwnerName);
-	SharedPreferences mPrefs111 = getSharedPreferences("userimage", 0);
-	String imgname = mPrefs111.getString("imgname", "");
-	rideDetailsModel.setImagename(imgname);
-	rideDetailsModel.setFromLocation(FromLocation);
-	rideDetailsModel.setToLocation(ToLocation);
-	rideDetailsModel.setFromShortName(fromshortname);
-	rideDetailsModel.setToShortName(toshortname);
-	rideDetailsModel.setTravelDate(TravelDate);
-	rideDetailsModel.setTravelTime(TravelTime);
-	rideDetailsModel.setSeats(Seats);
-	rideDetailsModel.setRemainingSeats(Seats);
-	rideDetailsModel.setSeat_Status("0/" + Seats);
-	rideDetailsModel.setDistance(distancetext);
-	rideDetailsModel.setOpenTime("");
-	rideDetailsModel.setCabStatus("A");
-	mainIntent.putExtra("comefrom", "fromcontactsmyclub");
-	rideDetailsModel.setBookingRefNo("");
-	rideDetailsModel.setDriverName("");
-	rideDetailsModel.setDriverNumber("");
-	rideDetailsModel.setCarNumber("");
-	rideDetailsModel.setCabName("");
-
-	mainIntent.putExtra("RideDetailsModel",
-			(new Gson()).toJson(rideDetailsModel));
-
-	// mainIntent.putExtra("CabId", CabId);
-	// mainIntent.putExtra("MobileNumber", MobileNumberstr);
-	// mainIntent.putExtra("OwnerName", OwnerName);
-	// SharedPreferences mPrefs111 = getSharedPreferences("userimage",
-	// 0);
-	// String imgname = mPrefs111.getString("imgname", "");
-	// mainIntent.putExtra("OwnerImage", imgname);
-	// mainIntent.putExtra("FromLocation", FromLocation);
-	// mainIntent.putExtra("ToLocation", ToLocation);
-	//
-	// mainIntent.putExtra("FromShortName", fromshortname);
-	// mainIntent.putExtra("ToShortName", toshortname);
-	//
-	// mainIntent.putExtra("TravelDate", TravelDate);
-	// mainIntent.putExtra("TravelTime", TravelTime);
-	// mainIntent.putExtra("Seats", Seats);
-	// mainIntent.putExtra("RemainingSeats", Seats);
-	// mainIntent.putExtra("Seat_Status", "0/" + Seats);
-	// mainIntent.putExtra("Distance", distancetext);
-	// mainIntent.putExtra("OpenTime", "");
-	// mainIntent.putExtra("CabStatus", "A");
-	// mainIntent.putExtra("comefrom", "fromcontactsmyclub");
-	//
-	// mainIntent.putExtra("BookingRefNo", "");
-	// mainIntent.putExtra("DriverName", "");
-	// mainIntent.putExtra("DriverNumber", "");
-	// mainIntent.putExtra("CarNumber", "");
-	// mainIntent.putExtra("CabName", "");
-
-	// mainIntent.putExtra("ExpTripDuration",
-	// ExpTripDuration.get(arg2));
-
-	startActivityForResult(mainIntent, 500);
-	overridePendingTransition(R.anim.slide_in_right,
-			R.anim.slide_out_left);
-}
-
-}
 	public class AuthenticateConnectionOwnerInviteFriends {
 
 		public AuthenticateConnectionOwnerInviteFriends() {
@@ -8834,7 +8829,7 @@ protected void onPostExecute(Void v) {
 
 		}
 	}
-	
+
 	public class AuthenticateConnectionSendInvite {
 
 		public AuthenticateConnectionSendInvite() {
@@ -9037,7 +9032,7 @@ protected void onPostExecute(Void v) {
 			Log.d("sendres", "" + stringBuilder.toString());
 		}
 	}
-	
+
 	public class AuthenticateConnectionReferfriends {
 
 		public AuthenticateConnectionReferfriends() {
@@ -9101,6 +9096,7 @@ protected void onPostExecute(Void v) {
 			Log.d("referfriendres", "" + stringBuilder.toString());
 		}
 	}
+
 	public class AuthenticateConnectionForNewClub {
 
 		public String fname;
@@ -9164,6 +9160,5 @@ protected void onPostExecute(Void v) {
 			Log.d("storeclubres", "" + stringBuilder.toString());
 		}
 	}
-	
 
 }

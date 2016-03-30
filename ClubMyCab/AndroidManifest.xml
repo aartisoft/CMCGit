@@ -64,22 +64,22 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity> 
+        </activity>  
   		
   		<activity
-            android:name=".ui.SendInvitesToOtherScreen"
+            android:name=".ui.NewHomeScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"
-             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-         />
-           <!--  <intent-filter>
+             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+         
+          <!--    <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
            
-        </activity> -->
+        </activity>  -->
         <meta-data
             android:name="af_DebugMode"
             android:value="false" />
@@ -126,7 +126,14 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
-        
+          
+      <activity
+            android:name=".ui.SendInvitesToOtherScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+         />
         <activity
             android:name=".ui.OfferPoolOrCabShare"
             android:label="@string/title_activity_home_page"

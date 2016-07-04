@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+    
+     <ImageView 
+        android:layout_height="@dimen/warnning_height"
+        android:layout_width="@dimen/warnning_width"
+        android:id="@+id/ivWarnning1"
+        android:background="@drawable/mygroups_group"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        
+        
+        />
+
+    <TextView
+        android:id="@+id/nameofclub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/ivWarnning1"
+        android:layout_marginLeft="10dp"
+        android:text="My Group"
+           android:singleLine="true"
+    android:maxEms="10"
+    android:ellipsize="end"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/noofmembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/nameofclub"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="(3)"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/removeclub"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/removeclub" />
+
+</RelativeLayout>

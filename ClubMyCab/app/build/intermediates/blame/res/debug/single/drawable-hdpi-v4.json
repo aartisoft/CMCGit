@@ -1,0 +1,1646 @@
+[
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_medium_off_client.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_medium_off_client.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sharelocationmarker.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/sharelocationmarker.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/rs.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/rs.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/forward_arrow_list.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/forward_arrow_list.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_selector_disabled_holo_dark.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_selector_disabled_holo_dark.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_large_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_large_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripinfo_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/tripinfo_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_small_blue.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_small_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_default_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_default_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/edittext_clear_button.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/edittext_clear_button.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_background_white.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/chat_background_white.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_selected_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_selected_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_xout.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_xout.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/menu_header.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/menu_header.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_pressed_holo_light.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_pressed_holo_light.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/arrow1.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/arrow1.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cabicon_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/cabicon_white.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/arrow1.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/arrow1.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_popup_background_mtrl_mult.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_popup_background_mtrl_mult.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_markallread.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/notifications_markallread.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_background.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_background.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_background.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_background.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ride_call.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/ride_call.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_light.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/powered_by_google_light.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_rating_star_off_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_rating_star_off_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_sorticon_time.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_sorticon_time.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_switch_track_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_switch_track_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_pressed_holo_dark.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_pressed_holo_dark.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_half_black_16dp.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_half_black_16dp.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_track_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_track_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_commit_search_api_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_commit_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_small_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_small_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/fav_home_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/fav_home_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_go_search_api_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_go_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_selected_focused_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/clubmycabnew/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_selected_focused_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/right_arrow_black.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/right_arrow_black.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_favicon_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_favicon_white.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripmessage_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/tripmessage_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/triprefer_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/triprefer_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_tab_indicator_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_tab_indicator_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_myrides.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_myrides.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_icon_blue.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myrides_icon_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/splash.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/splash.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/rs.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/rs.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_like_icon_selected.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_like_icon_selected.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_button_send_round_shadow.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_button_send_round_shadow.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notification_unread.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/notification_unread.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_joinclub.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/notifications_joinclub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cabappicon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/cabappicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myprofile_banner.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myprofile_banner.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_off.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/star_off.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_selector_disabled_holo_light.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_selector_disabled_holo_light.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/places_ic_search.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/places_ic_search.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notificationicon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/notificationicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_pressed_holo_dark.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_pressed_holo_dark.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/createnewclubbtn.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/createnewclubbtn.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ride_add.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/ride_add.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_standard_off_client.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_standard_off_client.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/drawer_top.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/drawer_top.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_send_icon_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_send_icon_white.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_2.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_2.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/switch_on_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/switch_on_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_rupeeicon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_rupeeicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/screen2.jpg",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/screen2.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/login_logo.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/login_logo.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_small_off_client.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_small_off_client.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_focused_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_focused_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/mobikwik_logo.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/mobikwik_logo.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_small_blue.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_small_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_015.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_015.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_000.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_focused_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_focused_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_spinner_mtrl_am_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sharelocation_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/sharelocation_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_rating_star_on_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_rating_star_on_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/right_arrow_black.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/right_arrow_black.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/switch_off_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/switch_off_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_unselected_pressed_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/clubmycabnew/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_unselected_pressed_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/selectrecipients.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/selectrecipients.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_unselected_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/clubmycabnew/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_unselected_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_like_icon_selected.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_like_icon_selected.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/arrow2.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/arrow2.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_share_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_share_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_black_36dp.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_black_36dp.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/trip_bottom_background.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/trip_bottom_background.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_bluerectangle.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_bluerectangle.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/mobile_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/mobile_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_normal.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_icon_large.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_icon_large.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/removeuser.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/removeuser.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_015.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_015.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_fromto_background.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myrides_fromto_background.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_cab_background_top_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_cab_background_top_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/settings_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/settings_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/right_arrow_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/right_arrow_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_black_16dp.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_black_16dp.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myprofile_banner.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myprofile_banner.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/edit_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/edit_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/screen3.jpg",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/screen3.jpg"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_markallread.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/notifications_markallread.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_spinner_mtrl_am_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_search_default_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_search_default_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_on.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/star_on.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myclubs_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myclubs_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_favicon_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_favicon_white.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_bubble_grey.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/chat_bubble_grey.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_bottomnub.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_bottomnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_selector_disabled_holo_light.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_selector_disabled_holo_light.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myprofile_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myprofile_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_booknowbtn.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_booknowbtn.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripcancel_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/tripcancel_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_background_white.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/chat_background_white.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_bubble_grey.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/chat_bubble_grey.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_button_send_round_shadow.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_button_send_round_shadow.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_000.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_normal.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/support_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/support_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/mobikwik_logo.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/mobikwik_logo.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_control_off_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/login_background.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/login_background.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_half_black_16dp.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_half_black_16dp.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/places_ic_clear.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/places_ic_clear.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_dark.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/powered_by_google_dark.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myclubs_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myclubs_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_selector_disabled_holo_dark.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_selector_disabled_holo_dark.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_clearall.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/notifications_clearall.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_divider_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_divider_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_on.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_on.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_search_activated_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_search_activated_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/splash.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/splash.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/padlock_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/padlock_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_unselected_focused_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/clubmycabnew/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_unselected_focused_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_selected_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/clubmycabnew/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_selected_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_full_open_on_phone.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_full_open_on_phone.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/iconmap.jpg",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/iconmap.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sharelocationmarker.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/sharelocationmarker.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/support_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/support_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/drawer_background.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/drawer_background.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_popup_background_mtrl_mult.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_popup_background_mtrl_mult.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_unselected_pressed_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_unselected_pressed_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_xout.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_xout.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_icon_large.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_icon_large.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sidemenu.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/sidemenu.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/places_ic_clear.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/places_ic_clear.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_topnub.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_topnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_rowbanner.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_rowbanner.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notification_unread.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/notification_unread.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/register_background.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/register_background.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripinfo_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/tripinfo_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_0.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_0.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_tall_off_client.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_tall_off_client.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_icon_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_icon_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_bottomnub.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_bottomnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_rowbanner.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_rowbanner.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/drawer_top.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/drawer_top.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_send_icon_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_send_icon_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myprofile_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myprofile_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_rowbanner.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myrides_rowbanner.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_015.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_check_to_on_mtrl_015.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_booknowbtn.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_booknowbtn.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_rating_star_on_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_rating_star_on_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_half_black_36dp.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_half_black_36dp.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_mobileicon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_mobileicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/wallet_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/wallet_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/forward_arrow_list.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/forward_arrow_list.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cabicon_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/cabicon_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/places_ic_search.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/places_ic_search.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/down_arrow.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/down_arrow.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/createnewclubbtn.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/createnewclubbtn.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_share_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_share_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_1.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_1.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_dateicon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myrides_dateicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_unselected_focused_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_unselected_focused_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/about_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/about_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ride_call.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/ride_call.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_joinclub.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/notifications_joinclub.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_icon_blue.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_icon_blue.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_topnub.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_topnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_go_search_api_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_go_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_background_blue.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/chat_background_blue.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_track_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_track_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_2.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_2.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripcancel_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/tripcancel_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/screen2.jpg",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/screen2.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sharelocation_mappin.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/sharelocation_mappin.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_pressed.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_rowbanner.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myrides_rowbanner.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_topnub.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_topnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_send_icon_blue.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_send_icon_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/watchmefor.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/watchmefor.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/fav_home_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/fav_home_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/login_background.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/login_background.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/iconmap.jpg",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/iconmap.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_longpressed_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_longpressed_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripmessage_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/tripmessage_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cabappicon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/cabappicon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_000.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_clockicon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myrides_clockicon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_myrides.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_myrides.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_launcher.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ride_add.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/ride_add.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_bluerectangle.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_bluerectangle.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/fav_office_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/fav_office_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_standard_off_client.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_standard_off_client.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sharelocation_mappin.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/sharelocation_mappin.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_search_activated_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_search_activated_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_clockicon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myrides_clockicon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_on.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_on.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/shareapp_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/shareapp_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_normal.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_000.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_large_blue.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_large_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_ic_googleplayservices.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_ic_googleplayservices.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_tab_indicator_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_tab_indicator_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/settings_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/settings_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_xout.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_xout.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myrides_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_default_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_default_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/fav_office_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/fav_office_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sharelocation_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/sharelocation_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_search_api_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_bottomnub.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_bottomnub.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_background.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_background.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/padlock_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/padlock_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/mobile_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/mobile_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_sorticon_time.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_sorticon_time.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/wallet_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/wallet_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/threedotsformap.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/threedotsformap.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_textfield_search_default_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_textfield_search_default_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_fromto_background.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myrides_fromto_background.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_half_black_36dp.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_half_black_36dp.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/threedotsformap.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/threedotsformap.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/register_background.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/register_background.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_background.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_background.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_full_open_on_phone.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_full_open_on_phone.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_rupeeicon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_rupeeicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_off.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/star_off.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/removeclub.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/removeclub.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookcab.jpg",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookcab.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_disabled.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_large_blue.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_large_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_selected_focused_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_selected_focused_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_send_arrow.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/button_send_arrow.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/booknow.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/booknow.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_unselected_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_unselected_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/selectrecipients.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/selectrecipients.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/owner_location.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/owner_location.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_blue_xout.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_blue_xout.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_focused.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/sidemenu.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/sidemenu.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/edit_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/edit_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/arrow2.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/arrow2.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_commit_search_api_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_commit_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_send_icon_blue.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_send_icon_blue.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_small_white.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_small_white.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_selected_pressed_holo.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_selected_pressed_holo.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_clearall.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/notifications_clearall.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_rating_star_off_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_rating_star_off_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_tall_off_client.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_tall_off_client.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notificationicon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/notificationicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/messenger_bubble_large_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/messenger_bubble_large_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/watchmefor.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/watchmefor.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/vpi__tab_selected_pressed_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/clubmycabnew/viewPagerIndicatorLibrary/unspecified/res/drawable-hdpi-v4/vpi__tab_selected_pressed_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_switch_track_mtrl_alpha.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_switch_track_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/tripcalculator_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/tripcalculator_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_ic_googleplayservices.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_ic_googleplayservices.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_bottomnub.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_bottomnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/shareapp_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/shareapp_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_on.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/star_on.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/menu_header.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/menu_header.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_pressed_holo_light.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_pressed_holo_light.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_1.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_1.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/screen1.jpg",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/screen1.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_search_api_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_disabled.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_light_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_light_focused.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/down_arrow.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/down_arrow.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_medium_off_client.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_medium_off_client.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/screen1.jpg",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/screen1.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_text_dark_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_text_dark_normal.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/myrides_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_small_off_client.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/res/drawable-hdpi/ic_plusone_small_off_client.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/offers_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/offers_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/drawer_background.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/drawer_background.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_tooltip_black_topnub.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_tooltip_black_topnub.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/cast_ic_notification_0.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/res/drawable-hdpi/cast_ic_notification_0.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/login_logo.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/login_logo.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/trip_bottom_background.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/trip_bottom_background.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_bluerectangle.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/notifications_bluerectangle.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/right_arrow_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/right_arrow_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_bubble_blue.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/chat_bubble_blue.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_clear_mtrl_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_clear_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_send_arrow.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/button_send_arrow.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/edittext_clear_button.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/edittext_clear_button.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_close.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_close.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_longpressed_holo.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_longpressed_holo.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_light_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_light_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_clear_mtrl_alpha.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_clear_mtrl_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_icon_blue.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_icon_blue.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_dateicon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myrides_dateicon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_light_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_light_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_black_36dp.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_black_36dp.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_mobileicon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_mobileicon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_text_dark_normal.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_text_dark_normal.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/notifications_bluerectangle.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/notifications_bluerectangle.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_bubble_blue.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/chat_bubble_blue.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_sorticon_rupee.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/bookacab_sorticon_rupee.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_star_black_16dp.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_star_black_16dp.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_015.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_btn_radio_to_on_mtrl_015.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/removeclub.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/removeclub.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/owner_location.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/owner_location.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_close.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_close.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/com_facebook_button_icon_white.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/drawable-hdpi-v4/com_facebook_button_icon_white.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_pressed.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/bookacab_sorticon_rupee.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/bookacab_sorticon_rupee.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_light_focused.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_light_focused.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_normal.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_normal.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/myrides_icon_blue.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/myrides_icon_blue.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/triprefer_icon.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/triprefer_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_plus_signin_btn_icon_dark_disabled.9.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_plus_signin_btn_icon_dark_disabled.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_cab_background_top_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_cab_background_top_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/about_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/about_icon.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/removeuser.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/removeuser.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/offers_icon.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/offers_icon.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/screen3.jpg",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/screen3.jpg"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_light.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/powered_by_google_light.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/abc_list_divider_mtrl_alpha.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/drawable-hdpi-v4/abc_list_divider_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/chat_background_blue.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/drawable-hdpi/chat_background_blue.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_google_signin_btn_icon_dark_pressed.9.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/res/drawable-hdpi/common_google_signin_btn_icon_dark_pressed.9.png"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_dark.png",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/res/drawable-hdpi/powered_by_google_dark.png"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_launcher.png",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/drawable-hdpi/ic_launcher.png"
+    }
+]

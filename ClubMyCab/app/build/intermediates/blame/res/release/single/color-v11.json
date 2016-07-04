@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/release/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/release/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/release/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/release/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    }
+]

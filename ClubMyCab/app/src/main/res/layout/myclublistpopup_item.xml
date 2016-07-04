@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp" >
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appuserimg"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/avatar_rides_list"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        />
+
+    <TextView
+        android:id="@+id/textmembername_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toLeftOf="@+id/textmembernum_popup"
+        android:layout_toRightOf="@+id/appuserimg"
+        android:text="djsnnds jnds djsndjsd sjd j dsds"
+        android:textColor="@color/color_app_text_dark"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textmembernum_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/removeuser"
+        android:text="9958211837"
+        android:textColor="@color/color_app_text_dark"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/removeuser"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/delet" />
+
+</RelativeLayout>

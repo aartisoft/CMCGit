@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:weightSum="3">
+
+    <LinearLayout
+        android:id="@+id/rlLeft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1" 
+        android:layout_marginLeft="15dp">
+         <LinearLayout
+             
+            android:id="@+id/rlTop1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        
+        >
+        <TextView
+                android:id="@+id/fromlocationtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="From"
+                android:textColor="#000000"
+                android:textSize="13sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/fromlocationvalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fromlocationtext"
+                android:text="Alpha-1, Commercial Belt"
+                android:textColor="#9e9e9e"
+                android:textSize="13sp">
+            </TextView>
+        
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/rlTop2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+       
+        
+        
+         <TextView
+                android:id="@+id/tolocationtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="To"
+                android:textColor="#000000"
+                android:textSize="15sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tolocationvalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tolocationtext"
+                android:text="New Ashok Nagar,New Delhi "
+                android:textColor="#9e9e9e"
+                android:textSize="13sp">
+            </TextView>
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rlMiddle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1" >
+         <LinearLayout
+             android:id="@+id/rlTop3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+                android:id="@+id/traveldatetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Date"
+                android:textColor="#000000"
+                android:textSize="15sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/traveldatevalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/traveldatetext"
+                android:text="12/02/2015"
+                android:textColor="#9e9e9e"
+                android:textSize="12sp" >
+            </TextView>
+        
+    </LinearLayout>
+    <LinearLayout
+         android:id="@+id/rlTop4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+       
+        
+        
+         <TextView
+                android:id="@+id/traveltimetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Time"
+                android:textColor="#000000"
+                android:textSize="15sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/traveltimevalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/traveltimetext"
+                android:text="16:00"
+                android:textColor="#9e9e9e"
+                android:textSize="12sp" >
+            </TextView>
+    </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/rlRight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1" 
+        android:layout_marginLeft="10dp">
+         <LinearLayout
+             android:id="@+id/rlTop5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+      <TextView
+                android:id="@+id/seatstext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Seats"
+                android:textColor="#000000"
+                android:textSize="15sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/seatsvalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seatstext"
+                android:text="2"
+                android:textColor="#9e9e9e"
+                android:textSize="12sp" >
+            </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/rlTop6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+       
+        
+          <TextView
+                android:id="@+id/statustext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Owner Name"
+                android:textColor="#000000"
+                android:textSize="15sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/statusvalue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/statustext"
+                android:text="ABC"
+                android:textColor="#9e9e9e"
+                android:textSize="12sp" >
+            </TextView>
+    </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+    

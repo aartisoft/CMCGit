@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainhomepagerl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/joinpoollocationtext" >
+
+        <fragment
+            android:id="@+id/updatepoolmap"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            class="com.google.android.gms.maps.SupportMapFragment" />
+
+        <ImageView
+            android:id="@+id/updatelocationmarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/locationmarker" />
+
+        <Button
+            android:id="@+id/buttonUpdateLocationMarker"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_above="@id/updatelocationmarker"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:alpha="0.6"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:text="Tap to update Pickup Location"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/joinpoollocationtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/updatepickuplocationbtn"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/updatepickuplocationbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#4279bd"
+        android:padding="10dp"
+        android:text="Update PickUp Location"
+        android:textColor="#ffffff"
+        android:textSize="17sp" />
+
+</RelativeLayout>

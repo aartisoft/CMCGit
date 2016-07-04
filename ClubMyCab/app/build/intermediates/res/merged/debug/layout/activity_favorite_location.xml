@@ -1,0 +1,680 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/myclubsrl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDEDED"
+    android:focusable="false"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/header1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        layout="@layout/header_for_menus"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/dummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewFavLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header1"
+        android:layout_marginTop="10dp"
+        android:layout_weight="20"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:text="Tell us about your regular travel locations"
+        android:textColor="@color/color_app_text_dark"
+        android:textSize="16sp"
+        />
+
+    <!-- <ScrollView -->
+    <!-- android:id="@+id/idFavoriteLocationScrollView" -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_height="fill_parent" -->
+    <!-- android:layout_below="@id/textViewFavLoc" -->
+    <!-- android:layout_margin="10dp" -->
+    <!-- android:layout_marginBottom="10dp" -->
+    <!-- android:background="#FFFFFF" > -->
+
+
+    <!-- <LinearLayout -->
+    <!-- android:id="@+id/idScrollViewLinearLayout" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:orientation="vertical" > -->
+    <!-- </LinearLayout> -->
+    <!-- </ScrollView> -->
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnSkip"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_strk_blue"
+                android:onClick="onSkipButtonClick"
+                android:text="Skip"
+                android:textColor="@color/btn_color"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="#ffffff" />
+
+            <Button
+                android:id="@+id/idDoneButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@color/color_app_blue"
+                android:onClick="onDoneButtonClick"
+                android:text="Save"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- <ListView -->
+    <!-- android:id="@+id/lvFavorateLocation" -->
+    <!-- android:layout_height="fill_parent" -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_below="@id/textViewFavLoc" -->
+    <!-- android:dividerHeight="0dp" -->
+    <!-- android:divider="@color/white" -->
+    <!-- android:layout_margin="10dp" -->
+    <!-- android:background="#FFFFFF" -->
+
+
+    <!-- android:layout_above="@id/llBottom" -->
+    <!-- ></ListView>  pawan start -->
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/llBottom"
+        android:layout_below="@id/textViewFavLoc"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp" >
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/ll1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#fff"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/tvLocationTagTextView1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/tag_where_work"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btnDelete1"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/removeclub"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/maintoviewsll1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/aTvLocationAutoComplete1"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="8dp"
+                            android:background="#e8e8e8"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="2.8"
+                            android:ellipsize="end"
+                            android:hint="Type Address or Select here >"
+                            android:singleLine="true"
+                            android:textSize="15sp" >
+
+                            <requestFocus />
+                        </AutoCompleteTextView>
+
+                        <ImageView
+                            android:id="@+id/ivClearedittextimg1"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:layout_weight=".2"
+                            android:src="@drawable/edittext_clear_button" />
+
+                        <FrameLayout
+                            android:id="@+id/flToLocation1"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            >
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/fromto"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#fff"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/tvLocationTagTextView2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/tag_where_work"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btnDelete2"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/removeclub"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/maintoviewsll2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/aTvLocationAutoComplete2"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="8dp"
+                            android:background="#e8e8e8"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="2.8"
+                            android:ellipsize="end"
+                            android:hint="Type Address or Select here >"
+                            android:singleLine="true"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/ivClearedittextimg2"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:layout_weight=".2"
+                            android:src="@drawable/edittext_clear_button" />
+
+                        <FrameLayout
+                            android:id="@+id/flToLocation2"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            >
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/fromto"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#fff"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/tvLocationTagTextView3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/tag_where_work"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btnDelete3"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/removeclub" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/maintoviewsll3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/aTvLocationAutoComplete3"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="8dp"
+                            android:background="#e8e8e8"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="2.8"
+                            android:ellipsize="end"
+                            android:hint="Type Address or Select here >"
+                            android:singleLine="true"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/ivClearedittextimg3"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:layout_weight=".2"
+                            android:src="@drawable/edittext_clear_button" />
+
+                        <FrameLayout
+                            android:id="@+id/flToLocation3"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            >
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/fromto"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#fff"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/tvLocationTagTextView4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/tag_where_work"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btnDelete4"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/removeclub" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/maintoviewsll4"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/aTvLocationAutoComplete4"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="8dp"
+                            android:background="#e8e8e8"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="2.8"
+                            android:ellipsize="end"
+                            android:hint="Type Address or Select here >"
+                            android:singleLine="true"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/ivClearedittextimg4"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:layout_weight=".2"
+                            android:src="@drawable/edittext_clear_button" />
+
+                        <FrameLayout
+                            android:id="@+id/flToLocation4"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            >
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/fromto"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="#fff"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="2" >
+
+                        <TextView
+                            android:id="@+id/tvLocationTagTextView5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/tag_where_work"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/btnDelete5"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/removeclub" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/maintoviewsll5"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="3" >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/aTvLocationAutoComplete5"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:paddingLeft="8dp"
+                            android:background="#e8e8e8"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="2.8"
+                            android:ellipsize="end"
+                            android:hint="Type Address or Select here >"
+                            android:singleLine="true"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/ivClearedittextimg5"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="2dp"
+                            android:layout_weight=".2"
+                            android:src="@drawable/edittext_clear_button" />
+
+                        <FrameLayout
+                            android:id="@+id/flToLocation5"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            >
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/fromto"
+                                android:layout_gravity="center" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/addMore"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/mygroup_add"
+                android:onClick="addMoreClick"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+    <!-- pawan End -->
+
+    <RelativeLayout
+        android:id="@+id/fromrelative"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/header"
+        android:background="#000000"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/flLocationName" >
+
+            <fragment
+                android:id="@+id/frommap"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                class="com.google.android.gms.maps.SupportMapFragment" />
+
+            <ImageView
+                android:id="@+id/locationmarker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:src="@drawable/locationmarker" />
+        </RelativeLayout>
+
+     <!--   <TextView
+            android:id="@+id/fromlocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/frombottomll"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:background="#5d5d5d"
+            android:textSize="15sp" />-->
+        <FrameLayout
+            android:id="@+id/flLocationName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="#5d5d5d"
+            android:layout_above="@+id/frombottomll"
+
+            >
+            <TextView
+                android:id="@+id/fromlocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:padding="5dp"
+                android:gravity="center"
+                />
+            <com.github.silvestrpredko.dotprogressbar.DotProgressBar
+                android:id="@+id/dot_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                custom:amount="5"
+                custom:duration="@android:integer/config_mediumAnimTime"
+                custom:endColor="@color/white"
+                custom:startColor="@color/white"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/frombottomll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#FFFFFF"
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <Button
+                android:id="@+id/idCancelButtonMap"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_strk_blue"
+                android:text="Cancel"
+                android:textColor="@color/btn_color"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="#ffffff" />
+
+            <Button
+                android:id="@+id/idDoneButtonMap"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@color/color_app_blue"
+                android:text="Done"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

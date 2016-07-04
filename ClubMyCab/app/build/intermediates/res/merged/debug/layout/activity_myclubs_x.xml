@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/myclubsrl"
+    >
+    <include
+        android:id="@+id/header1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        layout="@layout/header_for_menus" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+        <ListView
+            android:id="@+id/listMyclubs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:divider="@null" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/color_app_text_dark"
+            android:id="@+id/tvMessage"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:text="Create a group and invite friends to carpool with them"/>
+    </FrameLayout>
+    <Button
+        android:id="@+id/butmakenewclubs"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/color_app_blue"
+        android:text="Create New Group"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        />
+</LinearLayout>

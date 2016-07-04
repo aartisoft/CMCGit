@@ -1,0 +1,83 @@
+-keep class com.clubmycab.CabApplication {
+    <init>();
+    void attachBaseContext(android.content.Context);
+}
+-keep class com.clubmycab.ui.SplashActivity { <init>(); }
+-keep class com.clubmycab.ui.NewHomeScreen { <init>(); }
+-keep class com.clubmycab.ui.OTPActivity { <init>(); }
+-keep class com.clubmycab.ui.AppLoginScreen { <init>(); }
+-keep class com.clubmycab.SmsReciever { <init>(); }
+-keep class com.clubmycab.ui.HomeActivity { <init>(); }
+-keep class com.clubmycab.ui.HomeCarPoolActivity { <init>(); }
+-keep class com.clubmycab.ui.SendInvitesToOtherScreen { <init>(); }
+-keep class com.clubmycab.ui.OfferPoolOrCabShare { <init>(); }
+-keep class com.clubmycab.ui.InviteFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.RegistrationActivity { <init>(); }
+-keep class com.clubmycab.ui.LoginActivity { <init>(); }
+-keep class com.clubmycab.ui.TestActivity { <init>(); }
+-keep class com.google.android.gcm.GCMBroadcastReceiver { <init>(); }
+-keep class com.clubmycab.GCMIntentService { <init>(); }
+-keep class com.clubmycab.LocationShareService { <init>(); }
+-keep class com.clubmycab.LocationShareForRideService { <init>(); }
+-keep class com.clubmycab.ui.MyRidesActivity { <init>(); }
+-keep class com.clubmycab.MemberRideFragmentActivity { <init>(); }
+-keep class com.clubmycab.CheckPoolFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.ContactsToInviteActivity { <init>(); }
+-keep class com.clubmycab.BookaCabFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.NotificationListActivity { <init>(); }
+-keep class com.clubmycab.ui.UpdatePickupLocationFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.MyProfileActivity { <init>(); }
+-keep class com.clubmycab.ui.MyClubsActivity { <init>(); }
+-keep class com.clubmycab.ShareLocationFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.LocationInMapFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.AboutActivity { <init>(); }
+-keep class com.clubmycab.ui.SettingActivity { <init>(); }
+-keep class com.clubmycab.ui.AboutPagerFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.MobileSiteActivity { <init>(); }
+-keep class com.clubmycab.ui.TermsAndConditionsActivity { <init>(); }
+-keep class com.clubmycab.ui.ResetPasswordActivity { <init>(); }
+-keep class com.clubmycab.ui.RateCabActivity { <init>(); }
+-keep class com.google.android.gms.analytics.AnalyticsReceiver { <init>(); }
+-keep class com.google.android.gms.analytics.AnalyticsService { <init>(); }
+-keep class com.clubmycab.UpcomingStartTripAlarm { <init>(); }
+-keep class com.clubmycab.StartTripPHPAlarm { <init>(); }
+-keep class com.google.android.gms.analytics.CampaignTrackingService { <init>(); }
+-keep class com.clubmycab.ui.FavoriteLocationsAcivity { <init>(); }
+-keep class com.clubmycab.ui.FirstLoginClubsActivity { <init>(); }
+-keep class com.clubmycab.ui.FirstLoginWalletsActivity { <init>(); }
+-keep class com.clubmycab.ui.ContactsInviteForRideActivity { <init>(); }
+-keep class com.clubmycab.ui.ContactsInviteForRideActivityNew { <init>(); }
+-keep class com.clubmycab.ui.FavoritePlaceFindActivity { <init>(); }
+-keep class com.clubmycab.ui.FAQActivity { <init>(); }
+-keep class com.clubmycab.ui.NeedSupportFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.OffersListActivity { <init>(); }
+-keep class com.clubmycab.ui.OffersDetailsActivity { <init>(); }
+-keep class com.clubmycab.ui.VehicleDetailScreen { <init>(); }
+-keep class com.facebook.FacebookActivity { <init>(); }
+-keep class com.clubmycab.ui.XMyClubsActivty { <init>(); }
+-keep class com.clubmycab.ui.PickLocationActivity { <init>(); }
+-keep class com.clubmycab.ui.NewRideCreationScreen { <init>(); }
+-keep class com.clubmycab.ui.XCheckPoolFragmentActivty { <init>(); }
+-keep class com.clubmycab.ui.XMemberRideFragmentActivity { <init>(); }
+-keep class com.clubmycab.ui.ImageScreen { <init>(); }
+-keep class com.clubmycab.ui.PaymentMethodActivity { <init>(); }
+-keep class com.clubmycab.ui.ChoosePaymentTypeScreen { <init>(); }
+-keep class com.facebook.CustomTabActivity { <init>(); }
+-keep class com.google.android.gms.ads.AdActivity { <init>(); }
+-keep class com.google.android.gms.ads.purchase.InAppPurchaseActivity { <init>(); }
+-keep class com.google.android.gms.appinvite.PreviewActivity { <init>(); }
+-keep class com.google.android.gms.auth.api.signin.internal.SignInHubActivity { <init>(); }
+-keep class com.google.android.gms.auth.api.signin.RevocationBoundService { <init>(); }
+-keep class com.google.android.gms.measurement.AppMeasurementContentProvider { <init>(); }
+-keep class com.google.android.gms.measurement.AppMeasurementReceiver { <init>(); }
+-keep class com.google.android.gms.measurement.AppMeasurementService { <init>(); }
+-keep public class * extends android.app.backup.BackupAgent {
+    <init>();
+}
+-keep public class * extends java.lang.annotation.Annotation {
+    *;
+}
+-keep class com.android.tools.fd.** {
+    *;
+}
+-dontnote com.android.tools.fd.**,android.support.multidex.MultiDexExtractor

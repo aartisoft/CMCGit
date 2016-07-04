@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/myrides_fromto_background"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/textViewRowExistingRides"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="#FFFFFF" >
+
+        <ImageView
+            android:id="@+id/dateimg"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/myrides_dateicon" />
+
+        <TextView
+            android:id="@+id/datetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/dateimg"
+            android:text="08/042015"
+            android:textColor="#000000"
+            android:textSize="13sp" >
+        </TextView>
+
+        <ImageView
+            android:id="@+id/timeimg"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/datetext"
+            android:adjustViewBounds="true"
+            android:src="@drawable/myrides_clockicon" />
+
+        <TextView
+            android:id="@+id/timetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/timeimg"
+            android:text="12:18 PM"
+            android:textColor="#000000"
+            android:textSize="13sp" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/seatstext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="3/3 Seats"
+            android:textColor="#000000"
+            android:textSize="13sp" >
+        </TextView>
+    </RelativeLayout>
+
+</LinearLayout>

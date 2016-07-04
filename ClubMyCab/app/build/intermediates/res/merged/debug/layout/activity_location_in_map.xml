@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sharelocationtext" >
+
+        <fragment
+            android:id="@+id/sharelocationmap"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            class="com.google.android.gms.maps.SupportMapFragment" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/sharelocationtext"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        android:background="#5d5d5d"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"/>
+
+</RelativeLayout>

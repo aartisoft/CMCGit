@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <FrameLayout
+        android:id="@+id/flNameLetter"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/circle_grey_fill"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/tvFirstLetter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:text="A"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/flNameLetter"
+        android:layout_toLeftOf="@+id/flAddGroup"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_alignTop="@+id/flNameLetter"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorTextLable"
+        android:text="@string/dummy_name"
+        android:layout_marginLeft="8dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/tvNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/flNameLetter"
+        android:textSize="12sp"
+        android:textColor="@color/colorTextLable"
+        android:text="@string/dummy_name"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@+id/tvName"
+        android:layout_toLeftOf="@+id/flAddGroup"
+        android:singleLine="true"
+        android:ellipsize="end"/>
+
+    <FrameLayout
+        android:id="@+id/flAddGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add"
+           />
+    </FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#b8b8b8"
+        android:layout_toRightOf="@+id/flNameLetter"
+        android:layout_alignParentBottom="true">
+
+    </View>
+
+
+</RelativeLayout>

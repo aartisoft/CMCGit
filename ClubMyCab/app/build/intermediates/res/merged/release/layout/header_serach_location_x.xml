@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/card_left_margin"
+        android:layout_marginRight="@dimen/card_right_margin"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        app:cardBackgroundColor="#ffffff"
+        card_view:cardCornerRadius="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:id="@+id/tvSearchCabs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:text="Search Cabs"
+                android:textColor="@color/color_app_blue"
+                android:textSize="16sp"
+                android:layout_marginTop="12dp"/>
+            <RelativeLayout
+                android:id="@+id/homerelative"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:layout_below="@id/textViewWhere"
+                android:layout_marginTop="8dp" >
+
+                <TextView
+                    android:id="@+id/textFrom"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:text="From"
+                    android:textColor="@color/color_app_text_dark"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:id="@+id/mainfromviewsll"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toLeftOf="@+id/flFromLocation"
+                    android:layout_toRightOf="@+id/textFrom"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/from_places"
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/clearedittextimgfrom"
+                            android:background="@drawable/bg_rect_grey_fill"
+                            android:editable="false"
+                            android:ellipsize="end"
+                            android:focusable="false"
+                            android:gravity="center_vertical"
+                            android:hint="@string/hint_select_address"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:textSize="14sp"
+                            android:textColor="#5d5d5d" />
+
+                        <ImageView
+                            android:id="@+id/clearedittextimgfrom"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/edittext_clear_button"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/flFromLocation"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/fromto"
+                        android:layout_gravity="center" />
+                </FrameLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlTo"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:layout_below="@id/homerelative"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp" >
+
+                <TextView
+                    android:id="@+id/textTo"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:text="To"
+                    android:textColor="@color/color_app_text_dark"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:id="@+id/llthree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/maintoviewsll"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+                    <FrameLayout
+                        android:id="@+id/flToLocation"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/fromto"
+                            android:layout_gravity="center"/>
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/maintoviewsll"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toLeftOf="@+id/llthree"
+                    android:layout_toRightOf="@+id/textTo"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/to_places"
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/clearedittextimgto"
+                            android:background="@drawable/bg_rect_grey_fill"
+                            android:editable="false"
+                            android:ellipsize="end"
+                            android:focusable="false"
+                            android:hint="@string/hint_select_address"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"                            android:singleLine="true"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:textColor="#5d5d5d"/>
+
+                        <ImageView
+                            android:id="@+id/clearedittextimgto"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/edittext_clear_button"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

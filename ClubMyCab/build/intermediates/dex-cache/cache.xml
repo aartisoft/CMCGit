@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-vision-8.4.0_473f217f584d656a21b706a0379ce6709eb56a91/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.5.5/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="611605b6b640c1558f9bdea41de8ff837ab68ca8">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-crashlytics-2.5.5_067987b7f5cf78de7647fd54791212e683d990fc/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.10/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a5db9a2dd46d84285ef737f65030b74b6e8ee2a4">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/io.fabric.sdk.android-fabric-1.3.10_d90602cd090a8831105ad3f8babe0bbe49c97f86/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_b7bce0d7c44c006c970fff32008451cb9b51ff53/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.4.0/support-annotations-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.4.0_3bc5ddb0898e4574c7d716f77b3e307f0f735157/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-multidex-1.0.1_ce9f0095a778d6174054560c41e7eccf69aa9da2/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appindexing-8.4.0_603d61a2ed90913f4a23b0dcd7b58f7ec6f35338/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.2/1f96456ca233dec780aa224bff076d8e8bca3908/gson-2.2.2.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1f96456ca233dec780aa224bff076d8e8bca3908">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.2.2_dd5cab4ce1022f9af16c7bf028e13795c459f928/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="08d34b2d135c1cc96ab506fd8bf6916d1e2f391a">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-panorama-8.4.0_fb35ad4393260ac9281dd7b2e54f7cd4a0d377c5/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/asmack-android-6.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="3d0153304081a3a9ddb15c93082e2664b94746e9">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/asmack-android-6_11da3ed31e5aabad0efb4daf6e88de2149e99e0a/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_697a8ad3f64bc6eafc800a51511757d4a3e99614/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8efc878f32a6b9fcd5d8a61e3af478ed8884971d">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_b347348ca0d36d6b3c664cb88887d9f2c908e8ee/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="551e78f21acf69ebfb489c0e79647824c838013e">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-8.4.0_8b926e7a0ec42e1c2230630856de7c28f8850a4c/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-8.4.0_9b7a80050171ee1224f22ece359c958cf1dd84bf/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-tasks-1.4.0_9df540e37fc32862e26e47f38c11bc46459ebb76/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-8.4.0_dadedf160dc422db756f951ba503cd638ed25de7/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-8.4.0_ab46374a432bf358589b7f65ca7b755fbd342190/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d9ecde39b460470e655de6e47c05573d2d5a8bfb">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-23.4.0_0e95241080ba354eb96b3b387cd1015358512987/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.8/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="c9ef45dcbd082cd63aac09a5e2cd443adb5df837">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-crashlytics-core-2.3.8_1a97fdbc269a00afd021b25b6a9877b40c21ba2f/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/glide-3.5.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="4401b15ca6aad7bc187e8daea1c84e9674186ea8">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/glide-3.5.1_1422385b798aa23bf1f5d25a5a46156173e87654/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-8.4.0_a32b9be615f2d8c14908f9e1e16009eb3d2d16e1/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.4.0_4c0187b87bca56a308c05f0b01cccc740328950c/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/customtabs/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2d1eaa9e0b98f8fc4c2b989d9b30d4f1480648ac">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-customtabs-23.4.0_32678b3c7bb67845e96b2f8ccd6b617df4a7792a/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.4.0_743b62588f1857b665a1a67191958ea1e895a26e/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1a78298e7724d5440d210bcb946b3493250d354d">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-plus-8.4.0_96bf3227177d0357790f01c9e30ea8e8067d6f8f/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="312288443c4e2fa0317faa0a66d02bab57e965c5">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_10b5cb0bcf404a01b7d0653c6b32be798503169d/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="debf30ce0a7560396b6235edef77e447006454c2">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.3.0_fdb144223ec81bce4030c0d2422baa4d00c71fb0/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-8.4.0_f8a25c06342fe232cc1b737729b6ace7c71a6449/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/listviewanimations_lib-manipulation_3.1.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="63737e512fcd9e0ebe9bcd0bb375c2dded74116f">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/listviewanimations_lib-manipulation_3.1.0_7d7740436fcd22d43f8443e0890282094db7d714/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/android-query-full.0.25.10.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="646ad6432a4da6a827e74ce64149c719ce7e86eb">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/android-query-full.0.25.10_26368a4d71bfbcb7e4ba62a4f19503a0c63bab55/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.sothree.slidinguppanel/library/3.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ef5362ef793f9212afafc3a50c5839f650115ebd">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.sothree.slidinguppanel-library-3.3.0_cb6890e52252f8cb00cfc8a5db90ab0ba1961e3b/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b36f30ac5ee5d5214f4b1e2ac49f11889d58e71a">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-drive-8.4.0_c3ac751fa7014afb8504355329d3d7270d6412af/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/listviewanimations_lib-core-slh_3.1.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a4fe703aabd23e8c287c90396514418119109dd1">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/listviewanimations_lib-core-slh_3.1.0_c42907addfa6b43169552c5b65d4e49e531077e7/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/gcm.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a6d7bce795a14c7f86111756c4ceb44b79de14aa">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/gcm_79f1a9e5629b20b5a7a4253f202b686378e1ff99/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.3.6/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9af3b9b8114e685291aa00e6572b0a9131244956">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-answers-1.3.6_16a28ecac8685608b7a31aa40616d12db7703ece/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.4.3/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="4d3de1e946207667e76261421de0218f132960e0">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.maps.android-android-maps-utils-0.4.3_45eae52d5a2de00c84f2dedf7dd5a8a0066e199c/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/simple-side-drawer2.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="5c03f3a39e0eb9ba2f74681d63093341ca9f3e55">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/simple-side-drawer2_421f5c7ffd48153a11019839720ca879890ca952/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.3.0_89fc3511e02c31aee0a3b750bcf7b9004e8f8c31/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-location-8.4.0_262740e7d7dd59654955777b72e2bf765c630017/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/acra-4.5.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="44a5eb946e0d83eed4a0128d877ca1fd8168b83a">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/acra-4.5.0_d73611f913d2e6336cacd25804ee181e15ae0d65/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/libs/internal_impl-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.4.0_b9460dd88883441e4f6496f50547731fa6595f6f/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/libs/listviewanimations_lib-core_3.1.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f3f9629b068554d8513a2aaf34418171bf430851">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/2/listviewanimations_lib-core_3.1.0_d5cfd43630246883c6eab0ef9519b0e6ea3a6484/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.3.0_40c6d90604b9c1b45bfbbb52b27f8759a41dd07e/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-applinks/1.4.0/8ad21bf21784dacce5f2043afb97218cc377e835/bolts-applinks-1.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8ad21bf21784dacce5f2043afb97218cc377e835">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-applinks-1.4.0_b77179daff45334212c620bc8c121fadd891a5a2/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-8.4.0_37e89baffc7f9138a72dab58372d09232c649225/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9cad249cf62751a323d9af568caf12284b7d6062">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-nearby-8.4.0_44578fae8a3af32cba065d63d3e0087b1e56a2aa/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.3.0_5239cc52f66e2e71553b898500b106b67dc968e6/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-8.4.0_432b94b75899279c06304a17af1766f6389c8330/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/ClubMyCab1/linkedin-sdk/unspecified/jars/libs/volley.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d640e952132d6f43fcd2fb8e2f150b937a0d1532">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/8/volley_88183b3f635fd5a92d578aac37ae225171e20f6b/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ad4d4c5914b7b25e51e66f8e2d1b842c67dd63a9">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.android-facebook-android-sdk-4.13.1_995b332cadd5fc835b7806e02088be1b552caf5f/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-measurement-8.4.0_d6fa4537259f267bdecfa1022b7ffdc164bacc37/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/2.0.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="031e8b3ab2df4ab43b1017f84417d7e10dfbb8d2">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/de.hdodenhof-circleimageview-2.0.0_2a0f4e245e4f5073f89fd690a3c8631577b09dc7/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-8.4.0_b30d2f4d7929ba329b83bf978af7c7398f0d86b1/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="0194a7409c40de94fb539d4ad9928ec5d47afeb7">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-safetynet-8.4.0_eda163ea479f449e1653f171aadf78dbb00e499a/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wearable-8.4.0_dadee02f2b563f93b09fe4ecde533427e43b4b0f/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.4.0_f06a03a5dca005aa6e079904d3d6fa1c10f7cad9/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-8.4.0_54797549dd16e4ac59639bc55dcb085c6a1f0a89/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9fe026fb4c7fce21bc5142f6e1bdf844f28061ac">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appinvite-8.4.0_9677cd310bdc191a7c05aef3b9b149c72d4afce4/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.github.silvestrpredko/dot-progress-bar/0.1.4/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="df0171f37d16ae73a24a7c1a044e4dda806ef058">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.silvestrpredko-dot-progress-bar-0.1.4_fec7bbfe1e761538d2a76eccaaf6f3db22e37559/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.4/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ad5bb101ced4d3939225c9b57e5a3d81547c1fbb">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-beta-1.1.4_968d8afe3ee7950f69c2184144852c3d6b1ed6e9/classes.dex" />
+    </item>
+    <item
+        jar="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.3.0_6ae64fa20c43f3c02c15140d6938f0498a7181bd/classes.dex" />
+    </item>
+
+</items>

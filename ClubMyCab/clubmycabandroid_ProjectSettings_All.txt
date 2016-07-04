@@ -1,9 +1,0 @@
-Affle_TRACKER_URL = https://affle.co/global/install.php?af_cid=1438003779
-
-INAPP_TRACKER_URL = 
-
-APP_URL_SCHEME = clubmycabandroid
-
-<meta-data android:name="appStoreName" android:value="" />
-
-

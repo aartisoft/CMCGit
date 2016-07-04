@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">iShareRyde</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_phone_number">PhoneNumber</string>
+    <string name="title_activity_enter_otp">EnterOTP</string>
+    <string name="title_activity_home_page">HomePage</string>
+    <string name="title_activity_invite">Invite</string>
+    <string name="title_activity_contacts_my_club">ContactsMyGroup</string>
+    <string name="title_activity_registration">Registration</string>
+    <string name="title_activity_login_via_phone_number">LoginViaPhoneNumber</string>
+    <string name="title_activity_my_pool">MyPool</string>
+    <string name="title_activity_select_route">SelectRoute</string>
+    <string name="title_activity_join_pool">JoinPool</string>
+    <string name="title_activity_check_pool">CheckPool</string>
+    <string name="title_activity_trip_completed">TripCompleted</string>
+    <string name="title_activity_user_refer_more_friends">UserReferMoreFriends</string>
+    <string name="title_activity_all_notification_request">AllNotificationRequest</string>
+    <string name="title_activity_update_pickup_location">UpdatePickupLocation</string>
+    <string name="title_activity_owner_invite_friends">OwnerInviteFriends</string>
+    <string name="title_activity_chat_to_all">ChatToAll</string>
+    <string name="title_activity_chat_to_single">ChatToSingle</string>
+    <string name="title_activity_share_location">ShareLocation</string>
+    <string name="title_activity_location_in_map">LocationInMap</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_setting_details">SettingDetails</string>
+    <string name="msgCrash">Exception <b>\"%1$s\"</b> has been successfully caught!\n</string>
+    <string name="msgCrashCause">Exception <b>\"%1$s\"</b> (caused by <b>\"%2$s\"</b>) has been successfully caught!\n</string>
+    <string name="dummy_name">Mic Tison</string>
+
+    <string-array name="msgMem">
+        <item>All your base are belong to us</item>
+        <item>I\'m sorry Dave, I\'m afraid I can\'t do that</item>
+        <item>Resistance is futile</item>
+        <item>Technically I was never alive, but I appreciate your concern</item>
+        <item>What do you want?</item>
+        <item>By your command</item>
+    </string-array>
+
+    <string name="tag_where_work">Where do you work/study?</string>
+    <string name="tag_where_live">Where do you live?</string>
+    <string name="btnCrash">Test Calc</string>
+    <string name="btnBackgroundCrash">Test Background Crash</string>
+    <string name="btnNext">Next Activity</string>
+    <string name="btnReport">Report It!</string>
+    <string name="btnClose">Close</string>
+    <string name="txtSendReportHint">Press <b>\"Report It!\"</b> to see the stuff</string>
+    <string name="txtCrashTitle">Crash Caught</string>
+    <string name="btnIgnore">Ignore</string>
+    <string name="underline_text_home"><u>Home</u></string>
+    <string name="underline_text_office"><u>Office</u></string>
+    <string name="underline_text_call_driver"><u>(Call Driver)</u></string>
+    <string name="text_label_tnc_website"><a href="http://ishareryde.com/terms.html">Terms and Conditions</a></string>
+    <string name="facebook_app_id">1061232687227968</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="exceptionstring">Something went wrong, please try again!</string>
+    <string name="title_activity_wallets_acitivity">WalletsAcitivity</string>
+    <string name="title_activity_favorite_locations_acivity">FavoriteLocationsAcivity</string>
+    <string name="text_firstloginclubs_member">Congratulations! You are already member of the following groups and can start sharing rides immediately!</string>
+    <string name="text_firstloginclubs_notmember">Let\'s start!! Invite your friends to join your ride sharing groups</string>
+    <string name="button_flc_create_club">Create more groups</string>
+    <string name="button_flc_continue">Skip</string>
+    <string name="button_flc_create_club_notmember">Create groups</string>
+    <string name="button_flc_continue_notmember">Skip</string>
+    <string name="btn_done">Done</string>
+    <string name="hint_select_address">Enter address or select on map</string>
+    <string name="in_30min">In 30 min</string>
+    <string name="in_1_hour">In 1 Hour</string>
+    <string name="select_datetime">(Tap to change)</string>
+    <string name="change">(tap to change)</string>
+    <string name="how_many_passenger">How many co-passengers?</string>
+    <string name="faq">How To &amp; FAQs</string>
+    <string name="askforquery">Need Support?</string>
+    <string name="quesiton1">What is iShareRyde?</string>
+    <string name="quesiton2">What are groups and why do I need them?</string>
+    <string name="quesiton3">Why can’t I search for rides like other apps?</string>
+    <string name="quesiton4">What will it cost and how do I pay?</string>
+    <string name="selectclub">Select a group from above</string>
+    <string name="memberexcludingmsg">(Number in brackets is members including the person who created the group)</string>
+    <string name="Affle_TRACKER_URL">http://affle.co/1111111111/clubmycab/clubmycabandroid/dl_android.php?ad2cid=1438003779&amp;affle</string>
+    <string name="seatcount">3</string>
+    <string name="otpsent">We have sent One Time Password (OTP) to your Mobile</string>
+    <string name="mobikwik_nothave_account">Link a wallet for payments. Click on \'Send OTP\' to create a wallet and link it now</string>
+    <string name="mobikwik_already_account">Link a wallet for payments. Click on \'Send OTP\' to link it now</string>
+    <string name="mobikwik_signup_tnc">User agrees to allow iShareRyde to transfer amount to/from user\'s Mobikwik wallet to settle fare splits at the end of each journey undertaken by the user. These transfers will be undertaken only after confirmation of fare split by both sending and receiving user. Further upon completion of journey and subsequent payment done, the User will not claim any other charges whatsoever from iShareRyde or its partners</string>
+    <string name="str_text_termandcondition_mobikwik">By clicking on the button I agree to the terms &amp; conditions mentioned at the link below</string>
+    <string name="str_text_termandcondition_mobikwik_coupon">1. Extra cash Amount is fixed at Rs. 50/- for a Minimum "Add Money" amount of Rs.50/- \r\n2. Sign Up platform, Coupon Redemption and Payment should be done on  iPhone, Windows or Android App\r\n3. Offer can be redeemed only once per user per card and is applicable for the "Add Money" payment done during the offer period on MobiKwik App\r\n4. Offer will be valid only for the transactions done through Debit Card or Credit Card. Not valid on Net Banking and Virtual Cards\r\n5. Offer valid for new MobiKwik user only\r\n6. Valid till 31st Oct\'15</string>
+    <string name="underline_text_mobikwik_tnc"><u>Terms &amp; Conditions</u></string>
+    <string name="str_text_termandcondition">By clicking on submit I agree to the terms &amp; conditions mentioned at the link below</string>
+    <string name="str_home_pagger_heading">If you have open ride(s) invitations, they will appear here</string>
+    <string name="str_problem">Problem</string>
+    <string name="str_screen">Screen</string>
+    <string name="str_description">Description</string>
+    <string name="str_hint_description">Enter a brief but detailed description of the problem</string>
+    <string name="str_thank">*Thank you for reporting a problem!\nOur team will look into this issue and correct it as soon as possible.</string>
+    <string name="str_hint_where_problem">Enter where the problem happened</string>
+    <string name="btn_submit">Submit</string>
+    <string name="check_box">Call me to explain</string>
+    <string name="promt">Ask a question</string>
+
+    <string name="underline_text_book_a_cab"><u>Going alone, just find a cab</u></string>
+    <string name="underline_text_save_favorites"><u>Save Favorites</u></string>
+    <string name="msg_low_balance_for_ride">Your wallet balance is low for this ride. Please recharge to join.</string>
+
+    <string-array name="needsupport_arrays">
+        <item>Ask a question</item>
+        <item>Report a problem</item>
+    </string-array>
+    <string name="rupee">&#xf156;</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="faq_q1">I drive my own car, why should I carpool with iShareRyde?</string>
+    <string name="faq_a1">Share the cost and also you don’t have to drive everyday</string>
+    <string name="faq_q2">Who will be travelling with me?</string>
+    <string name="faq_a2">Any other verified user of iShareRyde can join the ride. We provide you details of who has joined.</string>
+    <string name="faq_q3">Why can’t I schedule regular rides for the entire week or month like other apps?</string>
+    <string name="faq_a3">We have experienced that it is difficult for someone to stick to the same time everyday and pre-scheduling results in a lot of dropouts
+    \n\nWe’ve made offering a ride super simple so that you can do it quickly when you want to leave.</string>
+    <string name="faq_q4">How can I communicate with people joining the ride?</string>
+    <string name="faq_a4">You can call them from within the app</string>
+    <string name="faq_q5">How is payment handled?</string>
+    <string name="faq_a5">Ask the ride taker to press the “PAY” button in the app as soon as they get in the vehicle.\n\nIf they are paying through wallet it will be transferred immediately to your account.\n\nIf cash collect the amount soon.</string>
+    <string name="faq_q6">What does iShareRyde charge?</string>
+    <string name="faq_a6">We charge a platform fees of Rs.5/- per rider. This is deducted from the money transfer to your account. We don’t charge anything if you don’t get a rider</string>
+    <string name="faq_q7">What if I need to cancel the ride?</string>
+    <string name="faq_a7">You can do so from the ride page in app. We discourage cancellation after ride takers have joined because it affects their travel plans. Do so only if you can’t avoid it</string>
+    <string name="faq_q8">What if I need to change the departure time?</string>
+    <string name="faq_a8">You need to cancel the ride and create a new one – people who have joined the ride may not be comfortable with new timing and it is easier to create a new ride. iShareRyde is about sharing rides on the go – create your rides when you are certain of your departure time</string>
+    <string name="faq_q9">I’m looking for a ride, why should I use iShareRyde?</string>
+    <string name="faq_a9">It is the cheapest way to travel by car. You can get a comfortable ride in an AC vehicle for as low as Rs 4/km per seat. There are no hidden costs like minimum fare, per minute charge or surge pricing</string>
+    <string name="faq_q10">I had joined a ride but now need to cancel?</string>
+    <string name="faq_a10">We understand that plans can change. You can leave a ride but if you do so less than 15 mins prior to departure time, cancellation charges will apply</string>
+    <string name="faq_q11">I see both private cars and commercial vehicles (cabs)?</string>
+    <string name="faq_a11">iShareRyde is a platform where you can get a ride on personal carpools or commercial cabs. Including the commercial vehicles helps us provide more supply of rides for you</string>
+    <string name="faq_q12">I need more than one seat, how do I book that?</string>
+    <string name="faq_a12">At the moment, you can book only one seat from each account – your companion can also book seat on the same ride using iShareRyde. We are working on booking multiple seats from the same account</string>
+    <string name="faq_gtd">Good To Dos</string>
+    <string name="faq_gtd_a">The ride giver should keep the car clean and comfortable for the riders. Use AC if weather demands it
+    \n\nPickup and drop points need to be at nearest main road. Do not insist on getting the vehicle inside complexes or narrow and congested lanes\n\nBe at the pickup points in time\n\nIf you are carrying luggage, call ahead of the ride and confirm how much is ok\n\nBefore getting into the vehicle, make sure details match the ride e.g. Vehicle make, Registration number, Ride giver, etc. Refuse the ride and report to us if otherwise</string>
+    <string name="text_join_btn">CONFIRM</string>
+    <string name="reason_1">Vehicle condition</string>
+    <string name="reason_2">Rude behaviour</string>
+    <string name="reason_3">On time</string>
+    <string name="reason_4">Other</string>
+
+</resources>

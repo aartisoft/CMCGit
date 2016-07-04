@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/myridesrl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDEDED" >
+
+  
+    <ListView
+        android:id="@+id/mypoollist"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/showhistory"
+        android:layout_below="@+id/header1"
+        android:visibility="visible"
+        android:divider="@null"
+        android:layout_marginTop="8dp"
+        android:dividerHeight="5dp">
+    </ListView>
+
+    <com.clubmycab.PagingListView
+        android:id="@+id/paging_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/header1"
+        android:layout_marginTop="8dp"
+        android:divider="#EDEDED"
+        android:dividerHeight="5dp"
+        android:visibility="gone"
+        android:layout_above="@+id/showhistory"/>
+    <LinearLayout
+        android:id="@+id/llErrorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e8e8e8"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_above="@+id/showhistory"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/car_pool"/>
+        <TextView
+            android:id="@+id/tvNoRideAvlble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No active rides!\nJoin a carpool or offer a ride now."
+            android:textColor="@color/color_app_text_dark"
+            android:textSize="18sp"
+            android:layout_marginTop="20dp"
+            />
+    </LinearLayout>
+    <Button
+        android:id="@+id/showhistory"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_blue"
+        android:text="SHOW HISTORY"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:textColor="#5d5d5d" 
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+          <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+</RelativeLayout>

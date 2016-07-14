@@ -1,7 +1,11 @@
 package com.clubmycab.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +13,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -16,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +44,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +78,8 @@ public class SplashActivity extends Activity  {
         //Glide.with(SplashActivity.this).load(R.drawable.splash_bg).animate(android.R.anim.fade_in).into(((ImageView)findViewById(R.id.ivSplash)));
         Log.d("time", System.currentTimeMillis()+"");
         timeStart = System.currentTimeMillis();
+       // new generatePictureStyleNotification(this,"Title", "Message gdfgdfgdffd", "http://api.androidhive.info/images/sample.jpg").execute();
+
         resetSearchedData();
         // Check if Internet present
         if (!isOnline()) {
@@ -647,7 +660,7 @@ public class SplashActivity extends Activity  {
 
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             int versionCode = pInfo.versionCode;
-            if(versionCode == 31 && !sharedPreferences.getBoolean(SPreference.IS_SEARCH_RESET,false)){
+            if(!sharedPreferences.getBoolean(SPreference.IS_SEARCH_RESET,false)){
                 editor1.clear().commit();
                 editor.putBoolean(SPreference.IS_SEARCH_RESET, true);
                 for (int i = 0; i < MAX_RECENT_SEARCH_COUNT ; i++) {
@@ -667,4 +680,72 @@ public class SplashActivity extends Activity  {
 
 
     }
+
+    public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
+
+        private Context mContext;
+        private String title, message, imageUrl;
+
+        public generatePictureStyleNotification(Context context, String title, String message, String imageUrl) {
+            super();
+            this.mContext = context;
+            this.title = title;
+            this.message = message;
+            this.imageUrl = imageUrl;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+
+            InputStream in;
+            try {
+                URL url = new URL(this.imageUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                in = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(in);
+                return myBitmap;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+
+            Intent intent = new Intent(mContext, SplashActivity.class);
+            intent.putExtra("key", "value");
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 100, intent, PendingIntent.FLAG_ONE_SHOT);
+            Notification notif = new NotificationCompat.Builder(mContext)
+                    .setContentTitle("New photo from ")
+                    .setContentText("Subject")
+                    .setSmallIcon(R.drawable.cabappicon)
+                    .setLargeIcon(result)
+                    .setStyle(new NotificationCompat.BigPictureStyle()
+                            .bigPicture(result).setBigContentTitle("big title").setSummaryText("Summary"))
+                    .build();
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+           /* Notification notif = new Notification.Builder(mContext)
+                    .setContentIntent(pendingIntent)
+                    .setContentTitle("App Title")
+                    .setContentText("Message").setTicker("Set Ticker text")
+
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setLargeIcon(R.drawable.cabappicon)
+                    .setStyle(new Notification.BigPictureStyle().bigPicture(result))
+                    .build();*/
+            notif.flags |= Notification.FLAG_AUTO_CANCEL;
+            notificationManager.notify(1, notif);
+        }
+    }
 }
+
+

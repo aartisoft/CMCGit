@@ -2,11 +2,12 @@ package com.clubmycab.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,6 +99,7 @@ public class NotificationListActivity extends Activity {
 	private RelativeLayout allnotificationrl;
 	private Tracker tracker;
 	private boolean exceptioncheck = false;
+	private Dialog onedialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -533,18 +536,11 @@ public class NotificationListActivity extends Activity {
 	private class ConnectionTaskForFetchAllNotification extends
 			AsyncTask<String, Void, Void> {
 
-		private ProgressDialog dialog = new ProgressDialog(
-				NotificationListActivity.this);
 
 		@Override
 		protected void onPreExecute() {
             try {
-                if(dialog != null){
-                    dialog.setMessage("Please Wait...");
-                    dialog.setCancelable(false);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
-                }
+               showProgressBar();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -566,9 +562,7 @@ public class NotificationListActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void v) {
             try{
-                if (dialog  != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+               hideProgressBar();
                 if(TextUtils.isEmpty(allnotificationresp) )
                     return;
                 if (exceptioncheck) {
@@ -1348,19 +1342,12 @@ public class NotificationListActivity extends Activity {
 
 	private class ConnectionTaskForseenotification extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(
-				NotificationListActivity.this);
+
 
 		@Override
 		protected void onPreExecute() {
 			try{
-                if(dialog != null){
-                    dialog.setMessage("Please Wait...");
-                    dialog.setCancelable(false);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
-                }
-
+               showProgressBar();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -1384,9 +1371,7 @@ public class NotificationListActivity extends Activity {
 		protected void onPostExecute(Void v) {
 
 			try{
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+               hideProgressBar();
 
                 if (exceptioncheck) {
                     exceptioncheck = false;
@@ -1787,20 +1772,14 @@ public class NotificationListActivity extends Activity {
 	private class ConnectionTaskForCabRating extends
 			AsyncTask<String, Void, Void> {
 
-		private ProgressDialog dialog = new ProgressDialog(
-				NotificationListActivity.this);
+
 		private String cabIDString;
 		private String notificationIDString;
 
 		@Override
 		protected void onPreExecute() {
 			try{
-                if(dialog != null){
-                    dialog.setMessage("Please Wait...");
-                    dialog.setCancelable(false);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
-                }
+                showProgressBar();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -1825,9 +1804,7 @@ public class NotificationListActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void v) {
 			try{
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+              hideProgressBar();
 
                 if (exceptioncheck) {
                     exceptioncheck = false;
@@ -2138,6 +2115,32 @@ public class NotificationListActivity extends Activity {
 		}
 
 		return monthString;
+	}
+
+	private void showProgressBar(){
+		try{
+			onedialog = new Dialog(NotificationListActivity.this);
+			onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			onedialog.setContentView(R.layout.dialog_ishare_loader);
+			onedialog.setCancelable(false);
+			onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+			// onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+			onedialog.show();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void hideProgressBar(){
+		try{
+			if(onedialog != null)
+				onedialog.dismiss();
+			onedialog = null;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 }

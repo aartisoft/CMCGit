@@ -23,8 +23,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,6 +36,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -96,15 +100,19 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
         GoogleApiClient.ConnectionCallbacks  {
 	private static RidesAvail fragment;
 	private ListView lvPrivateGrpRides, lvPublicGrpRides, lvAllRides;
-	private RidesAvailAdapter ridesAdapter;
+	private RidesAvailAdapter2 ridesAdapter2;
+    private RidesAvailAdapter ridesAdapter1;
 	private PrivateRidesAdapter privateRidesAdapter;
 	private PublicRidesAdapter publicRidesAdapter;
 	private ArrayList<PublicRide> ridesList = new ArrayList<PublicRide>();
-	private ArrayList<Integer> ridesFareList = new ArrayList<Integer>();
+	private ArrayList<Integer> ridesFareListNearyBy = new ArrayList<Integer>();
+    private ArrayList<Integer> ridesFareListPublicGrp = new ArrayList<Integer>();
 
 	private ArrayList<Ride> ridesListPublic = new ArrayList<Ride>();
 	private ArrayList<PrivateRide> ridesListPrivate = new ArrayList<PrivateRide>();
-	private String MobileNumber;
+    private ArrayList<PublicRide> ridesListMyPublicGrp = new ArrayList<PublicRide>();
+
+    private String MobileNumber;
 	private TextView tvFromTo;
 	private String sLocation;
 	private LocationManager locationManager;
@@ -116,7 +124,13 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 	private Dialog searchRideDialog;
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter1, mPlaceArrayAdapter2;
-    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+
+	@Override
+	public void onOptionsMenuClosed(Menu menu) {
+		super.onOptionsMenuClosed(menu);
+	}
+
+	private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private static final String LOG_TAG = "MainActivity";
@@ -179,14 +193,14 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
         view.findViewById(R.id.cardSerchView).setOnClickListener(this);
 
         view.findViewById(R.id.carpoolll).setOnClickListener(this);
-		((TextView)view.findViewById(R.id.tvNoRideAvlble)).setTypeface(FontTypeface.getTypeface(getActivity(),AppConstants.HELVITICA));
-		((TextView)view.findViewById(R.id.tvOfferARide)).setTypeface(FontTypeface.getTypeface(getActivity(),AppConstants.HELVITICA));
+		((TextView)view.findViewById(R.id.tvNoRideAvlble)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+		((TextView)view.findViewById(R.id.tvOfferARide)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
 		tvFromTo = (TextView) view.findViewById(R.id.tvFromToRides);
 		tvFromTo.setTypeface(FontTypeface.getTypeface(getActivity(),
-				AppConstants.HELVITICA));
+                AppConstants.HELVITICA));
 		((TextView) view.findViewById(R.id.tvPriRideLable))
 				.setTypeface(FontTypeface.getTypeface(getActivity(),
-						AppConstants.HELVITICA));
+                        AppConstants.HELVITICA));
 
 		lvPrivateGrpRides = (ListView) view
 				.findViewById(R.id.lvPrivateGrpRides);
@@ -201,15 +215,19 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 		privateRidesAdapter.init(getActivity(), ridesListPrivate);
 		lvPrivateGrpRides.setAdapter(privateRidesAdapter);
 
-        ridesAdapter = new RidesAvailAdapter();
-        ridesAdapter.init(getActivity(), ridesList,ridesFareList, ridesListPrivate);
+        ridesAdapter2 = new RidesAvailAdapter2();
+        ridesAdapter2.init(getActivity(), ridesList, ridesFareListNearyBy, ridesListPrivate, ridesListMyPublicGrp, ridesFareListPublicGrp);
        /* LayoutInflater inflater = getActivity().getLayoutInflater();
         header = (ViewGroup) inflater.inflate(
                 R.layout.header_private_groups_x, lvAllRides, false);
         header.setVisibility(View.GONE);
         lvAllRides.addHeaderView(header);
-   */     lvAllRides.setAdapter(ridesAdapter);
-		if(CabApplication.getInstance().getFirstLocation() != null){
+   */     lvAllRides.setAdapter(ridesAdapter2);
+
+        ridesAdapter1 = new RidesAvailAdapter();
+        ridesAdapter1.init(getActivity(), ridesList, ridesFareListNearyBy, ridesListPrivate);
+
+        if(CabApplication.getInstance().getFirstLocation() != null){
 			getLatLong(CabApplication.getInstance().getFirstLocation());
 		}
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -229,9 +247,9 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 
 
 	private void notifyAdpater(ArrayList<PublicRide> arrayList) {
-		if (ridesAdapter != null) {
-			ridesAdapter.init(getActivity(), arrayList,ridesFareList, ridesListPrivate);
-			ridesAdapter.notifyDataSetChanged();
+		if (ridesAdapter2 != null) {
+			ridesAdapter2.init(getActivity(), arrayList, ridesFareListNearyBy, ridesListPrivate,ridesListMyPublicGrp,ridesFareListPublicGrp);
+			ridesAdapter2.notifyDataSetChanged();
 		}
 	}
 
@@ -332,13 +350,13 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 		}
 	}
 
-	private void expandPubGrpRides(int index) {
+	private void expandNearByGrpRides(int index) {
        // ((NewHomeScreen)getActivity()).hideSearch();
 
         tracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Open public rides available card")
-                .setAction("Open public rides available card")
-                .setLabel("Open public rides available card").build());
+                .setCategory("Open Near By rides available card")
+                .setAction("Open Near By rides available card")
+                .setLabel("Open Near By rides available card").build());
 		getView().findViewById(R.id.llRideTypes).setVisibility(View.GONE);
 		getView().findViewById(R.id.llPrivateGrpRides).setVisibility(View.GONE);
 		getView().findViewById(R.id.llPublicGrpRides).setVisibility(
@@ -353,6 +371,28 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 		}
 
 	}
+
+    private void expandPubGrpRides(int index) {
+        // ((NewHomeScreen)getActivity()).hideSearch();
+
+        tracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Open public rides available card")
+                .setAction("Open public rides available card")
+                .setLabel("Open public rides available card").build());
+        getView().findViewById(R.id.llRideTypes).setVisibility(View.GONE);
+        getView().findViewById(R.id.llPrivateGrpRides).setVisibility(View.GONE);
+        getView().findViewById(R.id.llPublicGrpRides).setVisibility(
+                View.VISIBLE);
+        if(ridesListMyPublicGrp.get(index).getName() != null)
+            tvFromTo.setVisibility(View.VISIBLE);
+        tvFromTo.setText(ridesListMyPublicGrp.get(index).getName());
+
+        if(publicRidesAdapter != null){
+            publicRidesAdapter.init(getActivity(), (ArrayList<Ride>) ridesListMyPublicGrp.get(index).getRides(), tracker);
+            publicRidesAdapter.notifyDataSetChanged();
+        }
+
+    }
 
 	private void expandPriGrpRides() {
        // ((NewHomeScreen)getActivity()).hideSearch();
@@ -457,6 +497,7 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 			this.context = context;
 			inflater = LayoutInflater.from(this.context);
 			this.rPtivateList = rPtivateList;
+			offset = 0;
 		}
 
 		@Override
@@ -515,7 +556,7 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 
                     @Override
                     public void onClick(View v) {
-                        expandPubGrpRides(position-offset);
+                        expandNearByGrpRides(position - offset);
                         tracker.send(new HitBuilders.EventBuilder().setCategory("Screen").setAction("Click").setLabel("Ride Group Details").build());
 
 
@@ -612,6 +653,345 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 
 	}
 
+	public class RidesAvailAdapter2 extends BaseAdapter {
+		private ArrayList<PublicRide> arrayList, arrayListPrivate;
+		private Context context;
+		private LayoutInflater inflater;
+		private ArrayList<Integer> rFareList;
+		private ArrayList<PrivateRide> rPtivateList;
+        private ArrayList<PublicRide> publicGrpRide;
+		private int offset = 0;
+		private int type, PRIVATE_GRP= 0, NEARBY_HEADER=1, NEARBY_GRP=2,PUBLIC_HEADER = 3, PUBLIC_GRP = 4;
+        private ArrayList<Integer> rPulicRideFares;
+        private int private_offset ,public_offset, nearby_offset, public_header_offset, nearby_header_offset;
+        int count;
+        private Type1Holder holder1= null;
+        private Type2Holder holder2 = null;
+        private Type3Holder holder3 = null;
+        private Type4Holder holder4 = null;
+        private Type5Holder holder5 = null;
+
+
+		public void init(Context context, ArrayList<PublicRide> arrayList, ArrayList<Integer> rFareList, ArrayList<PrivateRide> rPtivateList,ArrayList<PublicRide> publicGrpRide, ArrayList<Integer> rPulicRideFares) {
+			this.arrayList = arrayList;
+			this.rFareList = rFareList;
+			this.context = context;
+			this.rPtivateList = rPtivateList;
+            this.publicGrpRide = publicGrpRide;
+            this.rPulicRideFares = rPulicRideFares;
+            inflater = LayoutInflater.from(this.context);
+            private_offset = 0;public_offset= 0;nearby_header_offset=0;public_header_offset=0;nearby_offset=0;count =0;
+
+            if(arrayList != null && arrayList.size() >0){
+                nearby_offset = arrayList.size();
+                nearby_header_offset = 1;
+            }
+            if(publicGrpRide != null && publicGrpRide.size()>0){
+                public_offset = publicGrpRide.size();
+                public_header_offset = 1;
+            }
+
+            if(rPtivateList != null && rPtivateList.size()>0){
+                private_offset = 1;
+            }
+
+           // private_offset = 1;public_offset= 2;nearby_header_offset=1;public_header_offset=1;nearby_offset=2;count =0;
+
+            count = nearby_offset+nearby_header_offset+public_offset+public_header_offset+private_offset;
+
+        }
+
+		@Override
+		public int getItemViewType(int position) {
+
+			if (private_offset == 1 && position == 0){
+				type = PRIVATE_GRP;
+			} else if  (nearby_offset > 0 && position == private_offset){
+				type = NEARBY_HEADER;
+			}else if(nearby_offset > 0 && (position >= (private_offset+nearby_header_offset) && (position < (private_offset+nearby_header_offset+nearby_offset)))){
+                type = NEARBY_GRP;
+            }else if(public_offset > 0 &&(position == (private_offset+nearby_header_offset+nearby_offset))){
+                type = PUBLIC_HEADER;
+            }else if(public_offset > 0 && ((position > (private_offset+nearby_header_offset+nearby_offset))&&(position<count))){
+                type = PUBLIC_GRP;
+            }
+
+			return type;
+		}
+
+		@Override
+		public int getViewTypeCount() {
+			return 5;
+		}
+
+		@Override
+		public int getCount() {
+
+			return count;
+		}
+
+		public Object getItem(int position) {
+			// return arrayList.get(position);
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return arrayList.indexOf(getItem(position));
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			View row = convertView;
+            int viewType = this.getItemViewType(position);
+            if(viewType == PRIVATE_GRP){
+                View v = convertView;
+                if (v == null) {
+                    v = inflater.inflate(R.layout.item_pri_grp_ride, parent, false);
+                    holder1 = new Type1Holder(v);
+                    v.setTag(holder1);
+                }
+                else {
+                    holder1 = (Type1Holder)v.getTag();
+                }
+
+
+                holder1.tvRideCountPrivate.setText(String.valueOf(rPtivateList.size()));
+                holder1.cardView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        expandPriGrpRides();
+                    }
+                });
+
+                // return the created view
+                return v;
+            }else if(viewType == NEARBY_HEADER){
+                View v = convertView;
+                if (v == null) {
+                    v = inflater.inflate(R.layout.item_nearby_grp_header, parent, false);
+                    holder2 = new Type2Holder(v);
+                    v.setTag(holder2);
+                }
+                else {
+                    holder2 = (Type2Holder)v.getTag();
+                }
+                return v;
+            }else if(viewType == NEARBY_GRP){
+                final int realPosition = position - (private_offset + nearby_header_offset);
+                View v = convertView;
+                if (v == null) {
+                    v = inflater.inflate(R.layout.item_nearby_grp_ride, parent, false);
+                    holder3 = new Type3Holder(v);
+                    v.setTag(holder3);
+                }
+                else {
+                    holder3 = (Type3Holder)v.getTag();
+                }
+
+                v.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        expandNearByGrpRides(realPosition);
+                        tracker.send(new HitBuilders.EventBuilder().setCategory("Screen").setAction("Click").setLabel("Ride Group Details").build());
+
+
+                    }
+                });
+
+
+                if(arrayList.get(realPosition).getRides() != null && arrayList.get(realPosition).getRides().size()>0){
+                    holder3.tvTotalRideCount.setText(String.valueOf(arrayList.get(realPosition).getRides().size()));
+                    String arr[] = arrayList.get(realPosition).getName().trim().split(" to ");
+                    String from = arr[0].trim();
+                    String to = arr[1].trim();
+
+                    holder3.tvFromPlace.setText(from);
+                    holder3.tvToPlace.setText(to);
+                }
+                holder3.tvFareCount.setText(String.valueOf("Rs."+rFareList.get(realPosition)));
+                return v;
+            }else if(viewType == PUBLIC_HEADER){
+                View v = convertView;
+                if (v == null) {
+                    v = inflater.inflate(R.layout.item_pub_grp_header, parent, false);
+                    holder4 = new Type4Holder(v);
+                    v.setTag(holder4);
+                }
+                else {
+                    holder4 = (Type4Holder)v.getTag();
+                }
+                return v;
+            }else if(viewType == PUBLIC_GRP){
+                final int realPosition = position - (private_offset + nearby_header_offset+nearby_offset+public_header_offset);
+
+                View v = convertView;
+                if (v == null) {
+                    v = inflater.inflate(R.layout.item_pub_grp_ride, parent, false);
+                    holder5 = new Type5Holder(v);
+                    v.setTag(holder5);
+                }
+                else {
+                    holder5 = (Type5Holder)v.getTag();
+                }
+
+                v.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        expandPubGrpRides(realPosition);
+                        tracker.send(new HitBuilders.EventBuilder().setCategory("Screen").setAction("Click").setLabel("Ride Group Details").build());
+
+
+                    }
+                });
+
+
+                if(publicGrpRide.get(realPosition).getRides() != null && publicGrpRide.get(realPosition).getRides().size()>0){
+                    holder5.tvTotalRideCount.setText(String.valueOf(publicGrpRide.get(realPosition).getRides().size()));
+                    String arr[] = publicGrpRide.get(realPosition).getName().trim().split(" to ");
+                    String from = arr[0].trim();
+                    String to = arr[1].trim();
+
+                    holder5.tvFromPlace.setText(from);
+                    holder5.tvToPlace.setText(to);
+                }
+                holder5.tvFareCount.setText(String.valueOf("Rs."+rPulicRideFares.get(realPosition)));
+                return v;
+            }
+            return convertView;
+		}
+
+		private class Type1Holder{
+			private CardView cardView;
+			private TextView tvRideCountPrivate;
+            Type1Holder(View view){
+				cardView = (CardView)view.findViewById(R.id.card_viewPrivate);
+				tvRideCountPrivate = (TextView) view.findViewById(R.id.tvTotalCountPrivate);
+
+				((TextView) view.findViewById(R.id.tvHeadingRideGrp)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				((TextView) view.findViewById(R.id.tvTotalRideLablePrivate)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+			}
+        }
+
+        private class Type2Holder{
+			private TextView tvNearByGrpHeader;
+            Type2Holder(View v){
+				tvNearByGrpHeader = (TextView) v.findViewById(R.id.tvNearByGrpHeader);
+               // tvNearByGrpHeader.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+            }
+        }
+
+        private class Type3Holder{
+			private TextView  tvFromPlace, tvFromCity, tvToPlace, tvToCity, tvTotalRide, tvTotalRideCount,tvFare, tvFareCount;
+			private CardView  cardPublic;
+
+			Type3Holder(View view){
+				tvFromPlace = (TextView)view.findViewById(R.id.tvPlaceFrom);
+				tvFromCity = (TextView)view.findViewById(R.id.tvCityFrom);
+				tvToPlace = (TextView)view.findViewById(R.id.tvPlaceTo);
+				tvToCity = (TextView)view.findViewById(R.id.tvCityTo);
+				tvTotalRide = (TextView)view.findViewById(R.id.tvTotalRideLable);
+				tvTotalRideCount = (TextView)view.findViewById(R.id.tvTotalCount);
+				tvFare = (TextView)view.findViewById(R.id.tvFare);
+				tvFareCount = (TextView)view.findViewById(R.id.tvFareCount);
+				cardPublic = (CardView)view.findViewById(R.id.card_view2);
+
+				tvFromPlace.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvFromCity.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvToPlace.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvToCity.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvTotalRide.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvTotalRideCount.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvFare.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvFareCount.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+			}
+        }
+        private class Type4Holder{
+            private TextView tvPubRideHeader;
+            Type4Holder(View v){
+                tvPubRideHeader = (TextView) v.findViewById(R.id.tvPubRideHeader);
+               // tvPubRideHeader.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+            }
+        }
+
+        private class Type5Holder{
+            private TextView  tvFromPlace, tvFromCity, tvToPlace, tvToCity, tvTotalRide, tvTotalRideCount,tvFare, tvFareCount;
+            private CardView  cardPublic;
+
+            Type5Holder(View view){
+                tvFromPlace = (TextView)view.findViewById(R.id.tvPlaceFrom);
+                tvFromCity = (TextView)view.findViewById(R.id.tvCityFrom);
+                tvToPlace = (TextView)view.findViewById(R.id.tvPlaceTo);
+                tvToCity = (TextView)view.findViewById(R.id.tvCityTo);
+                tvTotalRide = (TextView)view.findViewById(R.id.tvTotalRideLable);
+                tvTotalRideCount = (TextView)view.findViewById(R.id.tvTotalCount);
+                tvFare = (TextView)view.findViewById(R.id.tvFare);
+                tvFareCount = (TextView)view.findViewById(R.id.tvFareCount);
+                cardPublic = (CardView)view.findViewById(R.id.card_view2);
+
+                tvFromPlace.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvFromCity.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvToPlace.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvToCity.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvTotalRide.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvTotalRideCount.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvFare.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+                tvFareCount.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+            }
+        }
+
+
+
+		private class ViewHolder {
+			private TextView tvRideCountPrivate, tvFromPlace, tvFromCity, tvToPlace, tvToCity, tvTotalRide, tvTotalRideCount,tvFare, tvFareCount;
+			private CardView cardPrivate, cardPublic;
+			public ViewHolder(View view){
+				tvFromPlace = (TextView)view.findViewById(R.id.tvPlaceFrom);
+				tvFromCity = (TextView)view.findViewById(R.id.tvCityFrom);
+				tvToPlace = (TextView)view.findViewById(R.id.tvPlaceTo);
+				tvToCity = (TextView)view.findViewById(R.id.tvCityTo);
+				tvTotalRide = (TextView)view.findViewById(R.id.tvTotalRideLable);
+				tvTotalRideCount = (TextView)view.findViewById(R.id.tvTotalCount);
+				tvFare = (TextView)view.findViewById(R.id.tvFare);
+				tvFareCount = (TextView)view.findViewById(R.id.tvFareCount);
+				cardPrivate = (CardView)view.findViewById(R.id.card_viewPrivate);
+				cardPublic = (CardView)view.findViewById(R.id.card_view2);
+
+				tvFromPlace.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvFromCity.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvToPlace.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvToCity.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvTotalRide.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvTotalRideCount.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvFare.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				tvFareCount.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+				((TextView) view.findViewById(R.id.tvTotalRideLablePrivate)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				((TextView) view.findViewById(R.id.tvTotalCountPrivate)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+				((TextView) view.findViewById(R.id.tvHeadingRideGrp)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+
+				tvRideCountPrivate = (TextView) view.findViewById(R.id.tvTotalCountPrivate);
+               /* header.findViewById(R.id.card_view2).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });*/
+
+
+			}
+		}
+
+	}
+
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if( requestCode == LOCATION_REQUEST){
@@ -652,10 +1032,13 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 		ridesList.clear();
 		ridesListPrivate.clear();
 		ridesListPublic.clear();
+        ridesFareListNearyBy.clear();
+        ridesFareListPublicGrp.clear();
+        ridesListMyPublicGrp.clear();
         allRidesResponse = "";
-        if(ridesAdapter != null){
-            ridesAdapter.init(getActivity(),ridesList, ridesFareList, ridesListPrivate);
-            ridesAdapter.notifyDataSetChanged();
+        if(ridesAdapter2 != null){
+            ridesAdapter2.init(getActivity(),ridesList, ridesFareListNearyBy, ridesListPrivate,ridesListMyPublicGrp,ridesFareListPublicGrp);
+            ridesAdapter2.notifyDataSetChanged();
         }
 		getView().findViewById(R.id.llErrorMsg).setVisibility(View.GONE);
 		getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
@@ -673,7 +1056,19 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 	private void fetchSearchedRides() {
 		if(getView() == null)
 			return;
-
+        ridesList.clear();
+        ridesListPrivate.clear();
+        ridesListPublic.clear();
+        ridesFareListNearyBy.clear();
+        ridesFareListPublicGrp.clear();
+        ridesListMyPublicGrp.clear();
+        allRidesResponse = "";
+        if(ridesAdapter2 != null){
+            ridesAdapter2.init(getActivity(),ridesList, ridesFareListNearyBy, ridesListPrivate,ridesListMyPublicGrp,ridesFareListPublicGrp);
+            ridesAdapter2.notifyDataSetChanged();
+        }
+        getView().findViewById(R.id.llErrorMsg).setVisibility(View.GONE);
+       // getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 
 		if (isOnline()) {
             ridesList.clear();
@@ -748,15 +1143,21 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 					getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
 
 				if(TextUtils.isEmpty(allRidesResponse)){
+                    getView().findViewById(R.id.llErrorMsg).setVisibility(View.VISIBLE);
+                    getView().findViewById(R.id.cardSerchView).setVisibility(View.GONE);
 					return;
 				}
 
 				try{
 					collapseRideList();
-					if((ridesList != null && ridesList.size() > 0) || (ridesListPrivate != null && ridesListPrivate.size()>0)){
+					if((ridesList != null && ridesList.size() > 0) || (ridesListPrivate != null && ridesListPrivate.size()>0
+                        || (ridesListMyPublicGrp != null && ridesListMyPublicGrp.size()>0))){
 						getView().findViewById(R.id.llErrorMsg).setVisibility(View.GONE);
-						populateDataInList();
-					}else{
+						//populateDataInList();
+                        ridesAdapter2 = new RidesAvailAdapter2();
+                        ridesAdapter2.init(getActivity(), ridesList, ridesFareListNearyBy, ridesListPrivate, ridesListMyPublicGrp, ridesFareListPublicGrp);
+                        lvAllRides.setAdapter(ridesAdapter2);
+                    }else{
 						getView().findViewById(R.id.llErrorMsg).setVisibility(View.VISIBLE);
 					}
 				}catch(Exception e){
@@ -780,8 +1181,11 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 
 			// Connect to google.com
 			HttpClient httpClient = new DefaultHttpClient();
+			/*String url_select11 = GlobalVariables.ServiceUrl
+					+ "/rideInvitationsNew.php";*/
 			String url_select11 = GlobalVariables.ServiceUrl
-					+ "/rideInvitationsNew.php";
+					+ "/ridesAvailable.php";
+
 			HttpPost httpPost = new HttpPost(url_select11);
 			BasicNameValuePair MobileNumberBasicNameValuePair = new BasicNameValuePair(
 					"mobileNumber", MobileNumber);
@@ -843,14 +1247,10 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 							obj2.getJSONArray("publicRides").toString(),
 							new TypeToken<ArrayList<PublicRide>>() {
 							}.getType());
-					calculateMinimumFare(ridesList);
+					calculateMinimumFareNearBy(ridesList);
 					Log.d("public rides", ridesList.toString());
 
-					/*if (arrayRideLocal.size() > 0) {
-						for (int i = 0; i < arrayRideLocal.size(); i++) {
-							//ridesList.add(arrayRideLocal.get(i));
-						}
-					}*/
+
 				}
 
 			} catch (JSONException e1) {
@@ -880,6 +1280,35 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
+            try {
+
+                if(TextUtils.isEmpty(allRidesResponse)){
+                    return;
+                }
+                Log.d("AllRides", allRidesResponse);
+                JSONObject obj = new JSONObject(allRidesResponse);
+                if(obj == null)
+                    return;
+                if (!obj.isNull("status") && obj.optString("status").equalsIgnoreCase("success")) {
+                    if(obj.isNull("data")){
+                        return;
+                    }
+                    JSONObject obj2 = obj.getJSONObject("data");
+                    Gson gson = new Gson();
+
+                    ridesListMyPublicGrp = gson.fromJson(
+                            obj2.getJSONArray("myPublicGroupRides").toString(),
+                            new TypeToken<ArrayList<PublicRide>>() {
+                            }.getType());
+                    calculateMinimumFarePublicGrp(ridesListMyPublicGrp);
+                    Log.d("my public rides", ridesListMyPublicGrp.toString());
+
+                }
+
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
 		}
 	}
 
@@ -914,6 +1343,8 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
                hideProgressBar();
 
                 if(TextUtils.isEmpty(allRidesResponse)){
+                    getView().findViewById(R.id.llErrorMsg).setVisibility(View.VISIBLE);
+                    getView().findViewById(R.id.cardSerchView).setVisibility(View.GONE);
                     return;
                 }
 
@@ -921,7 +1352,11 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 					if((ridesList != null && ridesList.size() > 0) || (ridesListPrivate != null && ridesListPrivate.size()>0)){
 						getView().findViewById(R.id.llErrorMsg).setVisibility(View.GONE);
                         getView().findViewById(R.id.cardSerchView).setVisibility(View.VISIBLE);
-                        populateDataInList();
+                        //populateDataInList();
+                        ridesAdapter1 = new RidesAvailAdapter();
+                        ridesAdapter1.init(getActivity(), ridesList, ridesFareListNearyBy, ridesListPrivate);
+                        lvAllRides.setAdapter(ridesAdapter1);
+
                     }else{
                         getView().findViewById(R.id.llErrorMsg).setVisibility(View.VISIBLE);
                         getView().findViewById(R.id.cardSerchView).setVisibility(View.GONE);
@@ -1022,7 +1457,7 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
                             obj2.getJSONArray("publicRides").toString(),
                             new TypeToken<ArrayList<PublicRide>>() {
                             }.getType());
-                    calculateMinimumFare(ridesList);
+                    calculateMinimumFareNearBy(ridesList);
                     Log.d("public rides", ridesList.toString());
 
 					/*if (arrayRideLocal.size() > 0) {
@@ -1063,79 +1498,10 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
     }
 	
 	private void populateDataInList(){
-		/*try{
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			ViewGroup header = (ViewGroup) inflater.inflate(
-					R.layout.header_private_groups, lvAllRides, false);
-            if(ridesAdapter!=null)
-			lvAllRides.removeHeaderView(header);
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
 
-		if(ridesListPrivate != null && ridesListPrivate.size()>0 ){
-
-            //header.setVisibility(View.VISIBLE);
-			/*((TextView) header.findViewById(R.id.tvTotalRideLable)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
-			((TextView) header.findViewById(R.id.tvTotalCount)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
-			((TextView) header.findViewById(R.id.tvHeadingRideGrp)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
-
-			((TextView) header.findViewById(R.id.tvTotalCount)).setText(String.valueOf(ridesListPrivate.size()));
-			header.findViewById(R.id.card_view2).setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					expandPriGrpRides();
-
-				}
-			});
-			*//*header.findViewById(R.id.flExpandPri).setOnClickListener(this);
-			((TextView) header.findViewById(R.id.tvRideInPriGrp))
-					.setTypeface(FontTypeface.getTypeface(getActivity(),
-							AppConstants.HELVITICA));
-			header.findViewById(R.id.cardPrivate).setOnClickListener(this);
-			((TextView) header.findViewById(R.id.tvFromToLocation)).setTypeface(FontTypeface.getTypeface(getActivity(),
-					AppConstants.HELVITICA));
-			((TextView) header.findViewById(R.id.seatstext)).setTypeface(FontTypeface.getTypeface(getActivity(),
-					AppConstants.HELVITICA));
-			((TextView) header.findViewById(R.id.tvAvSeats)).setTypeface(FontTypeface.getTypeface(getActivity(),
-					AppConstants.HELVITICA));
-			((TextView) header.findViewById(R.id.datetext)).setTypeface(FontTypeface.getTypeface(getActivity(),
-					AppConstants.HELVITICA));
-			((TextView) header.findViewById(R.id.timetext)).setTypeface(FontTypeface.getTypeface(getActivity(),
-					AppConstants.HELVITICA));
-			
-			if(ridesListPrivate.get(0).getOwnerName() != null){
-					StringBuilder builder = new StringBuilder(ridesListPrivate.get(0).getOwnerName()) ;
-					if(ridesListPrivate.get(0).getRideType()!=null){
-						String rideType = ridesListPrivate.get(0).getRideType();
-						if(rideType.equalsIgnoreCase("1") || rideType.equalsIgnoreCase("4")){
-							builder.append("(Car Pool)");
-						}else if(rideType.equalsIgnoreCase("2") || rideType.equalsIgnoreCase("5")){
-							builder.append("(Cab Share)");
-						}
-					}
-				
-				((TextView) header.findViewById(R.id.myridesbannerusername)).setText(builder.toString().toUpperCase());
-			}
-			if(ridesListPrivate.get(0).getFromShortName() != null && ridesListPrivate.get(0).getToShortName() != null)
-				((TextView) header.findViewById(R.id.tvFromToLocation)).setText(ridesListPrivate.get(0).getFromShortName()+" - \n"+ridesListPrivate.get(0).getToShortName());
-			if(ridesListPrivate.get(0).getTravelDate() != null)
-				((TextView) header.findViewById(R.id.datetext)).setText(ridesListPrivate.get(0).getTravelDate());
-			if(ridesListPrivate.get(0).getTravelTime() != null)
-				((TextView) header.findViewById(R.id.timetext)).setText(ridesListPrivate.get(0).getTravelTime());
-			if(ridesListPrivate.get(0).getSeats() != null)
-				((TextView) header.findViewById(R.id.seatstext)).setText("Total seats : "+ridesListPrivate.get(0).getSeats());
-			if(ridesListPrivate.get(0).getRemainingSeats() != null)
-				((TextView) header.findViewById(R.id.tvAvSeats)).setText("Remaining seats : "+ridesListPrivate.get(0).getRemainingSeats());
-	*/
-			//lvAllRides.addHeaderView(header);
-		}else {
-          //  header.setVisibility(View.GONE);
-        }
-		//lvAllRides.setAdapter(ridesAdapter);
-        if(ridesAdapter != null ){
-            ridesAdapter.init(getActivity(),ridesList, ridesFareList, ridesListPrivate);
-            ridesAdapter.notifyDataSetChanged();
+        if(ridesAdapter2 != null ){
+            ridesAdapter2.init(getActivity(),ridesList, ridesFareListNearyBy, ridesListPrivate,ridesListMyPublicGrp,ridesFareListPublicGrp);
+            ridesAdapter2.notifyDataSetChanged();
         }
 	}
 	
@@ -1366,13 +1732,13 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 	*
 	*
 	 */
-	private void calculateMinimumFare(ArrayList<PublicRide> arrayList){
+	private void calculateMinimumFareNearBy(ArrayList<PublicRide> arrayList){
 		try{
 			int minRs = 4;
 			int minFare = 10;
 			if(arrayList == null)
 				return;
-			ridesFareList.clear();
+			ridesFareListNearyBy.clear();
 			for (int i = 0; i < arrayList.size(); i++) {
 				int fare = 0;
 				ArrayList<Ride> arralistride = (ArrayList<Ride>) ridesList.get(i).getRides();
@@ -1386,15 +1752,45 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 					}
 					fare = min*minRs;
 					fare= (int)(10*(Math.round(fare/10.0))); // Round figure for 10 as suggested
-					ridesFareList.add(fare);
+					ridesFareListNearyBy.add(fare);
 				}else {
-					ridesFareList.add(minFare);
+					ridesFareListNearyBy.add(minFare);
 				}
 			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
+
+    private void calculateMinimumFarePublicGrp(ArrayList<PublicRide> arrayList){
+        try{
+            int minRs = 4;
+            int minFare = 10;
+            if(arrayList == null)
+                return;
+            ridesFareListPublicGrp.clear();
+            for (int i = 0; i < arrayList.size(); i++) {
+                int fare = 0;
+                ArrayList<Ride> arralistride = (ArrayList<Ride>) ridesListMyPublicGrp.get(i).getRides();
+                if(arralistride != null && arralistride.size()>0){
+                    minRs = Integer.parseInt(arralistride.get(0).getPerKmCharge());
+                    int min = !TextUtils.isEmpty(arralistride.get(0).getDistance()) ?(int)Math.round(Double.parseDouble(arralistride.get(0).getDistance().replace("km","").trim())) : 0;
+                    for(Ride j: arralistride) {
+                        if(!TextUtils.isEmpty(j.getDistance()) && (int)Math.round(Double.parseDouble(j.getDistance().replace("km","").trim())) < min){
+                            min = (int)Math.round(Double.parseDouble(j.getDistance().replace("km","").trim()));
+                        }
+                    }
+                    fare = min*minRs;
+                    fare= (int)(10*(Math.round(fare/10.0))); // Round figure for 10 as suggested
+                    ridesFareListPublicGrp.add(fare);
+                }else {
+                    ridesFareListPublicGrp.add(minFare);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 	private void checkTokenExist(){
 		String endpoint = GlobalVariables.ServiceUrl + "/walletApis.php";
 		String authString = "getToken"+MobileNumber+SPreference.getWalletType(getActivity());
@@ -1430,19 +1826,35 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
         ((TextView)searchRideDialog.findViewById(R.id.tvSearchCabs)).setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
         mFromLocation.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
         mToLocation.setTypeface(FontTypeface.getTypeface(getActivity(), AppConstants.HELVITICA));
+        final ImageView imageDeleteFrom = (ImageView)searchRideDialog.findViewById(R.id.clearedittextimgfrom);
+        final ImageView imageDeleteTo = (ImageView)searchRideDialog.findViewById(R.id.clearedittextimgto);
+        imageDeleteFrom.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFromLocation.setText("");
+            }
+        });
+
+        imageDeleteTo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mToLocation.setText("");
+            }
+        });
+
         searchRideDialog.findViewById(R.id.tvSubmit).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(mFromLocation.getText().toString().trim())){
-					mFromLocation.setError("Please enter from address");
-					return;
-				}
-				if(TextUtils.isEmpty(mToLocation.getText().toString().trim())){
-					mToLocation.setError("Please enter to address");
-					return;
-				}
-				collapseRideList();
-				fetchSearchedRides();
+                if (TextUtils.isEmpty(mFromLocation.getText().toString().trim())) {
+                    mFromLocation.setError("Please enter from address");
+                    return;
+                }
+                if (TextUtils.isEmpty(mToLocation.getText().toString().trim())) {
+                    mToLocation.setError("Please enter to address");
+                    return;
+                }
+                collapseRideList();
+                fetchSearchedRides();
                 searchRideDialog.dismiss();
                 Utility.hideSoftKeyboard(getActivity());
 
@@ -1452,6 +1864,62 @@ public class RidesAvail extends Fragment implements OnClickListener, LocationLis
 		mFromLocation.setOnItemClickListener(mAutocompleteClickListener1);
 
         mFromLocation.setAdapter(mPlaceArrayAdapter1);
+
+        mFromLocation.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2,
+                                      int arg3) {
+                // When user changed the Text
+
+
+                if (arg3 == 0) {
+                    imageDeleteFrom.setVisibility(View.GONE);
+                } else {
+                    imageDeleteFrom.setVisibility(View.VISIBLE);
+                }
+
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mToLocation.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2,
+                                      int arg3) {
+                // When user changed the Text
+
+
+                if (arg3 == 0) {
+                    imageDeleteTo.setVisibility(View.GONE);
+                } else {
+                    imageDeleteTo.setVisibility(View.VISIBLE);
+                }
+
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         mToLocation.setThreshold(2);
         mToLocation.setOnItemClickListener(mAutocompleteClickListener2);

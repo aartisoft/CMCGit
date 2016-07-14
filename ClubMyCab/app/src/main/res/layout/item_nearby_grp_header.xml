@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="25dp"
+           android:orientation="vertical"
+           android:layout_marginTop="8dp">
+           <TextView
+               android:id="@+id/tvNearByGrpHeader"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="RIDES STARTING NEAR YOU"
+               android:textSize="14sp"
+               android:layout_marginLeft="8dp"
+               android:layout_marginRight="8dp"
+               android:textColor="#5d5d5d"
+               android:textStyle="bold"/>
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="2dp"
+               android:background="@color/color_app_blue"
+               android:layout_marginTop="3dp"/>
+       </LinearLayout>
+
+
+</LinearLayout>

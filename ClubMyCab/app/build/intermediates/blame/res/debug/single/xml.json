@@ -1,10 +1,6 @@
 [
     {
-        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/debug/xml/global_tracker.xml",
-        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/src/main/res/xml/global_tracker.xml"
-    },
-    {
-        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/debug/xml/global_tracker.xml",
-        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/src/main/res/xml/global_tracker.xml"
+        "merged": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/res/merged/debug/xml/global_tracker.xml",
+        "source": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/src/main/res/xml/global_tracker.xml"
     }
 ]

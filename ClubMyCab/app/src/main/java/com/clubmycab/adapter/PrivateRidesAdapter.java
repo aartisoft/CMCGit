@@ -103,7 +103,7 @@ public class PrivateRidesAdapter extends BaseAdapter {
 			String[] arr2 = arrayList.get(position).getTravelDate().toString().trim().split("/");
 			int month = Integer.parseInt(arr2[1]);
 			int date = Integer.parseInt(arr2[0]);
-			holder.tvDate.setText(String.format("%02d",date)+" "+getMontString(month));
+			holder.tvDate.setText(String.format("%02d",date)+" "+getMontString(month)+" "+ arr2[2]);
 		}
 		if(arrayList.get(position).getTravelTime() != null){
 			holder.tvTime.setText(arrayList.get(position).getTravelTime());
@@ -142,12 +142,12 @@ public class PrivateRidesAdapter extends BaseAdapter {
 				}
 			}else if(rideType.equalsIgnoreCase("2") || rideType.equalsIgnoreCase("5")){
 				// builder.append("(Cab Share)");
-				if (arrayList.get(position).getVehicleModel() != null){
+				//if (arrayList.get(position).getVehicleModel() != null){
 					holder.tvModelNumber.setText("CAB SHARE");
-				}
-				if (arrayList.get(position).getRegistrationNumber() != null){
+				//}
+			//	if (arrayList.get(position).getRegistrationNumber() != null){
 					holder.tvRegNo.setText("");
-				}
+				//}
 				holder.ivCabImage.setImageResource(R.drawable.car_taxi);
 
 			}

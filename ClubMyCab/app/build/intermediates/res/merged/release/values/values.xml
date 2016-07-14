@@ -772,7 +772,7 @@
     <string name="change">(tap to change)</string>
     <string name="character_counter_pattern" translatable="false">%1$d / %2$d</string>
     <string name="check_box">Call me to explain</string>
-    <string name="com.crashlytics.android.build_id" ns2:ignore="UnusedResources,TypographyDashes" translatable="false">6e290db4-170e-4f4b-a935-87c390936d6b</string>
+    <string name="com.crashlytics.android.build_id" ns2:ignore="UnusedResources,TypographyDashes" translatable="false">dddd59ab-ba47-4113-9b54-8838fce4f833</string>
     <string name="com_facebook_device_auth_instructions">Visit &lt;b>facebook.com/device&lt;/b>&lt;br />on your smartphone or computer&lt;br />and enter this code</string>
     <string name="com_facebook_image_download_unknown_error">Unexpected error while downloading an image.</string>
     <string name="com_facebook_internet_permission_error_message">WebView login requires INTERNET permission</string>

@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/release/values-v18/values-v18.xml",
+        "outputFile": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/res/merged/release/values-v18/values-v18.xml",
         "map": [
             {
                 "to": {
@@ -11,31 +11,7 @@
                     "endOffset": 99
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v18/values-v18.xml",
-                    "position": {
-                        "startLine": 2,
-                        "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 48,
-                        "endOffset": 99
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/release/values-v18/values-v18.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 55,
-                    "endColumn": 48,
-                    "endOffset": 99
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v18/values-v18.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/res/values-v18/values-v18.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,

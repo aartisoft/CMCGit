@@ -115,17 +115,17 @@ public final class R {
 		public static final int standard = 0x7f0e0041;
 		public static final int terrain = 0x7f0e003a;
 		public static final int text = 0x7f0e000a;
-		public static final int webview = 0x7f0e0408;
+		public static final int webview = 0x7f0e0410;
 		public static final int wide = 0x7f0e0042;
-		public static final int window = 0x7f0e035a;
+		public static final int window = 0x7f0e0360;
 	}
 	public static final class integer {
 		public static final int google_play_services_version = 0x7f0b000b;
 	}
 	public static final class layout {
 		public static final int info_window = 0x7f03008b;
-		public static final int text_bubble = 0x7f0300d4;
-		public static final int webview = 0x7f0300d7;
+		public static final int text_bubble = 0x7f0300da;
+		public static final int webview = 0x7f0300dd;
 	}
 	public static final class raw {
 		public static final int ballon_gx_prefix = 0x7f060000;

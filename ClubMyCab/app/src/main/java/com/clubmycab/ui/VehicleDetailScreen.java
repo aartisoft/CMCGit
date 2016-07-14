@@ -2,12 +2,13 @@ package com.clubmycab.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -113,7 +115,9 @@ public class VehicleDetailScreen extends Activity implements View.OnClickListene
 
         }
     };
-       @Override
+    private Dialog onedialog;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vehicle_detail_screen);
@@ -339,20 +343,13 @@ public class VehicleDetailScreen extends Activity implements View.OnClickListene
     }
 
     private class ConnectionTaskGetModel extends AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(VehicleDetailScreen.this);
         private String result;
 
         @Override
         protected void onPreExecute() {
             vehicleNameList.clear();
             vehicleIDList.clear();
-            if (dialog != null)
-                dialog.dismiss();
-            dialog = new ProgressDialog(VehicleDetailScreen.this);
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+           showProgressBar();
 
         }
 
@@ -373,8 +370,7 @@ public class VehicleDetailScreen extends Activity implements View.OnClickListene
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
-                if (dialog != null)
-                    dialog.dismiss();
+              hideProgressBar();
                 if (!TextUtils.isEmpty(result)) {
                     if (exceptioncheck) {
                         exceptioncheck = false;
@@ -460,18 +456,11 @@ public class VehicleDetailScreen extends Activity implements View.OnClickListene
     }
 
     private class SaveVehicleDetailTask extends AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(VehicleDetailScreen.this);
         private String result;
 
         @Override
         protected void onPreExecute() {
-            if (dialog != null)
-                dialog.dismiss();
-            dialog = new ProgressDialog(VehicleDetailScreen.this);
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+            showProgressBar();
 
         }
 
@@ -492,8 +481,7 @@ public class VehicleDetailScreen extends Activity implements View.OnClickListene
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
-                if (dialog != null)
-                    dialog.dismiss();
+                hideProgressBar();
                 if (!TextUtils.isEmpty(addVehicalResul)) {
                     if (exceptioncheck) {
                         exceptioncheck = false;
@@ -593,6 +581,32 @@ public class VehicleDetailScreen extends Activity implements View.OnClickListene
 
                 Log.d("result", "" + stringBuilder.toString());
             }
+        }
+
+    }
+
+    private void showProgressBar(){
+        try{
+            onedialog = new Dialog(VehicleDetailScreen.this);
+            onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            onedialog.setContentView(R.layout.dialog_ishare_loader);
+            onedialog.setCancelable(false);
+            onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+            // onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+            onedialog.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void hideProgressBar(){
+        try{
+            if(onedialog != null)
+                onedialog.dismiss();
+            onedialog = null;
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }

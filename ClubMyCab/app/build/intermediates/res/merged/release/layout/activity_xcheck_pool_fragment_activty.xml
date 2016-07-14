@@ -148,7 +148,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:text="15 Apr"
-                            android:textColor="@color/color_app_text_light"
+                            android:textColor="@color/color_app_text_dark"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -171,7 +171,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:text="12:17PM"
-                            android:textColor="@color/color_app_text_light"
+                            android:textColor="@color/color_app_text_dark"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -243,10 +243,10 @@
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@+id/ivFromTo"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:maxLines="2"
                     android:text="Sec 53"
                     android:textColor="@color/color_app_text_dark"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
 
                 <TextView
@@ -258,10 +258,10 @@
                     android:layout_marginLeft="8dp"
                     android:layout_toRightOf="@+id/ivFromTo"
                     android:ellipsize="end"
-                    android:singleLine="true"
                     android:text="Connaught Place"
+                    android:maxLines="2"
                     android:textColor="@color/color_app_text_dark"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
 
             </RelativeLayout>

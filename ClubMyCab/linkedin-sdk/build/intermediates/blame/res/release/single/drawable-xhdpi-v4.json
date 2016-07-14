@@ -1,10 +1,6 @@
 [
     {
-        "merged": "/Users/DevMac/Documents/VDWork/clubmycabnew/linkedin-sdk/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
-        "source": "/Users/DevMac/Documents/VDWork/clubmycabnew/linkedin-sdk/src/main/res/drawable-xhdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/linkedin-sdk/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
-        "source": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/linkedin-sdk/src/main/res/drawable-xhdpi/ic_launcher.png"
+        "merged": "/Users/DevMac/Documents/CMCGit/ClubMyCab/linkedin-sdk/build/intermediates/res/merged/release/drawable-xhdpi-v4/ic_launcher.png",
+        "source": "/Users/DevMac/Documents/CMCGit/ClubMyCab/linkedin-sdk/src/main/res/drawable-xhdpi/ic_launcher.png"
     }
 ]

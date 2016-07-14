@@ -165,6 +165,8 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
     private boolean isTokenExist;
     public  static final int SELECT_PAYMENT_REQUEST =  1001;
     private boolean isRoutePlotted;
+    private boolean isFreeRide;
+    private String payableByRider = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +203,14 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         ((TextView)findViewById(R.id.tvUserName)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
         ((TextView)findViewById(R.id.tvDate)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
         ((TextView)findViewById(R.id.tvTime)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+        ((TextView)findViewById(R.id.tvRupeeIcon)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.FONT_AWESOME));
+        ((TextView)findViewById(R.id.tvRupeeText)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+        ((TextView)findViewById(R.id.tvMsgActual)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+        ((TextView)findViewById(R.id.tvPlaceFrom)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+        ((TextView)findViewById(R.id.tvPlaceTo)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+        ((TextView)findViewById(R.id.tvYouPay)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+
+        ((TextView)findViewById(R.id.tvRupeeIcon)).setText(getResources().getString(R.string.rupee));
         if(rideDetailsModel != null){
             ((TextView)findViewById(R.id.tvUserName)).setText(rideDetailsModel.getOwnerName());
             ((TextView)findViewById(R.id.tvTime)).setText(rideDetailsModel.getTravelTime());
@@ -208,21 +218,29 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
             int month = Integer.parseInt(arr2[1]);
             int date = Integer.parseInt(arr2[0]);
             ((TextView)findViewById(R.id.tvDate)).setText(String.format("%02d",date)+" "+getMontString(month));
-            ((TextView)findViewById(R.id.tvPlaceFrom)).setText(rideDetailsModel.getFromShortName());
-            ((TextView)findViewById(R.id.tvPlaceTo)).setText(rideDetailsModel.getToShortName());
+            ((TextView)findViewById(R.id.tvPlaceFrom)).setText(rideDetailsModel.getFromLocation());
+            ((TextView)findViewById(R.id.tvPlaceTo)).setText(rideDetailsModel.getToLocation());
             if (rideDetailsModel.getImagename() != null){
                 String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
                         +rideDetailsModel.getImagename().toString().trim();
                 // Glide.with(XCheckPoolFragmentActivty.this).load(url).placeholder(R.drawable.avatar_rides_list).error(R.drawable.avatar_rides_list).into((ImageView)findViewById(R.id.ivOwnerImage));
                 Picasso.with(XMemberRideFragmentActivity.this).load(url).placeholder(R.drawable.avatar_rides_list).error(R.drawable.avatar_rides_list).into((ImageView)findViewById(R.id.ivOwnerImage));
-
             }
+
+
+
+            // Ride amount for total distance
+
+
         }
         if(isComeFromShowHistory){
             findViewById(R.id.tvJoin).setVisibility(View.GONE);
             ((TextView)findViewById(R.id.tvTripCompleted)).setVisibility(View.VISIBLE);
             findViewById(R.id.tvLeave).setVisibility(View.GONE);
             findViewById(R.id.llCall).setVisibility(View.GONE);
+            findViewById(R.id.llRupees).setVisibility(View.GONE);
+            findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
+
 
         }
         findViewById(R.id.ivOwnerImage).setOnClickListener(new View.OnClickListener() {
@@ -254,6 +272,7 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
             buttonLocationMarker.setOnClickListener(this);
             findViewById(R.id.tvJoin).setOnClickListener(this);
             findViewById(R.id.tvLeave).setOnClickListener(this);
+            findViewById(R.id.flEditPickDrop).setOnClickListener(this);
 
             getBundleData();
             if(CheckNetworkConnection.isNetworkAvailable(XMemberRideFragmentActivity.this)){
@@ -1031,6 +1050,10 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                }
                 break;
             case R.id.tvJoin:
+                if(slidingUpPanelLayout != null){
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
+                }
             if(!isRoutePlotted){// This condtion is needed if route is not plotted due to network error and user pressed confirm button
                 if(CheckNetworkConnection.isNetworkAvailable(XMemberRideFragmentActivity.this)){
                     sendCheckPoolAreadyJoined();
@@ -1043,11 +1066,20 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
               if(tvJoin.getText().toString().equalsIgnoreCase("CONFIRM")){
                   //checkTokenExist();
                   //checkBalanceNew();
-                  joinPoolClicked();
+                 // joinPoolClicked();
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                      new ConnectionTaskJoinFromMainLocation().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                  } else {
+                      new ConnectionTaskJoinFromMainLocation().execute();
+                  }
                   tracker.send(new HitBuilders.EventBuilder().setCategory("Screen").setAction("Click").setLabel("Confirm Button Click").build());
 
               }else if(tvJoin.getText().toString().equalsIgnoreCase("PAY")){
-                  showPaymentProgressDialog();
+                  if(isFreeRide){
+                      sendFreeRideRequest();
+                  }else {
+                      showPaymentProgressDialog();
+                  }
                   tracker.send(new HitBuilders.EventBuilder().setCategory("Pay").setAction("Pay Clicked").setLabel("Pay").build());
 
               }
@@ -1071,6 +1103,29 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                 break;
             case R.id.cardBack:
                 finish();
+                break;
+
+            case R.id.flEditPickDrop:
+                if(slidingUpPanelLayout != null){
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
+                }
+                if(!isRoutePlotted){// This condtion is needed if route is not plotted due to network error and user pressed confirm button
+                    if(CheckNetworkConnection.isNetworkAvailable(XMemberRideFragmentActivity.this)){
+                        sendCheckPoolAreadyJoined();
+                    }else {
+                        CheckNetworkConnection.showConnectionErrorDialog(XMemberRideFragmentActivity.this);
+
+                    }
+                    return;
+                }
+                if(tvJoin.getText().toString().equalsIgnoreCase("CONFIRM")){
+                    //checkTokenExist();
+                    //checkBalanceNew();
+                    joinPoolClicked();
+                    tracker.send(new HitBuilders.EventBuilder().setCategory("Screen").setAction("Click").setLabel("Confirm Button Click").build());
+
+                }
                 break;
         }
     }
@@ -1133,12 +1188,18 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                     afterjoinpoolll.setVisibility(View.GONE);*/
                        findViewById(R.id.tvLeave).setVisibility(View.GONE);
                        findViewById(R.id.llCall).setVisibility(View.GONE);
+                       findViewById(R.id.flEditPickDrop).setVisibility(View.VISIBLE);
+
                        tvJoin.setText("CONFIRM");
+                       double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+                       checkPayingAmount(distance);
 
                    } else {
                        // fixit
                    /* beforejoinpoolll.setVisibility(View.GONE);
                     afterjoinpoolll.setVisibility(View.GONE);*/
+                       findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
+
                    }
 
                } else {
@@ -1149,28 +1210,42 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                        memberlocationaddressFrom = jsonArray.getJSONObject(0).optString("MemberLocationAddress");
                        memberlocationaddressTo = jsonArray.getJSONObject(0).optString("MemberEndLocationAddress");
                        memberDistance = jsonArray.getJSONObject(0).optString("distance");
+                       ((TextView)findViewById(R.id.tvPlaceFrom)).setText(memberlocationaddressFrom);
+                       ((TextView)findViewById(R.id.tvPlaceTo)).setText(memberlocationaddressTo);
                        if(hasBorded.equalsIgnoreCase("0")){
+                           findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
+
                            if (rideDetailsModel.getCabStatus().toString().trim().equalsIgnoreCase("A")) {
                                findViewById(R.id.llCall).setVisibility(View.VISIBLE);
                                findViewById(R.id.tvLeave).setVisibility(View.VISIBLE);
                                tvJoin.setText("PAY");
+                               double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+                               checkPayingAmount(distance);
                            } else {
                                findViewById(R.id.tvLeave).setVisibility(View.GONE);
                                findViewById(R.id.llCall).setVisibility(View.GONE);
                            }
                        }else if(hasBorded.equalsIgnoreCase("1")){
+                           findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
                            findViewById(R.id.llCall).setVisibility(View.VISIBLE);
                            findViewById(R.id.tvLeave).setVisibility(View.VISIBLE);
                            tvJoin.setVisibility(View.GONE);
                            findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
                            ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
+                           findViewById(R.id.llRupees).setVisibility(View.GONE);
+
                        }else if(hasBorded.equalsIgnoreCase("2")){
+                           findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
                            findViewById(R.id.llCall).setVisibility(View.VISIBLE);
                            findViewById(R.id.tvLeave).setVisibility(View.VISIBLE);
                            tvJoin.setVisibility(View.GONE);
                            findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
                            ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
+                           findViewById(R.id.llRupees).setVisibility(View.GONE);
+
                        }
+
+
 
                    }catch (Exception e){
                        e.printStackTrace();
@@ -2632,9 +2707,6 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         } else if (uniqueID.equals("initiatePeerTransfer")) {
             Log.d("MemberRideFragmentActivity", "initiatePeerTransfer response : " + response);
 
-            SharedPreferences sharedPreferences = getSharedPreferences(
-                    "MobikwikToken", 0);
-            String token = sharedPreferences.getString("token", "");
 
             try {
                 JSONObject jsonObject = new JSONObject(response);
@@ -2659,6 +2731,8 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                     findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
                     ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
                 }
+                findViewById(R.id.llRupees).setVisibility(View.GONE);
+
                 //tokenRegenerate(MemberNumberstr.substring(4), token, false);
 
             } catch (Exception e) {
@@ -2752,6 +2826,130 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                 }
                 L.mesaage("");
             }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else if(uniqueID.equalsIgnoreCase("checkPayingAmount")){
+            try{
+                JSONObject jsonObject = new JSONObject(response);
+                if (jsonObject.getString("status").equalsIgnoreCase("success")) {
+                    if(!jsonObject.isNull("payableByRider") && !TextUtils.isEmpty(jsonObject.getString("payableByRider")) ){
+                        if(Integer.parseInt(jsonObject.getString("payableByRider")) == 0){
+                            payableByRider = "0";
+                            findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                            findViewById(R.id.tvMsgActual).setVisibility(View.VISIBLE);
+                            ((TextView)findViewById(R.id.tvMsgActual)).setText("(Offer/Credit Applied)");
+                            ((TextView)findViewById(R.id.tvRupeeText)).setText(jsonObject.getString("payableByRider"));
+                            isFreeRide = true;
+                        }else {
+                            isFreeRide = false;
+                            int amountPayBleByRide = Integer.parseInt(jsonObject.getString("payableByRider"));
+                            double minFare = Double.parseDouble(rideDetailsModel.getPerKmCharge());
+                            double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+                            int totalFare = (int)Math.round(distance*minFare);
+                            payableByRider = String.valueOf(amountPayBleByRide);
+                            if(amountPayBleByRide<totalFare){
+                                findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                                findViewById(R.id.tvMsgActual).setVisibility(View.VISIBLE);
+                                ((TextView)findViewById(R.id.tvMsgActual)).setText("(Offer/Credit Applied)");
+                                ((TextView)findViewById(R.id.tvRupeeText)).setText(jsonObject.getString("payableByRider"));
+
+                            }else {
+                                if(rideDetailsModel != null && !TextUtils.isEmpty(rideDetailsModel.getDistance())){
+                                    findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.tvMsgActual).setVisibility(View.GONE);
+
+                                    double d = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+                                    double m = Double.parseDouble(rideDetailsModel.getPerKmCharge());
+                                    int fare = (int)Math.round(d*m);
+                                    ((TextView)findViewById(R.id.tvRupeeText)).setText(String.valueOf(fare));
+                                }else {
+                                    findViewById(R.id.llRupees).setVisibility(View.GONE);
+
+                                }
+                            }
+                        }
+
+
+                    }else {
+                        if(rideDetailsModel != null && !TextUtils.isEmpty(rideDetailsModel.getDistance())){
+                            findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                            findViewById(R.id.tvMsgActual).setVisibility(View.GONE);
+
+                            double d = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+                            double m = Double.parseDouble(rideDetailsModel.getPerKmCharge());
+                            int fare = (int)Math.round(d*m);
+                            ((TextView)findViewById(R.id.tvRupeeText)).setText(String.valueOf(fare));
+                            payableByRider = String.valueOf(fare);
+                        }else {
+                            findViewById(R.id.llRupees).setVisibility(View.GONE);
+
+                        }
+
+                    }
+
+                }
+
+                   /* if (jsonObject.getString("status").equalsIgnoreCase("success")) {
+                    if(jsonObject.optString("walletStatusCode").equalsIgnoreCase(SUFFICIENT_BALANCE)){
+
+                        if(!jsonObject.isNull("payableByRider") && !TextUtils.isEmpty(jsonObject.getString("payableByRider")) && Integer.parseInt(jsonObject.getString("payableByRider")) == 0){
+                            findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                            findViewById(R.id.tvMsgActual).setVisibility(View.GONE);
+                            ((TextView)findViewById(R.id.tvRupeeText)).setText(jsonObject.getString("payableByRider"));
+                            isFreeRide = true;
+
+                        }else {
+                            isFreeRide = false;
+                            findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                            findViewById(R.id.tvMsgActual).setVisibility(View.GONE);
+                            ((TextView)findViewById(R.id.tvRupeeText)).setText(jsonObject.getString("payableByRider"));
+
+                        }
+
+
+
+
+                    }else {
+                        isFreeRide = false;
+                        if(TextUtils.isEmpty(memberDistance)){
+                            Toast.makeText(XMemberRideFragmentActivity.this,"Something went wrong", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        double minFare = Double.parseDouble(rideDetailsModel.getPerKmCharge());
+                        double distance = Double.parseDouble(memberDistance.trim());
+                        totalFare = (int)Math.round(distance*minFare);
+                        findViewById(R.id.llRupees).setVisibility(View.VISIBLE);
+                        findViewById(R.id.tvMsgActual).setVisibility(View.GONE);
+                        ((TextView)findViewById(R.id.tvRupeeText)).setText(String.valueOf(totalFare));
+                    }
+                }*/
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }else if(uniqueID.equalsIgnoreCase("sendFreeRideRequest")){
+            Log.d("MemberRideFragmentActivity", "initiatePeerTransfer response : " + response);
+
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+
+                if (jsonObject.get("status").toString().equalsIgnoreCase("success")) {
+                    isRefreshNeeded = true;
+                    tvJoin.setVisibility(View.GONE);
+                    findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
+                    ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
+                } else {
+                    isRefreshNeeded = true;
+                    // Need status of user payment
+                    tvJoin.setVisibility(View.GONE);
+                    findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
+                    ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
+                }
+                findViewById(R.id.llRupees).setVisibility(View.GONE);
+                //tokenRegenerate(MemberNumberstr.substring(4), token, false);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -2926,7 +3124,8 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         boolean exceptioncheck;
 
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             showProgressBar();
         }
 
@@ -2936,7 +3135,6 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
             try {
                 mAuth1.connection();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -3013,108 +3211,471 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
            }
         }
 
-    }
+        public class AuthenticateConnectionFetchNotification {
 
-    public class AuthenticateConnectionFetchNotification {
+            public AuthenticateConnectionFetchNotification() {
 
-        public AuthenticateConnectionFetchNotification() {
-
-        }
-
-        public void connection() throws Exception {
-            double lat = memberlocationlatlong.latitude;
-            double longi = memberlocationlatlong.longitude;
-            double latEnd = memberlocationlatlongTo.latitude;
-            double longiEnd = memberlocationlatlongTo.longitude;
-            String distance =  getDistance(memberlocationaddressFrom, memberlocationaddressTo).replace("km","").trim();
-            String latlong = String.valueOf(lat) + "," + String.valueOf(longi);
-            String latlongEnd = String.valueOf(latEnd) + "," + String.valueOf(longiEnd);
-            String poolId;
-            if(rideDetailsModel.getPoolId() == null){
-                poolId = "";
-            }else {
-                poolId = rideDetailsModel.getPoolId();
-            }
-            // Connect to google.com
-            HttpClient httpClient = new DefaultHttpClient();
-            String url_select = GlobalVariables.ServiceUrl + "/joinpool.php";
-            HttpPost httpPost = new HttpPost(url_select);
-            BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair("CabId", rideDetailsModel.getCabId());
-            BasicNameValuePair distanceNameValuePair = new BasicNameValuePair("distance", distance);
-            BasicNameValuePair MemberEndLocationAddressBasicNameValuePair = new BasicNameValuePair("MemberEndLocationAddress", memberlocationaddressTo);
-            BasicNameValuePair MemberEndLocationlatlongBasicNameValuePair = new BasicNameValuePair("MemberEndLocationlatlong", latlongEnd);
-            BasicNameValuePair MemberLocationAddressBasicNameValuePair = new BasicNameValuePair("MemberLocationAddress", memberlocationaddressFrom);
-            BasicNameValuePair MemberLocationlatlongBasicNameValuePair = new BasicNameValuePair("MemberLocationlatlong", latlong);
-            BasicNameValuePair MemberNameBasicNameValuePair = new BasicNameValuePair("MemberName", FullName);
-            BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair("MemberNumber", MemberNumberstr);
-            BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair("Message", FullName + " has joined your ride from " + rideDetailsModel.getFromShortName() + " to " + rideDetailsModel.getToShortName());
-            BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair("OwnerName", rideDetailsModel.getOwnerName());
-            BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair("OwnerNumber", rideDetailsModel.getMobileNumber());
-            BasicNameValuePair poolIdPair = new BasicNameValuePair("PoolId",poolId);
-            BasicNameValuePair rideTypePair = new BasicNameValuePair("rideType", rideDetailsModel.getRideType());
-            BasicNameValuePair StatusBasicNameValuePair = new BasicNameValuePair("Status", "Nothing");
-
-
-            String authString = rideDetailsModel.getCabId()
-                    +distance
-                    + memberlocationaddressTo + latlongEnd
-                    + memberlocationaddressFrom + latlong + FullName
-                    + MemberNumberstr + FullName
-                    + " has joined your ride from "
-                    + rideDetailsModel.getFromShortName() + " to "
-                    + rideDetailsModel.getToShortName()
-                    + rideDetailsModel.getOwnerName()
-                    + rideDetailsModel.getMobileNumber() +poolId+rideDetailsModel.getRideType()+ "Nothing";
-
-            BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
-                    GlobalMethods.calculateCMCAuthString(authString));
-            Log.d("authString",authString);
-            Log.d("authValuePair",GlobalMethods.calculateCMCAuthString(authString));
-
-            List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-            nameValuePairList.add(CabIdBasicNameValuePair);
-            nameValuePairList.add(distanceNameValuePair);
-            nameValuePairList.add(OwnerNameBasicNameValuePair);
-            nameValuePairList.add(OwnerNumberBasicNameValuePair);
-            nameValuePairList.add(MemberNameBasicNameValuePair);
-            nameValuePairList.add(MemberNumberBasicNameValuePair);
-            nameValuePairList.add(MemberLocationAddressBasicNameValuePair);
-            nameValuePairList.add(MemberLocationlatlongBasicNameValuePair);
-            nameValuePairList.add(StatusBasicNameValuePair);
-            nameValuePairList.add(MessageBasicNameValuePair);
-            nameValuePairList.add(MemberEndLocationAddressBasicNameValuePair);
-            nameValuePairList.add(MemberEndLocationlatlongBasicNameValuePair);
-            nameValuePairList.add(poolIdPair);
-            nameValuePairList.add(rideTypePair);
-
-            nameValuePairList.add(authValuePair);
-
-            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
-                    nameValuePairList);
-            httpPost.setEntity(urlEncodedFormEntity);
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            Log.d("httpResponse", "" + httpResponse);
-
-            InputStream inputStream = httpResponse.getEntity().getContent();
-            InputStreamReader inputStreamReader = new InputStreamReader(
-                    inputStream);
-
-            BufferedReader bufferedReader = new BufferedReader(
-                    inputStreamReader);
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            String bufferedStrChunk = null;
-
-            while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-                joinpoolresponse = stringBuilder.append(bufferedStrChunk)
-                        .toString();
             }
 
-            Log.d("joinpoolresponse", "" + stringBuilder.toString());
+            public void connection() throws Exception {
+                double lat = memberlocationlatlong.latitude;
+                double longi = memberlocationlatlong.longitude;
+                double latEnd = memberlocationlatlongTo.latitude;
+                double longiEnd = memberlocationlatlongTo.longitude;
+                // String distance =  getDistance(memberlocationaddressFrom, memberlocationaddressTo).replace("km","").trim();
+                String latlong = String.valueOf(lat) + "," + String.valueOf(longi);
+                String latlongEnd = String.valueOf(latEnd) + "," + String.valueOf(longiEnd);
+               // String distance = getDistance(latlong,latlongEnd);
+                String distance = rideDetailsModel.getDistance().replace("km", "").trim();
+
+
+                String poolId;
+                if(rideDetailsModel.getPoolId() == null){
+                    poolId = "";
+                }else {
+                    poolId = rideDetailsModel.getPoolId();
+                }
+                // Connect to google.com
+                HttpClient httpClient = new DefaultHttpClient();
+                String url_select = GlobalVariables.ServiceUrl + "/joinpool.php";
+                HttpPost httpPost = new HttpPost(url_select);
+                BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair("CabId", rideDetailsModel.getCabId());
+                BasicNameValuePair distanceNameValuePair = new BasicNameValuePair("distance", distance);
+                BasicNameValuePair MemberEndLocationAddressBasicNameValuePair = new BasicNameValuePair("MemberEndLocationAddress", memberlocationaddressTo);
+                BasicNameValuePair MemberEndLocationlatlongBasicNameValuePair = new BasicNameValuePair("MemberEndLocationlatlong", latlongEnd);
+                BasicNameValuePair MemberLocationAddressBasicNameValuePair = new BasicNameValuePair("MemberLocationAddress", memberlocationaddressFrom);
+                BasicNameValuePair MemberLocationlatlongBasicNameValuePair = new BasicNameValuePair("MemberLocationlatlong", latlong);
+                BasicNameValuePair MemberNameBasicNameValuePair = new BasicNameValuePair("MemberName", FullName);
+                BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair("MemberNumber", MemberNumberstr);
+                BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair("Message", FullName + " has joined your ride from " + rideDetailsModel.getFromShortName() + " to " + rideDetailsModel.getToShortName());
+                BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair("OwnerName", rideDetailsModel.getOwnerName());
+                BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair("OwnerNumber", rideDetailsModel.getMobileNumber());
+                BasicNameValuePair poolIdPair = new BasicNameValuePair("PoolId",poolId);
+                BasicNameValuePair rideTypePair = new BasicNameValuePair("rideType", rideDetailsModel.getRideType());
+                BasicNameValuePair StatusBasicNameValuePair = new BasicNameValuePair("Status", "Nothing");
+
+
+                String authString = rideDetailsModel.getCabId()
+                        +distance
+                        + memberlocationaddressTo + latlongEnd
+                        + memberlocationaddressFrom + latlong + FullName
+                        + MemberNumberstr + FullName
+                        + " has joined your ride from "
+                        + rideDetailsModel.getFromShortName() + " to "
+                        + rideDetailsModel.getToShortName()
+                        + rideDetailsModel.getOwnerName()
+                        + rideDetailsModel.getMobileNumber() +poolId+rideDetailsModel.getRideType()+ "Nothing";
+
+                BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+                        GlobalMethods.calculateCMCAuthString(authString));
+                Log.d("authString",authString);
+                Log.d("authValuePair",GlobalMethods.calculateCMCAuthString(authString));
+
+                List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+                nameValuePairList.add(CabIdBasicNameValuePair);
+                nameValuePairList.add(distanceNameValuePair);
+                nameValuePairList.add(OwnerNameBasicNameValuePair);
+                nameValuePairList.add(OwnerNumberBasicNameValuePair);
+                nameValuePairList.add(MemberNameBasicNameValuePair);
+                nameValuePairList.add(MemberNumberBasicNameValuePair);
+                nameValuePairList.add(MemberLocationAddressBasicNameValuePair);
+                nameValuePairList.add(MemberLocationlatlongBasicNameValuePair);
+                nameValuePairList.add(StatusBasicNameValuePair);
+                nameValuePairList.add(MessageBasicNameValuePair);
+                nameValuePairList.add(MemberEndLocationAddressBasicNameValuePair);
+                nameValuePairList.add(MemberEndLocationlatlongBasicNameValuePair);
+                nameValuePairList.add(poolIdPair);
+                nameValuePairList.add(rideTypePair);
+
+                nameValuePairList.add(authValuePair);
+
+                UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+                        nameValuePairList);
+                httpPost.setEntity(urlEncodedFormEntity);
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+
+                Log.d("httpResponse", "" + httpResponse);
+
+                InputStream inputStream = httpResponse.getEntity().getContent();
+                InputStreamReader inputStreamReader = new InputStreamReader(
+                        inputStream);
+
+                BufferedReader bufferedReader = new BufferedReader(
+                        inputStreamReader);
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                String bufferedStrChunk = null;
+
+                while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+                    joinpoolresponse = stringBuilder.append(bufferedStrChunk)
+                            .toString();
+                }
+
+                Log.d("joinpoolresponse", "" + stringBuilder.toString());
+            }
         }
+
+
+        private String getDistance(String fromLatLong, String toLatLong){
+            String distancevalue = null;
+            String distancetext = null;
+            try{
+
+
+                String url = "https://maps.googleapis.com/maps/api/directions/json?"
+                        + "origin="
+                        + fromLatLong
+                        + "&destination="
+                        + toLatLong
+                        + "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+                        + GlobalVariables.GoogleMapsAPIKey;
+
+                Log.d("url", "" + url);
+
+                String CompletePageResponse = new Communicator()
+                        .executeHttpGet(url);
+
+                CompletePageResponse = CompletePageResponse
+                        .replaceAll("\\\\/", "/");
+
+                JSONObject jsonObject = new JSONObject(CompletePageResponse);
+
+                String name = jsonObject.getString("routes");
+
+                JSONArray subArray = new JSONArray(name);
+
+
+                distancetext = null;
+
+                String durationvalue = null;
+                String durationtext = null;
+                double tempDistance = 0;
+                for (int i = 0; i < subArray.length(); i++) {
+
+                    String name1 = subArray.getJSONObject(i).getString("legs")
+                            .toString();
+
+                    JSONArray subArray1 = new JSONArray(name1);
+
+                    for (int i1 = 0; i1 < subArray1.length(); i1++) {
+
+                        String startadd = subArray1.getJSONObject(i1).getString("distance").toString();
+                        String startadd1 = subArray1.getJSONObject(i1).getString("duration").toString();
+
+                        JSONObject jsonObject1 = new JSONObject(startadd);
+                        if(i == 0){
+                            tempDistance = Double.parseDouble(jsonObject1.getString("value"));
+                            distancevalue = String.valueOf(Double.parseDouble(jsonObject1.getString("value")) / 1000);
+                            distancetext = jsonObject1.getString("text");
+                            JSONObject jsonObject11 = new JSONObject(startadd1);
+                            durationvalue = jsonObject11.getString("value");
+                            durationtext = jsonObject11.getString("text");
+                        }else {
+                            if(Double.parseDouble(jsonObject1.getString("value")) < tempDistance ){
+                                tempDistance = Double.parseDouble(jsonObject1.getString("value"));
+                                distancevalue = String.valueOf(Double.parseDouble(jsonObject1.getString("value"))/1000);
+                                distancetext = jsonObject1.getString("text");
+                                JSONObject jsonObject11 = new JSONObject(startadd1);
+                                durationvalue = jsonObject11.getString("value");
+                                durationtext = jsonObject11.getString("text");
+                            }
+                        }
+                    }
+                }
+
+
+                if(TextUtils.isEmpty(distancevalue)){
+                    exceptioncheck = true;
+                    return "";
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                exceptioncheck = true;
+
+            }
+            return distancevalue;
+        }
+
     }
+
+    private class ConnectionTaskJoinFromMainLocation extends
+            AsyncTask<String, Void, Void> {
+        boolean exceptioncheck;
+
+        @Override
+        protected void onPreExecute()
+        {
+            showProgressBar();
+        }
+
+        @Override
+        protected Void doInBackground(String... args) {
+            AuthenticateMainLocation mAuth1 = new AuthenticateMainLocation();
+            try {
+                mAuth1.connection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            try{
+                hideProgressBar();
+                if (exceptioncheck) {
+                    exceptioncheck = false;
+                    Toast.makeText(XMemberRideFragmentActivity.this,
+                            getResources().getString(R.string.exceptionstring),
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (joinpoolresponse != null && joinpoolresponse.length() > 0
+                        && joinpoolresponse.contains("Unauthorized Access")) {
+                    Log.e("MemberRideFragmentActivity",
+                            "joinpoolresponse Unauthorized Access");
+                    Toast.makeText(XMemberRideFragmentActivity.this,
+                            getResources().getString(R.string.exceptionstring),
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(!TextUtils.isEmpty(joinpoolresponse) && joinpoolresponse.equalsIgnoreCase("Error")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(XMemberRideFragmentActivity.this);
+                    builder.setTitle("Opps!");
+                    builder.setMessage("This ride is no longer available");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            Intent mainIntent = new Intent(XMemberRideFragmentActivity.this,
+                                    NewHomeScreen.class);
+                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivityForResult(mainIntent, 500);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        }
+                    });
+                    AlertDialog dialog = builder.show();
+                    TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
+                    messageText.setGravity(Gravity.CENTER);
+                    dialog.show();
+                    return;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(XMemberRideFragmentActivity.this);
+                builder.setTitle("Success!");
+                builder.setMessage("Enjoy your ride. Please pay when you get in the car.");
+                builder.setCancelable(false);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            new ConnectionTaskForcheckpoolalreadyjoinednew()
+                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        } else {
+                            new ConnectionTaskForcheckpoolalreadyjoinednew().execute();
+                        }*/
+                        isRefreshNeeded = true;
+                        sendCheckPoolAreadyJoined();
+
+                        tracker.send(new HitBuilders.EventBuilder()
+                                .setCategory("Join Ride").setAction("Join Ride")
+                                .setLabel("Join Ride").build());
+                    }
+                });
+                AlertDialog dialog = builder.show();
+                TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
+                messageText.setGravity(Gravity.CENTER);
+                dialog.show();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        public class AuthenticateMainLocation {
+
+            public AuthenticateMainLocation() {
+
+            }
+
+            public void connection() throws Exception {
+
+                String latlong = rideDetailsModel.getsLatLon();
+                String latlongEnd = rideDetailsModel.geteLatLon();
+                String distance = rideDetailsModel.getDistance().replace("km", "").trim();
+
+                String poolId;
+                if(rideDetailsModel.getPoolId() == null){
+                    poolId = "";
+                }else {
+                    poolId = rideDetailsModel.getPoolId();
+                }
+                // Connect to google.com
+                HttpClient httpClient = new DefaultHttpClient();
+                String url_select = GlobalVariables.ServiceUrl + "/joinpool.php";
+                HttpPost httpPost = new HttpPost(url_select);
+                BasicNameValuePair CabIdBasicNameValuePair = new BasicNameValuePair("CabId", rideDetailsModel.getCabId());
+                BasicNameValuePair distanceNameValuePair = new BasicNameValuePair("distance", distance);
+                BasicNameValuePair MemberEndLocationAddressBasicNameValuePair = new BasicNameValuePair("MemberEndLocationAddress", rideDetailsModel.getToLocation());
+                BasicNameValuePair MemberEndLocationlatlongBasicNameValuePair = new BasicNameValuePair("MemberEndLocationlatlong", latlongEnd);
+                BasicNameValuePair MemberLocationAddressBasicNameValuePair = new BasicNameValuePair("MemberLocationAddress", rideDetailsModel.getFromLocation());
+                BasicNameValuePair MemberLocationlatlongBasicNameValuePair = new BasicNameValuePair("MemberLocationlatlong", latlong);
+                BasicNameValuePair MemberNameBasicNameValuePair = new BasicNameValuePair("MemberName", FullName);
+                BasicNameValuePair MemberNumberBasicNameValuePair = new BasicNameValuePair("MemberNumber", MemberNumberstr);
+                BasicNameValuePair MessageBasicNameValuePair = new BasicNameValuePair("Message", FullName + " has joined your ride from " + rideDetailsModel.getFromShortName() + " to " + rideDetailsModel.getToShortName());
+                BasicNameValuePair OwnerNameBasicNameValuePair = new BasicNameValuePair("OwnerName", rideDetailsModel.getOwnerName());
+                BasicNameValuePair OwnerNumberBasicNameValuePair = new BasicNameValuePair("OwnerNumber", rideDetailsModel.getMobileNumber());
+                BasicNameValuePair poolIdPair = new BasicNameValuePair("PoolId",poolId);
+                BasicNameValuePair rideTypePair = new BasicNameValuePair("rideType", rideDetailsModel.getRideType());
+                BasicNameValuePair StatusBasicNameValuePair = new BasicNameValuePair("Status", "Nothing");
+
+
+                String authString = rideDetailsModel.getCabId()
+                        +distance
+                        + rideDetailsModel.getToLocation() + latlongEnd
+                        + rideDetailsModel.getFromLocation() + latlong + FullName
+                        + MemberNumberstr + FullName
+                        + " has joined your ride from "
+                        + rideDetailsModel.getFromShortName() + " to "
+                        + rideDetailsModel.getToShortName()
+                        + rideDetailsModel.getOwnerName()
+                        + rideDetailsModel.getMobileNumber() +poolId+rideDetailsModel.getRideType()+ "Nothing";
+
+                BasicNameValuePair authValuePair = new BasicNameValuePair("auth",
+                        GlobalMethods.calculateCMCAuthString(authString));
+                Log.d("authString",authString);
+                Log.d("authValuePair",GlobalMethods.calculateCMCAuthString(authString));
+
+                List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+                nameValuePairList.add(CabIdBasicNameValuePair);
+                nameValuePairList.add(distanceNameValuePair);
+                nameValuePairList.add(OwnerNameBasicNameValuePair);
+                nameValuePairList.add(OwnerNumberBasicNameValuePair);
+                nameValuePairList.add(MemberNameBasicNameValuePair);
+                nameValuePairList.add(MemberNumberBasicNameValuePair);
+                nameValuePairList.add(MemberLocationAddressBasicNameValuePair);
+                nameValuePairList.add(MemberLocationlatlongBasicNameValuePair);
+                nameValuePairList.add(StatusBasicNameValuePair);
+                nameValuePairList.add(MessageBasicNameValuePair);
+                nameValuePairList.add(MemberEndLocationAddressBasicNameValuePair);
+                nameValuePairList.add(MemberEndLocationlatlongBasicNameValuePair);
+                nameValuePairList.add(poolIdPair);
+                nameValuePairList.add(rideTypePair);
+
+                nameValuePairList.add(authValuePair);
+
+                UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(
+                        nameValuePairList);
+                httpPost.setEntity(urlEncodedFormEntity);
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+
+                Log.d("httpResponse", "" + httpResponse);
+
+                InputStream inputStream = httpResponse.getEntity().getContent();
+                InputStreamReader inputStreamReader = new InputStreamReader(
+                        inputStream);
+
+                BufferedReader bufferedReader = new BufferedReader(
+                        inputStreamReader);
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                String bufferedStrChunk = null;
+
+                while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+                    joinpoolresponse = stringBuilder.append(bufferedStrChunk)
+                            .toString();
+                }
+
+                Log.d("joinpoolresponse", "" + stringBuilder.toString());
+            }
+        }
+
+
+        private String getDistance(String fromLatLong, String toLatLong){
+            String distancevalue = null;
+            String distancetext = null;
+            try{
+
+
+                String url = "https://maps.googleapis.com/maps/api/directions/json?"
+                        + "origin="
+                        + fromLatLong
+                        + "&destination="
+                        + toLatLong
+                        + "&sensor=false&units=metric&mode=driving&alternatives=true&key="
+                        + GlobalVariables.GoogleMapsAPIKey;
+
+                Log.d("url", "" + url);
+
+                String CompletePageResponse = new Communicator()
+                        .executeHttpGet(url);
+
+                CompletePageResponse = CompletePageResponse
+                        .replaceAll("\\\\/", "/");
+
+                JSONObject jsonObject = new JSONObject(CompletePageResponse);
+
+                String name = jsonObject.getString("routes");
+
+                JSONArray subArray = new JSONArray(name);
+
+
+                distancetext = null;
+
+                String durationvalue = null;
+                String durationtext = null;
+                double tempDistance = 0;
+                for (int i = 0; i < subArray.length(); i++) {
+
+                    String name1 = subArray.getJSONObject(i).getString("legs")
+                            .toString();
+
+                    JSONArray subArray1 = new JSONArray(name1);
+
+                    for (int i1 = 0; i1 < subArray1.length(); i1++) {
+
+                        String startadd = subArray1.getJSONObject(i1).getString("distance").toString();
+                        String startadd1 = subArray1.getJSONObject(i1).getString("duration").toString();
+
+                        JSONObject jsonObject1 = new JSONObject(startadd);
+                        if(i == 0){
+                            tempDistance = Double.parseDouble(jsonObject1.getString("value"));
+                            distancevalue = String.valueOf(Double.parseDouble(jsonObject1.getString("value")) / 1000);
+                            distancetext = jsonObject1.getString("text");
+                            JSONObject jsonObject11 = new JSONObject(startadd1);
+                            durationvalue = jsonObject11.getString("value");
+                            durationtext = jsonObject11.getString("text");
+                        }else {
+                            if(Double.parseDouble(jsonObject1.getString("value")) < tempDistance ){
+                                tempDistance = Double.parseDouble(jsonObject1.getString("value"));
+                                distancevalue = String.valueOf(Double.parseDouble(jsonObject1.getString("value"))/1000);
+                                distancetext = jsonObject1.getString("text");
+                                JSONObject jsonObject11 = new JSONObject(startadd1);
+                                durationvalue = jsonObject11.getString("value");
+                                durationtext = jsonObject11.getString("text");
+                            }
+                        }
+                    }
+                }
+
+
+                if(TextUtils.isEmpty(distancevalue)){
+                    exceptioncheck = true;
+                    return "";
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                exceptioncheck = true;
+
+            }
+            return distancevalue;
+        }
+
+    }
+
+
 
     private class ConnectionTaskForcheckpoolalreadyjoinednew extends
             AsyncTask<String, Void, Void> {
@@ -3170,12 +3731,18 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                     afterjoinpoolll.setVisibility(View.GONE);*/
                         findViewById(R.id.tvLeave).setVisibility(View.GONE);
                         findViewById(R.id.llCall).setVisibility(View.GONE);
+                        findViewById(R.id.flEditPickDrop).setVisibility(View.VISIBLE);
+
                         tvJoin.setText("CONFIRM");
+                        double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+                        checkPayingAmount(distance);
 
                     } else {
                         // fixit
                    /* beforejoinpoolll.setVisibility(View.GONE);
                     afterjoinpoolll.setVisibility(View.GONE);*/
+                        findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
+
                     }
 
                 } else {
@@ -3186,27 +3753,39 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                         memberlocationaddressFrom = jsonArray.getJSONObject(0).optString("MemberLocationAddress");
                         memberlocationaddressTo = jsonArray.getJSONObject(0).optString("MemberEndLocationAddress");
                         memberDistance = jsonArray.getJSONObject(0).optString("distance");
+                        ((TextView)findViewById(R.id.tvPlaceFrom)).setText(memberlocationaddressFrom);
+                        ((TextView)findViewById(R.id.tvPlaceTo)).setText(memberlocationaddressTo);
+
                         if(hasBorded.equalsIgnoreCase("0")){
+                            findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
                             if (rideDetailsModel.getCabStatus().toString().trim().equalsIgnoreCase("A")) {
                                 findViewById(R.id.llCall).setVisibility(View.VISIBLE);
                                 findViewById(R.id.tvLeave).setVisibility(View.VISIBLE);
                                 tvJoin.setText("PAY");
+                                double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+
+                                checkPayingAmount(distance);
                             } else {
                                 findViewById(R.id.tvLeave).setVisibility(View.GONE);
                                 findViewById(R.id.llCall).setVisibility(View.GONE);
                             }
                         }else if(hasBorded.equalsIgnoreCase("1")){
+                            findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
                             findViewById(R.id.llCall).setVisibility(View.VISIBLE);
                             findViewById(R.id.tvLeave).setVisibility(View.VISIBLE);
                             tvJoin.setVisibility(View.GONE);
                             findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
                             ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
+                            findViewById(R.id.llRupees).setVisibility(View.GONE);
                         }else if(hasBorded.equalsIgnoreCase("2")){
+                            findViewById(R.id.flEditPickDrop).setVisibility(View.GONE);
                             findViewById(R.id.llCall).setVisibility(View.VISIBLE);
                             findViewById(R.id.tvLeave).setVisibility(View.VISIBLE);
                             tvJoin.setVisibility(View.GONE);
                             findViewById(R.id.tvTripCompleted).setVisibility(View.VISIBLE);
                             ((TextView)findViewById(R.id.tvTripCompleted)).setText("ENJOY YOUR RIDE");
+                            findViewById(R.id.llRupees).setVisibility(View.GONE);
+
                         }
 
                     }catch (Exception e){
@@ -3625,16 +4204,12 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
 
     private class ConnectionTaskFordroppool extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(
-                XMemberRideFragmentActivity.this);
+
         private boolean exceptioncheck;
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+           showProgressBar();
 
         }
 
@@ -3655,10 +4230,7 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         protected void onPostExecute(Void v) {
 
           try{
-              if (dialog != null && dialog.isShowing()) {
-                  dialog.dismiss();
-              }
-
+             hideProgressBar();
               if (exceptioncheck) {
                   exceptioncheck = false;
                   Toast.makeText(XMemberRideFragmentActivity.this,
@@ -3806,7 +4378,7 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         alertDialog.setButton("LINK NOW", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if(SPreference.getRideTakerWalletType(XMemberRideFragmentActivity.this) == AppConstants.PAYMENT_TYPE_MOBIKWIK) {
+                if (SPreference.getRideTakerWalletType(XMemberRideFragmentActivity.this) == AppConstants.PAYMENT_TYPE_MOBIKWIK) {
 
                     Intent intent = new Intent(XMemberRideFragmentActivity.this, FirstLoginWalletsActivity.class);
                     intent.putExtra(AppConstants.ACTIVITYNAME, AppConstants.XMEMBERRIDEFRAGACITIVTY);
@@ -3834,7 +4406,7 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-               // openAppOrMSite();
+                // openAppOrMSite();
                 String mSite = "https://m.mobikwik.com";
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(mSite));
@@ -3898,12 +4470,13 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
       //  int distance = (int)Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
       //  int distance = (int)Double.parseDouble(getDistance(memberlocationaddressFrom,memberlocationaddressTo).replace("km","").trim());
-        if(TextUtils.isEmpty(memberDistance)){
+        if(rideDetailsModel == null){
             Toast.makeText(XMemberRideFragmentActivity.this,"Something went wrong", Toast.LENGTH_LONG).show();
             return;
         }
         double minFare = Double.parseDouble(rideDetailsModel.getPerKmCharge());
-        double distance = Double.parseDouble(memberDistance.trim());
+       // double distance = Double.parseDouble(memberDistance.trim());
+        double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
         totalFare = (int)Math.round(distance*minFare);
         paymentDialog = new Dialog(XMemberRideFragmentActivity.this);
         paymentDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -3916,8 +4489,17 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         ((TextView)paymentDialog.findViewById(R.id.tvPleaseWait)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this,AppConstants.HELVITICA));
         ((TextView)paymentDialog.findViewById(R.id.tvPaymentStatus)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this,AppConstants.HELVITICA));
         ((TextView)paymentDialog.findViewById(R.id.tvMsg2)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this,AppConstants.HELVITICA));
-        ((TextView)paymentDialog.findViewById(R.id.tvOK)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this,AppConstants.HELVITICA));
-        ((TextView)paymentDialog.findViewById(R.id.tvMsg)).setText("You will be charged" +" "+getResources().getString(R.string.rupee)+totalFare+" "+"for this ride.");
+        ((TextView)paymentDialog.findViewById(R.id.tvOK)).setTypeface(FontTypeface.getTypeface(XMemberRideFragmentActivity.this, AppConstants.HELVITICA));
+
+        String amt = "";
+        if(!TextUtils.isEmpty(payableByRider) && !payableByRider.equalsIgnoreCase("0")){
+            // do nothing
+            amt = payableByRider;
+        }else {
+            amt = String.valueOf(totalFare);
+        }
+
+        ((TextView)paymentDialog.findViewById(R.id.tvMsg)).setText("You will be charged" +" "+getResources().getString(R.string.rupee)+amt+" "+"for this ride.");
 
       //  TextView tvPayTypeText = (TextView)paymentDialog.findViewById(R.id.tvCash);
         ImageView ivPayImage = (ImageView)paymentDialog.findViewById(R.id.pTytpeImage);
@@ -3947,7 +4529,7 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                 if(SPreference.getRideTakerWalletType(XMemberRideFragmentActivity.this) != AppConstants.PAYMENT_TYPE_CASH){
                     checkBalanceNew();
                 }else {
-                    sendCashPayRequest(String.valueOf(totalFare),rideDetailsModel.getCabId(),MemberNumberstr.substring(4), rideDetailsModel.getMobileNumber().substring(4));
+                    sendCashPayRequest(String.valueOf(totalFare),rideDetailsModel.getCabId(),MemberNumberstr.substring(4), rideDetailsModel.getMobileNumber().substring(4), "initiatePeerTransfer", false);
                 }
                 tracker.send(new HitBuilders.EventBuilder().setCategory("Payment done").setAction("OK button pressed on Pay popup").setLabel("Choose payment option").build());
 
@@ -3981,7 +4563,20 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         paymentDialog.show();
     }
 
-    private void sendCashPayRequest(String amount,String cabID,String sendercell, String receivercell) {
+    private void sendFreeRideRequest(){
+        if(TextUtils.isEmpty(memberDistance)){
+            Toast.makeText(XMemberRideFragmentActivity.this,"Something went wrong", Toast.LENGTH_LONG).show();
+            return;
+        }
+        double minFare = Double.parseDouble(rideDetailsModel.getPerKmCharge());
+        double distance = Double.parseDouble(memberDistance.trim());
+        totalFare = (int)Math.round(distance*minFare);
+
+        sendCashPayRequest(String.valueOf(totalFare),rideDetailsModel.getCabId(),MemberNumberstr.substring(4), rideDetailsModel.getMobileNumber().substring(4), "sendFreeRideRequest", true);
+
+    }
+
+    private void sendCashPayRequest(String amount,String cabID,String sendercell, String receivercell,String uniqueId, boolean showProgressDialog) {
         String endpoint = GlobalVariables.ServiceUrl + "/payNow.php";
         String authString = amount + cabID+AppConstants.CASH
                 + receivercell + sendercell ;
@@ -3990,8 +4585,8 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                 + GlobalMethods.calculateCMCAuthString(authString);
         Log.d("CheckPoolFragmentActivity", "initiatePeerTransfer endpoint : "
                 + endpoint + " params : " + params);
-        new GlobalAsyncTask(this, endpoint, params, null, this, false,
-                "initiatePeerTransfer", false);
+        new GlobalAsyncTask(this, endpoint, params, null, this, showProgressDialog,
+                uniqueId, false);
 
     }
 
@@ -4092,84 +4687,9 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         }
     }
 
-   /* private int getDistance(){
-        try{
-            String fromlatLong = memberlocationlatlong.latitude+","+memberlocationlatlong.longitude;
-            String tolatLong = memberlocationlatlongTo.latitude+","+memberlocationlatlongTo.longitude;
-            String source = memberlocationaddressFrom.trim()
-                    .replaceAll(" ", "%0A").replaceAll("\n","%0A");
 
-            String dest = memberlocationaddressTo.trim()
-                    .replaceAll(" ", "%0A").replaceAll("\n","%0A");;
 
-            String url = "https://maps.googleapis.com/maps/api/directions/json?"
-                    + "origin="
-                    + source
-                    + "&destination="
-                    + dest
-                    + "&sensor=false&units=metric&mode=driving&alternatives=true&key="
-                    + GlobalVariables.GoogleMapsAPIKey;
-
-            Log.d("url", "" + url);
-
-            String CompletePageResponse = new Communicator()
-                    .executeHttpGet(url);
-
-            CompletePageResponse = CompletePageResponse
-                    .replaceAll("\\\\/", "/");
-
-            JSONObject jsonObject = new JSONObject(CompletePageResponse);
-
-            String name = jsonObject.getString("routes");
-
-            JSONArray subArray = new JSONArray(name);
-
-            String distancevalue = null;
-            String distancetext = null;
-
-            String durationvalue = null;
-            String durationtext = null;
-
-            for (int i = 0; i < subArray.length(); i++) {
-
-                String name1 = subArray.getJSONObject(i).getString("legs")
-                        .toString();
-
-                JSONArray subArray1 = new JSONArray(name1);
-
-                for (int i1 = 0; i1 < subArray1.length(); i1++) {
-
-                    String startadd = subArray1.getJSONObject(i1)
-                            .getString("distance").toString();
-
-                    JSONObject jsonObject1 = new JSONObject(startadd);
-                    distancevalue = jsonObject1.getString("value");
-                    distancetext = jsonObject1.getString("text");
-
-                    String startadd1 = subArray1.getJSONObject(i1)
-                            .getString("duration").toString();
-
-                    JSONObject jsonObject11 = new JSONObject(startadd1);
-                    durationvalue = jsonObject11.getString("value");
-                    durationtext = jsonObject11.getString("text");
-                }
-            }
-            if(TextUtils.isEmpty(distancetext)){
-               // exceptioncheck = true;
-                return 0;
-            }
-
-            Log.d("distancevalue", "" + distancevalue);
-            Log.d("distancetext", "" + distancetext);
-
-            Log.d("durationvalue", "" + durationvalue);
-            Log.d("durationtext", "" + durationtext);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return 0;
-    }*/
-
+/*
     private String getDistance(String fromAddress, String toAddres){
         String distancevalue = null;
         String distancetext = null;
@@ -4179,7 +4699,7 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
                     .replaceAll(" ", "%0A").replaceAll("\n","%0A");
 
             String dest = toAddres.trim()
-                    .replaceAll(" ", "%0A").replaceAll("\n","%0A");;
+                    .replaceAll(" ", "%0A").replaceAll("\n","%0A");
 
             String url = "https://maps.googleapis.com/maps/api/directions/json?"
                     + "origin="
@@ -4246,6 +4766,10 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
         }
         return distancetext;
     }
+*/
+
+
+
 
     private void isValidDistance(){
         String wayPoint = "&waypoints=optimize:true";
@@ -4507,10 +5031,9 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
     }*/
     private void checkBalanceNew(){
         double minFare = Double.parseDouble(rideDetailsModel.getPerKmCharge());
-        double distance = Double.parseDouble(memberDistance.trim());
+      //  double distance = Double.parseDouble(memberDistance.trim());
 
-       // int minFare = Integer.parseInt(rideDetailsModel.getPerKmCharge());
-       // int distance = (int)Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+        double distance = Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
         int totalFare = (int)Math.round(distance*minFare);
 
             String endpoint = GlobalVariables.ServiceUrl + "/walletApis.php";
@@ -4522,6 +5045,35 @@ public class XMemberRideFragmentActivity extends AppCompatActivity implements Vi
             new GlobalAsyncTask(XMemberRideFragmentActivity.this, endpoint, params,
                     null, XMemberRideFragmentActivity.this, true, "checkBalance",
                     false);
+    }
+
+    private void checkPayingAmount(double d){
+        isFreeRide = false;
+        double minFare = Double.parseDouble(rideDetailsModel.getPerKmCharge());
+      //  double distance = Double.parseDouble(memberDistance.trim());
+        double distance =d;
+
+        // int minFare = Integer.parseInt(rideDetailsModel.getPerKmCharge());
+        // int distance = (int)Double.parseDouble(rideDetailsModel.getDistance().replace("km","").trim());
+        int totalFare = (int)Math.round(distance*minFare);
+
+        String endpoint = GlobalVariables.ServiceUrl + "/walletApis.php";
+        String walletType = "";
+        /*if(!TextUtils.isEmpty(SPreference.getWalletType(XMemberRideFragmentActivity.this))){
+            walletType = SPreference.getWalletType(XMemberRideFragmentActivity.this);
+        }else {
+            walletType = AppConstants.CASH;
+        }*/
+        walletType = AppConstants.CASH;
+
+        String authString = "checkBalanceForRide"+totalFare+MemberNumberstr+walletType;
+        String params = "act=checkBalanceForRide"+"&amount="+totalFare+"&mobileNumber="
+                + MemberNumberstr+"&paymentMethod="+walletType+ "&auth="
+                + GlobalMethods.calculateCMCAuthString(authString);
+
+        new GlobalAsyncTask(XMemberRideFragmentActivity.this, endpoint, params,
+                null, XMemberRideFragmentActivity.this, true, "checkPayingAmount",
+                false);
     }
 
     private void checkTokenExist(){

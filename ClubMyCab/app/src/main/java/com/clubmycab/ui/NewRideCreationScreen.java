@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -105,7 +106,7 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
     static final int TIME_DIALOG_ID = 1001;
     static final int DATE_DIALOG_ID = 1002;
     float FromToMinDestance = 2000;
-    private static final int MAX_SEAT_COUNT = 6;
+    private static final int MAX_SEAT_COUNT = 20;
 
     private Tracker tracker;
     private AppEventsLogger logger;
@@ -144,6 +145,7 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
     private String distancetext;
     private String privateRideResponse;
     private int pickerHour;
+    private Dialog onedialog;
 
     private enum ScreenType {
         CARPOOL, CABSHARE;
@@ -1183,17 +1185,39 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
     /**
      * Request for Public Group--------------->
      */
+
+    private void showProgressBar(){
+        try{
+            onedialog = new Dialog(NewRideCreationScreen.this);
+            onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            onedialog.setCancelable(false);
+            onedialog.setContentView(R.layout.dialog_ishare_loader);
+            onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+            // onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+            onedialog.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void hideProgressBar(){
+        try{
+            if(onedialog != null)
+                onedialog.dismiss();
+            onedialog = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
     private class SendInviteToPublicGrpTask extends AsyncTask<String, Void, Void> {
         private boolean exceptioncheck;
-        private ProgressDialog dialog = new ProgressDialog(
-                NewRideCreationScreen.this);
+
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+          showProgressBar();
 
         }
 
@@ -1213,9 +1237,7 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
         @Override
         protected void onPostExecute(Void v) {
 
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            hideProgressBar();
 
             if (exceptioncheck) {
                 exceptioncheck = false;
@@ -1287,12 +1309,12 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
             public void connection() throws Exception {
                 String fromlatLong = fAddress.getLatitude()+","+fAddress.getLongitude();
                 String tolatLong = tAddress.getLatitude()+","+tAddress.getLongitude();
-                String source = from_places.getText().toString().trim()
+               /* String source = from_places.getText().toString().trim()
                         .replaceAll(" ", "%0A").replaceAll("\n","%0A");
 
                 String dest = to_places.getText().toString().trim()
                         .replaceAll(" ", "%0A").replaceAll("\n","%0A");;
-
+*/
                 String url = "https://maps.googleapis.com/maps/api/directions/json?"
                         + "origin="
                         + fromlatLong
@@ -1358,6 +1380,11 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
                     }
                 }
                 if(TextUtils.isEmpty(distancetext)){
+                    exceptioncheck = true;
+                    return;
+                }
+
+                if(!TextUtils.isEmpty(distancevalue) && Integer.parseInt(distancevalue) == 0){
                     exceptioncheck = true;
                     return;
                 }
@@ -1578,15 +1605,11 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
     private class ConnectionTaskForSendInvite extends
             AsyncTask<String, Void, Void> {
         private boolean exceptioncheck;
-        private ProgressDialog dialog = new ProgressDialog(
-                NewRideCreationScreen.this);
+
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+           showProgressBar();
 
         }
 
@@ -1606,9 +1629,7 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
         @Override
         protected void onPostExecute(Void v) {
 
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+           hideProgressBar();
 
             if (exceptioncheck) {
                 exceptioncheck = false;
@@ -1669,10 +1690,10 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
             public void connection() throws Exception {
                 String fromlatLong = fAddress.getLatitude()+","+fAddress.getLongitude();
                 String tolatLong = tAddress.getLatitude()+","+tAddress.getLongitude();
-                String source = from_places.getText().toString().trim()
+               /* String source = from_places.getText().toString().trim()
                         .replaceAll(" ", "%20").replaceAll("\n","%0A");
                 String dest = to_places.getText().toString().trim()
-                        .replaceAll(" ", "%20").replaceAll("\n","%0A");
+                        .replaceAll(" ", "%20").replaceAll("\n","%0A");*/
 
                 String url = "https://maps.googleapis.com/maps/api/directions/json?"
                         + "origin="
@@ -1740,10 +1761,17 @@ public class NewRideCreationScreen extends Activity implements GlobalAsyncTask.A
 
                 Log.d("durationvalue", "" + durationvalue);
                 Log.d("durationtext", "" + durationtext);
-                if(TextUtils.isEmpty(distancevalue)){
+                if(TextUtils.isEmpty(distancevalue) ){
                     exceptioncheck = true;
                     return;
                 }
+
+                if(!TextUtils.isEmpty(distancevalue) && Integer.parseInt(distancevalue) == 0){
+                    exceptioncheck = true;
+                    return;
+                }
+
+
 
                 String msg = FullName + " invited you to share a cab from "
                         + fromshortname + " to " + toshortname;

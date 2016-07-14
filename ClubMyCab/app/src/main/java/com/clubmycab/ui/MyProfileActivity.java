@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -124,6 +126,7 @@ public class MyProfileActivity extends Activity {
     private String searchString = "";
     private EditText etRegistrationNo;
     private AutoCompleteTextView etModelName;
+	private Dialog onedialog;
 
 
 	@Override
@@ -1021,18 +1024,11 @@ public class MyProfileActivity extends Activity {
 
 	private class ConnectionTaskForUpdateMyProfile extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(
-				MyProfileActivity.this);
 
 		@Override
 		protected void onPreExecute() {
 			try{
-				if(dialog != null){
-					dialog.setMessage("Please Wait...");
-					dialog.setCancelable(false);
-					dialog.setCanceledOnTouchOutside(false);
-					dialog.show();
-				}
+				showProgressBar();
 			}catch (Exception e){
 				e.printStackTrace();
 			}
@@ -1059,9 +1055,7 @@ public class MyProfileActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void v) {
 			try{
-				if (dialog != null && dialog.isShowing()) {
-					dialog.dismiss();
-				}
+				hideProgressBar();
 
 				if (exceptioncheck) {
 					exceptioncheck = false;
@@ -1080,6 +1074,10 @@ public class MyProfileActivity extends Activity {
 					/*Toast.makeText(MyProfileActivity.this,
 							"Profile updated successfully", Toast.LENGTH_LONG)
 							.show();*/
+					SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
+					FullName = mPrefs.getString("FullName", "");
+					MobileNumberstr = mPrefs.getString("MobileNumber", "");
+					profilebannerusername.setText(FullName);
 				} else if (updateprofileresp.contains("Unauthorized Access")) {
 					Log.e("MyProfileActivity",
 							"updateprofileresp Unauthorized Access");
@@ -1091,6 +1089,8 @@ public class MyProfileActivity extends Activity {
 
 					Toast.makeText(MyProfileActivity.this, "" + updateprofileresp,
 							Toast.LENGTH_LONG).show();
+
+
 				}
                 if (!isOnline()) {
                     Toast.makeText(MyProfileActivity.this, "Please check internet connection", Toast.LENGTH_LONG).show();
@@ -1118,19 +1118,12 @@ public class MyProfileActivity extends Activity {
 		}
 	}
     private class SaveVehicleDetailTask extends AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(MyProfileActivity.this);
         private String result;
         private String addVehicalResul;
 
         @Override
         protected void onPreExecute() {
-            if (dialog != null)
-                dialog.dismiss();
-            dialog = new ProgressDialog(MyProfileActivity.this);
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+           showProgressBar();
 
         }
 
@@ -1151,8 +1144,7 @@ public class MyProfileActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
-                if (dialog != null)
-                    dialog.dismiss();
+                hideProgressBar();
                 if (!TextUtils.isEmpty(addVehicalResul)) {
                     if (exceptioncheck) {
                         exceptioncheck = false;
@@ -1376,6 +1368,24 @@ public class MyProfileActivity extends Activity {
 				SharedPreferences.Editor editor1 = sharedPreferences1.edit();
 				editor1.putString("myprofile", myprofileresp.toString().trim());
 				editor1.commit();
+
+				try{
+					JSONArray jsonArray = new JSONArray(myprofileresp);
+
+					if(jsonArray != null && jsonArray.length()>0){
+						JSONObject jsonObject = jsonArray.getJSONObject(0);
+						SharedPreferences mPrefs = getSharedPreferences("FacebookData", 0);
+						mPrefs.edit().putString("FullName", jsonObject.optString("FullName")).commit();
+						mPrefs.edit().putString("MobileNumber", jsonObject.optString("MobileNumber")).commit();
+						mPrefs.edit().putString("Email", jsonObject.optString("Email")).commit();
+						//MobileNumberstr = mPrefs.getString("MobileNumber", "");
+
+
+					}
+
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -1536,18 +1546,12 @@ public class MyProfileActivity extends Activity {
 
 	private class ConnectionTaskForImageUpload extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(
-				MyProfileActivity.this);
+
 
 		@Override
 		protected void onPreExecute() {
 			try{
-                if(dialog != null){
-                    dialog.setMessage("Please Wait...");
-                    dialog.setCancelable(false);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
-                }
+               showProgressBar();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -1571,9 +1575,7 @@ public class MyProfileActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void v) {
 			try{
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+              hideProgressBar();
 
                 if (exceptioncheck) {
                     exceptioncheck = false;
@@ -1872,20 +1874,13 @@ public class MyProfileActivity extends Activity {
 	};
 
     private class ConnectionTaskGetModel extends AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(MyProfileActivity.this);
         private String result;
 
         @Override
         protected void onPreExecute() {
             vehicleNameList.clear();
             vehicleIDList.clear();
-            if (dialog != null)
-                dialog.dismiss();
-            dialog = new ProgressDialog(MyProfileActivity.this);
-            dialog.setMessage("Please Wait...");
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+           showProgressBar();
 
         }
 
@@ -1906,8 +1901,7 @@ public class MyProfileActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             try {
-                if (dialog != null)
-                    dialog.dismiss();
+                hideProgressBar();
                 if (!TextUtils.isEmpty(result)) {
                     if (exceptioncheck) {
                         exceptioncheck = false;
@@ -2005,4 +1999,30 @@ public class MyProfileActivity extends Activity {
         }
         return false;
     }
+
+	private void showProgressBar(){
+		try{
+			onedialog = new Dialog(MyProfileActivity.this);
+			onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			onedialog.setContentView(R.layout.dialog_ishare_loader);
+			onedialog.setCancelable(false);
+			onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+			// onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+			onedialog.show();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void hideProgressBar(){
+		try{
+			if(onedialog != null)
+				onedialog.dismiss();
+			onedialog = null;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+	}
 }

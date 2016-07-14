@@ -413,6 +413,8 @@ public class FavoritePlaceFindActivity extends Activity implements OnClickListen
                 @Override
                 public void onClick(View v) {
 					Utility.hideSoftKeyboard(FavoritePlaceFindActivity.this);
+                    if(TextUtils.isEmpty(sharedPreferences.getString(AppConstants.SEARCH_INDEX_LATITUDE_+texView.getId(),"")))
+                        return;
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("address", sharedPreferences.getString(AppConstants.SEARCH_INDEX_+texView.getId(),""));
 					resultIntent.putExtra("latitude", Double.parseDouble(sharedPreferences.getString(AppConstants.SEARCH_INDEX_LATITUDE_+texView.getId(),"")));

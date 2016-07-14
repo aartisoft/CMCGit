@@ -3,7 +3,6 @@ package com.clubmycab.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -135,7 +134,6 @@ public class CabsFragment extends Fragment implements OnClickListener,
 	private String FullName;
 	private String MobileNumberstr;
 	private String mUberBookingInputParams, mUberUsername, mUberPassword;
-	public ProgressDialog dialog12;
 	float FromToMinDestance = 2000;
 	private boolean isRefresingCabList;
 	private boolean isFirstLaunch = true;
@@ -350,13 +348,15 @@ public class CabsFragment extends Fragment implements OnClickListener,
 		case R.id.flFromLocation:
 			 //myMap.getUiSettings().setAllGesturesEnabled(true);
 			isMapVisible = true;
-			myMap.getUiSettings().setAllGesturesEnabled(true);
+			if(myMap != null)
+				myMap.getUiSettings().setAllGesturesEnabled(true);
 			picFromLocation();
 			break;
 
 		case R.id.flToLocation:
 			isMapVisible = true;
-			 myMap.getUiSettings().setAllGesturesEnabled(true);
+			if(myMap != null)
+				myMap.getUiSettings().setAllGesturesEnabled(true);
 			picToLocation();
 			break;
 
@@ -847,11 +847,11 @@ public class CabsFragment extends Fragment implements OnClickListener,
 
 								if (mCabSearchArray.length() > 0) {
 									// Default sort by time
-									togglePriceTimeSort = true;
+									togglePriceTimeSort = false;
 									((NewHomeScreen) getActivity())
-											.setRupeeIcon();
+											.setTimeIcon();
 									JSONArray jsonArray = performSortOnResults(
-											mCabSearchArray, "timeEstimate");
+											mCabSearchArray, "low_estimate");
 									mCabSearchArray = jsonArray;
 								}
 
@@ -1988,7 +1988,6 @@ public class CabsFragment extends Fragment implements OnClickListener,
 			AsyncTask<String, Void, String> {
 
 		String result;
-		private ProgressDialog dialog12;
 
 		@Override
 		protected void onPreExecute() {
@@ -4725,6 +4724,7 @@ public class CabsFragment extends Fragment implements OnClickListener,
 		try{
 			onedialog = new Dialog(getActivity());
 			onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			onedialog.setCancelable(false);
 			onedialog.setContentView(R.layout.dialog_ishare_loader);
 			onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 

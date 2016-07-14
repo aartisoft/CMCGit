@@ -3,7 +3,6 @@ package com.clubmycab.ui;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -167,6 +166,9 @@ public class XCheckPoolFragmentActivty extends AppCompatActivity implements Glob
         ((TextView) findViewById(R.id.tvUserName)).setTypeface(FontTypeface.getTypeface(XCheckPoolFragmentActivty.this, AppConstants.HELVITICA));
         ((TextView) findViewById(R.id.tvDate)).setTypeface(FontTypeface.getTypeface(XCheckPoolFragmentActivty.this, AppConstants.HELVITICA));
         ((TextView) findViewById(R.id.tvTime)).setTypeface(FontTypeface.getTypeface(XCheckPoolFragmentActivty.this, AppConstants.HELVITICA));
+        ((TextView) findViewById(R.id.tvPlaceFrom)).setTypeface(FontTypeface.getTypeface(XCheckPoolFragmentActivty.this, AppConstants.HELVITICA));
+        ((TextView) findViewById(R.id.tvPlaceTo)).setTypeface(FontTypeface.getTypeface(XCheckPoolFragmentActivty.this, AppConstants.HELVITICA));
+
         if (rideDetailsModel != null) {
             ((TextView) findViewById(R.id.tvUserName)).setText(rideDetailsModel.getOwnerName());
             ((TextView) findViewById(R.id.tvTime)).setText(rideDetailsModel.getTravelTime());
@@ -174,8 +176,8 @@ public class XCheckPoolFragmentActivty extends AppCompatActivity implements Glob
             int month = Integer.parseInt(arr2[1]);
             int date = Integer.parseInt(arr2[0]);
             ((TextView) findViewById(R.id.tvDate)).setText(String.format("%02d", date) + " " + getMontString(month));
-            ((TextView) findViewById(R.id.tvPlaceFrom)).setText(rideDetailsModel.getFromShortName());
-            ((TextView) findViewById(R.id.tvPlaceTo)).setText(rideDetailsModel.getToShortName());
+            ((TextView) findViewById(R.id.tvPlaceFrom)).setText(rideDetailsModel.getFromLocation());
+            ((TextView) findViewById(R.id.tvPlaceTo)).setText(rideDetailsModel.getToLocation());
             if (rideDetailsModel.getImagename() != null) {
                 tracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Click").setAction("User Image Clicked")
@@ -1911,19 +1913,13 @@ public class XCheckPoolFragmentActivty extends AppCompatActivity implements Glob
     }
     private class ConnectionTaskForownercancelpool extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(
-                XCheckPoolFragmentActivty.this);
+
         private boolean exceptioncheck;
 
         @Override
         protected void onPreExecute() {
            try{
-               if(dialog != null){
-                   dialog.setMessage("Please Wait...");
-                   dialog.setCancelable(false);
-                   dialog.setCanceledOnTouchOutside(false);
-                   dialog.show();
-               }
+             showProgressBar();
            }catch (Exception e){
                e.printStackTrace();
            }
@@ -1947,9 +1943,7 @@ public class XCheckPoolFragmentActivty extends AppCompatActivity implements Glob
         protected void onPostExecute(Void v) {
 
           try{
-              if (dialog != null && dialog.isShowing()) {
-                  dialog.dismiss();
-              }
+              hideProgressBar();
 
               if (exceptioncheck) {
                   exceptioncheck = false;

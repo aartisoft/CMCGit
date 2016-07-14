@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/res/merged/release/values-ta/values-ta.xml",
+        "outputFile": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/res/merged/release/values-ta/values-ta.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 247
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 360
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,7 +49,7 @@
                     "endOffset": 473
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -68,7 +68,7 @@
                     "endOffset": 567
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -87,7 +87,7 @@
                     "endOffset": 642
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -106,7 +106,7 @@
                     "endOffset": 715
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -125,7 +125,7 @@
                     "endOffset": 778
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -144,7 +144,7 @@
                     "endOffset": 853
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 9,
                         "startColumn": 4,
@@ -163,7 +163,7 @@
                     "endOffset": 928
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 10,
                         "startColumn": 4,
@@ -182,7 +182,7 @@
                     "endOffset": 1026
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 11,
                         "startColumn": 4,
@@ -201,7 +201,7 @@
                     "endOffset": 1101
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 12,
                         "startColumn": 4,
@@ -220,7 +220,7 @@
                     "endOffset": 1176
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 13,
                         "startColumn": 4,
@@ -239,7 +239,7 @@
                     "endOffset": 1268
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 14,
                         "startColumn": 4,
@@ -258,7 +258,7 @@
                     "endOffset": 1380
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 15,
                         "startColumn": 4,
@@ -277,7 +277,7 @@
                     "endOffset": 1446
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 16,
                         "startColumn": 4,
@@ -296,7 +296,7 @@
                     "endOffset": 1511
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 17,
                         "startColumn": 4,
@@ -315,7 +315,7 @@
                     "endOffset": 1664
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 18,
                         "startColumn": 4,
@@ -334,354 +334,7 @@
                     "endOffset": 1727
                 },
                 "from": {
-                    "file": "/home/newpc/Desktop/OtherData/ClubMyCab15April/ClubMyCab1/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 19,
-                        "startColumn": 4,
-                        "startOffset": 1669,
-                        "endColumn": 62,
-                        "endOffset": 1727
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/res/merged/release/values-ta/values-ta.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 55,
-                    "endColumn": 196,
-                    "endOffset": 247
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 2,
-                        "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 196,
-                        "endOffset": 247
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 3,
-                    "startColumn": 4,
-                    "startOffset": 252,
-                    "endColumn": 112,
-                    "endOffset": 360
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 3,
-                        "startColumn": 4,
-                        "startOffset": 252,
-                        "endColumn": 112,
-                        "endOffset": 360
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 4,
-                    "startColumn": 4,
-                    "startOffset": 365,
-                    "endColumn": 112,
-                    "endOffset": 473
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 365,
-                        "endColumn": 112,
-                        "endOffset": 473
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 5,
-                    "startColumn": 4,
-                    "startOffset": 478,
-                    "endColumn": 93,
-                    "endOffset": 567
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 5,
-                        "startColumn": 4,
-                        "startOffset": 478,
-                        "endColumn": 93,
-                        "endOffset": 567
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 6,
-                    "startColumn": 4,
-                    "startOffset": 572,
-                    "endColumn": 74,
-                    "endOffset": 642
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 6,
-                        "startColumn": 4,
-                        "startOffset": 572,
-                        "endColumn": 74,
-                        "endOffset": 642
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 7,
-                    "startColumn": 4,
-                    "startOffset": 647,
-                    "endColumn": 72,
-                    "endOffset": 715
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 7,
-                        "startColumn": 4,
-                        "startOffset": 647,
-                        "endColumn": 72,
-                        "endOffset": 715
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 8,
-                    "startColumn": 4,
-                    "startOffset": 720,
-                    "endColumn": 62,
-                    "endOffset": 778
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 8,
-                        "startColumn": 4,
-                        "startOffset": 720,
-                        "endColumn": 62,
-                        "endOffset": 778
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 9,
-                    "startColumn": 4,
-                    "startOffset": 783,
-                    "endColumn": 74,
-                    "endOffset": 853
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 9,
-                        "startColumn": 4,
-                        "startOffset": 783,
-                        "endColumn": 74,
-                        "endOffset": 853
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 10,
-                    "startColumn": 4,
-                    "startOffset": 858,
-                    "endColumn": 74,
-                    "endOffset": 928
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 10,
-                        "startColumn": 4,
-                        "startOffset": 858,
-                        "endColumn": 74,
-                        "endOffset": 928
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 11,
-                    "startColumn": 4,
-                    "startOffset": 933,
-                    "endColumn": 97,
-                    "endOffset": 1026
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 11,
-                        "startColumn": 4,
-                        "startOffset": 933,
-                        "endColumn": 97,
-                        "endOffset": 1026
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 12,
-                    "startColumn": 4,
-                    "startOffset": 1031,
-                    "endColumn": 74,
-                    "endOffset": 1101
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 12,
-                        "startColumn": 4,
-                        "startOffset": 1031,
-                        "endColumn": 74,
-                        "endOffset": 1101
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 13,
-                    "startColumn": 4,
-                    "startOffset": 1106,
-                    "endColumn": 74,
-                    "endOffset": 1176
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 13,
-                        "startColumn": 4,
-                        "startOffset": 1106,
-                        "endColumn": 74,
-                        "endOffset": 1176
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 14,
-                    "startColumn": 4,
-                    "startOffset": 1181,
-                    "endColumn": 91,
-                    "endOffset": 1268
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 14,
-                        "startColumn": 4,
-                        "startOffset": 1181,
-                        "endColumn": 91,
-                        "endOffset": 1268
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 15,
-                    "startColumn": 4,
-                    "startOffset": 1273,
-                    "endColumn": 111,
-                    "endOffset": 1380
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 15,
-                        "startColumn": 4,
-                        "startOffset": 1273,
-                        "endColumn": 111,
-                        "endOffset": 1380
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 16,
-                    "startColumn": 4,
-                    "startOffset": 1385,
-                    "endColumn": 65,
-                    "endOffset": 1446
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 16,
-                        "startColumn": 4,
-                        "startOffset": 1385,
-                        "endColumn": 65,
-                        "endOffset": 1446
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 17,
-                    "startColumn": 4,
-                    "startOffset": 1451,
-                    "endColumn": 64,
-                    "endOffset": 1511
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 17,
-                        "startColumn": 4,
-                        "startOffset": 1451,
-                        "endColumn": 64,
-                        "endOffset": 1511
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 18,
-                    "startColumn": 4,
-                    "startOffset": 1516,
-                    "endColumn": 152,
-                    "endOffset": 1664
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
-                    "position": {
-                        "startLine": 18,
-                        "startColumn": 4,
-                        "startOffset": 1516,
-                        "endColumn": 152,
-                        "endOffset": 1664
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 19,
-                    "startColumn": 4,
-                    "startOffset": 1669,
-                    "endColumn": 62,
-                    "endOffset": 1727
-                },
-                "from": {
-                    "file": "/Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.1/res/values-ta/values-ta.xml",
+                    "file": "/Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.13.2/res/values-ta/values-ta.xml",
                     "position": {
                         "startLine": 19,
                         "startColumn": 4,

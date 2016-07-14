@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -152,6 +151,7 @@ public class XMyClubsActivty extends Activity implements
     private ArrayList<GroupDataModel> groupList = new ArrayList<GroupDataModel>();
     private ListView listMyclubs;
     private MyClubsAdapter adapterClubMy;
+    private Dialog onedialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1360,19 +1360,39 @@ public class XMyClubsActivty extends Activity implements
 
     // ///////
 
+    private void showProgressBar(){
+        try{
+            onedialog = new Dialog(XMyClubsActivty.this);
+            onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            onedialog.setContentView(R.layout.dialog_ishare_loader);
+            onedialog.setCancelable(false);
+            onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+            // onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+            onedialog.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void hideProgressBar(){
+        try{
+            if(onedialog != null)
+                onedialog.dismiss();
+            onedialog = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     private class ConnectionTaskForRemoveuserfromclub extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(XMyClubsActivty.this);
 
         @Override
         protected void onPreExecute() {
            try{
-               if(dialog != null){
-                   dialog.setMessage("Please Wait...");
-                   dialog.setCancelable(false);
-                   dialog.setCanceledOnTouchOutside(false);
-                   dialog.show();
-               }
+               showProgressBar();
            }catch (Exception e){
                e.printStackTrace();
            }
@@ -1397,9 +1417,7 @@ public class XMyClubsActivty extends Activity implements
         @Override
         protected void onPostExecute(Void v) {
             try{
-                if(dialog != null){
-                    dialog.dismiss();
-                }
+               hideProgressBar();
                 if (exceptioncheck) {
                     exceptioncheck = false;
                     Toast.makeText(XMyClubsActivty.this,
@@ -1561,17 +1579,11 @@ public class XMyClubsActivty extends Activity implements
 
     private class ConnectionTaskForAddmoreuserstoclub extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(XMyClubsActivty.this);
 
         @Override
         protected void onPreExecute() {
           try {
-              if(dialog != null){
-                  dialog.setMessage("Please Wait...");
-                  dialog.setCancelable(false);
-                  dialog.setCanceledOnTouchOutside(false);
-                  dialog.show();
-              }
+              showProgressBar();
           }catch (Exception e){
               e.printStackTrace();
           }
@@ -1599,10 +1611,7 @@ public class XMyClubsActivty extends Activity implements
         protected void onPostExecute(Void v) {
 
            try{
-               if (dialog != null && dialog.isShowing()) {
-                   dialog.dismiss();
-               }
-
+               hideProgressBar();
                if (exceptioncheck) {
                    exceptioncheck = false;
                    Toast.makeText(XMyClubsActivty.this,
@@ -1881,17 +1890,11 @@ public class XMyClubsActivty extends Activity implements
 
     private class ConnectionTaskForRemoveclub extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(XMyClubsActivty.this);
 
         @Override
         protected void onPreExecute() {
            try{
-               if(dialog != null){
-                   dialog.setMessage("Please Wait...");
-                   dialog.setCancelable(false);
-                   dialog.setCanceledOnTouchOutside(false);
-                   dialog.show();
-               }
+              showProgressBar();
            }catch (Exception e){
                e.printStackTrace();
            }
@@ -1916,9 +1919,7 @@ public class XMyClubsActivty extends Activity implements
         protected void onPostExecute(Void v) {
 
             try{
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+               hideProgressBar();
 
                 if (exceptioncheck) {
                     exceptioncheck = false;
@@ -2089,17 +2090,11 @@ public class XMyClubsActivty extends Activity implements
 
     private class ConnectionTaskForcreatingNewClub extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(XMyClubsActivty.this);
 
         @Override
         protected void onPreExecute() {
          try{
-             if(dialog != null){
-                 dialog.setMessage("Please Wait...");
-                 dialog.setCancelable(false);
-                 dialog.setCanceledOnTouchOutside(false);
-                 dialog.show();
-             }
+            showProgressBar();
          }catch (Exception e){
              e.printStackTrace();
          }
@@ -2128,9 +2123,7 @@ public class XMyClubsActivty extends Activity implements
         protected void onPostExecute(Void v) {
 
            try{
-               if (dialog != null && dialog.isShowing()) {
-                   dialog.dismiss();
-               }
+              hideProgressBar();
 
                if (exceptioncheck) {
                    exceptioncheck = false;
@@ -2300,18 +2293,11 @@ public class XMyClubsActivty extends Activity implements
     private class ConnectionTaskForFetchClubs extends
             AsyncTask<String, Void, Void> {
         String myprofileresp = null;
-        private ProgressDialog dialog = new ProgressDialog(XMyClubsActivty.this);
 
         @Override
         protected void onPreExecute() {
           try{
-              if(dialog != null){
-                  dialog.setMessage("Please Wait...");
-                  dialog.setCancelable(false);
-                  dialog.setCanceledOnTouchOutside(false);
-                  dialog.show();
-
-              }
+             showProgressBar();
           }catch (Exception e){
               e.printStackTrace();
           }
@@ -2333,9 +2319,7 @@ public class XMyClubsActivty extends Activity implements
         @Override
         protected void onPostExecute(Void v) {
            try{
-               if(dialog != null){
-                   dialog.dismiss();
-               }
+              hideProgressBar();
                if (exceptioncheck) {
                    exceptioncheck = false;
                    Toast.makeText(XMyClubsActivty.this,
@@ -3023,17 +3007,11 @@ public class XMyClubsActivty extends Activity implements
 
     private class ConnectionTaskForLeaveClub extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(XMyClubsActivty.this);
 
         @Override
         protected void onPreExecute() {
           try{
-              if(dialog != null){
-                  dialog.setMessage("Please Wait...");
-                  dialog.setCancelable(false);
-                  dialog.setCanceledOnTouchOutside(false);
-                  dialog.show();
-              }
+             showProgressBar();
           }catch (Exception e){
               e.printStackTrace();
           }
@@ -3057,9 +3035,7 @@ public class XMyClubsActivty extends Activity implements
         protected void onPostExecute(Void v) {
 
            try{
-               if (dialog != null && dialog.isShowing()) {
-                   dialog.dismiss();
-               }
+               hideProgressBar();
 
                if (exceptioncheck) {
                    exceptioncheck = false;

@@ -1,5 +1,5 @@
--injars /Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/transforms/jarMerging/release/jars/1/1f/combined.jar
--outjars /Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/multi-dex/release/componentClasses.jar
+-injars /Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/transforms/jarMerging/release/jars/1/1f/combined.jar
+-outjars /Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/multi-dex/release/componentClasses.jar
 
 -libraryjars '/Users/DevMac/Documents/Android/Android Software/AndroidStudio/build-tools/23.0.2/lib/shrinkedAndroid.jar'
 
@@ -10,7 +10,7 @@
 -dontpreverify
 -dontnote **,com.android.tools.fd.**,android.support.multidex.MultiDexExtractor
 -dontwarn **
--printconfiguration /Users/DevMac/Documents/VDWork/clubmycabnew/app/build/intermediates/multi-dex/release/components.flags
+-printconfiguration /Users/DevMac/Documents/CMCGit/ClubMyCab/app/build/intermediates/multi-dex/release/components.flags
 
 
 -keep class com.clubmycab.CabApplication {

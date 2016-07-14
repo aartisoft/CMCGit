@@ -147,7 +147,6 @@ com/clubmycab/ui/ContactsInviteForRideActivity$3.class
 com/clubmycab/MemberRideFragmentActivity.class
 android/support/v4/app/ActivityCompat$OnRequestPermissionsResultCallback.class
 com/clubmycab/CheckPoolFragmentActivity$43.class
-com/clubmycab/Communicator.class
 android/support/v4/view/ViewPager$ItemInfo.class
 com/clubmycab/CheckPoolFragmentActivity$6.class
 com/clubmycab/ui/XCheckPoolFragmentActivty$1.class
@@ -504,6 +503,7 @@ com/clubmycab/BookaCabFragmentActivity$31.class
 android/support/multidex/MultiDex$V14.class
 com/google/android/gms/internal/zzdk.class
 com/clubmycab/ui/VehicleDetailScreen$3.class
+com/clubmycab/ui/XMemberRideFragmentActivity$ConnectionTaskJoinFromMainLocation.class
 com/google/android/gms/ads/AdRequest.class
 com/google/android/gms/ads/doubleclick/PublisherAdRequest.class
 com/clubmycab/ui/XMemberRideFragmentActivity$17.class
@@ -947,6 +947,7 @@ com/google/android/gms/maps/model/internal/IPolylineDelegate.class
 com/google/android/gms/maps/model/Polyline.class
 com/google/android/gms/auth/api/signin/GoogleSignInAccount.class
 com/clubmycab/ui/ContactsInviteForRideActivityNew$3.class
+com/clubmycab/GCMIntentService$GeneratePictureStyleNotification.class
 com/google/android/gms/nearby/messages/internal/PublishRequest.class
 com/clubmycab/ui/MyProfileActivity$14.class
 android/support/v4/media/MediaBrowserCompat$1.class
@@ -990,6 +991,7 @@ android/support/v7/app/ActionBarDrawerToggle$DelegateProvider.class
 com/clubmycab/ui/GetLocationTaskHandler.class
 com/clubmycab/ShareLocationFragmentActivity$15.class
 com/google/ads/mediation/customevent/CustomEventServerParameters.class
+com/clubmycab/ui/SplashActivity$generatePictureStyleNotification.class
 com/clubmycab/CheckPoolFragmentActivity$ConnectionTaskForStartTrip.class
 com/clubmycab/ui/RegistrationActivity$AuthenticateConnectionLogin.class
 com/facebook/CallbackManager$Factory.class
@@ -1569,7 +1571,6 @@ com/google/android/gms/internal/zzbx.class
 org/apache/harmony/javax/security/auth/callback/PasswordCallback.class
 com/facebook/share/model/ShareContent.class
 com/clubmycab/ui/OffersDetailsActivity$1.class
-com/clubmycab/ui/XMemberRideFragmentActivity$AuthenticateConnectionFetchNotification.class
 com/google/android/gms/internal/zzgt.class
 com/clubmycab/MemberRideFragmentActivity$AuthenticateConnectionOwnerInviteFriends.class
 com/clubmycab/ui/XMemberRideFragmentActivity$18.class

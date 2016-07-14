@@ -423,7 +423,6 @@
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_btn_background"
-        android:focusableInTouchMode="true"
         android:text="Update"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />

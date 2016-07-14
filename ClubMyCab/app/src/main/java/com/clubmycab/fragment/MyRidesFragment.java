@@ -3,12 +3,14 @@ package com.clubmycab.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -23,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -123,7 +126,8 @@ public class MyRidesFragment extends Fragment implements
 	public static MyRidesFragment fragment;
 	private boolean isFirstLaunch;
     private Activity activity;
-	
+	private Dialog onedialog;
+
 	public static MyRidesFragment newInstance(Bundle args) {
 		if(fragment == null){
 			fragment = new MyRidesFragment();
@@ -276,7 +280,6 @@ public class MyRidesFragment extends Fragment implements
 
 	private class ConnectionTaskForFetchPool extends
 			AsyncTask<String, Void, Void> {
-		private ProgressDialog dialog = new ProgressDialog(getActivity());
 
 		@Override
 		protected void onPreExecute() {
@@ -311,9 +314,7 @@ public class MyRidesFragment extends Fragment implements
 					return;
 				if(getView() != null)
 					getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
-				if (dialog != null && dialog.isShowing()) {
-					dialog.dismiss();
-				}
+
 				if(getView().findViewById(R.id.paging_list_view) != null){
 					getView().findViewById(R.id.paging_list_view).setVisibility(View.GONE);
 				}
@@ -1150,12 +1151,12 @@ public class MyRidesFragment extends Fragment implements
 					viewholder.ivUserImage.setVisibility(View.VISIBLE);
 					viewholder.ivCabTypeIcon.setVisibility(View.GONE);
 					viewholder.tvUserName.setText(ownername.get(position).toString().trim());
-					if (arrayListRide.get(position).getVehicleModel() != null){
+				//	if (arrayListRide.get(position).getVehicleModel() != null){
 						viewholder.tvModelNumber.setText("CAB SHARE");
-					}
-					if (arrayListRide.get(position).getRegistrationNumber() != null){
+				//	}
+				//	if (arrayListRide.get(position).getRegistrationNumber() != null){
 						viewholder.tvRegNo.setText("");
-					}
+				//	}
 					viewholder.ivCabImage.setImageResource(R.drawable.car_taxi);
 					if(!TextUtils.isEmpty(ownerimagename.get(position).toString())){
 						String url = GlobalVariables.ServiceUrl + "/ProfileImages/"
@@ -1389,23 +1390,41 @@ public class MyRidesFragment extends Fragment implements
 				cancelUberCabAsync.execute(param);
 			}
 		}
+		private void showProgressBar(){
+			try{
+				onedialog = new Dialog(getActivity());
+				onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				onedialog.setContentView(R.layout.dialog_ishare_loader);
+				onedialog.setCancelable(false);
+				onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
+				// onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+				onedialog.show();
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+		public void hideProgressBar(){
+			try{
+				if(onedialog != null)
+					onedialog.dismiss();
+				onedialog = null;
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+		}
 		public class CancelUberCabAsync extends AsyncTask<String, Void, String> {
 
 			String result;
 
-			private ProgressDialog dialog = new ProgressDialog(
-					context);
+
 
 			@Override
 			protected void onPreExecute() {
 				try{
-					if(dialog != null){
-						dialog.setMessage("Please Wait...");
-						dialog.setCancelable(false);
-						dialog.setCanceledOnTouchOutside(false);
-						dialog.show();
-					}
+					showProgressBar();
 				}catch (Exception e){
 					e.printStackTrace();
 				}
@@ -1554,9 +1573,7 @@ public class MyRidesFragment extends Fragment implements
 			protected void onPostExecute(String result) {
 
 				try{
-					if (dialog  != null && dialog.isShowing()) {
-						dialog.dismiss();
-					}
+					hideProgressBar();
 					refershRideListData("");
 				}catch (Exception e){
 					e.printStackTrace();
@@ -1601,18 +1618,12 @@ public class MyRidesFragment extends Fragment implements
 
 			String result;
 
-			private ProgressDialog dialog = new ProgressDialog(
-					context);
+
 
 			@Override
 			protected void onPreExecute() {
 				try{
-					if(dialog != null){
-						dialog.setMessage("Please Wait...");
-						dialog.setCancelable(false);
-						dialog.setCanceledOnTouchOutside(false);
-						dialog.show();
-					}
+					showProgressBar();
 				}catch (Exception e){
 					e.printStackTrace();
 				}
@@ -1778,9 +1789,7 @@ public class MyRidesFragment extends Fragment implements
 			@Override
 			protected void onPostExecute(String result) {
 				try{
-					if (dialog != null && dialog.isShowing()) {
-						dialog.dismiss();
-					}
+					hideProgressBar();
 					refershRideListData("");
 				}catch (Exception e){
 					e.printStackTrace();

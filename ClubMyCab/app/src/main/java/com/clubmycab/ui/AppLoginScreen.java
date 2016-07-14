@@ -1,6 +1,7 @@
 package com.clubmycab.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -27,6 +29,7 @@ import android.text.method.LinkMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,7 +99,6 @@ public class AppLoginScreen extends FragmentActivity implements View.OnClickList
     private CallbackManager mCallbackManager;
     private boolean exceptioncheck;
     private String result;
-    private ProgressDialog dialog12;
     private String userName, userEmail, loginType, profilePicUrl, socialId, socialType;
     private String imageuploadresp;
     private GoogleApiClient mGoogleApiClient;
@@ -104,6 +106,7 @@ public class AppLoginScreen extends FragmentActivity implements View.OnClickList
     private static final int RC_SIGN_IN = 9001;
     private TextView textViewTNCLink;
     private String profilePickLink;
+    private Dialog onedialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -388,25 +391,7 @@ public class AppLoginScreen extends FragmentActivity implements View.OnClickList
 
     }
 
-    private void showProgressDialog(){
-        dialog12 = new ProgressDialog(AppLoginScreen.this);
-        if(dialog12 == null){
-            dialog12.setCancelable(false);
-            dialog12.setCanceledOnTouchOutside(false);
-            dialog12.setMessage("loginin...");
-            dialog12.show();
-        }else {
-            if(!dialog12.isShowing()){
-                dialog12.show();
-            }
-        }
-    }
 
-    private void hideProgressDialog(){
-        if(dialog12 != null){
-            dialog12.dismiss();
-        }
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -418,18 +403,12 @@ public class AppLoginScreen extends FragmentActivity implements View.OnClickList
      */
     private class ConnectionTaskForRegister extends
             AsyncTask<String, Void, Void> {
-        private ProgressDialog dialog = new ProgressDialog(
-                AppLoginScreen.this);
+
 
         @Override
         protected void onPreExecute() {
            try{
-               if(dialog != null){
-                   dialog.setMessage("Please Wait...");
-                   dialog.setCancelable(false);
-                   dialog.setCanceledOnTouchOutside(false);
-                   dialog.show();
-               }
+              showProgressBar();
            }catch (Exception e){
                e.printStackTrace();
            }
@@ -453,10 +432,7 @@ public class AppLoginScreen extends FragmentActivity implements View.OnClickList
         protected void onPostExecute(Void v) {
             try{
 
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-
+                hideProgressBar();
                 if (exceptioncheck) {
                     exceptioncheck = false;
                     Toast.makeText(AppLoginScreen.this,
@@ -892,6 +868,37 @@ public class AppLoginScreen extends FragmentActivity implements View.OnClickList
     private void signInGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+
+    }
+
+    private void showProgressBar(){
+        try{
+            if(onedialog != null){
+                onedialog.hide();
+            }
+
+            onedialog = new Dialog(AppLoginScreen.this);
+            onedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            onedialog.setContentView(R.layout.dialog_ishare_loader);
+            onedialog.setCancelable(false);
+            onedialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+            // onedialog.getWindow().setB(getResources().getColor(R.color.colorTransparent));
+            onedialog.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void hideProgressBar(){
+        try{
+            if(onedialog != null)
+                onedialog.dismiss();
+            onedialog = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }

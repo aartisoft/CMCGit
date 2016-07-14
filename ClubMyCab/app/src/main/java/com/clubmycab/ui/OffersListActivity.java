@@ -140,7 +140,7 @@ public class OffersListActivity extends Activity implements
 		String endpoint = GlobalVariables.ServiceUrl + "/FetchUnreadNotificationCount.php";
 		String authString = MobileNumber;
 		String params = "MobileNumber=" + MobileNumber + "&auth=" + GlobalMethods.calculateCMCAuthString(authString);
-		new GlobalAsyncTask(this, endpoint, params, new FetchUnreadNotificationCountHandler(), this, false, "FetchUnreadNotificationCount", false);
+		new GlobalAsyncTask(this, endpoint, params, new FetchUnreadNotificationCountHandler(), this, true, "FetchUnreadNotificationCount", false);
 
 	}
 	private void selectImage() {
@@ -187,7 +187,7 @@ public class OffersListActivity extends Activity implements
 		Log.d("userData", "userData endpoint : " + endpoint + " params : "
 				+ params);
 		new GlobalAsyncTask(OffersListActivity.this, endpoint, params, null,
-				OffersListActivity.this, false, "userData", false);
+				OffersListActivity.this, true, "userData", false);
 	}
 
 	private void getOffers() {

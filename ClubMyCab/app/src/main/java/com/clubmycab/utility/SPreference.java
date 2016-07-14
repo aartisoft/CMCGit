@@ -49,8 +49,6 @@ public class SPreference {
         SharedPreferences mPrefs = context.getSharedPreferences("FacebookData", 0);
         if(mPrefs.getInt(SPreference.RIDE_OFFER_WALLET_TYPE, AppConstants.NULL) == AppConstants.PAYMENT_TYPE_MOBIKWIK){
             return AppConstants.MOBIKWIK;
-        }else  if(mPrefs.getInt(SPreference.RIDE_OFFER_WALLET_TYPE, AppConstants.NULL) == AppConstants.PAYMENT_TYPE_MOBIKWIK){
-            return AppConstants.CASH;
         }
         return "";
 
